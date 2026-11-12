@@ -10,6 +10,7 @@ nothing from `store`, `core`, `server`, `provider`, `markdown`, `filter`, or
 | `clientip/` | trusted-proxy aware client IP resolution middleware |
 | `email/` | SMTP client, config, and message types |
 | `httphandler/` | HTTP response errors, panic recovery, and routing compatibility |
+| `immich/` | read-only client for an Immich photo server's REST API, with SSRF guards |
 | `identifier/` | grammar of UIDs and usernames shared by parser, store, and API |
 | `linkmeta/` | HTML metadata, oEmbed, and image fetching for link previews |
 | `motionphoto/` | Live Photo and Motion Photo container parsing |

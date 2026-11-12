@@ -22,6 +22,7 @@ import (
 	"github.com/usememos/memos/server/api"
 	"github.com/usememos/memos/server/fileserver"
 	"github.com/usememos/memos/server/frontend"
+	"github.com/usememos/memos/server/immich"
 	"github.com/usememos/memos/server/mcp"
 	"github.com/usememos/memos/store"
 )
@@ -106,6 +107,8 @@ func NewServer(ctx context.Context, profile *profile.Profile, store *store.Store
 	fileServerService.MemoExporter = apiService
 	fileServerService.RateLimiter = apiService.RateLimiter
 	fileServerService.RegisterRoutes(mux, apiHandler)
+	// Each user's Immich photo picker: their saved connection and a read-only photo proxy.
+	immich.NewService(s.Store, s.Secret).RegisterRoutes(mux)
 	// Preserve unclean-path routing without ServeMux's automatic redirects.
 	fallback := frontendService.Handler(apiHandler)
 	router := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
