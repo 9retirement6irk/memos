@@ -134,7 +134,10 @@ func TestClient(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, "thumb", string(body))
 
-	_, err = client.Original(ctx, "../users/me")
+	original, err := client.Original(ctx, "../users/me")
+	if original != nil {
+		original.Body.Close()
+	}
 	require.ErrorContains(t, err, "invalid asset ID")
 	_, err = client.SearchPhotos(ctx, "not-an-id", "")
 	require.ErrorContains(t, err, "invalid album ID")

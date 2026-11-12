@@ -13,6 +13,9 @@ vi.mock("@/contexts/AuthContext", () => ({ useAuth: () => ({ userGeneralSetting:
 vi.mock("@/hooks/useSpaceQueries", () => ({ useSpaces: () => ({ data: [] }) }));
 vi.mock("@/contexts/SpaceContext", () => ({ useSpaceContext: () => ({ selectedSpaceName: undefined }) }));
 vi.mock("@/components/map/useReverseGeocoding", () => ({ useReverseGeocoding: () => ({ data: undefined }) }));
+const immich = vi.hoisted(() => ({ connection: { configured: false, url: "" } }));
+vi.mock("@/hooks/useImmichQueries", () => ({ useImmichConnection: () => ({ data: immich.connection }) }));
+vi.mock("@/components/ImmichPicker/ImmichPickerDialog", () => ({ default: () => null }));
 
 beforeAll(() => {
   Element.prototype.scrollIntoView = vi.fn();
@@ -28,11 +31,18 @@ const viewToggles = {
 const richMode = { isSourceMode: false, onToggle: vi.fn() };
 
 /** `hosted` mirrors an editor whose presentation belongs to a host (the global composer). */
-const renderMenu = (onInsertImages = vi.fn(), isSaving = false, hosted = false, sourceMode = richMode) =>
+const renderMenu = (
+  onInsertImages = vi.fn(),
+  isSaving = false,
+  hosted = false,
+  sourceMode = richMode,
+  onAttachFiles?: (files: File[]) => void,
+) =>
   render(
     <EditorProvider>
       <InsertMenu
         isSaving={isSaving}
+        onAttachFiles={onAttachFiles}
         onLocationChange={vi.fn()}
         onInsertImages={onInsertImages}
         onAudioRecorderClick={vi.fn()}
@@ -43,6 +53,24 @@ const renderMenu = (onInsertImages = vi.fn(), isSaving = false, hosted = false, 
   );
 
 describe("InsertMenu", () => {
+  test("offers Immich photos only once the user has connected Immich", () => {
+    renderMenu(vi.fn(), false, false, richMode, vi.fn());
+    fireEvent.click(screen.getByRole("button", { name: "common.add" }));
+    expect(screen.queryByRole("menuitem", { name: "immich.insert" })).not.toBeInTheDocument();
+  });
+
+  test("lists Immich photos after inline images when connected", () => {
+    immich.connection = { configured: true, url: "http://immich.example.com" };
+    try {
+      renderMenu(vi.fn(), false, false, richMode, vi.fn());
+      fireEvent.click(screen.getByRole("button", { name: "common.add" }));
+      const labels = screen.getAllByRole("menuitem").map((item) => item.textContent);
+      expect(labels.indexOf("immich.insert")).toBe(labels.indexOf("editor.insert-menu.insert-image") + 1);
+    } finally {
+      immich.connection = { configured: false, url: "" };
+    }
+  });
+
   test("shows attachment and inline-image actions in the intended order", () => {
     renderMenu();
     const trigger = screen.getByRole("button", { name: "common.add" });

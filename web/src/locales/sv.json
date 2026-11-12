@@ -917,6 +917,18 @@
       "users-description": "The entry applies to each of these users.",
       "users-required": "Name at least one user."
     },
+    "immich": {
+      "label": "Immich",
+      "description": "Välj bilder från din Immich-server medan du skriver. Din API-nyckel stannar på den här servern.",
+      "status-connected": "Ansluten till {{url}}",
+      "status-not-connected": "Inte ansluten",
+      "server-url": "Serveradress",
+      "api-key": "API-nyckel",
+      "api-key-keep": "Lämna tomt för att behålla den sparade nyckeln",
+      "api-key-help": "Skapa en i Immich under Kontoinställningar → API-nycklar. Behöver: asset.read, asset.view, asset.download, album.read, user.read.",
+      "connect": "Anslut",
+      "disconnect": "Koppla från"
+    },
     "webhook": {
       "create-dialog": {
         "an-easy-to-remember-name": "Ett lättnamn",
@@ -1417,6 +1429,17 @@
     "update-profile-failed": "Det gick inte att uppdatera profilen",
     "unlink-identity-failed": "Det gick inte att koppla från identitetsleverantören.",
     "link-identity-failed": "Det gick inte att starta kontokopplingen. Försök igen."
+  },
+  "immich": {
+    "insert": "Bilder från Immich",
+    "title": "Välj bilder från Immich",
+    "album": "Album",
+    "all-photos": "Alla bilder",
+    "add-photos": "Lägg till bilder ({{count}})",
+    "load-more": "Läs in fler",
+    "empty": "Inga bilder här.",
+    "not-connected": "Anslut först din Immich-server under Inställningar.",
+    "add-failed": "Vissa bilder kunde inte läggas till."
   },
   "attachment-preview": {
     "title": "Förhandsgranskning av bilaga",

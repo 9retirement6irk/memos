@@ -918,6 +918,18 @@
       "users-description": "The entry applies to each of these users.",
       "users-required": "Name at least one user."
     },
+    "immich": {
+      "label": "Immich",
+      "description": "Scegli foto dal tuo server Immich mentre scrivi. La tua chiave API resta su questo server.",
+      "status-connected": "Connesso a {{url}}",
+      "status-not-connected": "Non connesso",
+      "server-url": "Indirizzo del server",
+      "api-key": "Chiave API",
+      "api-key-keep": "Lascia vuoto per mantenere la chiave salvata",
+      "api-key-help": "Creane una in Immich in Impostazioni account → Chiavi API. Permessi necessari: asset.read, asset.view, asset.download, album.read, user.read.",
+      "connect": "Connetti",
+      "disconnect": "Disconnetti"
+    },
     "webhook": {
       "create-dialog": {
         "an-easy-to-remember-name": "Nome facile da ricordare",
@@ -1418,6 +1430,17 @@
     "update-profile-failed": "Impossibile aggiornare il profilo",
     "unlink-identity-failed": "Impossibile scollegare il provider di identità.",
     "link-identity-failed": "Impossibile avviare il collegamento dell'account. Riprova."
+  },
+  "immich": {
+    "insert": "Foto da Immich",
+    "title": "Scegli foto da Immich",
+    "album": "Album",
+    "all-photos": "Tutte le foto",
+    "add-photos": "Aggiungi foto ({{count}})",
+    "load-more": "Carica altro",
+    "empty": "Nessuna foto qui.",
+    "not-connected": "Prima collega il tuo server Immich nelle Impostazioni.",
+    "add-failed": "Non è stato possibile aggiungere alcune foto."
   },
   "attachment-preview": {
     "title": "Anteprima allegato",

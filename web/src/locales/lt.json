@@ -1035,6 +1035,18 @@
       "users-description": "The entry applies to each of these users.",
       "users-required": "Name at least one user."
     },
+    "immich": {
+      "label": "Immich",
+      "description": "Rinkitės nuotraukas iš savo Immich serverio rašydami. Jūsų API raktas lieka šiame serveryje.",
+      "status-connected": "Prisijungta prie {{url}}",
+      "status-not-connected": "Neprisijungta",
+      "server-url": "Serverio adresas",
+      "api-key": "API raktas",
+      "api-key-keep": "Palikite tuščią, kad liktų išsaugotas raktas",
+      "api-key-help": "Sukurkite jį Immich skiltyje Paskyros nustatymai → API raktai. Reikia teisių: asset.read, asset.view, asset.download, album.read, user.read.",
+      "connect": "Prisijungti",
+      "disconnect": "Atsijungti"
+    },
     "webhook": {
       "create-dialog": {
         "an-easy-to-remember-name": "Lengvai įsimenamas vardas",
@@ -1419,6 +1431,17 @@
     "update-profile-failed": "Nepavyko atnaujinti profilio",
     "unlink-identity-failed": "Nepavyko atsieti tapatybės teikėjo.",
     "link-identity-failed": "Nepavyko pradėti paskyros susiejimo. Bandykite dar kartą."
+  },
+  "immich": {
+    "insert": "Nuotraukos iš Immich",
+    "title": "Pasirinkite nuotraukas iš Immich",
+    "album": "Albumas",
+    "all-photos": "Visos nuotraukos",
+    "add-photos": "Pridėti nuotraukas ({{count}})",
+    "load-more": "Įkelti daugiau",
+    "empty": "Čia nuotraukų nėra.",
+    "not-connected": "Pirmiausia prijunkite savo Immich serverį nustatymuose.",
+    "add-failed": "Kai kurių nuotraukų nepavyko pridėti."
   },
   "attachment-preview": {
     "title": "Priedo peržiūra",

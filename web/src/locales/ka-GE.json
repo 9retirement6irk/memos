@@ -917,6 +917,18 @@
       "users-description": "The entry applies to each of these users.",
       "users-required": "Name at least one user."
     },
+    "immich": {
+      "label": "Immich",
+      "description": "წერისას აირჩიეთ ფოტოები თქვენი Immich სერვერიდან. თქვენი API გასაღები ამ სერვერზე რჩება.",
+      "status-connected": "დაკავშირებულია: {{url}}",
+      "status-not-connected": "არ არის დაკავშირებული",
+      "server-url": "სერვერის მისამართი",
+      "api-key": "API გასაღები",
+      "api-key-keep": "დატოვეთ ცარიელი შენახული გასაღების შესანარჩუნებლად",
+      "api-key-help": "შექმენით Immich-ში: ანგარიშის პარამეტრები → API გასაღებები. საჭირო ნებართვები: asset.read, asset.view, asset.download, album.read, user.read.",
+      "connect": "დაკავშირება",
+      "disconnect": "გათიშვა"
+    },
     "webhook": {
       "create-dialog": {
         "an-easy-to-remember-name": "მარტივად დასამახსოვრებელი სახელი",
@@ -1417,6 +1429,17 @@
     "update-profile-failed": "პროფილის განახლება ვერ მოხერხდა",
     "unlink-identity-failed": "იდენტობის პროვაიდერის მოხსნა ვერ მოხერხდა.",
     "link-identity-failed": "ანგარიშის დაკავშირების დაწყება ვერ მოხერხდა. სცადეთ ხელახლა."
+  },
+  "immich": {
+    "insert": "ფოტოები Immich-იდან",
+    "title": "აირჩიეთ ფოტოები Immich-იდან",
+    "album": "ალბომი",
+    "all-photos": "ყველა ფოტო",
+    "add-photos": "ფოტოების დამატება ({{count}})",
+    "load-more": "მეტის ჩატვირთვა",
+    "empty": "აქ ფოტოები არ არის.",
+    "not-connected": "ჯერ პარამეტრებში დააკავშირეთ თქვენი Immich სერვერი.",
+    "add-failed": "ზოგიერთი ფოტოს დამატება ვერ მოხერხდა."
   },
   "attachment-preview": {
     "title": "დანართის გადახედვა",

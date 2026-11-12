@@ -917,6 +917,18 @@
       "users-description": "Der Eintrag gilt für jeden dieser Benutzer.",
       "users-required": "Nennen Sie mindestens einen Benutzer."
     },
+    "immich": {
+      "label": "Immich",
+      "description": "Wähle beim Schreiben Fotos von deinem Immich-Server aus. Dein API-Schlüssel bleibt auf diesem Server.",
+      "status-connected": "Verbunden mit {{url}}",
+      "status-not-connected": "Nicht verbunden",
+      "server-url": "Serveradresse",
+      "api-key": "API-Schlüssel",
+      "api-key-keep": "Leer lassen, um den gespeicherten Schlüssel zu behalten",
+      "api-key-help": "Erstelle einen in Immich unter Kontoeinstellungen → API-Schlüssel. Benötigte Berechtigungen: asset.read, asset.view, asset.download, album.read, user.read.",
+      "connect": "Verbinden",
+      "disconnect": "Trennen"
+    },
     "webhook": {
       "create-dialog": {
         "an-easy-to-remember-name": "Einprägsamer Name",
@@ -1417,6 +1429,17 @@
     "update-profile-failed": "Profil konnte nicht aktualisiert werden",
     "unlink-identity-failed": "Verknüpfung mit dem Identitätsanbieter konnte nicht aufgehoben werden.",
     "link-identity-failed": "Kontoverknüpfung konnte nicht gestartet werden. Bitte versuche es erneut."
+  },
+  "immich": {
+    "insert": "Fotos aus Immich",
+    "title": "Fotos aus Immich auswählen",
+    "album": "Album",
+    "all-photos": "Alle Fotos",
+    "add-photos": "Fotos hinzufügen ({{count}})",
+    "load-more": "Mehr laden",
+    "empty": "Hier sind keine Fotos.",
+    "not-connected": "Verbinde zuerst deinen Immich-Server in den Einstellungen.",
+    "add-failed": "Einige Fotos konnten nicht hinzugefügt werden."
   },
   "attachment-preview": {
     "title": "Anhangvorschau",

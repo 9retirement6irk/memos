@@ -1155,6 +1155,18 @@
       "users-description": "The entry applies to each of these users.",
       "users-required": "Name at least one user."
     },
+    "immich": {
+      "label": "Immich",
+      "description": "寫作時可從你的 Immich 伺服器選擇照片。API 金鑰只會保存在此伺服器上。",
+      "status-connected": "已連線到 {{url}}",
+      "status-not-connected": "未連線",
+      "server-url": "伺服器位址",
+      "api-key": "API 金鑰",
+      "api-key-keep": "留空即保留已儲存的金鑰",
+      "api-key-help": "在 Immich 的「帳號設定 → API 金鑰」中建立。所需權限：asset.read, asset.view, asset.download, album.read, user.read。",
+      "connect": "連線",
+      "disconnect": "中斷連線"
+    },
     "webhook": {
       "create-dialog": {
         "an-easy-to-remember-name": "一個容易記住的名稱",
@@ -1417,6 +1429,17 @@
     "update-profile-failed": "更新個人資料失敗",
     "unlink-identity-failed": "解除身分提供者連結失敗。",
     "link-identity-failed": "無法開始連結帳號，請再試一次。"
+  },
+  "immich": {
+    "insert": "來自 Immich 的照片",
+    "title": "從 Immich 選擇照片",
+    "album": "相簿",
+    "all-photos": "所有照片",
+    "add-photos": "加入照片（{{count}}）",
+    "load-more": "載入更多",
+    "empty": "這裡沒有照片。",
+    "not-connected": "請先在設定中連線你的 Immich 伺服器。",
+    "add-failed": "部分照片無法加入。"
   },
   "attachment-preview": {
     "title": "附件預覽",

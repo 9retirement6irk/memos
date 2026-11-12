@@ -90,6 +90,8 @@ export interface EditorToolbarProps {
   onInsertImages: (files: File[]) => void;
   /** Opens the drawing sheet for a new drawing. */
   onDrawingClick?: () => void;
+  /** Adds files to the memo's attachment list, such as photos picked from Immich. */
+  onAttachFiles?: (files: File[]) => void;
 }
 
 export interface EditorMetadataProps {
@@ -139,6 +141,7 @@ export interface InsertMenuProps {
   sourceMode: EditorSourceModeToggle;
   onInsertImages: (files: File[]) => void;
   onDrawingClick?: () => void;
+  onAttachFiles?: (files: File[]) => void;
 }
 
 export interface AudienceMenuProps {

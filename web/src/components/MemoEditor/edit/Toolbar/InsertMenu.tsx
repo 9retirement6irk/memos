@@ -3,6 +3,7 @@ import { uniqBy } from "lodash-es";
 import {
   CodeXmlIcon,
   ImageIcon,
+  ImagesIcon,
   LinkIcon,
   MapPinIcon,
   Maximize2Icon,
@@ -12,10 +13,12 @@ import {
   PlusIcon,
 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import ImmichPickerDialog from "@/components/ImmichPicker/ImmichPickerDialog";
 import { LinkMemoDialog, LocationDialog } from "@/components/MemoMetadata";
 import type { MapPoint } from "@/components/map/types";
 import { useReverseGeocoding } from "@/components/map/useReverseGeocoding";
 import { useDebouncedEffect } from "@/hooks";
+import { useImmichConnection } from "@/hooks/useImmichQueries";
 import type { MemoRelation } from "@/types/proto/api/memo_service_pb";
 import { useTranslate } from "@/utils/i18n";
 import { useFileUpload, useLinkMemo, useLocation } from "../hooks";
@@ -31,6 +34,10 @@ const InsertMenu = (props: InsertMenuProps) => {
 
   const [linkDialogOpen, setLinkDialogOpen] = useState(false);
   const [locationDialogOpen, setLocationDialogOpen] = useState(false);
+  const [immichDialogOpen, setImmichDialogOpen] = useState(false);
+  // Offered only to a user who has connected their Immich server in Settings.
+  const { data: immichConnection } = useImmichConnection();
+  const immichAvailable = Boolean(immichConnection?.configured && props.onAttachFiles);
   const inlineImageInputRef = useRef<HTMLInputElement>(null);
 
   const { fileInputRef, selectingFlag, handleFileInputChange, handleUploadClick } = useFileUpload((newFiles: LocalFile[]) => {
@@ -139,6 +146,7 @@ const InsertMenu = (props: InsertMenuProps) => {
     ...(props.onDrawingClick
       ? [{ key: "drawing", label: t("editor.insert-menu.drawing"), icon: PencilLineIcon, onClick: props.onDrawingClick }]
       : []),
+    ...(immichAvailable ? [{ key: "immich", label: t("immich.insert"), icon: ImagesIcon, onClick: () => setImmichDialogOpen(true) }] : []),
     { key: "audio", label: t("editor.audio-recorder.trigger"), icon: MicIcon, onClick: props.onAudioRecorderClick },
     { key: "link", label: t("editor.insert-menu.link-memo"), icon: LinkIcon, onClick: handleOpenLinkDialog },
     { key: "location", label: t("editor.insert-menu.add-location"), icon: MapPinIcon, onClick: handleLocationClick },
@@ -229,6 +237,10 @@ const InsertMenu = (props: InsertMenuProps) => {
         onCancel={handleLocationCancel}
         onConfirm={handleLocationConfirm}
       />
+
+      {immichAvailable && props.onAttachFiles && (
+        <ImmichPickerDialog open={immichDialogOpen} onOpenChange={setImmichDialogOpen} onPick={props.onAttachFiles} />
+      )}
     </>
   );
 };

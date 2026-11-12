@@ -917,6 +917,18 @@
       "users-description": "The entry applies to each of these users.",
       "users-required": "Name at least one user."
     },
+    "immich": {
+      "label": "Immich",
+      "description": "書きながら Immich サーバーの写真を選べます。API キーはこのサーバーにのみ保存されます。",
+      "status-connected": "{{url}} に接続済み",
+      "status-not-connected": "未接続",
+      "server-url": "サーバーのアドレス",
+      "api-key": "API キー",
+      "api-key-keep": "保存済みのキーを使う場合は空欄のままにします",
+      "api-key-help": "Immich の「アカウント設定 → API キー」で作成してください。必要な権限: asset.read, asset.view, asset.download, album.read, user.read",
+      "connect": "接続",
+      "disconnect": "接続を解除"
+    },
     "webhook": {
       "create-dialog": {
         "an-easy-to-remember-name": "覚えやすい名前",
@@ -1417,6 +1429,17 @@
     "update-profile-failed": "プロフィールの更新に失敗しました",
     "unlink-identity-failed": "ID プロバイダーのリンク解除に失敗しました。",
     "link-identity-failed": "アカウント連携を開始できませんでした。もう一度お試しください。"
+  },
+  "immich": {
+    "insert": "Immich の写真",
+    "title": "Immich から写真を選ぶ",
+    "album": "アルバム",
+    "all-photos": "すべての写真",
+    "add-photos": "写真を追加（{{count}}）",
+    "load-more": "さらに読み込む",
+    "empty": "写真はありません。",
+    "not-connected": "まず設定で Immich サーバーに接続してください。",
+    "add-failed": "一部の写真を追加できませんでした。"
   },
   "attachment-preview": {
     "title": "添付ファイルのプレビュー",

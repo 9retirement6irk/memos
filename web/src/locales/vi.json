@@ -912,6 +912,18 @@
       "reactions-description": "Xác định các tùy chọn biểu tượng cảm xúc mà người dùng có thể áp dụng cho ghi chú.",
       "remove-reaction": "Xóa phản ứng"
     },
+    "immich": {
+      "label": "Immich",
+      "description": "Chọn ảnh từ máy chủ Immich của bạn khi đang viết. Khóa API của bạn được giữ trên máy chủ này.",
+      "status-connected": "Đã kết nối với {{url}}",
+      "status-not-connected": "Chưa kết nối",
+      "server-url": "Địa chỉ máy chủ",
+      "api-key": "Khóa API",
+      "api-key-keep": "Để trống để giữ khóa đã lưu",
+      "api-key-help": "Tạo khóa trong Immich tại Cài đặt tài khoản → Khóa API. Quyền cần có: asset.read, asset.view, asset.download, album.read, user.read.",
+      "connect": "Kết nối",
+      "disconnect": "Ngắt kết nối"
+    },
     "webhook": {
       "create-dialog": {
         "an-easy-to-remember-name": "Tên dễ nhớ",
@@ -1417,6 +1429,17 @@
     "update-profile-failed": "Không thể cập nhật hồ sơ",
     "unlink-identity-failed": "Không thể hủy liên kết nhà cung cấp danh tính.",
     "link-identity-failed": "Không thể bắt đầu liên kết tài khoản. Vui lòng thử lại."
+  },
+  "immich": {
+    "insert": "Ảnh từ Immich",
+    "title": "Chọn ảnh từ Immich",
+    "album": "Album",
+    "all-photos": "Tất cả ảnh",
+    "add-photos": "Thêm ảnh ({{count}})",
+    "load-more": "Tải thêm",
+    "empty": "Không có ảnh nào ở đây.",
+    "not-connected": "Hãy kết nối máy chủ Immich của bạn trong Cài đặt trước.",
+    "add-failed": "Không thể thêm một số ảnh."
   },
   "attachment-preview": {
     "title": "Xem trước tệp đính kèm",

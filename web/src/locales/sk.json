@@ -1035,6 +1035,18 @@
       "users-description": "The entry applies to each of these users.",
       "users-required": "Name at least one user."
     },
+    "immich": {
+      "label": "Immich",
+      "description": "Pri písaní vyberajte fotky zo svojho servera Immich. Váš kľúč API zostáva na tomto serveri.",
+      "status-connected": "Pripojené k {{url}}",
+      "status-not-connected": "Nepripojené",
+      "server-url": "Adresa servera",
+      "api-key": "Kľúč API",
+      "api-key-keep": "Nechajte prázdne, ak chcete ponechať uložený kľúč",
+      "api-key-help": "Vytvorte ho v Immichi v Nastaveniach účtu → Kľúče API. Potrebné oprávnenia: asset.read, asset.view, asset.download, album.read, user.read.",
+      "connect": "Pripojiť",
+      "disconnect": "Odpojiť"
+    },
     "webhook": {
       "create-dialog": {
         "an-easy-to-remember-name": "Ľahko zapamätateľné meno",
@@ -1419,6 +1431,17 @@
     "update-profile-failed": "Profil sa nepodarilo aktualizovať",
     "unlink-identity-failed": "Poskytovateľa identity sa nepodarilo odpojiť.",
     "link-identity-failed": "Prepojenie účtu sa nepodarilo spustiť. Skúste to znova."
+  },
+  "immich": {
+    "insert": "Fotky z Immichu",
+    "title": "Vybrať fotky z Immichu",
+    "album": "Album",
+    "all-photos": "Všetky fotky",
+    "add-photos": "Pridať fotky ({{count}})",
+    "load-more": "Načítať ďalšie",
+    "empty": "Žiadne fotky.",
+    "not-connected": "Najprv v Nastaveniach pripojte svoj server Immich.",
+    "add-failed": "Niektoré fotky sa nepodarilo pridať."
   },
   "attachment-preview": {
     "title": "Ukážka prílohy",

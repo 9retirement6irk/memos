@@ -912,6 +912,18 @@
       "reactions-description": "Tentukan opsi reaksi yang dapat diterapkan pengguna pada memo.",
       "remove-reaction": "Hapus reaksi"
     },
+    "immich": {
+      "label": "Immich",
+      "description": "Pilih foto dari server Immich Anda saat menulis. Kunci API Anda tetap di server ini.",
+      "status-connected": "Terhubung ke {{url}}",
+      "status-not-connected": "Tidak terhubung",
+      "server-url": "Alamat server",
+      "api-key": "Kunci API",
+      "api-key-keep": "Biarkan kosong untuk mempertahankan kunci yang tersimpan",
+      "api-key-help": "Buat di Immich pada Pengaturan Akun → Kunci API. Izin yang diperlukan: asset.read, asset.view, asset.download, album.read, user.read.",
+      "connect": "Hubungkan",
+      "disconnect": "Putuskan"
+    },
     "webhook": {
       "create-dialog": {
         "an-easy-to-remember-name": "Nama yang mudah diingat",
@@ -1417,6 +1429,17 @@
     "update-profile-failed": "Gagal memperbarui profil",
     "unlink-identity-failed": "Gagal memutuskan tautan penyedia identitas.",
     "link-identity-failed": "Gagal memulai penautan akun. Silakan coba lagi."
+  },
+  "immich": {
+    "insert": "Foto dari Immich",
+    "title": "Pilih foto dari Immich",
+    "album": "Album",
+    "all-photos": "Semua foto",
+    "add-photos": "Tambahkan foto ({{count}})",
+    "load-more": "Muat lebih banyak",
+    "empty": "Tidak ada foto di sini.",
+    "not-connected": "Hubungkan server Immich Anda di Pengaturan terlebih dahulu.",
+    "add-failed": "Beberapa foto tidak dapat ditambahkan."
   },
   "attachment-preview": {
     "title": "Pratinjau lampiran",

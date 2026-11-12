@@ -912,6 +912,18 @@
       "reactions-description": "उन रिएक्शन ऑप्शन को डिफाइन करें जिन्हें यूज़र्स मेमो पर अप्लाई कर सकते हैं।",
       "remove-reaction": "रिएक्शन हटाएँ"
     },
+    "immich": {
+      "label": "Immich",
+      "description": "लिखते समय अपने Immich सर्वर से फ़ोटो चुनें। आपकी API कुंजी इसी सर्वर पर रहती है।",
+      "status-connected": "{{url}} से जुड़ा है",
+      "status-not-connected": "जुड़ा नहीं है",
+      "server-url": "सर्वर का पता",
+      "api-key": "API कुंजी",
+      "api-key-keep": "सहेजी गई कुंजी रखने के लिए खाली छोड़ें",
+      "api-key-help": "Immich में खाता सेटिंग → API कुंजियाँ में एक बनाएँ। ज़रूरी अनुमतियाँ: asset.read, asset.view, asset.download, album.read, user.read।",
+      "connect": "जोड़ें",
+      "disconnect": "डिस्कनेक्ट करें"
+    },
     "webhook": {
       "create-dialog": {
         "an-easy-to-remember-name": "आसान नाम",
@@ -1417,6 +1429,17 @@
     "update-profile-failed": "प्रोफ़ाइल अपडेट नहीं हो सकी",
     "unlink-identity-failed": "आइडेंटिटी प्रोवाइडर को अनलिंक नहीं किया जा सका।",
     "link-identity-failed": "खाता लिंक करना शुरू नहीं हो सका। फिर से कोशिश करें।"
+  },
+  "immich": {
+    "insert": "Immich से फ़ोटो",
+    "title": "Immich से फ़ोटो चुनें",
+    "album": "एल्बम",
+    "all-photos": "सभी फ़ोटो",
+    "add-photos": "फ़ोटो जोड़ें ({{count}})",
+    "load-more": "और लोड करें",
+    "empty": "यहाँ कोई फ़ोटो नहीं है।",
+    "not-connected": "पहले सेटिंग में अपना Immich सर्वर जोड़ें।",
+    "add-failed": "कुछ फ़ोटो नहीं जोड़ी जा सकीं।"
   },
   "attachment-preview": {
     "title": "अटैचमेंट पूर्वावलोकन",

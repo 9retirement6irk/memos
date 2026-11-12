@@ -916,6 +916,18 @@
       "reactions-description": "حدد خيارات التفاعل التي يمكن للمستخدمين تطبيقها على المذكرات.",
       "remove-reaction": "إزالة التفاعل"
     },
+    "immich": {
+      "label": "Immich",
+      "description": "اختر صورًا من خادم Immich الخاص بك أثناء الكتابة. يبقى مفتاح API على هذا الخادم.",
+      "status-connected": "متصل بـ {{url}}",
+      "status-not-connected": "غير متصل",
+      "server-url": "عنوان الخادم",
+      "api-key": "مفتاح API",
+      "api-key-keep": "اتركه فارغًا للإبقاء على المفتاح المحفوظ",
+      "api-key-help": "أنشئ مفتاحًا في Immich من إعدادات الحساب ← مفاتيح API. الأذونات المطلوبة: asset.read, asset.view, asset.download, album.read, user.read.",
+      "connect": "اتصال",
+      "disconnect": "قطع الاتصال"
+    },
     "webhook": {
       "create-dialog": {
         "an-easy-to-remember-name": "اسم سهل التذكر",
@@ -1421,6 +1433,17 @@
     "update-profile-failed": "فشل تحديث الملف الشخصي",
     "unlink-identity-failed": "فشل إلغاء ربط موفر الهوية.",
     "link-identity-failed": "تعذّر بدء ربط الحساب. حاول مرة أخرى."
+  },
+  "immich": {
+    "insert": "صور من Immich",
+    "title": "اختيار صور من Immich",
+    "album": "الألبوم",
+    "all-photos": "كل الصور",
+    "add-photos": "إضافة صور ({{count}})",
+    "load-more": "تحميل المزيد",
+    "empty": "لا توجد صور هنا.",
+    "not-connected": "اربط خادم Immich من الإعدادات أولًا.",
+    "add-failed": "تعذّرت إضافة بعض الصور."
   },
   "attachment-preview": {
     "title": "معاينة المرفق",

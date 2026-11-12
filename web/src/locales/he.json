@@ -1066,6 +1066,18 @@
       "users-description": "The entry applies to each of these users.",
       "users-required": "Name at least one user."
     },
+    "immich": {
+      "label": "Immich",
+      "description": "בחרו תמונות משרת ה-Immich שלכם תוך כדי כתיבה. מפתח ה-API נשאר בשרת הזה.",
+      "status-connected": "מחובר אל {{url}}",
+      "status-not-connected": "לא מחובר",
+      "server-url": "כתובת השרת",
+      "api-key": "מפתח API",
+      "api-key-keep": "השאירו ריק כדי לשמור על המפתח השמור",
+      "api-key-help": "צרו מפתח ב-Immich תחת הגדרות חשבון ← מפתחות API. הרשאות נדרשות: asset.read, asset.view, asset.download, album.read, user.read.",
+      "connect": "התחברות",
+      "disconnect": "ניתוק"
+    },
     "webhook": {
       "create-dialog": {
         "an-easy-to-remember-name": "שם שקל לזכור",
@@ -1417,6 +1429,17 @@
     "update-profile-failed": "עדכון הפרופיל נכשל",
     "unlink-identity-failed": "ניתוק ספק הזהות נכשל.",
     "link-identity-failed": "לא ניתן להתחיל את קישור החשבון. נסו שוב."
+  },
+  "immich": {
+    "insert": "תמונות מ-Immich",
+    "title": "בחירת תמונות מ-Immich",
+    "album": "אלבום",
+    "all-photos": "כל התמונות",
+    "add-photos": "הוספת תמונות ({{count}})",
+    "load-more": "טעינת עוד",
+    "empty": "אין כאן תמונות.",
+    "not-connected": "חברו קודם את שרת ה-Immich שלכם בהגדרות.",
+    "add-failed": "חלק מהתמונות לא נוספו."
   },
   "attachment-preview": {
     "title": "תצוגה מקדימה של קובץ מצורף",

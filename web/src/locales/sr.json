@@ -1034,6 +1034,18 @@
       "users-description": "The entry applies to each of these users.",
       "users-required": "Name at least one user."
     },
+    "immich": {
+      "label": "Immich",
+      "description": "Бирајте фотографије са свог Immich сервера док пишете. Ваш API кључ остаје на овом серверу.",
+      "status-connected": "Повезано са {{url}}",
+      "status-not-connected": "Није повезано",
+      "server-url": "Адреса сервера",
+      "api-key": "API кључ",
+      "api-key-keep": "Оставите празно да задржите сачувани кључ",
+      "api-key-help": "Направите га у Immich-у под Подешавања налога → API кључеви. Потребне дозволе: asset.read, asset.view, asset.download, album.read, user.read.",
+      "connect": "Повежи",
+      "disconnect": "Прекини везу"
+    },
     "webhook": {
       "create-dialog": {
         "an-easy-to-remember-name": "Име које се лако памти",
@@ -1418,6 +1430,17 @@
     "update-profile-failed": "Ажурирање профила није успело",
     "unlink-identity-failed": "Уклањање везе са добављачем идентитета није успело.",
     "link-identity-failed": "Повезивање налога није могло да започне. Покушајте поново."
+  },
+  "immich": {
+    "insert": "Фотографије из Immich-а",
+    "title": "Изаберите фотографије из Immich-а",
+    "album": "Албум",
+    "all-photos": "Све фотографије",
+    "add-photos": "Додај фотографије ({{count}})",
+    "load-more": "Учитај још",
+    "empty": "Овде нема фотографија.",
+    "not-connected": "Прво повежите свој Immich сервер у Подешавањима.",
+    "add-failed": "Неке фотографије није било могуће додати."
   },
   "attachment-preview": {
     "title": "Преглед прилога",

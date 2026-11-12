@@ -1033,6 +1033,18 @@
       "users-description": "The entry applies to each of these users.",
       "users-required": "Name at least one user."
     },
+    "immich": {
+      "label": "Immich",
+      "description": "Избирайте снимки от своя Immich сървър, докато пишете. API ключът ви остава на този сървър.",
+      "status-connected": "Свързано с {{url}}",
+      "status-not-connected": "Не е свързано",
+      "server-url": "Адрес на сървъра",
+      "api-key": "API ключ",
+      "api-key-keep": "Оставете празно, за да запазите записания ключ",
+      "api-key-help": "Създайте такъв в Immich от Настройки на акаунта → API ключове. Нужни права: asset.read, asset.view, asset.download, album.read, user.read.",
+      "connect": "Свързване",
+      "disconnect": "Прекъсване"
+    },
     "webhook": {
       "create-dialog": {
         "an-easy-to-remember-name": "Лесно запомнящо се име",
@@ -1417,6 +1429,17 @@
     "update-profile-failed": "Неуспешно обновяване на профила",
     "unlink-identity-failed": "Неуспешно премахване на връзката с доставчика на самоличност.",
     "link-identity-failed": "Неуспешно започване на свързването на акаунта. Опитайте отново."
+  },
+  "immich": {
+    "insert": "Снимки от Immich",
+    "title": "Изберете снимки от Immich",
+    "album": "Албум",
+    "all-photos": "Всички снимки",
+    "add-photos": "Добавяне на снимки ({{count}})",
+    "load-more": "Зареди още",
+    "empty": "Тук няма снимки.",
+    "not-connected": "Първо свържете своя Immich сървър в Настройки.",
+    "add-failed": "Някои снимки не можаха да бъдат добавени."
   },
   "attachment-preview": {
     "title": "Преглед на прикачен файл",

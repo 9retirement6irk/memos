@@ -919,6 +919,18 @@
       "users-description": "The entry applies to each of these users.",
       "users-required": "Name at least one user."
     },
+    "immich": {
+      "label": "Immich",
+      "description": "Вибирайте фото зі свого сервера Immich під час написання. Ваш API-ключ залишається на цьому сервері.",
+      "status-connected": "Підключено до {{url}}",
+      "status-not-connected": "Не підключено",
+      "server-url": "Адреса сервера",
+      "api-key": "API-ключ",
+      "api-key-keep": "Залиште порожнім, щоб зберегти поточний ключ",
+      "api-key-help": "Створіть його в Immich: Налаштування облікового запису → API-ключі. Потрібні права: asset.read, asset.view, asset.download, album.read, user.read.",
+      "connect": "Підключити",
+      "disconnect": "Відключити"
+    },
     "webhook": {
       "create-dialog": {
         "an-easy-to-remember-name": "Легке для запам'ятовування ім'я",
@@ -1419,6 +1431,17 @@
     "update-profile-failed": "Не вдалося оновити профіль",
     "unlink-identity-failed": "Не вдалося від’єднати постачальника ідентифікації.",
     "link-identity-failed": "Не вдалося почати прив’язування облікового запису. Спробуйте ще раз."
+  },
+  "immich": {
+    "insert": "Фото з Immich",
+    "title": "Вибір фото з Immich",
+    "album": "Альбом",
+    "all-photos": "Усі фото",
+    "add-photos": "Додати фото ({{count}})",
+    "load-more": "Завантажити ще",
+    "empty": "Тут немає фото.",
+    "not-connected": "Спочатку підключіть сервер Immich у налаштуваннях.",
+    "add-failed": "Не вдалося додати деякі фото."
   },
   "attachment-preview": {
     "title": "Перегляд вкладення",

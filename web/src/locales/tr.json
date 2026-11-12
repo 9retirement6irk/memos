@@ -1085,6 +1085,18 @@
       "users-description": "Kayıt bu kullanıcıların her birine uygulanır.",
       "users-required": "En az bir kullanıcı belirtin."
     },
+    "immich": {
+      "label": "Immich",
+      "description": "Yazarken Immich sunucundan fotoğraf seç. API anahtarın bu sunucuda kalır.",
+      "status-connected": "{{url}} adresine bağlı",
+      "status-not-connected": "Bağlı değil",
+      "server-url": "Sunucu adresi",
+      "api-key": "API anahtarı",
+      "api-key-keep": "Kayıtlı anahtarı korumak için boş bırak",
+      "api-key-help": "Immich'te Hesap Ayarları → API Anahtarları altında bir tane oluştur. Gerekli izinler: asset.read, asset.view, asset.download, album.read, user.read.",
+      "connect": "Bağlan",
+      "disconnect": "Bağlantıyı kes"
+    },
     "webhook": {
       "create-dialog": {
         "an-easy-to-remember-name": "Hatırlaması kolay bir isim",
@@ -1417,6 +1429,17 @@
     "update-profile-failed": "Profil güncellenemedi",
     "unlink-identity-failed": "Kimlik sağlayıcının bağlantısı kaldırılamadı.",
     "link-identity-failed": "Hesap bağlama başlatılamadı. Lütfen tekrar deneyin."
+  },
+  "immich": {
+    "insert": "Immich'ten fotoğraflar",
+    "title": "Immich'ten fotoğraf seç",
+    "album": "Albüm",
+    "all-photos": "Tüm fotoğraflar",
+    "add-photos": "Fotoğraf ekle ({{count}})",
+    "load-more": "Daha fazla yükle",
+    "empty": "Burada fotoğraf yok.",
+    "not-connected": "Önce Ayarlar'dan Immich sunucunu bağla.",
+    "add-failed": "Bazı fotoğraflar eklenemedi."
   },
   "attachment-preview": {
     "title": "Ek önizlemesi",
