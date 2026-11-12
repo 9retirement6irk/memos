@@ -39,9 +39,25 @@ const (
 // ErrUnauthorized means the server refused the API key.
 var ErrUnauthorized = errors.New("immich: the API key was refused")
 
-// ErrBlockedAddress means the server address resolves to the calling machine
-// itself or to link-local space, which the client never dials.
+// ErrBlockedAddress means the server address resolves only to the calling
+// machine itself or to link-local space, which the client never dials.
 var ErrBlockedAddress = errors.New("immich: the address is not allowed")
+
+// BlockedAddressError names the host and the blocked address it resolved to.
+// It matches ErrBlockedAddress with errors.Is.
+type BlockedAddressError struct {
+	Host string
+	IP   net.IP
+}
+
+func (e *BlockedAddressError) Error() string {
+	return fmt.Sprintf("immich: %q resolves to %s, which is not allowed", e.Host, e.IP)
+}
+
+// Is makes a BlockedAddressError match ErrBlockedAddress.
+func (*BlockedAddressError) Is(target error) bool {
+	return target == ErrBlockedAddress
+}
 
 // ErrNotImmich means something answered, but not with an Immich API answer.
 var ErrNotImmich = errors.New("immich: the server's answer is not an Immich API answer")
@@ -117,8 +133,12 @@ func safeDialContext(ctx context.Context, network, address string) (net.Conn, er
 	dialer := &net.Dialer{}
 	var dialErr error
 	for _, ip := range ips {
+		// Skip a blocked answer and try the rest; fail only if every answer is blocked.
 		if isBlocked(ip.IP) {
-			return nil, errors.Wrapf(ErrBlockedAddress, "immich: %q resolves to %s", host, ip.IP)
+			if dialErr == nil {
+				dialErr = &BlockedAddressError{Host: host, IP: ip.IP}
+			}
+			continue
 		}
 		dialHost := ip.IP.String()
 		if ip.Zone != "" {
@@ -129,6 +149,10 @@ func safeDialContext(ctx context.Context, network, address string) (net.Conn, er
 			return conn, nil
 		}
 		dialErr = err
+	}
+	var blocked *BlockedAddressError
+	if errors.As(dialErr, &blocked) {
+		return nil, dialErr
 	}
 	if dialErr != nil {
 		return nil, errors.Wrapf(dialErr, "immich: failed to connect to %q", host)

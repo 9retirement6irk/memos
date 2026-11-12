@@ -37,8 +37,8 @@ func TestExplain(t *testing.T) {
 		server := httptest.NewServer(http.NotFoundHandler())
 		defer server.Close()
 		message := Explain(currentUserError(t, server.URL, nil))
-		require.Contains(t, message, "points at the Memos server itself")
-		require.Contains(t, message, strings.TrimPrefix(server.URL, "http://"))
+		require.Contains(t, message, "127.0.0.1 resolves to 127.0.0.1")
+		require.Contains(t, message, "the Memos server itself")
 	})
 
 	t.Run("no Immich API at that path", func(t *testing.T) {
@@ -191,4 +191,15 @@ func TestCheckRedirect(t *testing.T) {
 		many[i] = first[0]
 	}
 	require.ErrorContains(t, checkRedirect(request("https://immich.example.com/"), many), "stopped after")
+}
+
+func TestSafeDialSkipsBlockedAnswers(t *testing.T) {
+	t.Parallel()
+	// localhost resolves only to loopback, so every answer is skipped and the error names one.
+	_, err := safeDialContext(context.Background(), "tcp", "localhost:2283")
+	var blocked *BlockedAddressError
+	require.ErrorAs(t, err, &blocked)
+	require.ErrorIs(t, err, ErrBlockedAddress)
+	require.Equal(t, "localhost", blocked.Host)
+	require.True(t, blocked.IP.IsLoopback())
 }

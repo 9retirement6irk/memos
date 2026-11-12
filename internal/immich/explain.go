@@ -21,6 +21,7 @@ func Explain(err error) string {
 	host := failedHost(err)
 	var (
 		statusError   *StatusError
+		blockedError  *BlockedAddressError
 		redirectError *RedirectError
 		dnsError      *net.DNSError
 		unknownCA     x509.UnknownAuthorityError
@@ -32,6 +33,11 @@ func Explain(err error) string {
 	switch {
 	case errors.Is(err, ErrUnauthorized):
 		return "Immich refused the API key. Check that it was copied whole and has the permissions listed below."
+	case errors.As(err, &blockedError):
+		return fmt.Sprintf("From the Memos server, %s resolves to %s, which is the Memos server itself or a link-local address, "+
+			"so Memos won't connect to it. Check the DNS the Memos server uses (a local DNS rewrite or an extra_hosts entry), "+
+			"or enter the address of the machine Immich runs on (like http://192.168.1.20:2283) "+
+			"or the Immich container's name if both run in the same Docker network.", blockedError.Host, blockedError.IP)
 	case errors.Is(err, ErrBlockedAddress):
 		return fmt.Sprintf("%s points at the Memos server itself, so Memos won't connect to it. "+
 			"Use the address of the machine Immich runs on (like http://192.168.1.20:2283), "+
