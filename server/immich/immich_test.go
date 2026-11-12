@@ -95,6 +95,7 @@ func TestConnectionLifecycle(t *testing.T) {
 	// A wrong key is refused and nothing is saved.
 	response = env.request(http.MethodPut, "/api/immich/connection", `{"url":"`+immichServer.URL+`","apiKey":"bad-key"}`, true)
 	require.Equal(t, http.StatusBadGateway, response.Code)
+	require.Contains(t, response.Body.String(), "refused the API key")
 	saved, err := env.store.GetImmichConnection(ctx, env.user.ID)
 	require.NoError(t, err)
 	require.Nil(t, saved)
@@ -178,4 +179,38 @@ func TestPhotoProxyPassesOnlyImages(t *testing.T) {
 	response := env.request(http.MethodGet, "/api/immich/photos/"+testPhotoID+"/original", "", true)
 	require.Equal(t, http.StatusBadGateway, response.Code)
 	require.NotContains(t, response.Body.String(), "photo-bytes")
+}
+
+func TestConnectionKeepsWhereARedirectLeads(t *testing.T) {
+	t.Parallel()
+	ctx := context.Background()
+	immichServer := fakeImmich(t, "image/jpeg")
+	defer immichServer.Close()
+	// Like a reverse proxy sending http:// on to https:// on the same host.
+	frontDoor := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		http.Redirect(w, r, immichServer.URL+r.URL.RequestURI(), http.StatusMovedPermanently)
+	}))
+	defer frontDoor.Close()
+	env := newTestEnv(ctx, t, immichServer)
+
+	response := env.request(http.MethodPut, "/api/immich/connection", `{"url":"`+frontDoor.URL+`","apiKey":"good-key"}`, true)
+	require.Equal(t, http.StatusOK, response.Code, response.Body.String())
+	require.JSONEq(t, `{"configured":true,"url":"`+immichServer.URL+`"}`, response.Body.String())
+	saved, err := env.store.GetImmichConnection(ctx, env.user.ID)
+	require.NoError(t, err)
+	require.Equal(t, immichServer.URL, saved.URL)
+}
+
+func TestConnectionSaysWhyItFailed(t *testing.T) {
+	t.Parallel()
+	ctx := context.Background()
+	immichServer := fakeImmich(t, "image/jpeg")
+	defer immichServer.Close()
+	env := newTestEnv(ctx, t, immichServer)
+
+	// An address with a path in front of the API, as when the web app's page is pasted.
+	response := env.request(http.MethodPut, "/api/immich/connection", `{"url":"`+immichServer.URL+`/photos","apiKey":"good-key"}`, true)
+	require.Equal(t, http.StatusBadGateway, response.Code)
+	require.Contains(t, response.Body.String(), "not the Immich API")
+	require.NotContains(t, response.Body.String(), "good-key")
 }

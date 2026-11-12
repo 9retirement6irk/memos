@@ -13,8 +13,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/pkg/errors"
-
 	"github.com/usememos/memos/internal/httphandler"
 	immichclient "github.com/usememos/memos/internal/immich"
 	"github.com/usememos/memos/server/auth"
@@ -107,12 +105,10 @@ func (s *Service) clientFor(ctx context.Context, user *store.User) (*immichclien
 	return client, nil
 }
 
-// immichError turns a failed Immich call into an answer for the browser.
+// immichError turns a failed Immich call into an answer for the browser that
+// says what went wrong and what to change.
 func immichError(err error) error {
-	if errors.Is(err, immichclient.ErrUnauthorized) {
-		return &httphandler.Error{Code: http.StatusBadGateway, Message: "Immich refused the API key", Cause: err}
-	}
-	return &httphandler.Error{Code: http.StatusBadGateway, Message: "Immich could not be reached", Cause: err}
+	return &httphandler.Error{Code: http.StatusBadGateway, Message: immichclient.Explain(err), Cause: err}
 }
 
 func (s *Service) getConnection(w http.ResponseWriter, r *http.Request) error {
@@ -165,14 +161,16 @@ func (s *Service) putConnection(w http.ResponseWriter, r *http.Request) error {
 	if err != nil {
 		return &httphandler.Error{Code: http.StatusBadRequest, Message: strings.TrimPrefix(err.Error(), "immich: ")}
 	}
-	// Save only a connection that works.
+	// Save only a connection that works, at the address it ended up at: a
+	// redirect within the same host, such as http:// to https://, is kept.
 	if _, err := client.CurrentUser(r.Context()); err != nil {
 		return immichError(err)
 	}
+	connection.URL = client.BaseURL()
 	if err := s.Store.UpsertImmichConnection(r.Context(), user.ID, connection); err != nil {
 		return &httphandler.Error{Code: http.StatusInternalServerError, Message: "failed to save the Immich connection", Cause: err}
 	}
-	return httphandler.JSON(w, http.StatusOK, ConnectionResponse{Configured: true, URL: baseURL})
+	return httphandler.JSON(w, http.StatusOK, ConnectionResponse{Configured: true, URL: connection.URL})
 }
 
 func (s *Service) deleteConnection(w http.ResponseWriter, r *http.Request) error {
