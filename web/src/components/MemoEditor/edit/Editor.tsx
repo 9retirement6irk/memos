@@ -1,6 +1,8 @@
 import type { EditorMode, Editor as MarkdownEditorInstance } from "@usememos/editor";
 import { forwardRef, useImperativeHandle, useLayoutEffect, useMemo, useRef } from "react";
+import { useIsAero } from "@/hooks/useAppearance";
 import { useTagCounts } from "@/hooks/useUserQueries";
+import { aeroEditorIcons } from "@/lib/aero-editor-icons";
 import { MEMO_FOCUS_EDITOR_THEME } from "@/lib/memo-markdown";
 import { cn } from "@/lib/utils";
 import type { Attachment } from "@/types/proto/api/attachment_service_pb";
@@ -78,6 +80,11 @@ const Editor = forwardRef(function Editor(props: EditorProps, ref: React.Forward
     [],
   );
 
+  // Aero themes swap the toolbar's icons for Vista pictures. The editor reads icons once,
+  // so switching between Aero and another theme recreates it; the draft is kept by `value`.
+  const isAero = useIsAero();
+  const icons = useMemo(() => (isAero ? aeroEditorIcons() : undefined), [isAero]);
+
   return (
     <div
       className={cn("relative flex w-full flex-col items-start justify-start bg-inherit", isFocusMode && "min-h-0 flex-1", className)}
@@ -86,6 +93,7 @@ const Editor = forwardRef(function Editor(props: EditorProps, ref: React.Forward
     >
       <div className={cn("memo-editor-scroller w-full text-base leading-6", isFocusMode && "min-h-0 flex-1")}>
         <MemoMarkdown
+          key={isAero ? "aero" : "standard"}
           editorRef={editorRef}
           value={value}
           editable
@@ -97,6 +105,7 @@ const Editor = forwardRef(function Editor(props: EditorProps, ref: React.Forward
           extensions={extensions}
           attributes={EDITOR_ATTRIBUTES}
           theme={isFocusMode ? MEMO_FOCUS_EDITOR_THEME : undefined}
+          icons={icons}
           className="memo-editor-root"
         />
       </div>

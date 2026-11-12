@@ -899,13 +899,16 @@
     border-color: var(--aero-focus-edge);
     background: var(--aero-check-box-hover);
   }
+  /* The knob stays put: zero its slide distance rather than resetting translate, which the
+     production minifier folds into transform and so drops. */
+  & .mu-switch {
+    --switch-w: var(--switch-h);
+  }
   & .mu-switch .mu-switch-thumb {
     width: 14px;
     height: 14px;
     margin: 0 auto;
     border-radius: 0;
-    transform: none;
-    translate: none;
     background: none;
     box-shadow: none;
   }
@@ -941,6 +944,47 @@
   & *::-webkit-scrollbar-thumb:hover {
     background: linear-gradient(90deg, #e3f4fc, #bee6fd 50%, #a7d9f5 51%, #c6e7f8);
     border-color: #3c7fb1;
+  }
+
+  /* ---------- 10b. Profile pictures: a square photo in the Vista user frame */
+  /* user-frame.png is 128px with a 15px border and a gloss over the top half of its
+     window, so the picture sits 15/128 in from each edge and the frame is drawn over it. */
+  & [data-user-avatar] {
+    position: relative;
+    overflow: visible;
+    border: 0;
+    border-radius: 0;
+    background: none;
+  }
+  & [data-user-avatar]::before,
+  & [data-user-avatar]::after {
+    content: "";
+    position: absolute;
+    pointer-events: none;
+  }
+  /* The window behind the picture: the user's own hue, or a plain well. */
+  & [data-user-avatar]::before {
+    inset: 11.72%;
+    background: var(--mu-well);
+  }
+  & [data-user-avatar][style*="--avatar-hue"]::before {
+    background: oklch(0.82 0.09 var(--avatar-hue));
+  }
+  & [data-user-avatar]::after {
+    inset: 0;
+    background: url("./ui/user-frame.png") center / 100% 100% no-repeat;
+  }
+  & [data-user-avatar] > :is(img, svg) {
+    position: absolute;
+    top: 11.72%;
+    left: 11.72%;
+    width: 76.56%;
+    height: 76.56%;
+    border-radius: 0;
+  }
+  /* The stand-in is the Vista user picture (section 13), which needs no lowering to crop. */
+  & [data-user-avatar] > svg {
+    translate: none;
   }
 
   /* ---------- 11. Calendar page: Windows Calendar on a spiral pad -------- */
@@ -1330,6 +1374,44 @@
     --vi: url("./toolbar/code.png");
     --vi-hide: 0;
     opacity: 1;
+  }
+  /* The editor's own controls (lib/aero-editor-icons.ts): the floating formatting toolbar,
+     its block and list menus and the slash menu name each icon in data-aero-icon. */
+  & .mbe-icon[data-aero-icon] {
+    background: center / contain no-repeat;
+  }
+  & .mbe-icon[data-aero-icon="text"] {
+    background-image: url("./icons/shell32_155.png");
+  }
+  & .mbe-icon[data-aero-icon="bold"] {
+    background-image: url("./toolbar/bold.png");
+  }
+  & .mbe-icon[data-aero-icon="italic"] {
+    background-image: url("./toolbar/italic.png");
+  }
+  & .mbe-icon[data-aero-icon="strike"] {
+    background-image: url("./toolbar/strikethrough.png");
+  }
+  & .mbe-icon[data-aero-icon="inlineCode"] {
+    background-image: url("./toolbar/code.png");
+  }
+  & .mbe-icon[data-aero-icon="link"] {
+    background-image: url("./icons/shell32_16769.png");
+  }
+  & .mbe-icon[data-aero-icon="bulletList"] {
+    background-image: url("./icons/imageres_116.png");
+  }
+  & .mbe-icon[data-aero-icon="numberedList"] {
+    background-image: url("./toolbar/list-ordered.png");
+  }
+  & .mbe-icon[data-aero-icon="todoList"] {
+    background-image: url("./icons/imageres_165.png");
+  }
+  & .mbe-icon[data-aero-icon="quote"] {
+    background-image: url("./icons/shell32_2.png");
+  }
+  & .mbe-icon[data-aero-icon="code"] {
+    background-image: url("./icons/notepad_2.png");
   }
   /* Space icon picker. */
   & svg.lucide:is(.lucide-briefcase, .lucide-briefcase-business) {
