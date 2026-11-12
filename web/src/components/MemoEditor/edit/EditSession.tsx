@@ -28,6 +28,10 @@ import {
   useMemoSave,
 } from "./hooks";
 import { canChooseSpaceFor } from "./initialState";
+import { JournalHeader } from "./journal/JournalHeader";
+import { JournalGoals, JournalPicks } from "./journal/JournalPicks";
+import { JournalSuggestions } from "./journal/JournalSuggestions";
+import { useJournalSession } from "./journal/useJournalSession";
 import { cacheService, errorService, transcriptionService } from "./services";
 import { useEditorContext, useEditorSelector } from "./state";
 import { EditorToolbar } from "./Toolbar";
@@ -96,6 +100,8 @@ export const EditSession: React.FC<EditSessionProps> = ({
   const draftSpace = useEditorSelector((s) => s.metadata.space);
   const canChooseSpace = canChooseSpaceFor({ memo, currentUser, parentMemoName, defaultSpace });
   const editorSpace = memo ? draftSpace : parentMemoName ? undefined : (defaultSpace ?? draftSpace);
+  // Journaling mode: on by itself in the journal Space, or by the ＋ menu, for new memos of their own.
+  const journal = useJournalSession({ draftKey, available: !memo && !parentMemoName, space: editorSpace });
   const canTranscribe = useMemo(() => {
     const providerId = aiSetting.transcription?.providerId ?? "";
     if (!providerId) return false;
@@ -330,6 +336,8 @@ export const EditSession: React.FC<EditSessionProps> = ({
     discardDraft,
     onConfirm,
     onCancel: onCancel ? handleCancel : undefined,
+    transformContent: journal.active ? journal.compose : undefined,
+    onSaved: journal.active ? journal.reset : undefined,
   });
 
   return (
@@ -376,10 +384,18 @@ export const EditSession: React.FC<EditSessionProps> = ({
           </div>
         )}
 
+        {journal.active && (
+          <>
+            <JournalSuggestions journal={journal} onAttachFiles={handleAttachFiles} />
+            <JournalHeader journal={journal} />
+            <JournalPicks journal={journal} />
+          </>
+        )}
+
         {/* Editor content grows to fill available space in focus mode */}
         <EditorContent
           ref={editorRef}
-          placeholder={placeholder}
+          placeholder={journal.active ? t("journal.placeholder") : placeholder}
           sourceMode={sourceMode}
           onSubmit={handleSave}
           onFiles={handleEditorFiles}
@@ -396,6 +412,8 @@ export const EditSession: React.FC<EditSessionProps> = ({
             isTranscribing={isTranscribingAudio}
           />
         )}
+
+        {journal.active && <JournalGoals journal={journal} />}
 
         {/* Metadata and toolbar grouped together at bottom */}
         <div className="w-full flex flex-col gap-2">
@@ -426,6 +444,8 @@ export const EditSession: React.FC<EditSessionProps> = ({
             onInsertImages={handleInsertImages}
             onDrawingClick={drawing.openNew}
             onAttachFiles={handleAttachFiles}
+            journalMode={journal.available ? { active: journal.active, onToggle: () => journal.setActive(!journal.active) } : undefined}
+            hasExtraContent={journal.active && journal.hasPicks}
           />
         </div>
       </div>

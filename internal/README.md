@@ -8,15 +8,18 @@ nothing from `store`, `core`, `server`, `provider`, `markdown`, `filter`, or
 | Package | Purpose |
 | --- | --- |
 | `clientip/` | trusted-proxy aware client IP resolution middleware |
+| `dawarich/` | read-only client for a Dawarich location history: points and visits, position and time only |
 | `email/` | SMTP client, config, and message types |
+| `homeassistant/` | Home Assistant client: token check, notify services, notifications with a tap link |
 | `httphandler/` | HTTP response errors, panic recovery, and routing compatibility |
-| `immich/` | read-only client for an Immich photo server's REST API, with SSRF guards |
+| `immich/` | read-only client for an Immich photo server's REST API |
 | `identifier/` | grammar of UIDs and usernames shared by parser, store, and API |
 | `linkmeta/` | HTML metadata, oEmbed, and image fetching for link previews |
 | `motionphoto/` | Live Photo and Motion Photo container parsing |
 | `profile/` | process configuration parsed from flags and environment |
 | `random/` | UUIDs and random strings from a secure source |
 | `ratelimit/` | sliding-window rate limiter |
+| `safehttp/` | HTTP client for user-named servers: SSRF guards, same-host redirects, plain-language failures |
 | `testutil/` | test fixtures and the fake S3 server (the one package allowed to import `proto/gen`) |
 | `version/` | CalVer build metadata from release overrides or the embedded Git commit |
 | `webhook/` | signed webhook delivery with SSRF protection |

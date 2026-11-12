@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { JournalPanel } from "@/components/Journal/JournalPanel";
 import { MAP_MEMO_FILTER } from "@/components/MapView/useMapMemos";
 import { MemoDetailSidebar } from "@/components/MemoDetailSidebar";
 import MemoDisplaySettingMenu from "@/components/MemoDisplaySettingMenu";
@@ -33,6 +34,7 @@ import { useSpaceContext } from "@/contexts/SpaceContext";
 import { useAttachmentLibraryStats } from "@/hooks/useAttachmentLibrary";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import { useFilteredMemoStats } from "@/hooks/useFilteredMemoStats";
+import { useJournalSettings } from "@/hooks/useJournalQueries";
 import useMediaQuery from "@/hooks/useMediaQuery";
 import { useNotifications } from "@/hooks/useUserQueries";
 import { combineCELFilters } from "@/lib/cel-filter";
@@ -84,6 +86,7 @@ const CollectionSidebarContent = ({
   const { memoFilter, selectedSpaceName, creatorUsername } = useSpaceContext();
   const md = useMediaQuery("md");
   const { mobileOpen, setMobileOpen } = useAppSidebar();
+  const { settings: journalSettings } = useJournalSettings();
   const { isInitialized: authInitialized } = useAuth();
   const { isInitialized: instanceInitialized } = useInstance();
   // User-level collections stay aligned with their unscoped feeds even when a Space is remembered.
@@ -100,6 +103,11 @@ const CollectionSidebarContent = ({
 
   return (
     <div className={SIDEBAR_SECTION_STACK_CLASSES}>
+      {selectedSpaceName && selectedSpaceName === journalSettings.space && (
+        <SidebarSection ariaLabel={t("journal.panel")}>
+          <JournalPanel />
+        </SidebarSection>
+      )}
       {showStatistics && (
         <SidebarSection ariaLabel={t("common.statistics")}>
           <StatisticsView statisticsData={statistics} onDateSelect={() => setMobileOpen(false)} />

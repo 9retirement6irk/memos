@@ -84,6 +84,32 @@ export const listImmichPhotos = (albumId: string, next: string) => {
   return json<ImmichPhotoPage>(`/photos${query ? `?${query}` : ""}`);
 };
 
+/** One photo of a dated search, with where and exactly when it was taken when the photo says. */
+export interface ImmichTakenPhoto extends ImmichPhoto {
+  /** The moment in UTC; empty when unknown. */
+  takenAtUtc?: string;
+  latitude?: number;
+  longitude?: number;
+  city?: string;
+}
+
+const isoSeconds = (date: Date) => date.toISOString().replace(/\.\d{3}Z$/, "Z");
+
+/** Every photo taken between after and before (at most eight days apart), oldest first. */
+export const listImmichPhotosTaken = async (after: Date, before: Date, maxPages = 10): Promise<ImmichTakenPhoto[]> => {
+  const photos: ImmichTakenPhoto[] = [];
+  let next = "";
+  for (let page = 0; page < maxPages; page++) {
+    const params = new URLSearchParams({ after: isoSeconds(after), before: isoSeconds(before) });
+    if (next) params.set("next", next);
+    const result = await json<{ photos: ImmichTakenPhoto[]; next: string }>(`/photos/taken?${params}`);
+    photos.push(...result.photos);
+    next = result.next;
+    if (!next) break;
+  }
+  return photos;
+};
+
 /** A small preview of the photo; an <img> loads it with the session cookie. */
 export const immichThumbnailUrl = (photoId: string) => `${BASE}/photos/${encodeURIComponent(photoId)}/thumbnail`;
 

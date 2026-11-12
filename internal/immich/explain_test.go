@@ -5,13 +5,14 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
-	"net/url"
 	"strings"
 	"sync/atomic"
 	"testing"
 	"time"
 
 	"github.com/stretchr/testify/require"
+
+	"github.com/usememos/memos/internal/safehttp"
 )
 
 // currentUserError asks server for the current user with client and returns the failure.
@@ -117,7 +118,7 @@ func TestExplain(t *testing.T) {
 // redirectingClient is server's client with the package's redirect rule.
 func redirectingClient(server *httptest.Server) *http.Client {
 	httpClient := server.Client()
-	httpClient.CheckRedirect = checkRedirect
+	httpClient.CheckRedirect = safehttp.CheckRedirect
 	return httpClient
 }
 
@@ -168,38 +169,4 @@ func TestClientRefusesRedirectToAnotherHost(t *testing.T) {
 	require.Equal(t, target, redirectError.Target)
 	require.Contains(t, Explain(err), "redirects to "+target)
 	require.False(t, keySeen.Load())
-}
-
-func TestCheckRedirect(t *testing.T) {
-	t.Parallel()
-	request := func(rawURL string) *http.Request {
-		parsed, err := url.Parse(rawURL)
-		require.NoError(t, err)
-		return &http.Request{URL: parsed}
-	}
-	first := []*http.Request{request("http://immich.example.com/api/users/me")}
-	require.NoError(t, checkRedirect(request("https://immich.example.com/api/users/me"), first))
-	require.NoError(t, checkRedirect(request("http://IMMICH.example.com:2283/api/users/me"), first))
-
-	var redirectError *RedirectError
-	require.ErrorAs(t, checkRedirect(request("https://photos.example.com/api/users/me"), first), &redirectError)
-	secure := []*http.Request{request("https://immich.example.com/api/users/me")}
-	require.ErrorAs(t, checkRedirect(request("http://immich.example.com/api/users/me"), secure), &redirectError)
-
-	many := make([]*http.Request, maxRedirects)
-	for i := range many {
-		many[i] = first[0]
-	}
-	require.ErrorContains(t, checkRedirect(request("https://immich.example.com/"), many), "stopped after")
-}
-
-func TestSafeDialSkipsBlockedAnswers(t *testing.T) {
-	t.Parallel()
-	// localhost resolves only to loopback, so every answer is skipped and the error names one.
-	_, err := safeDialContext(context.Background(), "tcp", "localhost:2283")
-	var blocked *BlockedAddressError
-	require.ErrorAs(t, err, &blocked)
-	require.ErrorIs(t, err, ErrBlockedAddress)
-	require.Equal(t, "localhost", blocked.Host)
-	require.True(t, blocked.IP.IsLoopback())
 }

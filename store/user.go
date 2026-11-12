@@ -249,5 +249,6 @@ func (s *Store) DeleteUser(ctx context.Context, delete *DeleteUser) (*DeleteUser
 		slog.Warn("failed to remove deleted user from usage limits", slog.Int("userID", int(delete.ID)), slog.String("error", err.Error()))
 	}
 	s.removeDeletedUserImmichConnection(ctx, delete.ID)
+	s.removeDeletedUserRecords(ctx, delete.ID)
 	return result, nil
 }

@@ -37,6 +37,10 @@ vi.mock("@/components/MemoView/components/MemoSpaceBadge", () => ({
   default: ({ spaceName }: { spaceName?: string }) => <span data-testid="memo-space">{spaceName}</span>,
 }));
 
+vi.mock("@/components/Journal/EntryMood", () => ({
+  EntryMood: () => null,
+}));
+
 vi.mock("@/contexts/NewMemoContext", () => ({
   useNewMemo: () => ({ newMemoName: undefined }),
 }));

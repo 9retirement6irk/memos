@@ -13,18 +13,16 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"fmt"
 	"io"
-	"net"
 	"net/http"
-	"net/netip"
-	"net/url"
 	"regexp"
 	"strconv"
 	"strings"
 	"time"
 
 	"github.com/pkg/errors"
+
+	"github.com/usememos/memos/internal/safehttp"
 )
 
 // PageSize is how many photos one page of SearchPhotos returns.
@@ -37,55 +35,24 @@ const (
 )
 
 // ErrUnauthorized means the server refused the API key.
-var ErrUnauthorized = errors.New("immich: the API key was refused")
+var ErrUnauthorized = safehttp.ErrUnauthorized
 
 // ErrBlockedAddress means the server address resolves only to the calling
 // machine itself or to link-local space, which the client never dials.
-var ErrBlockedAddress = errors.New("immich: the address is not allowed")
-
-// BlockedAddressError names the host and the blocked address it resolved to.
-// It matches ErrBlockedAddress with errors.Is.
-type BlockedAddressError struct {
-	Host string
-	IP   net.IP
-}
-
-func (e *BlockedAddressError) Error() string {
-	return fmt.Sprintf("immich: %q resolves to %s, which is not allowed", e.Host, e.IP)
-}
-
-// Is makes a BlockedAddressError match ErrBlockedAddress.
-func (*BlockedAddressError) Is(target error) bool {
-	return target == ErrBlockedAddress
-}
+var ErrBlockedAddress = safehttp.ErrBlockedAddress
 
 // ErrNotImmich means something answered, but not with an Immich API answer.
-var ErrNotImmich = errors.New("immich: the server's answer is not an Immich API answer")
+var ErrNotImmich = safehttp.ErrUnexpectedAnswer
 
-// maxRedirects bounds the same-host redirects followed for one request.
-const maxRedirects = 5
+type (
+	// BlockedAddressError names the host and the blocked address it resolved to.
+	BlockedAddressError = safehttp.BlockedAddressError
+	// StatusError is an answer outside 2xx (other than a refused key).
+	StatusError = safehttp.StatusError
+	// RedirectError is a redirect the client won't follow.
+	RedirectError = safehttp.RedirectError
+)
 
-// StatusError is an answer outside 2xx (other than a refused key).
-type StatusError struct {
-	Code int
-}
-
-func (e *StatusError) Error() string {
-	return fmt.Sprintf("immich: the server answered %d", e.Code)
-}
-
-// RedirectError is a redirect the client won't follow: to another host, or
-// from https to http. Following it would hand the API key to someone else or
-// send it in the clear.
-type RedirectError struct {
-	Target string
-}
-
-func (e *RedirectError) Error() string {
-	return fmt.Sprintf("immich: the server redirects to %s", e.Target)
-}
-
-// assetIDPattern is an Immich asset or album ID: a UUID.
 var assetIDPattern = regexp.MustCompile(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$`)
 
 // IsID reports whether value is an Immich asset or album ID.
@@ -93,116 +60,20 @@ func IsID(value string) bool {
 	return assetIDPattern.MatchString(value)
 }
 
-// blockedNetworks are never dialed: they reach the calling machine itself or
-// the cloud metadata service, not an Immich server on the network.
-var blockedNetworks = []netip.Prefix{
-	netip.MustParsePrefix("0.0.0.0/8"),      // "this network", dials the local host
-	netip.MustParsePrefix("127.0.0.0/8"),    // IPv4 loopback
-	netip.MustParsePrefix("169.254.0.0/16"), // link-local and cloud metadata
-	netip.MustParsePrefix("::/128"),         // IPv6 unspecified, dials the local host
-	netip.MustParsePrefix("::1/128"),        // IPv6 loopback
-	netip.MustParsePrefix("fe80::/10"),      // IPv6 link-local
-	netip.MustParsePrefix("fd00:ec2::/32"),  // cloud metadata over IPv6
-}
-
-func isBlocked(ip net.IP) bool {
-	addr, ok := netip.AddrFromSlice(ip)
-	if !ok {
-		return true
-	}
-	addr = addr.Unmap()
-	for _, network := range blockedNetworks {
-		if network.Contains(addr) {
-			return true
-		}
-	}
-	return false
-}
-
-// safeDialContext resolves the host, refuses blocked addresses, and dials the
-// checked address itself, so DNS can't be rebound between check and connect.
-func safeDialContext(ctx context.Context, network, address string) (net.Conn, error) {
-	host, port, err := net.SplitHostPort(address)
-	if err != nil {
-		return nil, errors.Errorf("immich: invalid address %q", address)
-	}
-	ips, err := net.DefaultResolver.LookupIPAddr(ctx, host)
-	if err != nil {
-		return nil, errors.Wrapf(err, "immich: failed to resolve %q", host)
-	}
-	dialer := &net.Dialer{}
-	var dialErr error
-	for _, ip := range ips {
-		// Skip a blocked answer and try the rest; fail only if every answer is blocked.
-		if isBlocked(ip.IP) {
-			if dialErr == nil {
-				dialErr = &BlockedAddressError{Host: host, IP: ip.IP}
-			}
-			continue
-		}
-		dialHost := ip.IP.String()
-		if ip.Zone != "" {
-			dialHost += "%" + ip.Zone
-		}
-		conn, err := dialer.DialContext(ctx, network, net.JoinHostPort(dialHost, port))
-		if err == nil {
-			return conn, nil
-		}
-		dialErr = err
-	}
-	var blocked *BlockedAddressError
-	if errors.As(dialErr, &blocked) {
-		return nil, dialErr
-	}
-	if dialErr != nil {
-		return nil, errors.Wrapf(dialErr, "immich: failed to connect to %q", host)
-	}
-	return nil, errors.Errorf("immich: %q resolved to no addresses", host)
-}
-
 // NewHTTPClient returns the HTTP client the package uses by default: it
 // refuses blocked addresses and follows redirects only within one host.
 func NewHTTPClient() *http.Client {
-	return &http.Client{
-		Timeout:       requestTimeout,
-		Transport:     &http.Transport{DialContext: safeDialContext, ResponseHeaderTimeout: requestTimeout},
-		CheckRedirect: checkRedirect,
-	}
-}
-
-// checkRedirect follows a redirect that stays on the same host name and does
-// not drop from https to http, such as a reverse proxy sending http:// to
-// https://. The API key header goes along with a followed redirect, so
-// anything else is refused.
-func checkRedirect(request *http.Request, via []*http.Request) error {
-	if len(via) >= maxRedirects {
-		return errors.Errorf("immich: stopped after %d redirects", maxRedirects)
-	}
-	first := via[0].URL
-	if !strings.EqualFold(request.URL.Hostname(), first.Hostname()) || (first.Scheme == "https" && request.URL.Scheme != "https") {
-		return &RedirectError{Target: request.URL.Scheme + "://" + request.URL.Host}
-	}
-	return nil
+	return safehttp.NewClient(requestTimeout)
 }
 
 // NormalizeURL checks an Immich server address and returns it without a
 // trailing slash or a trailing /api, which the client adds itself.
 func NormalizeURL(rawURL string) (string, error) {
-	parsed, err := url.Parse(strings.TrimSpace(rawURL))
-	if err != nil || parsed.Host == "" {
-		return "", errors.New("immich: the server address must be a full URL, like http://immich.local:2283")
+	normalized, err := safehttp.NormalizeBaseURL(rawURL, "immich.local:2283", "/api")
+	if err != nil {
+		return "", errors.Wrap(err, "immich")
 	}
-	if parsed.Scheme != "http" && parsed.Scheme != "https" {
-		return "", errors.New("immich: the server address must start with http:// or https://")
-	}
-	if parsed.User != nil || parsed.RawQuery != "" || parsed.Fragment != "" {
-		return "", errors.New("immich: the server address must not carry a user name, query or fragment")
-	}
-	path := strings.TrimRight(parsed.Path, "/")
-	path = strings.TrimSuffix(path, "/api")
-	parsed.Path = path
-	parsed.RawPath = ""
-	return parsed.String(), nil
+	return normalized, nil
 }
 
 // Client calls one Immich server with one API key.
@@ -264,22 +135,8 @@ func (c *Client) do(request *http.Request) (*http.Response, error) {
 		response.Body.Close()
 		return nil, &StatusError{Code: response.StatusCode}
 	}
-	c.followMove(request.URL, response.Request.URL)
+	c.baseURL = safehttp.MovedBase(c.baseURL, request.URL, response.Request.URL)
 	return response, nil
-}
-
-// followMove keeps calling the server where a followed redirect led, such as
-// https:// after http://, so later calls (POSTs included) skip the redirect.
-func (c *Client) followMove(asked, answered *url.URL) {
-	if answered == nil || (asked.Scheme == answered.Scheme && asked.Host == answered.Host) {
-		return
-	}
-	base, err := url.Parse(c.baseURL)
-	if err != nil {
-		return
-	}
-	base.Scheme, base.Host = answered.Scheme, answered.Host
-	c.baseURL = base.String()
 }
 
 // BaseURL is the server address the client calls: the one it was given, or
@@ -349,6 +206,18 @@ type Photo struct {
 	TakenAt  string `json:"localDateTime"`
 	Width    int    `json:"width"`
 	Height   int    `json:"height"`
+	// Exif is set only by PhotosTaken, which asks for it.
+	Exif *Exif `json:"exifInfo,omitempty"`
+}
+
+// Exif is the part of a photo's EXIF the journal uses: when and where.
+type Exif struct {
+	Latitude  *float64 `json:"latitude"`
+	Longitude *float64 `json:"longitude"`
+	City      *string  `json:"city"`
+	// TakenAt is the moment with its offset, unlike Photo.TakenAt, which is
+	// local time written as if it were UTC.
+	TakenAt *string `json:"dateTimeOriginal"`
 }
 
 // PhotoPage is one page of photos, newest first. Next is empty on the last page.
@@ -378,6 +247,29 @@ func (c *Client) SearchPhotos(ctx context.Context, albumID, next string) (*Photo
 	} else {
 		query["visibility"] = "timeline"
 	}
+	return c.search(ctx, query, next)
+}
+
+// PhotosTaken returns a page of the timeline's photos taken between after and
+// before, oldest first, with their EXIF time and place. next is the Next of
+// the page before, or empty for the first page.
+func (c *Client) PhotosTaken(ctx context.Context, after, before time.Time, next string) (*PhotoPage, error) {
+	if !before.After(after) {
+		return nil, errors.New("immich: the time range is empty")
+	}
+	query := map[string]any{
+		"size":        PageSize,
+		"order":       "asc",
+		"type":        "IMAGE",
+		"visibility":  "timeline",
+		"withExif":    true,
+		"takenAfter":  after.UTC().Format(time.RFC3339),
+		"takenBefore": before.UTC().Format(time.RFC3339),
+	}
+	return c.search(ctx, query, next)
+}
+
+func (c *Client) search(ctx context.Context, query map[string]any, next string) (*PhotoPage, error) {
 	// Immich 3.2 and later page with a cursor; earlier versions with a page number.
 	switch {
 	case strings.HasPrefix(next, "c:"):

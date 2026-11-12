@@ -1,6 +1,7 @@
 import { Button, Menu, Spinner, Tooltip } from "@usememos/ui";
 import { uniqBy } from "lodash-es";
 import {
+  BookHeartIcon,
   CodeXmlIcon,
   ImageIcon,
   ImagesIcon,
@@ -188,6 +189,17 @@ const InsertMenu = (props: InsertMenuProps) => {
             <Menu.Item onClick={viewToggles.onToggleFocusMode} icon={<Maximize2Icon />}>
               {t("editor.focus-mode")}
             </Menu.Item>
+          )}
+          {props.journalMode && (
+            <Menu.CheckboxItem
+              checked={props.journalMode.active}
+              onCheckedChange={props.journalMode.onToggle}
+              closeOnClick
+              icon={<BookHeartIcon />}
+              description={t("journal.menu-description")}
+            >
+              {t("journal.mode")}
+            </Menu.CheckboxItem>
           )}
           <Menu.CheckboxItem checked={sourceMode.isSourceMode} onCheckedChange={sourceMode.onToggle} closeOnClick icon={<CodeXmlIcon />}>
             {t("editor.markdown-mode")}
