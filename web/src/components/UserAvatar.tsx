@@ -28,6 +28,7 @@ const UserAvatar = (props: Props) => {
       )}
       style={style}
       aria-hidden="true"
+      data-user-avatar=""
     >
       {avatarUrl ? (
         <img className="size-full object-cover" src={avatarUrl} decoding="async" loading="lazy" alt="" />
