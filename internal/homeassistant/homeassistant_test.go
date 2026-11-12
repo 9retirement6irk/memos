@@ -67,11 +67,11 @@ func TestCheckListAndNotify(t *testing.T) {
 	}))
 	require.Equal(t, "Your journal", sent["title"])
 	require.Equal(t, "Write a line?", sent["message"])
-	data := sent["data"].(map[string]any)
+	data, ok := sent["data"].(map[string]any)
+	require.True(t, ok)
 	require.Equal(t, "https://notes.example.com/journal", data["url"])
 	require.Equal(t, "https://notes.example.com/journal", data["clickAction"])
-	action := data["actions"].([]any)[0].(map[string]any)
-	require.Equal(t, map[string]any{"action": "URI", "title": "Write now", "uri": "https://notes.example.com/journal"}, action)
+	require.Equal(t, []any{map[string]any{"action": "URI", "title": "Write now", "uri": "https://notes.example.com/journal"}}, data["actions"])
 
 	// Only notify services can be called.
 	require.Error(t, client.Notify(ctx, "light.turn_on", Notification{Message: "x"}))

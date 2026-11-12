@@ -5,7 +5,7 @@ import "github.com/usememos/memos/internal/safehttp"
 // service describes Immich for failure messages.
 var service = safehttp.Service{
 	Name:        "Immich",
-	ExampleURL:  "http://192.168.1.20:2283",
+	ExampleHost: "192.168.1.20:2283",
 	DefaultPort: "2283",
 	KeyHelp:     "Check that it was copied whole and has the permissions listed below.",
 }

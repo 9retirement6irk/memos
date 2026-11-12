@@ -10,7 +10,7 @@ import (
 	"io"
 	"net/http"
 	"regexp"
-	"sort"
+	"slices"
 	"strings"
 	"time"
 
@@ -27,7 +27,7 @@ const (
 // Service describes Home Assistant for failure messages.
 var Service = safehttp.Service{
 	Name:        "Home Assistant",
-	ExampleURL:  "http://192.168.1.20:8123",
+	ExampleHost: "192.168.1.20:8123",
 	DefaultPort: "8123",
 	KeyName:     "access token",
 	KeyHelp:     "Create a long-lived access token on your Home Assistant profile page and paste it whole.",
@@ -49,7 +49,7 @@ func IsNotifier(name string) bool {
 
 // NormalizeURL checks a Home Assistant address a person typed and returns its base.
 func NormalizeURL(rawURL string) (string, error) {
-	normalized, err := safehttp.NormalizeBaseURL(rawURL, Service.ExampleURL, "/api")
+	normalized, err := safehttp.NormalizeBaseURL(rawURL, Service.ExampleHost, "/api")
 	if err != nil {
 		return "", errors.Wrap(err, "home assistant")
 	}
@@ -158,7 +158,7 @@ func (c *Client) Notifiers(ctx context.Context) ([]string, error) {
 			}
 		}
 	}
-	sort.Strings(notifiers)
+	slices.Sort(notifiers)
 	return notifiers, nil
 }
 

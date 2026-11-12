@@ -162,7 +162,8 @@ func TestReminderLifecycle(t *testing.T) {
 	response = env.request(http.MethodPost, "/api/journal/reminder/test", "", true)
 	require.Equal(t, http.StatusNoContent, response.Code, response.Body.String())
 	require.Equal(t, 1, homeAssistant.sentCount())
-	data := homeAssistant.sent[0]["data"].(map[string]any)
+	data, ok := homeAssistant.sent[0]["data"].(map[string]any)
+	require.True(t, ok)
 	require.Equal(t, "https://notes.example.com/journal", data["url"])
 	require.Equal(t, "mobile_app_phone", homeAssistant.sent[0]["service"])
 

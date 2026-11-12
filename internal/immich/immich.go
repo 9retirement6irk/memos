@@ -60,8 +60,6 @@ func IsID(value string) bool {
 	return assetIDPattern.MatchString(value)
 }
 
-// blockedNetworks are never dialed: they reach the calling machine itself or
-// the cloud metadata service, not an Immich server on the network.
 // NewHTTPClient returns the HTTP client the package uses by default: it
 // refuses blocked addresses and follows redirects only within one host.
 func NewHTTPClient() *http.Client {
@@ -71,7 +69,7 @@ func NewHTTPClient() *http.Client {
 // NormalizeURL checks an Immich server address and returns it without a
 // trailing slash or a trailing /api, which the client adds itself.
 func NormalizeURL(rawURL string) (string, error) {
-	normalized, err := safehttp.NormalizeBaseURL(rawURL, "http://immich.local:2283", "/api")
+	normalized, err := safehttp.NormalizeBaseURL(rawURL, "immich.local:2283", "/api")
 	if err != nil {
 		return "", errors.Wrap(err, "immich")
 	}

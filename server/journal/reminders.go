@@ -83,7 +83,7 @@ func (s *Service) sendIfDue(ctx context.Context, userID int32, reminder *Reminde
 	if err != nil {
 		return err
 	}
-	if !(reminder.OnlyIfNotWritten && wrote) {
+	if !reminder.OnlyIfNotWritten || !wrote {
 		client, err := homeassistant.NewClient(reminder.URL, reminder.Token, s.HTTPClient)
 		if err != nil {
 			return err

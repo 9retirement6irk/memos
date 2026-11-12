@@ -18,8 +18,9 @@ import (
 type Service struct {
 	// Name is how people call the server, like "Immich".
 	Name string
-	// ExampleURL is an address of the usual shape, like "http://192.168.1.20:2283".
-	ExampleURL string
+	// ExampleHost is the host and port of an address of the usual shape, like
+	// "192.168.1.20:2283"; messages show it as a plain-HTTP address.
+	ExampleHost string
 	// DefaultPort is the port the server uses unless changed, like "2283".
 	DefaultPort string
 	// KeyName is what the server calls its credential; empty means "API key".
@@ -55,13 +56,13 @@ func Explain(err error, service Service) string {
 	case errors.As(err, &blockedError):
 		return fmt.Sprintf("From the Memos server, %s resolves to %s, which is the Memos server itself or a link-local address, "+
 			"so Memos won't connect to it. Check the DNS the Memos server uses (a local DNS rewrite or an extra_hosts entry), "+
-			"or enter the address of the machine %s runs on (like %s) "+
+			"or enter the address of the machine %s runs on (like http://%s) "+
 			"or the %s container's name if both run in the same Docker network.",
-			blockedError.Host, blockedError.IP, service.Name, service.ExampleURL, service.Name)
+			blockedError.Host, blockedError.IP, service.Name, service.ExampleHost, service.Name)
 	case errors.Is(err, ErrBlockedAddress):
 		return fmt.Sprintf("%s points at the Memos server itself, so Memos won't connect to it. "+
-			"Use the address of the machine %s runs on (like %s), "+
-			"or the %s container's name if both run in the same Docker network.", host, service.Name, service.ExampleURL, service.Name)
+			"Use the address of the machine %s runs on (like http://%s), "+
+			"or the %s container's name if both run in the same Docker network.", host, service.Name, service.ExampleHost, service.Name)
 	case errors.As(err, &redirectError):
 		return fmt.Sprintf("That address redirects to %s, and Memos won't send your key to a different address. "+
 			"Enter %s instead.", redirectError.Target, redirectError.Target)

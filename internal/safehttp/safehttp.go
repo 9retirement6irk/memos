@@ -162,12 +162,12 @@ func NewClient(timeout time.Duration) *http.Client {
 
 // NormalizeBaseURL checks a server address a person typed and returns it
 // without surrounding space, trailing slashes or any of the given path
-// suffixes (such as "/api"). example is shown in the error, like
-// "http://192.168.1.20:2283".
-func NormalizeBaseURL(rawURL, example string, trimSuffixes ...string) (string, error) {
+// suffixes (such as "/api"). exampleHost, like "192.168.1.20:2283", is
+// shown in the error as a plain-HTTP address.
+func NormalizeBaseURL(rawURL, exampleHost string, trimSuffixes ...string) (string, error) {
 	parsed, err := url.Parse(strings.TrimSpace(rawURL))
 	if err != nil || parsed.Host == "" {
-		return "", errors.Errorf("the server address must be a full URL, like %s", example)
+		return "", errors.Errorf("the server address must be a full URL, like http://%s", exampleHost)
 	}
 	if parsed.Scheme != "http" && parsed.Scheme != "https" {
 		return "", errors.New("the server address must start with http:// or https://")

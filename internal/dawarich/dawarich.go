@@ -35,7 +35,7 @@ const (
 // Service describes Dawarich for failure messages.
 var Service = safehttp.Service{
 	Name:        "Dawarich",
-	ExampleURL:  "http://192.168.1.20:3000",
+	ExampleHost: "192.168.1.20:3000",
 	DefaultPort: "3000",
 	KeyHelp:     "Copy it again from Account › API access in Dawarich.",
 }
@@ -52,7 +52,7 @@ func NewHTTPClient() *http.Client {
 
 // NormalizeURL checks a Dawarich address a person typed and returns its base.
 func NormalizeURL(rawURL string) (string, error) {
-	normalized, err := safehttp.NormalizeBaseURL(rawURL, Service.ExampleURL, "/api/v1", "/api")
+	normalized, err := safehttp.NormalizeBaseURL(rawURL, Service.ExampleHost, "/api/v1", "/api")
 	if err != nil {
 		return "", errors.Wrap(err, "dawarich")
 	}
