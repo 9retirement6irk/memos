@@ -4,14 +4,16 @@
 //
 // Immich usually runs on the same home network as whatever calls it, so the
 // client may reach private addresses. It refuses loopback, link-local (cloud
-// metadata) and "this network" addresses, follows no redirects, and only ever
-// calls the fixed API paths below.
+// metadata) and "this network" addresses, follows a redirect only to the same
+// host (so the API key never leaves it), and only ever calls the fixed API
+// paths below.
 package immich
 
 import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net"
 	"net/http"
@@ -36,6 +38,36 @@ const (
 
 // ErrUnauthorized means the server refused the API key.
 var ErrUnauthorized = errors.New("immich: the API key was refused")
+
+// ErrBlockedAddress means the server address resolves to the calling machine
+// itself or to link-local space, which the client never dials.
+var ErrBlockedAddress = errors.New("immich: the address is not allowed")
+
+// ErrNotImmich means something answered, but not with an Immich API answer.
+var ErrNotImmich = errors.New("immich: the server's answer is not an Immich API answer")
+
+// maxRedirects bounds the same-host redirects followed for one request.
+const maxRedirects = 5
+
+// StatusError is an answer outside 2xx (other than a refused key).
+type StatusError struct {
+	Code int
+}
+
+func (e *StatusError) Error() string {
+	return fmt.Sprintf("immich: the server answered %d", e.Code)
+}
+
+// RedirectError is a redirect the client won't follow: to another host, or
+// from https to http. Following it would hand the API key to someone else or
+// send it in the clear.
+type RedirectError struct {
+	Target string
+}
+
+func (e *RedirectError) Error() string {
+	return fmt.Sprintf("immich: the server redirects to %s", e.Target)
+}
 
 // assetIDPattern is an Immich asset or album ID: a UUID.
 var assetIDPattern = regexp.MustCompile(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$`)
@@ -86,7 +118,7 @@ func safeDialContext(ctx context.Context, network, address string) (net.Conn, er
 	var dialErr error
 	for _, ip := range ips {
 		if isBlocked(ip.IP) {
-			return nil, errors.Errorf("immich: %q resolves to an address that is not allowed", host)
+			return nil, errors.Wrapf(ErrBlockedAddress, "immich: %q resolves to %s", host, ip.IP)
 		}
 		dialHost := ip.IP.String()
 		if ip.Zone != "" {
@@ -105,15 +137,28 @@ func safeDialContext(ctx context.Context, network, address string) (net.Conn, er
 }
 
 // NewHTTPClient returns the HTTP client the package uses by default: it
-// refuses blocked addresses and follows no redirects.
+// refuses blocked addresses and follows redirects only within one host.
 func NewHTTPClient() *http.Client {
 	return &http.Client{
-		Timeout:   requestTimeout,
-		Transport: &http.Transport{DialContext: safeDialContext, ResponseHeaderTimeout: requestTimeout},
-		CheckRedirect: func(*http.Request, []*http.Request) error {
-			return http.ErrUseLastResponse
-		},
+		Timeout:       requestTimeout,
+		Transport:     &http.Transport{DialContext: safeDialContext, ResponseHeaderTimeout: requestTimeout},
+		CheckRedirect: checkRedirect,
 	}
+}
+
+// checkRedirect follows a redirect that stays on the same host name and does
+// not drop from https to http, such as a reverse proxy sending http:// to
+// https://. The API key header goes along with a followed redirect, so
+// anything else is refused.
+func checkRedirect(request *http.Request, via []*http.Request) error {
+	if len(via) >= maxRedirects {
+		return errors.Errorf("immich: stopped after %d redirects", maxRedirects)
+	}
+	first := via[0].URL
+	if !strings.EqualFold(request.URL.Hostname(), first.Hostname()) || (first.Scheme == "https" && request.URL.Scheme != "https") {
+		return &RedirectError{Target: request.URL.Scheme + "://" + request.URL.Host}
+	}
+	return nil
 }
 
 // NormalizeURL checks an Immich server address and returns it without a
@@ -193,9 +238,30 @@ func (c *Client) do(request *http.Request) (*http.Response, error) {
 	}
 	if response.StatusCode < 200 || response.StatusCode > 299 {
 		response.Body.Close()
-		return nil, errors.Errorf("immich: the server answered %d", response.StatusCode)
+		return nil, &StatusError{Code: response.StatusCode}
 	}
+	c.followMove(request.URL, response.Request.URL)
 	return response, nil
+}
+
+// followMove keeps calling the server where a followed redirect led, such as
+// https:// after http://, so later calls (POSTs included) skip the redirect.
+func (c *Client) followMove(asked, answered *url.URL) {
+	if answered == nil || (asked.Scheme == answered.Scheme && asked.Host == answered.Host) {
+		return
+	}
+	base, err := url.Parse(c.baseURL)
+	if err != nil {
+		return
+	}
+	base.Scheme, base.Host = answered.Scheme, answered.Host
+	c.baseURL = base.String()
+}
+
+// BaseURL is the server address the client calls: the one it was given, or
+// where a followed redirect moved it.
+func (c *Client) BaseURL() string {
+	return c.baseURL
 }
 
 func (c *Client) getJSON(ctx context.Context, method, path string, body, out any) error {
@@ -209,7 +275,7 @@ func (c *Client) getJSON(ctx context.Context, method, path string, body, out any
 	}
 	defer response.Body.Close()
 	if err := json.NewDecoder(io.LimitReader(response.Body, maxJSONBytes)).Decode(out); err != nil {
-		return errors.Wrap(err, "immich: the server's answer is not an Immich API answer")
+		return errors.Wrap(ErrNotImmich, err.Error())
 	}
 	return nil
 }
