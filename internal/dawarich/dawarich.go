@@ -342,15 +342,20 @@ func (c *Client) Tracks(ctx context.Context, start, end time.Time) ([]Track, err
 				Path:     path,
 			})
 		}
-		// Without a page count, the first page is all there is.
-		totalPages, parseErr := strconv.Atoi(header.Get("X-Total-Pages"))
-		if parseErr != nil || page >= totalPages {
+		if lastPage(header, page) {
 			break
 		}
 	}
 	// Dawarich lists the newest first.
 	slices.SortFunc(tracks, func(a, b Track) int { return a.Start.Compare(b.Start) })
 	return tracks, nil
+}
+
+// lastPage reports whether page is the last one; without a page count, the
+// first page is all there is.
+func lastPage(header http.Header, page int) bool {
+	totalPages, err := strconv.Atoi(header.Get("X-Total-Pages"))
+	return err != nil || page >= totalPages
 }
 
 // linePoints reads a GeoJSON LineString or MultiLineString, whose positions
