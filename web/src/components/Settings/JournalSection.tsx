@@ -3,14 +3,7 @@ import { PlusIcon, RefreshCwIcon, XIcon } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { ActivityIconView } from "@/components/Journal/ActivityIconView";
 import { useAuth } from "@/contexts/AuthContext";
-import {
-  useDawarichConnection,
-  useJournalReminder,
-  useJournalSettings,
-  useSaveJournalSettings,
-  useUpdateDawarichConnection,
-  useUpdateJournalReminder,
-} from "@/hooks/useJournalQueries";
+import { useJournalReminder, useJournalSettings, useSaveJournalSettings, useUpdateJournalReminder } from "@/hooks/useJournalQueries";
 import { useSpaces } from "@/hooks/useSpaceQueries";
 import { normalizePrefix, tagSegment } from "@/lib/journal/entry";
 import { listNotifiers, sendTestReminder } from "@/lib/journal/reminder";
@@ -114,89 +107,6 @@ const EditableList = ({
         </Button>
       </div>
     </div>
-  );
-};
-
-/** Dawarich: the user's own location history, for places, routes and visits. */
-const DawarichConnectionForm = () => {
-  const t = useTranslate();
-  const { data: connection } = useDawarichConnection();
-  const { save, remove } = useUpdateDawarichConnection();
-  const [url, setUrl] = useState("");
-  const [apiKey, setApiKey] = useState("");
-  const [error, setError] = useState("");
-  const configured = Boolean(connection?.configured);
-  useEffect(() => {
-    if (connection?.url) setUrl(connection.url);
-  }, [connection?.url]);
-
-  return (
-    <SettingGroup title="Dawarich" description={t("journal.settings.dawarich-description")} showSeparator>
-      <SettingList aria-label="Dawarich">
-        <SettingListItem
-          label={
-            configured ? t("setting.immich.status-connected", { url: connection?.url ?? "" }) : t("setting.immich.status-not-connected")
-          }
-        >
-          {configured && (
-            <Button
-              variant="neutral"
-              loading={remove.isPending}
-              onClick={() =>
-                remove.mutate(undefined, { onSuccess: () => setUrl(""), onError: (failure) => showErrorToast(failure.message) })
-              }
-            >
-              {t("setting.immich.disconnect")}
-            </Button>
-          )}
-        </SettingListItem>
-      </SettingList>
-      <Form.Root
-        bordered
-        aria-label="Dawarich"
-        onSubmit={(event) => {
-          event.preventDefault();
-          setError("");
-          save.mutate(
-            { url: url.trim(), apiKey: apiKey.trim() },
-            { onSuccess: () => setApiKey(""), onError: (failure) => setError(failure.message) },
-          );
-        }}
-      >
-        <Field.Root name="dawarich-url" invalid={Boolean(error)}>
-          <Field.Label>{t("setting.immich.server-url")}</Field.Label>
-          <Input
-            type="url"
-            required
-            autoComplete="off"
-            placeholder="http://dawarich.local:3000"
-            value={url}
-            onChange={(event) => {
-              setUrl(event.target.value);
-              setError("");
-            }}
-          />
-          <Field.Error match>{error}</Field.Error>
-        </Field.Root>
-        <Field.Root name="dawarich-key">
-          <Field.Label>{t("setting.immich.api-key")}</Field.Label>
-          <Input
-            type="password"
-            required={!configured}
-            autoComplete="off"
-            placeholder={configured ? t("setting.immich.api-key-keep") : undefined}
-            value={apiKey}
-            onChange={(event) => setApiKey(event.target.value)}
-          />
-          <Field.Description>{t("journal.settings.dawarich-key-help")}</Field.Description>
-        </Field.Root>
-        <Form.Footer>
-          <Button variant="primary" type="submit" loading={save.isPending}>
-            {configured ? t("common.save") : t("setting.immich.connect")}
-          </Button>
-        </Form.Footer>
-      </Form.Root>
-    </SettingGroup>
   );
 };
 
@@ -598,7 +508,6 @@ const JournalSection = () => {
         />
       </SettingGroup>
 
-      <DawarichConnectionForm />
       <ReminderForm space={settings.space} />
     </SettingSection>
   );

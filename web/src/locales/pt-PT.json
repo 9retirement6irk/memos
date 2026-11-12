@@ -1196,6 +1196,11 @@
     },
     "journal": {
       "label": "Diário"
+    },
+    "dawarich": {
+      "api-key-help": "Encontra-a no Dawarich em Account › API access.",
+      "label": "Dawarich",
+      "description": "O seu próprio histórico de localização, para locais do diário e imagens de percurso em qualquer memo. A sua chave de API fica neste servidor."
     }
   },
   "tooltip": {
@@ -1588,8 +1593,6 @@
       "goals-description": "Assinalados em cada entrada e guardados como lista de verificação.",
       "add-goal": "Novo objetivo",
       "remove": "Remover {{name}}",
-      "dawarich-description": "O seu próprio histórico de localização, para o local e o percurso de uma entrada. A sua chave de API fica neste servidor.",
-      "dawarich-key-help": "Encontra-a no Dawarich em Account › API access.",
       "reminder-title": "Lembrete de sequência",
       "reminder-description": "Enviado para o seu telemóvel pelo seu Home Assistant quando ainda não escreveu.",
       "reminder-enabled": "Enviar lembretes",
@@ -1608,6 +1611,20 @@
       "reminder-saved": "Lembrete guardado",
       "test": "Enviar um teste",
       "test-sent": "Teste enviado"
+    }
+  },
+  "dawarich": {
+    "route": {
+      "insert": "Percurso do Dawarich",
+      "title": "Adicionar um percurso do Dawarich",
+      "day": "Dia",
+      "which": "Que percurso",
+      "whole-day": "O dia inteiro",
+      "empty": "O Dawarich não tem percurso para este dia.",
+      "map": "Mostrar o mapa por baixo",
+      "map-description": "O mapa vem do OpenStreetMap, que vê a área mostrada.",
+      "add": "Adicionar imagem",
+      "preview": "Pré-visualização da imagem do percurso"
     }
   }
 }

@@ -1,9 +1,9 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { composeEntry, moodFromTags, normalizePrefix, tagSegment, weatherLine } from "@/lib/journal/entry";
-import { formatDistance, projectRoute } from "@/lib/journal/route";
 import { defaultJournalSettings, withDefaults } from "@/lib/journal/settings";
 import { groupPhotos, type SuggestionPhoto, spreadPick } from "@/lib/journal/suggestions";
 import { weatherAt, weatherKind } from "@/lib/journal/weather";
+import { formatDistance, projectRoute } from "@/lib/routeImage";
 
 const base = { body: "", goals: [], activities: [], moodTagPrefix: "mood/", activityTagPrefix: "did/" };
 
@@ -103,8 +103,8 @@ describe("routes", () => {
   it("fits a route inside the image without stretching it", () => {
     const points = projectRoute(
       [
-        { lat: 0, lon: 0, time: "" },
-        { lat: 0, lon: 1, time: "" },
+        { lat: 0, lon: 0 },
+        { lat: 0, lon: 1 },
       ],
       200,
       100,

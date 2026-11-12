@@ -1235,6 +1235,11 @@
     },
     "journal": {
       "label": "Dienoraštis"
+    },
+    "dawarich": {
+      "api-key-help": "Jį rasi Dawarich skiltyje Account › API access.",
+      "label": "Dawarich",
+      "description": "Tavo paties vietų istorija – dienoraščio vietoms ir maršrutų vaizdams bet kuriame įraše. Tavo API raktas lieka šiame serveryje."
     }
   },
   "tooltip": {
@@ -1589,8 +1594,6 @@
       "goals-description": "Pažymimi kiekviename įraše ir išsaugomi kaip kontrolinis sąrašas.",
       "add-goal": "Naujas tikslas",
       "remove": "Pašalinti {{name}}",
-      "dawarich-description": "Tavo paties vietų istorija, įrašo vietai ir maršrutui. Tavo API raktas lieka šiame serveryje.",
-      "dawarich-key-help": "Jį rasi Dawarich skiltyje Account › API access.",
       "reminder-title": "Serijos priminimas",
       "reminder-description": "Tavo Home Assistant siunčia jį į telefoną, kai dar nerašei.",
       "reminder-enabled": "Siųsti priminimus",
@@ -1609,6 +1612,20 @@
       "reminder-saved": "Priminimas išsaugotas",
       "test": "Siųsti bandymą",
       "test-sent": "Bandymas išsiųstas"
+    }
+  },
+  "dawarich": {
+    "route": {
+      "insert": "Maršrutas iš Dawarich",
+      "title": "Pridėti maršrutą iš Dawarich",
+      "day": "Diena",
+      "which": "Kuris maršrutas",
+      "whole-day": "Visa diena",
+      "empty": "Dawarich neturi maršruto šiai dienai.",
+      "map": "Rodyti žemėlapį apačioje",
+      "map-description": "Žemėlapis gaunamas iš OpenStreetMap, kuris mato rodomą sritį.",
+      "add": "Pridėti vaizdą",
+      "preview": "Maršruto vaizdo peržiūra"
     }
   }
 }

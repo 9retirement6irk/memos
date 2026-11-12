@@ -1109,7 +1109,7 @@
     --vi-hide: 0;
     opacity: 1;
   }
-  & svg.lucide:is(.lucide-compass, .lucide-map) {
+  & svg.lucide:is(.lucide-compass, .lucide-map, .lucide-route) {
     --vi: url("./icons/netcenter_7.png");
     --vi-hide: 0;
     opacity: 1;

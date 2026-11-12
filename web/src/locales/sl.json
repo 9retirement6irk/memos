@@ -1197,6 +1197,11 @@
     },
     "journal": {
       "label": "Dnevnik"
+    },
+    "dawarich": {
+      "api-key-help": "Najdeš ga v Dawarich pod Account › API access.",
+      "label": "Dawarich",
+      "description": "Tvoja lastna zgodovina lokacij, za kraje v dnevniku in slike poti v katerem koli zapisu. Tvoj ključ API ostane na tem strežniku."
     }
   },
   "tooltip": {
@@ -1589,8 +1594,6 @@
       "goals-description": "Odkljukajo se v vsakem vnosu in shranijo kot kontrolni seznam.",
       "add-goal": "Nov cilj",
       "remove": "Odstrani {{name}}",
-      "dawarich-description": "Tvoja lastna zgodovina lokacij, za kraj in pot vnosa. Tvoj ključ API ostane na tem strežniku.",
-      "dawarich-key-help": "Najdeš ga v Dawarich pod Account › API access.",
       "reminder-title": "Opomnik za niz",
       "reminder-description": "Tvoj Home Assistant ga pošlje na telefon, ko še nisi pisal.",
       "reminder-enabled": "Pošiljaj opomnike",
@@ -1609,6 +1612,20 @@
       "reminder-saved": "Opomnik shranjen",
       "test": "Pošlji preizkus",
       "test-sent": "Preizkus poslan"
+    }
+  },
+  "dawarich": {
+    "route": {
+      "insert": "Pot iz Dawarich",
+      "title": "Dodaj pot iz Dawarich",
+      "day": "Dan",
+      "which": "Katera pot",
+      "whole-day": "Ves dan",
+      "empty": "Dawarich za ta dan nima poti.",
+      "map": "Pokaži zemljevid pod potjo",
+      "map-description": "Zemljevid je iz OpenStreetMap, ki vidi prikazano območje.",
+      "add": "Dodaj sliko",
+      "preview": "Predogled slike poti"
     }
   }
 }

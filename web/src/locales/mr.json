@@ -1190,6 +1190,11 @@
     },
     "journal": {
       "label": "जर्नल"
+    },
+    "dawarich": {
+      "api-key-help": "ती Dawarich मध्ये Account › API access येथे मिळेल.",
+      "label": "Dawarich",
+      "description": "तुमचा स्वतःचा स्थान इतिहास, जर्नलमधील ठिकाणांसाठी आणि कोणत्याही मेमोतील मार्गाच्या प्रतिमांसाठी. तुमची API की याच सर्व्हरवर राहते."
     }
   },
   "tooltip": {
@@ -1587,8 +1592,6 @@
       "goals-description": "प्रत्येक नोंदीत खूण केली जाते आणि चेकलिस्ट म्हणून जतन होतात.",
       "add-goal": "नवीन उद्दिष्ट",
       "remove": "{{name}} काढा",
-      "dawarich-description": "तुमचा स्वतःचा स्थान इतिहास, नोंदीच्या ठिकाणासाठी व मार्गासाठी. तुमची API की याच सर्व्हरवर राहते.",
-      "dawarich-key-help": "ती Dawarich मध्ये Account › API access येथे मिळेल.",
       "reminder-title": "सलगतेचे स्मरणपत्र",
       "reminder-description": "तुम्ही लिहिले नसेल तेव्हा तुमचा Home Assistant ते फोनवर पाठवतो.",
       "reminder-enabled": "स्मरणपत्रे पाठवा",
@@ -1607,6 +1610,20 @@
       "reminder-saved": "स्मरणपत्र जतन केले",
       "test": "चाचणी पाठवा",
       "test-sent": "चाचणी पाठवली"
+    }
+  },
+  "dawarich": {
+    "route": {
+      "insert": "Dawarich मधील मार्ग",
+      "title": "Dawarich मधून मार्ग जोडा",
+      "day": "दिवस",
+      "which": "कोणता मार्ग",
+      "whole-day": "संपूर्ण दिवस",
+      "empty": "Dawarich मध्ये या दिवसाचा मार्ग नाही.",
+      "map": "खाली नकाशा दाखवा",
+      "map-description": "नकाशा OpenStreetMap कडून येतो, जो दाखवलेला भाग पाहतो.",
+      "add": "प्रतिमा जोडा",
+      "preview": "मार्गाच्या प्रतिमेचे पूर्वावलोकन"
     }
   }
 }

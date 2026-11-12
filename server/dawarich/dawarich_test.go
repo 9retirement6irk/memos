@@ -37,6 +37,16 @@ func fakeDawarich(t *testing.T) *httptest.Server {
 		}
 		_, _ = io.WriteString(w, `[{"name":"Arnold Arboretum","status":"confirmed","started_at":"2026-11-11T19:14:00Z","ended_at":"2026-11-11T22:02:00Z","place":{"latitude":42.3,"longitude":-71.12}}]`)
 	})
+	mux.HandleFunc("GET /api/v1/tracks", func(w http.ResponseWriter, r *http.Request) {
+		if r.Header.Get("Authorization") != "Bearer good-key" {
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+		w.Header().Set("X-Total-Pages", "1")
+		_, _ = io.WriteString(w, `{"type":"FeatureCollection","features":[{"type":"Feature",
+			"geometry":{"type":"LineString","coordinates":[[-71.12,42.3],[-71.121,42.301],[-71.122,42.302]]},
+			"properties":{"id":7,"start_at":"2026-11-11T20:00:00Z","end_at":"2026-11-11T20:25:00Z","distance":2100,"dominant_mode":"cycling","color":"#6366F1"}}]}`)
+	})
 	return httptest.NewServer(mux)
 }
 
@@ -138,6 +148,36 @@ func TestPointsAndVisitsCarryOnlyPositionAndTime(t *testing.T) {
 		response = env.request(http.MethodGet, "/api/dawarich/points?"+query, "", true)
 		require.Equal(t, http.StatusBadRequest, response.Code, query)
 	}
+}
+
+func TestTracksCarryTheLineAndMode(t *testing.T) {
+	t.Parallel()
+	ctx := context.Background()
+	server := fakeDawarich(t)
+	defer server.Close()
+	env := newTestEnv(ctx, t, server)
+	require.NoError(t, env.store.UpsertUserRecord(ctx, store.UserRecordDawarichConnection, env.user.ID, &Connection{URL: server.URL, APIKey: "good-key"}))
+
+	response := env.request(http.MethodGet, "/api/dawarich/tracks?start=2026-11-11T05:00:00Z&end=2026-11-12T05:00:00Z", "", true)
+	require.Equal(t, http.StatusOK, response.Code, response.Body.String())
+	require.JSONEq(t, `{"supported":true,"tracks":[{"id":7,"start":"2026-11-11T20:00:00Z","end":"2026-11-11T20:25:00Z","distanceMeters":2100,"mode":"cycling",
+		"points":[{"lat":42.3,"lon":-71.12},{"lat":42.301,"lon":-71.121},{"lat":42.302,"lon":-71.122}]}]}`, response.Body.String())
+
+	response = env.request(http.MethodGet, "/api/dawarich/tracks?start=2026-11-11T05:00:00Z&end=2026-11-12T05:00:00Z", "", false)
+	require.Equal(t, http.StatusUnauthorized, response.Code)
+}
+
+func TestTracksOnAnOlderDawarich(t *testing.T) {
+	t.Parallel()
+	ctx := context.Background()
+	server := httptest.NewServer(http.NotFoundHandler())
+	defer server.Close()
+	env := newTestEnv(ctx, t, server)
+	require.NoError(t, env.store.UpsertUserRecord(ctx, store.UserRecordDawarichConnection, env.user.ID, &Connection{URL: server.URL, APIKey: "good-key"}))
+
+	response := env.request(http.MethodGet, "/api/dawarich/tracks?start=2026-11-11T05:00:00Z&end=2026-11-12T05:00:00Z", "", true)
+	require.Equal(t, http.StatusOK, response.Code, response.Body.String())
+	require.JSONEq(t, `{"supported":false,"tracks":[]}`, response.Body.String())
 }
 
 func TestThinKeepsEndsAndLimit(t *testing.T) {

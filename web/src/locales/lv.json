@@ -1234,6 +1234,11 @@
     },
     "journal": {
       "label": "Dienasgrāmata"
+    },
+    "dawarich": {
+      "api-key-help": "To atradīsi Dawarich sadaļā Account › API access.",
+      "label": "Dawarich",
+      "description": "Tava paša atrašanās vietu vēsture – dienasgrāmatas vietām un maršrutu attēliem jebkurā piezīmē. Tava API atslēga paliek šajā serverī."
     }
   },
   "tooltip": {
@@ -1588,8 +1593,6 @@
       "goals-description": "Atzīmē katrā ierakstā un saglabā kā kontrolsarakstu.",
       "add-goal": "Jauns mērķis",
       "remove": "Noņemt {{name}}",
-      "dawarich-description": "Tava paša atrašanās vietu vēsture, ieraksta vietai un maršrutam. Tava API atslēga paliek šajā serverī.",
-      "dawarich-key-help": "To atradīsi Dawarich sadaļā Account › API access.",
       "reminder-title": "Sērijas atgādinājums",
       "reminder-description": "Tavs Home Assistant to sūta uz tālruni, kad vēl neesi rakstījis.",
       "reminder-enabled": "Sūtīt atgādinājumus",
@@ -1608,6 +1611,20 @@
       "reminder-saved": "Atgādinājums saglabāts",
       "test": "Sūtīt testu",
       "test-sent": "Tests nosūtīts"
+    }
+  },
+  "dawarich": {
+    "route": {
+      "insert": "Maršruts no Dawarich",
+      "title": "Pievienot maršrutu no Dawarich",
+      "day": "Diena",
+      "which": "Kurš maršruts",
+      "whole-day": "Visa diena",
+      "empty": "Dawarich nav maršruta šai dienai.",
+      "map": "Rādīt karti apakšā",
+      "map-description": "Karte nāk no OpenStreetMap, kas redz parādīto apgabalu.",
+      "add": "Pievienot attēlu",
+      "preview": "Maršruta attēla priekšskatījums"
     }
   }
 }

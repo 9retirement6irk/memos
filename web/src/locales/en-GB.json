@@ -1195,6 +1195,11 @@
     },
     "journal": {
       "label": "Journal"
+    },
+    "dawarich": {
+      "api-key-help": "Find it in Dawarich under Account › API access.",
+      "label": "Dawarich",
+      "description": "Your own location history, for journal places and route images in any memo. Your API key stays on this server."
     }
   },
   "tooltip": {
@@ -1587,8 +1592,6 @@
       "goals-description": "Ticked off in each entry and saved as a checklist.",
       "add-goal": "New goal",
       "remove": "Remove {{name}}",
-      "dawarich-description": "Your own location history, for an entry's place and route. Your API key stays on this server.",
-      "dawarich-key-help": "Find it in Dawarich under Account › API access.",
       "reminder-title": "Streak reminder",
       "reminder-description": "Sent to your phone by your Home Assistant when you haven't written.",
       "reminder-enabled": "Send reminders",
@@ -1607,6 +1610,20 @@
       "reminder-saved": "Reminder saved",
       "test": "Send a test",
       "test-sent": "Test sent"
+    }
+  },
+  "dawarich": {
+    "route": {
+      "insert": "Route from Dawarich",
+      "title": "Add a route from Dawarich",
+      "day": "Day",
+      "which": "Which route",
+      "whole-day": "The whole day",
+      "empty": "Dawarich has no route for this day.",
+      "map": "Show the map underneath",
+      "map-description": "The map comes from OpenStreetMap, which sees the area shown.",
+      "add": "Add image",
+      "preview": "Preview of the route image"
     }
   }
 }

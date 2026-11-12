@@ -13,8 +13,11 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/pkg/errors"
+
 	dawarichclient "github.com/usememos/memos/internal/dawarich"
 	"github.com/usememos/memos/internal/httphandler"
+	"github.com/usememos/memos/internal/safehttp"
 	"github.com/usememos/memos/server/auth"
 	"github.com/usememos/memos/store"
 )
@@ -56,6 +59,7 @@ func (s *Service) RegisterRoutes(mux *http.ServeMux) {
 	mux.Handle("DELETE /api/dawarich/connection", httphandler.Func(s.deleteConnection))
 	mux.Handle("GET /api/dawarich/points", httphandler.Func(s.listPoints))
 	mux.Handle("GET /api/dawarich/visits", httphandler.Func(s.listVisits))
+	mux.Handle("GET /api/dawarich/tracks", httphandler.Func(s.listTracks))
 }
 
 // ConnectionResponse is what a user sees of their connection: never the key.
@@ -249,6 +253,59 @@ func (s *Service) listVisits(w http.ResponseWriter, r *http.Request) error {
 			Name: visit.Name, Start: visit.Start.Format(time.RFC3339), End: visit.End.Format(time.RFC3339),
 			Latitude: visit.Latitude, Longitude: visit.Longitude,
 		})
+	}
+	return httphandler.JSON(w, http.StatusOK, response)
+}
+
+// TrackPoint is one position on a track's line.
+type TrackPoint struct {
+	Latitude  float64 `json:"lat"`
+	Longitude float64 `json:"lon"`
+}
+
+// TrackResponse is one journey: its line, times, length and travel mode.
+type TrackResponse struct {
+	ID             int64        `json:"id"`
+	Start          string       `json:"start"`
+	End            string       `json:"end"`
+	DistanceMeters float64      `json:"distanceMeters"`
+	Mode           string       `json:"mode,omitempty"`
+	Points         []TrackPoint `json:"points"`
+}
+
+// TracksResponse lists journeys, oldest first. Supported is false when the
+// Dawarich server is too old to have tracks in its API.
+type TracksResponse struct {
+	Tracks    []TrackResponse `json:"tracks"`
+	Supported bool            `json:"supported"`
+}
+
+// maxTrackPoints keeps each track's line light enough to draw in the browser.
+const maxTrackPoints = 600
+
+func (s *Service) listTracks(w http.ResponseWriter, r *http.Request) error {
+	client, start, end, err := s.clientFor(r)
+	if err != nil {
+		return err
+	}
+	tracks, err := client.Tracks(r.Context(), start, end)
+	var statusError *safehttp.StatusError
+	if errors.As(err, &statusError) && statusError.Code == http.StatusNotFound {
+		return httphandler.JSON(w, http.StatusOK, TracksResponse{Tracks: []TrackResponse{}})
+	}
+	if err != nil {
+		return dawarichError(err)
+	}
+	response := TracksResponse{Tracks: []TrackResponse{}, Supported: true}
+	for _, track := range tracks {
+		item := TrackResponse{
+			ID: track.ID, Start: track.Start.Format(time.RFC3339), End: track.End.Format(time.RFC3339),
+			DistanceMeters: track.Distance, Mode: track.Mode, Points: []TrackPoint{},
+		}
+		for _, point := range thin(track.Path, maxTrackPoints) {
+			item.Points = append(item.Points, TrackPoint{Latitude: point.Latitude, Longitude: point.Longitude})
+		}
+		response.Tracks = append(response.Tracks, item)
 	}
 	return httphandler.JSON(w, http.StatusOK, response)
 }

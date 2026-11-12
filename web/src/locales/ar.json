@@ -1194,6 +1194,11 @@
     },
     "journal": {
       "label": "اليوميات"
+    },
+    "dawarich": {
+      "api-key-help": "تجده في Dawarich ضمن Account › API access.",
+      "label": "Dawarich",
+      "description": "سجل مواقعك الخاص، لأماكن اليوميات وصور المسارات في أي مذكرة. يبقى مفتاح API على هذا الخادم."
     }
   },
   "tooltip": {
@@ -1591,8 +1596,6 @@
       "goals-description": "تُحدَّد في كل إدخال وتُحفظ كقائمة تحقق.",
       "add-goal": "هدف جديد",
       "remove": "إزالة {{name}}",
-      "dawarich-description": "سجل مواقعك الخاص، لمكان الإدخال ومساره. يبقى مفتاح API على هذا الخادم.",
-      "dawarich-key-help": "تجده في Dawarich ضمن Account › API access.",
       "reminder-title": "تذكير السلسلة",
       "reminder-description": "يرسله Home Assistant إلى هاتفك عندما لا تكون قد كتبت.",
       "reminder-enabled": "إرسال التذكيرات",
@@ -1611,6 +1614,20 @@
       "reminder-saved": "تم حفظ التذكير",
       "test": "إرسال اختبار",
       "test-sent": "تم إرسال الاختبار"
+    }
+  },
+  "dawarich": {
+    "route": {
+      "insert": "مسار من Dawarich",
+      "title": "إضافة مسار من Dawarich",
+      "day": "اليوم",
+      "which": "أي مسار",
+      "whole-day": "اليوم كله",
+      "empty": "لا يوجد في Dawarich مسار لهذا اليوم.",
+      "map": "عرض الخريطة أسفله",
+      "map-description": "تأتي الخريطة من OpenStreetMap، الذي يرى المنطقة المعروضة.",
+      "add": "إضافة صورة",
+      "preview": "معاينة صورة المسار"
     }
   }
 }

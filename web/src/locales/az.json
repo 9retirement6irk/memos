@@ -1311,6 +1311,11 @@
     },
     "journal": {
       "label": "Gündəlik"
+    },
+    "dawarich": {
+      "api-key-help": "Onu Dawarich-də Account › API access bölməsində tapa bilərsən.",
+      "label": "Dawarich",
+      "description": "Öz məkan tarixçən, gündəlik yerləri və istənilən qeyddə marşrut şəkilləri üçün. API açarın bu serverdə qalır."
     }
   },
   "space": {
@@ -1587,8 +1592,6 @@
       "goals-description": "Hər qeyddə işarələnir və yoxlama siyahısı kimi saxlanılır.",
       "add-goal": "Yeni hədəf",
       "remove": "{{name}} sil",
-      "dawarich-description": "Öz məkan tarixçən, qeydin yeri və marşrutu üçün. API açarın bu serverdə qalır.",
-      "dawarich-key-help": "Onu Dawarich-də Account › API access bölməsində tapa bilərsən.",
       "reminder-title": "Ardıcıllıq xatırlatması",
       "reminder-description": "Yazmadığın zaman Home Assistant onu telefonuna göndərir.",
       "reminder-enabled": "Xatırlatma göndər",
@@ -1607,6 +1610,20 @@
       "reminder-saved": "Xatırlatma saxlanıldı",
       "test": "Sınaq göndər",
       "test-sent": "Sınaq göndərildi"
+    }
+  },
+  "dawarich": {
+    "route": {
+      "insert": "Dawarich-dən marşrut",
+      "title": "Dawarich-dən marşrut əlavə et",
+      "day": "Gün",
+      "which": "Hansı marşrut",
+      "whole-day": "Bütün gün",
+      "empty": "Dawarich-də bu gün üçün marşrut yoxdur.",
+      "map": "Xəritəni altda göstər",
+      "map-description": "Xəritə OpenStreetMap-dən gəlir və o, göstərilən ərazini görür.",
+      "add": "Şəkil əlavə et",
+      "preview": "Marşrut şəklinin önizləməsi"
     }
   }
 }

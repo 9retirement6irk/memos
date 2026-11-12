@@ -1195,6 +1195,11 @@
     },
     "journal": {
       "label": "Tagebuch"
+    },
+    "dawarich": {
+      "api-key-help": "Du findest ihn in Dawarich unter Account › API access.",
+      "label": "Dawarich",
+      "description": "Dein eigener Standortverlauf, für Orte im Tagebuch und Routenbilder in jedem Memo. Dein API-Schlüssel bleibt auf diesem Server."
     }
   },
   "tooltip": {
@@ -1587,8 +1592,6 @@
       "goals-description": "In jedem Eintrag abgehakt und als Checkliste gespeichert.",
       "add-goal": "Neues Ziel",
       "remove": "{{name}} entfernen",
-      "dawarich-description": "Dein eigener Standortverlauf, für Ort und Route eines Eintrags. Dein API-Schlüssel bleibt auf diesem Server.",
-      "dawarich-key-help": "Du findest ihn in Dawarich unter Account › API access.",
       "reminder-title": "Serie-Erinnerung",
       "reminder-description": "Wird von deinem Home Assistant an dein Handy gesendet, wenn du noch nicht geschrieben hast.",
       "reminder-enabled": "Erinnerungen senden",
@@ -1607,6 +1610,20 @@
       "reminder-saved": "Erinnerung gespeichert",
       "test": "Test senden",
       "test-sent": "Test gesendet"
+    }
+  },
+  "dawarich": {
+    "route": {
+      "insert": "Route aus Dawarich",
+      "title": "Route aus Dawarich hinzufügen",
+      "day": "Tag",
+      "which": "Welche Route",
+      "whole-day": "Der ganze Tag",
+      "empty": "Dawarich hat für diesen Tag keine Route.",
+      "map": "Karte darunter zeigen",
+      "map-description": "Die Karte kommt von OpenStreetMap, das den gezeigten Bereich sieht.",
+      "add": "Bild hinzufügen",
+      "preview": "Vorschau des Routenbilds"
     }
   }
 }

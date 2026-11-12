@@ -1195,6 +1195,11 @@
     },
     "journal": {
       "label": "Dagbok"
+    },
+    "dawarich": {
+      "api-key-help": "Du hittar den i Dawarich under Account › API access.",
+      "label": "Dawarich",
+      "description": "Din egen platshistorik, för platser i dagboken och ruttbilder i alla anteckningar. Din API-nyckel stannar på den här servern."
     }
   },
   "tooltip": {
@@ -1587,8 +1592,6 @@
       "goals-description": "Bockas av i varje inlägg och sparas som checklista.",
       "add-goal": "Nytt mål",
       "remove": "Ta bort {{name}}",
-      "dawarich-description": "Din egen platshistorik, för ett inläggs plats och rutt. Din API-nyckel stannar på den här servern.",
-      "dawarich-key-help": "Du hittar den i Dawarich under Account › API access.",
       "reminder-title": "Påminnelse om svit",
       "reminder-description": "Skickas till din telefon av din Home Assistant när du inte har skrivit.",
       "reminder-enabled": "Skicka påminnelser",
@@ -1607,6 +1610,20 @@
       "reminder-saved": "Påminnelsen sparades",
       "test": "Skicka ett test",
       "test-sent": "Testet skickades"
+    }
+  },
+  "dawarich": {
+    "route": {
+      "insert": "Rutt från Dawarich",
+      "title": "Lägg till en rutt från Dawarich",
+      "day": "Dag",
+      "which": "Vilken rutt",
+      "whole-day": "Hela dagen",
+      "empty": "Dawarich har ingen rutt för den här dagen.",
+      "map": "Visa kartan under",
+      "map-description": "Kartan kommer från OpenStreetMap, som ser området som visas.",
+      "add": "Lägg till bild",
+      "preview": "Förhandsvisning av ruttbilden"
     }
   }
 }

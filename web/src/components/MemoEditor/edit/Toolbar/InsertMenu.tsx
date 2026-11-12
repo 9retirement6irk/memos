@@ -12,13 +12,16 @@ import {
   PaperclipIcon,
   PencilLineIcon,
   PlusIcon,
+  RouteIcon,
 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import RoutePickerDialog from "@/components/DawarichRoute/RoutePickerDialog";
 import ImmichPickerDialog from "@/components/ImmichPicker/ImmichPickerDialog";
 import { LinkMemoDialog, LocationDialog } from "@/components/MemoMetadata";
 import type { MapPoint } from "@/components/map/types";
 import { useReverseGeocoding } from "@/components/map/useReverseGeocoding";
 import { useDebouncedEffect } from "@/hooks";
+import { useDawarichConnection } from "@/hooks/useDawarichQueries";
 import { useImmichConnection } from "@/hooks/useImmichQueries";
 import type { MemoRelation } from "@/types/proto/api/memo_service_pb";
 import { useTranslate } from "@/utils/i18n";
@@ -39,6 +42,11 @@ const InsertMenu = (props: InsertMenuProps) => {
   // Offered only to a user who has connected their Immich server in Settings.
   const { data: immichConnection } = useImmichConnection();
   const immichAvailable = Boolean(immichConnection?.configured && props.onAttachFiles);
+  const [routeDialogOpen, setRouteDialogOpen] = useState(false);
+  // Likewise for Dawarich, whose routes become images.
+  const { data: dawarichConnection } = useDawarichConnection();
+  const routeAvailable = Boolean(dawarichConnection?.configured && props.onAttachFiles);
+  const createTime = useEditorSelector((s) => s.timestamps.createTime);
   const inlineImageInputRef = useRef<HTMLInputElement>(null);
 
   const { fileInputRef, selectingFlag, handleFileInputChange, handleUploadClick } = useFileUpload((newFiles: LocalFile[]) => {
@@ -148,6 +156,9 @@ const InsertMenu = (props: InsertMenuProps) => {
       ? [{ key: "drawing", label: t("editor.insert-menu.drawing"), icon: PencilLineIcon, onClick: props.onDrawingClick }]
       : []),
     ...(immichAvailable ? [{ key: "immich", label: t("immich.insert"), icon: ImagesIcon, onClick: () => setImmichDialogOpen(true) }] : []),
+    ...(routeAvailable
+      ? [{ key: "route", label: t("dawarich.route.insert"), icon: RouteIcon, onClick: () => setRouteDialogOpen(true) }]
+      : []),
     { key: "audio", label: t("editor.audio-recorder.trigger"), icon: MicIcon, onClick: props.onAudioRecorderClick },
     { key: "link", label: t("editor.insert-menu.link-memo"), icon: LinkIcon, onClick: handleOpenLinkDialog },
     { key: "location", label: t("editor.insert-menu.add-location"), icon: MapPinIcon, onClick: handleLocationClick },
@@ -252,6 +263,9 @@ const InsertMenu = (props: InsertMenuProps) => {
 
       {immichAvailable && props.onAttachFiles && (
         <ImmichPickerDialog open={immichDialogOpen} onOpenChange={setImmichDialogOpen} onPick={props.onAttachFiles} />
+      )}
+      {routeAvailable && props.onAttachFiles && (
+        <RoutePickerDialog open={routeDialogOpen} onOpenChange={setRouteDialogOpen} day={createTime} onPick={props.onAttachFiles} />
       )}
     </>
   );

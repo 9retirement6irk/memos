@@ -1196,6 +1196,11 @@
     },
     "journal": {
       "label": "Journal"
+    },
+    "dawarich": {
+      "api-key-help": "Vous la trouverez dans Dawarich sous Account › API access.",
+      "label": "Dawarich",
+      "description": "Votre propre historique de positions, pour les lieux du journal et les images de trajet dans n’importe quel mémo. Votre clé API reste sur ce serveur."
     }
   },
   "tooltip": {
@@ -1588,8 +1593,6 @@
       "goals-description": "Cochés dans chaque entrée et enregistrés comme liste de contrôle.",
       "add-goal": "Nouvel objectif",
       "remove": "Retirer {{name}}",
-      "dawarich-description": "Votre propre historique de positions, pour le lieu et le trajet d’une entrée. Votre clé API reste sur ce serveur.",
-      "dawarich-key-help": "Vous la trouverez dans Dawarich sous Account › API access.",
       "reminder-title": "Rappel de série",
       "reminder-description": "Envoyé sur votre téléphone par votre Home Assistant quand vous n’avez pas écrit.",
       "reminder-enabled": "Envoyer des rappels",
@@ -1608,6 +1611,20 @@
       "reminder-saved": "Rappel enregistré",
       "test": "Envoyer un test",
       "test-sent": "Test envoyé"
+    }
+  },
+  "dawarich": {
+    "route": {
+      "insert": "Trajet depuis Dawarich",
+      "title": "Ajouter un trajet depuis Dawarich",
+      "day": "Jour",
+      "which": "Quel trajet",
+      "whole-day": "Toute la journée",
+      "empty": "Dawarich n’a aucun trajet pour ce jour.",
+      "map": "Afficher la carte en dessous",
+      "map-description": "La carte vient d’OpenStreetMap, qui voit la zone affichée.",
+      "add": "Ajouter l’image",
+      "preview": "Aperçu de l’image du trajet"
     }
   }
 }

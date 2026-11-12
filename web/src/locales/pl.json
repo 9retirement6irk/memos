@@ -1197,6 +1197,11 @@
     },
     "journal": {
       "label": "Dziennik"
+    },
+    "dawarich": {
+      "api-key-help": "Znajdziesz go w Dawarich w Account › API access.",
+      "label": "Dawarich",
+      "description": "Twoja własna historia lokalizacji, dla miejsc w dzienniku i obrazów tras w dowolnej notatce. Twój klucz API zostaje na tym serwerze."
     }
   },
   "tooltip": {
@@ -1589,8 +1594,6 @@
       "goals-description": "Odhaczane w każdym wpisie i zapisywane jako lista kontrolna.",
       "add-goal": "Nowy cel",
       "remove": "Usuń {{name}}",
-      "dawarich-description": "Twoja własna historia lokalizacji, dla miejsca i trasy wpisu. Twój klucz API zostaje na tym serwerze.",
-      "dawarich-key-help": "Znajdziesz go w Dawarich w Account › API access.",
       "reminder-title": "Przypomnienie o serii",
       "reminder-description": "Wysyłane na telefon przez twojego Home Assistanta, gdy jeszcze nie pisałeś.",
       "reminder-enabled": "Wysyłaj przypomnienia",
@@ -1609,6 +1612,20 @@
       "reminder-saved": "Przypomnienie zapisane",
       "test": "Wyślij test",
       "test-sent": "Test wysłany"
+    }
+  },
+  "dawarich": {
+    "route": {
+      "insert": "Trasa z Dawarich",
+      "title": "Dodaj trasę z Dawarich",
+      "day": "Dzień",
+      "which": "Która trasa",
+      "whole-day": "Cały dzień",
+      "empty": "Dawarich nie ma trasy dla tego dnia.",
+      "map": "Pokaż mapę pod spodem",
+      "map-description": "Mapa pochodzi z OpenStreetMap, który widzi pokazany obszar.",
+      "add": "Dodaj obraz",
+      "preview": "Podgląd obrazu trasy"
     }
   }
 }

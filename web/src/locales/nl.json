@@ -1195,6 +1195,11 @@
     },
     "journal": {
       "label": "Dagboek"
+    },
+    "dawarich": {
+      "api-key-help": "Je vindt hem in Dawarich onder Account › API access.",
+      "label": "Dawarich",
+      "description": "Je eigen locatiegeschiedenis, voor plaatsen in je dagboek en routeafbeeldingen in elke memo. Je API-sleutel blijft op deze server."
     }
   },
   "tooltip": {
@@ -1587,8 +1592,6 @@
       "goals-description": "In elk item afgevinkt en als checklist opgeslagen.",
       "add-goal": "Nieuw doel",
       "remove": "{{name}} verwijderen",
-      "dawarich-description": "Je eigen locatiegeschiedenis, voor de plaats en route van een item. Je API-sleutel blijft op deze server.",
-      "dawarich-key-help": "Je vindt hem in Dawarich onder Account › API access.",
       "reminder-title": "Reeksherinnering",
       "reminder-description": "Door je Home Assistant naar je telefoon gestuurd als je nog niet hebt geschreven.",
       "reminder-enabled": "Herinneringen sturen",
@@ -1607,6 +1610,20 @@
       "reminder-saved": "Herinnering opgeslagen",
       "test": "Test sturen",
       "test-sent": "Test verstuurd"
+    }
+  },
+  "dawarich": {
+    "route": {
+      "insert": "Route uit Dawarich",
+      "title": "Route uit Dawarich toevoegen",
+      "day": "Dag",
+      "which": "Welke route",
+      "whole-day": "De hele dag",
+      "empty": "Dawarich heeft geen route voor deze dag.",
+      "map": "Kaart eronder tonen",
+      "map-description": "De kaart komt van OpenStreetMap, dat het getoonde gebied ziet.",
+      "add": "Afbeelding toevoegen",
+      "preview": "Voorbeeld van de routeafbeelding"
     }
   }
 }

@@ -16,6 +16,9 @@ vi.mock("@/components/map/useReverseGeocoding", () => ({ useReverseGeocoding: ()
 const immich = vi.hoisted(() => ({ connection: { configured: false, url: "" } }));
 vi.mock("@/hooks/useImmichQueries", () => ({ useImmichConnection: () => ({ data: immich.connection }) }));
 vi.mock("@/components/ImmichPicker/ImmichPickerDialog", () => ({ default: () => null }));
+const dawarich = vi.hoisted(() => ({ connection: { configured: false, url: "" } }));
+vi.mock("@/hooks/useDawarichQueries", () => ({ useDawarichConnection: () => ({ data: dawarich.connection }) }));
+vi.mock("@/components/DawarichRoute/RoutePickerDialog", () => ({ default: () => null }));
 
 beforeAll(() => {
   Element.prototype.scrollIntoView = vi.fn();
@@ -68,6 +71,20 @@ describe("InsertMenu", () => {
       expect(labels.indexOf("immich.insert")).toBe(labels.indexOf("editor.insert-menu.insert-image") + 1);
     } finally {
       immich.connection = { configured: false, url: "" };
+    }
+  });
+
+  test("offers a route from Dawarich after Immich photos once Dawarich is connected", () => {
+    immich.connection = { configured: true, url: "http://immich.example.com" };
+    dawarich.connection = { configured: true, url: "http://dawarich.example.com" };
+    try {
+      renderMenu(vi.fn(), false, false, richMode, vi.fn());
+      fireEvent.click(screen.getByRole("button", { name: "common.add" }));
+      const labels = screen.getAllByRole("menuitem").map((item) => item.textContent);
+      expect(labels.indexOf("dawarich.route.insert")).toBe(labels.indexOf("immich.insert") + 1);
+    } finally {
+      immich.connection = { configured: false, url: "" };
+      dawarich.connection = { configured: false, url: "" };
     }
   });
 

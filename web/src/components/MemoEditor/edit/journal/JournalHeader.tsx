@@ -13,8 +13,9 @@ import {
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDawarichConnection, useSaveJournalSettings } from "@/hooks/useJournalQueries";
-import { placeAt } from "@/lib/journal/dawarich";
+import { useDawarichConnection } from "@/hooks/useDawarichQueries";
+import { useSaveJournalSettings } from "@/hooks/useJournalQueries";
+import { placeAt } from "@/lib/dawarich";
 import { findCity, placeName, searchPlace, weatherAt } from "@/lib/journal/weather";
 import { showErrorToast } from "@/lib/toast";
 import { LocationSchema } from "@/types/proto/api/memo_service_pb";

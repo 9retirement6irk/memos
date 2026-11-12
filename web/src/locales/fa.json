@@ -1190,6 +1190,11 @@
     },
     "journal": {
       "label": "روزنوشت"
+    },
+    "dawarich": {
+      "api-key-help": "آن را در Dawarich زیر Account › API access پیدا می‌کنید.",
+      "label": "Dawarich",
+      "description": "تاریخچهٔ مکان خودتان، برای مکان‌های روزنوشت و تصویر مسیر در هر یادداشت. کلید API شما روی همین سرور می‌ماند."
     }
   },
   "tooltip": {
@@ -1587,8 +1592,6 @@
       "goals-description": "در هر ورودی تیک می‌خورند و به‌صورت فهرست بررسی ذخیره می‌شوند.",
       "add-goal": "هدف تازه",
       "remove": "حذف {{name}}",
-      "dawarich-description": "تاریخچهٔ مکان خودتان، برای مکان و مسیر ورودی. کلید API شما روی همین سرور می‌ماند.",
-      "dawarich-key-help": "آن را در Dawarich زیر Account › API access پیدا می‌کنید.",
       "reminder-title": "یادآور پیاپی",
       "reminder-description": "وقتی ننوشته‌اید، Home Assistant آن را به گوشی‌تان می‌فرستد.",
       "reminder-enabled": "ارسال یادآور",
@@ -1607,6 +1610,20 @@
       "reminder-saved": "یادآور ذخیره شد",
       "test": "ارسال آزمایشی",
       "test-sent": "پیام آزمایشی فرستاده شد"
+    }
+  },
+  "dawarich": {
+    "route": {
+      "insert": "مسیر از Dawarich",
+      "title": "افزودن مسیر از Dawarich",
+      "day": "روز",
+      "which": "کدام مسیر",
+      "whole-day": "تمام روز",
+      "empty": "Dawarich برای این روز مسیری ندارد.",
+      "map": "نمایش نقشه در زیر",
+      "map-description": "نقشه از OpenStreetMap می‌آید که ناحیهٔ نمایش‌داده‌شده را می‌بیند.",
+      "add": "افزودن تصویر",
+      "preview": "پیش‌نمایش تصویر مسیر"
     }
   }
 }

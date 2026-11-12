@@ -1195,6 +1195,11 @@
     },
     "journal": {
       "label": "Napló"
+    },
+    "dawarich": {
+      "api-key-help": "A Dawarichban az Account › API access alatt találod.",
+      "label": "Dawarich",
+      "description": "A saját helyelőzményeid, a napló helyeihez és útvonalképekhez bármely jegyzetben. Az API-kulcsod ezen a szerveren marad."
     }
   },
   "tooltip": {
@@ -1587,8 +1592,6 @@
       "goals-description": "Minden bejegyzésben kipipálhatók, és ellenőrzőlistaként mentődnek.",
       "add-goal": "Új cél",
       "remove": "{{name}} eltávolítása",
-      "dawarich-description": "A saját helyelőzményeid, a bejegyzés helyéhez és útvonalához. Az API-kulcsod ezen a szerveren marad.",
-      "dawarich-key-help": "A Dawarichban az Account › API access alatt találod.",
       "reminder-title": "Sorozat-emlékeztető",
       "reminder-description": "A Home Assistantod küldi a telefonodra, ha még nem írtál.",
       "reminder-enabled": "Emlékeztetők küldése",
@@ -1607,6 +1610,20 @@
       "reminder-saved": "Emlékeztető mentve",
       "test": "Teszt küldése",
       "test-sent": "Teszt elküldve"
+    }
+  },
+  "dawarich": {
+    "route": {
+      "insert": "Útvonal a Dawarichból",
+      "title": "Útvonal hozzáadása a Dawarichból",
+      "day": "Nap",
+      "which": "Melyik útvonal",
+      "whole-day": "Az egész nap",
+      "empty": "A Dawarichban nincs útvonal erre a napra.",
+      "map": "Térkép megjelenítése alatta",
+      "map-description": "A térkép az OpenStreetMaptől jön, amely látja a megjelenített területet.",
+      "add": "Kép hozzáadása",
+      "preview": "Az útvonalkép előnézete"
     }
   }
 }

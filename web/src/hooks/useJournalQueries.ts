@@ -1,7 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo } from "react";
 import useCurrentUser from "@/hooks/useCurrentUser";
-import { type DawarichConnection, deleteDawarichConnection, getDawarichConnection, saveDawarichConnection } from "@/lib/journal/dawarich";
 import {
   deleteJournalReminder,
   getJournalReminder,
@@ -22,7 +21,6 @@ export const journalKeys = {
   all: ["journal"] as const,
   settings: (user: string) => [...journalKeys.all, "settings", user] as const,
   reminder: (user: string) => [...journalKeys.all, "reminder", user] as const,
-  dawarich: (user: string) => [...journalKeys.all, "dawarich", user] as const,
 };
 
 /** The signed-in user's journal settings, with defaults for anything not saved yet. */
@@ -53,29 +51,6 @@ export const useSaveJournalSettings = () => {
     mutationFn: (settings: JournalSettings) => saveJournalSettings(settings),
     onSuccess: (saved) => queryClient.setQueryData(journalKeys.settings(user?.name ?? ""), saved),
   });
-};
-
-/** The signed-in user's Dawarich connection, without its key. */
-export const useDawarichConnection = () => {
-  const user = useCurrentUser();
-  return useQuery({
-    queryKey: journalKeys.dawarich(user?.name ?? ""),
-    queryFn: getDawarichConnection,
-    enabled: Boolean(user),
-    staleTime: 5 * 60 * 1000,
-  });
-};
-
-export const useUpdateDawarichConnection = () => {
-  const user = useCurrentUser();
-  const queryClient = useQueryClient();
-  const onSuccess = (connection: DawarichConnection) => queryClient.setQueryData(journalKeys.dawarich(user?.name ?? ""), connection);
-  const save = useMutation({
-    mutationFn: ({ url, apiKey }: { url: string; apiKey: string }) => saveDawarichConnection(url, apiKey),
-    onSuccess,
-  });
-  const remove = useMutation({ mutationFn: deleteDawarichConnection, onSuccess });
-  return { save, remove };
 };
 
 /** The signed-in user's streak reminder, without the Home Assistant token. */

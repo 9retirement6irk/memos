@@ -1190,6 +1190,11 @@
     },
     "journal": {
       "label": "일기"
+    },
+    "dawarich": {
+      "api-key-help": "Dawarich의 Account › API access에서 찾을 수 있습니다.",
+      "label": "Dawarich",
+      "description": "일기 장소와 모든 메모의 경로 이미지에 쓰이는 내 위치 기록. API 키는 이 서버에 보관됩니다."
     }
   },
   "tooltip": {
@@ -1587,8 +1592,6 @@
       "goals-description": "항목마다 체크하고 체크리스트로 저장합니다.",
       "add-goal": "새 목표",
       "remove": "{{name}} 제거",
-      "dawarich-description": "항목의 장소와 경로에 쓰이는 내 위치 기록. API 키는 이 서버에 보관됩니다.",
-      "dawarich-key-help": "Dawarich의 Account › API access에서 찾을 수 있습니다.",
       "reminder-title": "연속 기록 알림",
       "reminder-description": "아직 쓰지 않았을 때 Home Assistant가 휴대폰으로 보냅니다.",
       "reminder-enabled": "알림 보내기",
@@ -1607,6 +1610,20 @@
       "reminder-saved": "알림이 저장되었습니다",
       "test": "테스트 보내기",
       "test-sent": "테스트를 보냈습니다"
+    }
+  },
+  "dawarich": {
+    "route": {
+      "insert": "Dawarich 경로",
+      "title": "Dawarich에서 경로 추가",
+      "day": "날짜",
+      "which": "어떤 경로",
+      "whole-day": "하루 전체",
+      "empty": "Dawarich에 이날의 경로가 없습니다.",
+      "map": "아래에 지도 표시",
+      "map-description": "지도는 OpenStreetMap에서 가져오며, 표시된 지역이 OpenStreetMap에 전달됩니다.",
+      "add": "이미지 추가",
+      "preview": "경로 이미지 미리 보기"
     }
   }
 }

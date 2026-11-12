@@ -1,4 +1,4 @@
-import { apiJSON } from "./api";
+import { apiJSON } from "./journal/api";
 
 /** What the server shares about the user's Dawarich connection: never the API key. */
 export interface DawarichConnection {
@@ -59,4 +59,41 @@ export const placeAt = async (at: Date): Promise<{ lat: number; lon: number; nam
     }
   }
   return nearest ? { lat: nearest.lat, lon: nearest.lon } : undefined;
+};
+
+/** One journey Dawarich cut from the user's points. */
+export interface Track {
+  id: number;
+  start: string;
+  end: string;
+  distanceMeters: number;
+  /** Like "walking" or "driving"; absent when Dawarich doesn't know. */
+  mode?: string;
+  points: { lat: number; lon: number }[];
+}
+
+/**
+ * The journeys overlapping start..end, oldest first. `supported` is false on a Dawarich too old
+ * to list tracks; the whole day's points still make a route then.
+ */
+export const getTracks = (start: Date, end: Date) =>
+  apiJSON<{ tracks: Track[]; supported: boolean }>(`${BASE}/tracks?${range(start, end)}`);
+
+const MAP_TILES_KEY = "memos-route-map-tiles";
+
+/** Whether route images get OpenStreetMap's map underneath: on unless the user turned it off. */
+export const routeMapTiles = (): boolean => {
+  try {
+    return localStorage.getItem(MAP_TILES_KEY) !== "off";
+  } catch {
+    return true;
+  }
+};
+
+export const setRouteMapTiles = (on: boolean) => {
+  try {
+    localStorage.setItem(MAP_TILES_KEY, on ? "on" : "off");
+  } catch {
+    // Not remembered in this browser; the choice still applies now.
+  }
 };

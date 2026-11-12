@@ -1234,6 +1234,11 @@
     },
     "journal": {
       "label": "Jurnal"
+    },
+    "dawarich": {
+      "api-key-help": "O găsești în Dawarich la Account › API access.",
+      "label": "Dawarich",
+      "description": "Propriul istoric de locații, pentru locurile din jurnal și imaginile traseelor în orice notă. Cheia ta API rămâne pe acest server."
     }
   },
   "tooltip": {
@@ -1588,8 +1593,6 @@
       "goals-description": "Bifate în fiecare intrare și salvate ca listă de verificare.",
       "add-goal": "Obiectiv nou",
       "remove": "Elimină {{name}}",
-      "dawarich-description": "Propriul tău istoric de locații, pentru locul și traseul unei intrări. Cheia ta API rămâne pe acest server.",
-      "dawarich-key-help": "O găsești în Dawarich la Account › API access.",
       "reminder-title": "Memento pentru serie",
       "reminder-description": "Trimis pe telefon de Home Assistant când nu ai scris.",
       "reminder-enabled": "Trimite mementouri",
@@ -1608,6 +1611,20 @@
       "reminder-saved": "Memento salvat",
       "test": "Trimite un test",
       "test-sent": "Test trimis"
+    }
+  },
+  "dawarich": {
+    "route": {
+      "insert": "Traseu din Dawarich",
+      "title": "Adaugă un traseu din Dawarich",
+      "day": "Zi",
+      "which": "Ce traseu",
+      "whole-day": "Toată ziua",
+      "empty": "Dawarich nu are niciun traseu pentru această zi.",
+      "map": "Arată harta dedesubt",
+      "map-description": "Harta vine de la OpenStreetMap, care vede zona afișată.",
+      "add": "Adaugă imaginea",
+      "preview": "Previzualizarea imaginii traseului"
     }
   }
 }

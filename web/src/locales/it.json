@@ -1196,6 +1196,11 @@
     },
     "journal": {
       "label": "Diario"
+    },
+    "dawarich": {
+      "api-key-help": "La trovi in Dawarich in Account › API access.",
+      "label": "Dawarich",
+      "description": "La tua cronologia delle posizioni, per i luoghi del diario e le immagini dei percorsi in qualsiasi memo. La tua chiave API resta su questo server."
     }
   },
   "tooltip": {
@@ -1588,8 +1593,6 @@
       "goals-description": "Spuntati in ogni voce e salvati come checklist.",
       "add-goal": "Nuovo obiettivo",
       "remove": "Rimuovi {{name}}",
-      "dawarich-description": "La tua cronologia delle posizioni, per il luogo e il percorso di una voce. La tua chiave API resta su questo server.",
-      "dawarich-key-help": "La trovi in Dawarich in Account › API access.",
       "reminder-title": "Promemoria della serie",
       "reminder-description": "Inviato al tuo telefono dal tuo Home Assistant quando non hai scritto.",
       "reminder-enabled": "Invia promemoria",
@@ -1608,6 +1611,20 @@
       "reminder-saved": "Promemoria salvato",
       "test": "Invia una prova",
       "test-sent": "Prova inviata"
+    }
+  },
+  "dawarich": {
+    "route": {
+      "insert": "Percorso da Dawarich",
+      "title": "Aggiungi un percorso da Dawarich",
+      "day": "Giorno",
+      "which": "Quale percorso",
+      "whole-day": "Tutto il giorno",
+      "empty": "Dawarich non ha percorsi per questo giorno.",
+      "map": "Mostra la mappa sotto",
+      "map-description": "La mappa arriva da OpenStreetMap, che vede la zona mostrata.",
+      "add": "Aggiungi immagine",
+      "preview": "Anteprima dell’immagine del percorso"
     }
   }
 }
