@@ -345,6 +345,8 @@ export const EditSession: React.FC<EditSessionProps> = ({
 
       <div
         ref={editorContainerRef}
+        // Styling hook for app themes (themes/aero): a composer or editor with its own frame.
+        data-memo-editor={!frameless || isFocusMode ? "" : undefined}
         className={cn(
           "group w-full flex flex-col justify-between items-start gap-2",
           // A card that is the frame already supplies the background, border and padding; a session floating over the page in

@@ -729,7 +729,11 @@
       "theme-system-short": "Sistēma",
       "theme-light": "Gaišs",
       "theme-dark": "Tumšs",
-      "theme-paper": "Papīrs"
+      "theme-paper": "Papīrs",
+      "theme-aero-system": "Aero · Sinhronizēt ar sistēmu",
+      "theme-aero-light": "Aero · Gaišs",
+      "theme-aero-dark": "Aero · Tumšs",
+      "theme-aero-paper": "Aero · Papīrs"
     },
     "editor": {
       "label": "Redaktors",

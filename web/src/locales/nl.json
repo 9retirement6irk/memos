@@ -612,7 +612,11 @@
       "theme-system-short": "Systeem",
       "theme-light": "Licht",
       "theme-dark": "Donker",
-      "theme-paper": "Papier"
+      "theme-paper": "Papier",
+      "theme-aero-system": "Aero · Systeem volgen",
+      "theme-aero-light": "Aero · Licht",
+      "theme-aero-dark": "Aero · Donker",
+      "theme-aero-paper": "Aero · Papier"
     },
     "editor": {
       "label": "Editor",

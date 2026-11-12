@@ -1,0 +1,1458 @@
+/*
+ * Aero: the Windows Vista look for the Aero Light, Aero Dark and Aero Paper themes.
+ *
+ * The colors of each variant are @usememos/ui tokens in ../aero-light.css, ../aero-dark.css and
+ * ../aero-paper.css. This file draws what tokens can't: the Aurora wallpaper, glass, the window
+ * frame (components/AppWindow.tsx), glossy keys, sticky notes and the Vista icons. It only
+ * applies under data-theme="aero-*", so the other themes never see it.
+ *
+ * It styles the package's component classes (mu-button-primary, mu-menu-popup…) and memos'
+ * own styling hooks (data-app-sidebar, data-app-window, data-memo-card, data-memo-editor,
+ * data-column-grid, data-calendar-date, data-current, data-pinned-mark). Prefer adding a hook
+ * to a component over matching its Tailwind classes, which change with every redesign.
+ *
+ * Unlayered on purpose: it wins over the package's `mu` layer and Tailwind's utilities.
+ */
+
+/* ---------- 1. Recipes, per variant ---------------------------------------- */
+[data-theme="aero-light"] {
+  --aero-glass-sheen: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.42) 0%,
+    rgba(255, 255, 255, 0.16) 46%,
+    rgba(255, 255, 255, 0.06) 46.5%,
+    rgba(255, 255, 255, 0.14) 100%
+  );
+  --aero-glass-tint: rgba(110, 160, 205, 0.55);
+  --aero-glass: var(--aero-glass-sheen), var(--aero-glass-tint);
+  --aero-glass-border: 1px solid rgba(0, 0, 0, 0.55);
+  --aero-glass-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.55), 0 6px 24px rgba(0, 0, 0, 0.45);
+  --aero-glass-ink: #0b2340;
+  --aero-glass-ink-glow: 0 0 10px #fff, 0 0 4px #fff;
+  --aero-button: linear-gradient(180deg, #f2f2f2 0%, #ebebeb 49%, #dddddd 50%, #cfcfcf 100%);
+  --aero-button-hover: linear-gradient(180deg, #eaf6fd 0%, #d9f0fc 49%, #bee6fd 50%, #a7d9f5 100%);
+  --aero-button-pressed: linear-gradient(180deg, #e5f4fc 0%, #c4e5f6 49%, #98d1ef 50%, #68b3db 100%);
+  --aero-button-ink: #1e1e1e;
+  --aero-blue-button: linear-gradient(180deg, #7fb8ec 0%, #3d8bd8 49%, #1e6cc0 50%, #2f87d8 100%);
+  --aero-blue-button-hover: linear-gradient(180deg, #9fcdf6 0%, #5aa3e8 49%, #2b7dd2 50%, #4ca0ea 100%);
+  --aero-blue-button-edge: #173c6b;
+  --aero-blue-button-glow: rgba(80, 170, 255, 0.5);
+  --aero-select: linear-gradient(180deg, #f1f8fe 0%, #dcebfc 50%, #c6defb 51%, #d7e8fc 100%);
+  --aero-select-edge: #7da2ce;
+  --aero-select-ink: #0b2340;
+  --aero-hover: linear-gradient(180deg, #f2f8fd, #d6e9fa);
+  --aero-pane: linear-gradient(180deg, #ffffff 0%, #f7f9fc 70%, #eef3f9 100%);
+  --aero-pane-edge: #9fb5cf;
+  --aero-pane-ink: #1e1e1e;
+  --aero-pane-ink-muted: #4a5a6e;
+  --aero-pane-primary: #1e6cc0;
+  --aero-window-body: linear-gradient(#fbfcfe, #f2f6fb);
+  --aero-window-body-edge: #8ea7c2;
+  --aero-field: #ffffff;
+  --aero-field-edge: #abadb3;
+  --aero-field-edge-top: #8e9097;
+  --aero-focus-edge: #3c7fb1;
+  --aero-menu: linear-gradient(90deg, #f1f1f1 0, #f1f1f1 28px, #e2e3e3 28px, #e2e3e3 29px, #fff 29px, #fbfbfb 100%);
+  --aero-menu-edge: #979797;
+  --aero-menu-hover-edge: #a8d8eb;
+  --aero-tooltip: linear-gradient(180deg, #fff 0%, #e4e5f0 100%);
+  --aero-tooltip-ink: #4c4c4c;
+  --aero-tooltip-edge: #767676;
+  --aero-check-box: linear-gradient(135deg, #e6e6e6 0%, #f8f8f8 60%, #ffffff 100%);
+  --aero-check-box-hover: linear-gradient(135deg, #d8eefb 0%, #eef8fe 60%, #ffffff 100%);
+  --aero-check-edge: #8e8f8f;
+  --aero-check: url("./toolbar/check.svg");
+  --aero-scroll-track: linear-gradient(90deg, #e6e6e6, #f4f4f4);
+  --aero-scroll-thumb: linear-gradient(90deg, #f3f3f3, #e0e0e0 50%, #d0d0d0 51%, #dadada);
+  --aero-scroll-thumb-edge: #9c9c9c;
+  --aero-spiral-hole: #3a1d08;
+  --aero-spiral-wire: linear-gradient(90deg, transparent 0 6px, #111 6px, #777 7.5px, #2a2a2a 9px, #000 10.5px, transparent 10.5px);
+  --aero-gadget: linear-gradient(180deg, #fbc08a 0%, #f29247 46%, #e66a1f 50%, #ef8a3d 100%);
+  --aero-gadget-edge: #a5531a;
+  --aero-gadget-ink: #ffffff;
+  --aero-note-dim: none;
+  --aero-wallpaper:
+    linear-gradient(166deg, transparent 38%, rgba(190, 255, 160, 0.22) 41%, rgba(170, 255, 210, 0.08) 44%, transparent 47%),
+    linear-gradient(172deg, transparent 52%, rgba(150, 230, 255, 0.18) 55%, transparent 59%),
+    linear-gradient(176deg, transparent 63%, rgba(200, 255, 220, 0.14) 65%, transparent 68%),
+    radial-gradient(ellipse 40% 8% at 62% 88%, rgba(220, 255, 255, 0.45), transparent 70%),
+    radial-gradient(ellipse 60% 40% at 18% 28%, rgba(120, 220, 170, 0.45), transparent 70%),
+    radial-gradient(ellipse 45% 70% at 70% 8%, rgba(60, 160, 230, 0.5), transparent 70%),
+    radial-gradient(ellipse 50% 50% at 92% 80%, rgba(30, 90, 170, 0.6), transparent 70%),
+    linear-gradient(160deg, #0b3a54 0%, #0f5a5c 38%, #123e6b 70%, #081f3a 100%);
+  --aero-wallpaper-base: #0b3a54;
+}
+
+[data-theme="aero-dark"] {
+  --aero-glass-sheen: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.2) 0%,
+    rgba(255, 255, 255, 0.06) 46%,
+    rgba(255, 255, 255, 0) 46.5%,
+    rgba(255, 255, 255, 0.06) 100%
+  );
+  --aero-glass-tint: rgba(10, 18, 30, 0.78);
+  --aero-glass: var(--aero-glass-sheen), var(--aero-glass-tint);
+  --aero-glass-border: 1px solid rgba(0, 0, 0, 0.85);
+  --aero-glass-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22), 0 6px 24px rgba(0, 0, 0, 0.6);
+  --aero-glass-ink: #e6edf5;
+  --aero-glass-ink-glow: 0 0 8px rgba(0, 0, 0, 0.9);
+  --aero-button: linear-gradient(180deg, #56616f 0%, #3c4652 49%, #2b333d 50%, #333c47 100%);
+  --aero-button-hover: linear-gradient(180deg, #5f8fc4 0%, #3e6fa6 49%, #2c5a8f 50%, #3a6aa0 100%);
+  --aero-button-pressed: linear-gradient(180deg, #2c5a8f 0%, #23497a 100%);
+  --aero-button-ink: #f0f4f8;
+  --aero-blue-button: linear-gradient(180deg, #8fc4f2 0%, #5aa3e8 49%, #3d8bd8 50%, #5aa3e8 100%);
+  --aero-blue-button-hover: linear-gradient(180deg, #a8d2f7 0%, #73b2ec 49%, #4c98e0 50%, #6aaeee 100%);
+  --aero-blue-button-edge: #0a1f3a;
+  --aero-blue-button-glow: rgba(80, 170, 255, 0.35);
+  --aero-select: linear-gradient(180deg, #4a80bb 0%, #3a6ea8 50%, #2d5d95 51%, #3667a0 100%);
+  --aero-select-edge: #5d8fca;
+  --aero-select-ink: #ffffff;
+  --aero-hover: linear-gradient(180deg, #2f3c4c, #26313e);
+  --aero-pane: linear-gradient(180deg, #222c38 0%, #1c242e 100%);
+  --aero-pane-edge: #3a4a5e;
+  --aero-pane-ink: #e6edf5;
+  --aero-pane-ink-muted: #a9b8c9;
+  --aero-pane-primary: #5aa3e8;
+  --aero-window-body: linear-gradient(#1c242e, #161d25);
+  --aero-window-body-edge: #3a4a5e;
+  --aero-field: #10161d;
+  --aero-field-edge: #4a5a6e;
+  --aero-field-edge-top: #2a3644;
+  --aero-focus-edge: #5aa3e8;
+  --aero-menu: linear-gradient(90deg, #262f3a 0, #262f3a 28px, #34404e 28px, #34404e 29px, #1f2832 29px, #1c242e 100%);
+  --aero-menu-edge: #0a0f15;
+  --aero-menu-hover-edge: #5d8fca;
+  --aero-tooltip: linear-gradient(180deg, #2f3a47 0%, #1f2832 100%);
+  --aero-tooltip-ink: #e6edf5;
+  --aero-tooltip-edge: #0a0f15;
+  --aero-check-box: linear-gradient(135deg, #10161d 0%, #1b232e 100%);
+  --aero-check-box-hover: linear-gradient(135deg, #16263a 0%, #1d3350 100%);
+  --aero-check-edge: #6a7a8e;
+  --aero-check: url("./toolbar/check-dark.svg");
+  --aero-scroll-track: #151b22;
+  --aero-scroll-thumb: linear-gradient(90deg, #4a5563, #3a444f 50%, #2f3842 51%, #36404b);
+  --aero-scroll-thumb-edge: #0a0f15;
+  --aero-spiral-hole: #05080c;
+  --aero-spiral-wire: linear-gradient(
+    90deg,
+    transparent 0 6px,
+    #4a4a4a 6px,
+    #b8b8b8 7.5px,
+    #6a6a6a 9px,
+    #2a2a2a 10.5px,
+    transparent 10.5px
+  );
+  --aero-gadget: linear-gradient(180deg, #a85f35 0%, #8c4822 46%, #763a17 50%, #82411d 100%);
+  --aero-gadget-edge: #3e1a06;
+  --aero-gadget-ink: #f6e6da;
+  --aero-note-dim: brightness(0.9) saturate(0.9);
+  --aero-wallpaper:
+    linear-gradient(166deg, transparent 38%, rgba(120, 220, 120, 0.14) 41%, rgba(120, 220, 170, 0.05) 44%, transparent 47%),
+    linear-gradient(172deg, transparent 52%, rgba(90, 170, 230, 0.12) 55%, transparent 59%),
+    radial-gradient(ellipse 40% 8% at 62% 88%, rgba(140, 210, 255, 0.22), transparent 70%),
+    radial-gradient(ellipse 60% 40% at 18% 28%, rgba(40, 140, 110, 0.35), transparent 70%),
+    radial-gradient(ellipse 45% 70% at 70% 8%, rgba(30, 90, 160, 0.4), transparent 70%),
+    linear-gradient(160deg, #04121c 0%, #062226 38%, #071a33 70%, #02070f 100%);
+  --aero-wallpaper-base: #050d18;
+}
+
+[data-theme="aero-paper"] {
+  --aero-glass-sheen: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.42) 0%,
+    rgba(255, 255, 255, 0.16) 46%,
+    rgba(255, 255, 255, 0.06) 46.5%,
+    rgba(255, 255, 255, 0.14) 100%
+  );
+  --aero-glass-tint: rgba(190, 140, 80, 0.55);
+  --aero-glass: var(--aero-glass-sheen), var(--aero-glass-tint);
+  --aero-glass-border: 1px solid rgba(40, 20, 0, 0.55);
+  --aero-glass-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.55), 0 6px 24px rgba(30, 15, 0, 0.45);
+  --aero-glass-ink: #3d2a12;
+  --aero-glass-ink-glow: 0 0 10px #fff8ec, 0 0 4px #fff8ec;
+  --aero-button: linear-gradient(180deg, #fbf6ec 0%, #f4ecdc 49%, #e8dcc6 50%, #dccdb2 100%);
+  --aero-button-hover: linear-gradient(180deg, #fdf5e6 0%, #fbe9c9 49%, #f6d9a5 50%, #f0c98a 100%);
+  --aero-button-pressed: linear-gradient(180deg, #f8e3bd 0%, #eccb8e 49%, #e2b56a 50%, #d9a453 100%);
+  --aero-button-ink: #2b2418;
+  --aero-blue-button: linear-gradient(180deg, #e2aa64 0%, #b8752c 49%, #9a5b1e 50%, #b06a26 100%);
+  --aero-blue-button-hover: linear-gradient(180deg, #eab877 0%, #c4823a 49%, #a8662a 50%, #bd7733 100%);
+  --aero-blue-button-edge: #5e3510;
+  --aero-blue-button-glow: rgba(255, 180, 80, 0.45);
+  --aero-select: linear-gradient(180deg, #fffaf0 0%, #fbedd3 50%, #f5dfb8 51%, #f8e7c9 100%);
+  --aero-select-edge: #c9a26b;
+  --aero-select-ink: #3d2a12;
+  --aero-hover: linear-gradient(180deg, #fffaf0, #f7e8cd);
+  --aero-pane: linear-gradient(180deg, #fffdf7 0%, #fbf5e8 70%, #f5eddc 100%);
+  --aero-pane-edge: #cdb48a;
+  --aero-pane-ink: #2b2418;
+  --aero-pane-ink-muted: #6b5a44;
+  --aero-pane-primary: #9a5b1e;
+  --aero-window-body: linear-gradient(#fffdf7, #f8f0e0);
+  --aero-window-body-edge: #cdb48a;
+  --aero-field: #fffdf7;
+  --aero-field-edge: #bfa98a;
+  --aero-field-edge-top: #a8916f;
+  --aero-focus-edge: #b9853f;
+  --aero-menu: linear-gradient(90deg, #f5eee2 0, #f5eee2 28px, #e6dccb 28px, #e6dccb 29px, #fffaf0 29px, #fcf6ea 100%);
+  --aero-menu-edge: #a8916f;
+  --aero-menu-hover-edge: #e0c08a;
+  --aero-tooltip: linear-gradient(180deg, #fffdf7 0%, #f0e6d4 100%);
+  --aero-tooltip-ink: #5a4a36;
+  --aero-tooltip-edge: #8a7558;
+  --aero-check-box: linear-gradient(135deg, #ece2cf 0%, #faf4e8 60%, #fffdf7 100%);
+  --aero-check-box-hover: linear-gradient(135deg, #fbe9c9 0%, #fff8ec 60%, #fffdf7 100%);
+  --aero-check-edge: #8a7558;
+  --aero-check: url("./toolbar/check.svg");
+  --aero-scroll-track: linear-gradient(90deg, #ece2cf, #f8f1e4);
+  --aero-scroll-thumb: linear-gradient(90deg, #faf4e8, #ebdfc9 50%, #ddcdb1 51%, #e6d8bf);
+  --aero-scroll-thumb-edge: #a8916f;
+  --aero-spiral-hole: #3a1d08;
+  --aero-spiral-wire: linear-gradient(90deg, transparent 0 6px, #111 6px, #777 7.5px, #2a2a2a 9px, #000 10.5px, transparent 10.5px);
+  --aero-gadget: linear-gradient(180deg, #fbc08a 0%, #f29247 46%, #e66a1f 50%, #ef8a3d 100%);
+  --aero-gadget-edge: #a5531a;
+  --aero-gadget-ink: #ffffff;
+  --aero-note-dim: none;
+  --aero-wallpaper:
+    linear-gradient(166deg, transparent 38%, rgba(255, 220, 140, 0.22) 41%, rgba(255, 200, 120, 0.08) 44%, transparent 47%),
+    linear-gradient(172deg, transparent 52%, rgba(255, 190, 120, 0.16) 55%, transparent 59%),
+    radial-gradient(ellipse 40% 8% at 62% 88%, rgba(255, 240, 210, 0.45), transparent 70%),
+    radial-gradient(ellipse 60% 40% at 18% 28%, rgba(230, 170, 90, 0.45), transparent 70%),
+    radial-gradient(ellipse 45% 70% at 70% 8%, rgba(200, 110, 50, 0.45), transparent 70%),
+    radial-gradient(ellipse 50% 50% at 92% 80%, rgba(110, 60, 30, 0.6), transparent 70%),
+    linear-gradient(160deg, #4a3016 0%, #6b4a20 38%, #5a3218 70%, #2a1a0c 100%);
+  --aero-wallpaper-base: #3a2a18;
+}
+
+/* Everything below is shared by the three variants. */
+[data-theme^="aero-"] {
+  --mu-font-sans: "Segoe UI", "Noto Sans", Tahoma, Verdana, system-ui, sans-serif;
+  --mu-font-mono: Consolas, "Lucida Console", "Noto Sans Mono", ui-monospace, monospace;
+  /* What glass text reads in: white on the sidebar's glass. */
+  --aero-on-glass: #ffffff;
+  --aero-on-glass-muted: rgba(255, 255, 255, 0.88);
+  --aero-on-glass-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+
+  /* ---------- 2. Desktop wallpaper: a still Aurora ------------------------ */
+  background-color: var(--aero-wallpaper-base);
+  background-image: var(--aero-wallpaper);
+  background-attachment: fixed;
+  background-size: 100vw 100vh;
+
+  & body,
+  & #root .bg-mu-canvas {
+    background: transparent;
+  }
+
+  /* The phone header and the demo banner become thin glass strips. */
+  & main > header.sticky {
+    background: var(--aero-glass);
+    border-color: rgba(0, 0, 0, 0.45);
+    backdrop-filter: none;
+    color: var(--aero-glass-ink);
+    text-shadow: var(--aero-glass-ink-glow);
+    --mu-ink: var(--aero-glass-ink);
+  }
+
+  /* ---------- 3. Sidebar: frosted Aero glass ------------------------------ */
+  & #root div:has(> [data-app-sidebar]) {
+    padding: 10px 0 10px 10px;
+    border: 0;
+  }
+
+  & [data-app-sidebar] {
+    position: relative;
+    overflow: visible;
+    background: var(--aero-glass);
+    border: var(--aero-glass-border);
+    border-radius: 8px;
+    box-shadow: var(--aero-glass-shadow);
+    color: var(--aero-on-glass);
+    text-shadow: var(--aero-on-glass-shadow);
+    --mu-ink: var(--aero-on-glass);
+    --mu-ink-muted: var(--aero-on-glass-muted);
+    --mu-line: rgba(255, 255, 255, 0.35);
+    --mu-hover: rgba(255, 255, 255, 0.18);
+    --mu-primary: #ffffff;
+  }
+
+  /* The spiral binding along the top of the sidebar, like a desk notepad. */
+  & [data-app-sidebar]::before {
+    content: "";
+    position: absolute;
+    top: -9px;
+    left: 14px;
+    right: 14px;
+    height: 22px;
+    z-index: 3;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse 3px 3.5px at 50% 17px, var(--aero-spiral-hole) 0 90%, transparent 100%) 0 0 / 18px 22px repeat-x,
+      var(--aero-spiral-wire) 0 0 / 18px 17px repeat-x;
+    filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.35));
+  }
+
+  /* Rows: Explorer-style hover and selection. */
+  & [data-app-sidebar] :is(a, button):not(.mu-button-icon):not(.memos-brand-trigger) {
+    border: 1px solid transparent;
+    border-radius: 3px;
+    transition:
+      background 0.12s,
+      border-color 0.12s;
+  }
+  & [data-app-sidebar] :is(a, button):not(.mu-button-icon):not(.memos-brand-trigger):hover {
+    border-color: rgba(255, 255, 255, 0.55);
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.35),
+      rgba(255, 255, 255, 0.1) 50%,
+      rgba(255, 255, 255, 0.04) 51%,
+      rgba(255, 255, 255, 0.18)
+    );
+  }
+  & [data-app-sidebar] :is([aria-current="page"], [data-current], [data-checked]):not([data-calendar-date]) {
+    background: var(--aero-select);
+    border: 1px solid var(--aero-select-edge);
+    border-radius: 3px;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.8);
+    color: var(--aero-select-ink);
+    text-shadow: none;
+    --mu-ink: var(--aero-select-ink);
+    --mu-ink-muted: var(--aero-select-ink);
+    --mu-primary: var(--aero-select-ink);
+  }
+  /* A checked filter keeps the selection but drops the package's side mark. */
+  & [data-app-sidebar] [data-checked]::before {
+    display: none;
+  }
+  /* The current nav pill sits in a group that is already filled: one frame, not two. */
+  & [data-app-sidebar] nav div:has(> [aria-current="page"]) {
+    background: none;
+  }
+
+  /* The mini calendar and other sidebar widgets become white panes. */
+  & [data-app-sidebar] section:has([role="group"]) {
+    background: var(--aero-pane);
+    border: 1px solid var(--aero-pane-edge);
+    border-radius: 6px;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.6),
+      0 1px 3px rgba(0, 30, 80, 0.25);
+    padding: 6px;
+    text-shadow: none;
+    --mu-ink: var(--aero-pane-ink);
+    --mu-ink-muted: var(--aero-pane-ink-muted);
+    --mu-hover: rgba(60, 127, 177, 0.12);
+    --mu-primary: var(--aero-pane-primary);
+  }
+
+  /* The phone's slide-out sidebar sits outside the page, so it gets its own wallpaper. */
+  & .mu-drawer-popup:has([data-app-sidebar]) {
+    padding: 18px 8px 8px;
+    background-color: var(--aero-wallpaper-base);
+    background-image: var(--aero-wallpaper);
+    background-size: cover;
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.5);
+  }
+
+  /* The Memos mark becomes the Windows Journal notebook. */
+  & .memos-logo .memos-mark {
+    width: 28px;
+    height: 28px;
+    background: url("./icons/Journal_104.png") center / contain no-repeat;
+    filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.5));
+  }
+  & .memos-logo .memos-mark > * {
+    display: none;
+  }
+
+  /* ---------- 4. The page: an Aero window (components/AppWindow.tsx) ----- */
+  & [data-app-window] {
+    position: relative;
+    box-sizing: border-box;
+    width: calc(100% - 32px);
+    max-width: 48rem;
+    margin: 12px 16px 24px;
+    padding: 33px 8px 8px;
+    background: var(--aero-glass);
+    border: var(--aero-glass-border);
+    border-radius: 8px;
+    box-shadow: var(--aero-glass-shadow);
+  }
+  & [data-app-window][data-page="settings"],
+  & [data-app-window][data-page="common"] {
+    max-width: 62rem;
+  }
+  & [data-app-window][data-page="inbox"] {
+    max-width: 66rem;
+  }
+  & [data-app-window][data-page="calendar"] {
+    max-width: 76rem;
+  }
+  & [data-app-window][data-page="attachments"],
+  & [data-app-window][data-page="views"] {
+    max-width: 84rem;
+  }
+
+  /* The caption bar: the notebook, the title and the caption buttons. */
+  & [data-app-window-caption] {
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 32px;
+    border-radius: 7px 7px 0 0;
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.5),
+      rgba(255, 255, 255, 0.12) 55%,
+      rgba(255, 255, 255, 0) 56%,
+      rgba(255, 255, 255, 0.1)
+    );
+  }
+  & [data-app-window-title] {
+    position: absolute;
+    inset: 0 120px 0 0;
+    display: flex;
+    align-items: center;
+    padding-inline-start: 34px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: 14px;
+    color: var(--aero-glass-ink);
+    text-shadow: var(--aero-glass-ink-glow);
+    background: url("./icons/Journal_104.png") 10px center / 16px 16px no-repeat;
+    pointer-events: none;
+  }
+  & [data-app-window-buttons] {
+    position: absolute;
+    top: 0;
+    right: 6px;
+    width: 96px;
+    height: 20px;
+    background: url("./ui/caption-buttons.svg") center / 96px 20px no-repeat;
+    pointer-events: none;
+  }
+  /* The red close button over the drawn one: it signs out. */
+  & [data-app-window-close] {
+    all: unset;
+    position: absolute;
+    top: 0;
+    right: 6px;
+    width: 43px;
+    height: 20px;
+    border-radius: 0 0 5px 0;
+    cursor: default;
+    z-index: 5;
+  }
+  & [data-app-window-close]:hover {
+    background: linear-gradient(
+      180deg,
+      rgba(255, 200, 180, 0.45),
+      rgba(255, 120, 90, 0.2) 50%,
+      rgba(255, 60, 30, 0.35) 51%,
+      rgba(255, 150, 120, 0.45)
+    );
+    box-shadow: 0 0 10px rgba(255, 90, 60, 0.9);
+  }
+  & [data-app-window-close]:active {
+    filter: brightness(0.8);
+  }
+  & [data-app-window-close]:focus-visible {
+    outline: 1px dotted #fff;
+    outline-offset: -3px;
+  }
+
+  /* Memo lists keep the glass so the sticky notes sit on it; every other page gets a
+     window body, like a real Vista window, so its text reads on a solid pane. */
+  &
+    [data-app-window]:not(:is([data-page="home"], [data-page="explore"], [data-page="archived"], [data-page="memo"]))
+    > :not([data-app-window-caption]) {
+    background: var(--aero-window-body);
+    border: 1px solid var(--aero-window-body-edge);
+    border-radius: 3px;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.08);
+  }
+  /* On the glass, page-level text (empty states, the end of a list) reads light. */
+  & [data-app-window]:is([data-page="home"], [data-page="explore"], [data-page="archived"], [data-page="memo"]) {
+    --mu-ink-muted: var(--aero-on-glass-muted);
+    color: var(--aero-on-glass);
+  }
+
+  /* ---------- 5. Composer and editor: a white pane with a sunken box ----- */
+  & [data-memo-editor] {
+    background: var(--aero-pane);
+    border: 1px solid var(--aero-pane-edge);
+    border-radius: 6px;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.6),
+      0 1px 3px rgba(0, 30, 80, 0.25);
+    color: var(--aero-pane-ink);
+    --mu-ink: var(--aero-pane-ink);
+    --mu-ink-muted: var(--aero-pane-ink-muted);
+  }
+  & [data-memo-editor] .memo-editor-scroller {
+    background: var(--aero-field);
+    border: 1px solid var(--aero-field-edge);
+    border-top-color: var(--aero-field-edge-top);
+    border-radius: 3px;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.12);
+    padding: 8px 10px;
+  }
+
+  /* ---------- 6. Memos: sticky notes ------------------------------------- */
+  & [data-memo-card] {
+    --tilt: -1.2deg;
+    --note-top: #fff8a8;
+    --note-bottom: #fff17a;
+    --note-ink: #3d3200;
+    position: relative;
+    margin: 14px 6px 10px;
+    padding: 24px 18px 18px;
+    border: 0;
+    border-radius: 2px;
+    background: linear-gradient(180deg, var(--note-top) 0%, var(--note-bottom) 100%);
+    color: #1e1e1e;
+    color-scheme: light;
+    /* The note is paper in every variant: its text reads dark. */
+    --mu-ink: #1e1e1e;
+    --mu-ink-muted: var(--note-ink);
+    --mu-surface: var(--note-bottom);
+    --mu-line: rgba(0, 0, 0, 0.15);
+    --mu-hover: rgba(0, 0, 0, 0.06);
+    --mu-well: rgba(0, 0, 0, 0.08);
+    --mu-accent: #0b4f9c;
+    text-shadow: none;
+    filter: var(--aero-note-dim);
+    box-shadow:
+      0 1px 1px rgba(0, 0, 0, 0.18),
+      0 12px 16px -10px rgba(0, 0, 0, 0.55),
+      inset 0 -20px 30px -24px rgba(120, 80, 0, 0.35);
+    transform: rotate(var(--tilt));
+    transition:
+      transform 0.18s ease,
+      box-shadow 0.18s ease;
+  }
+  /* Seven paper colors cycle down the list. Seven doesn't divide 2, 3, 4 or 5 columns, so
+     neighbours rarely match; a memo with a comment preview sits one div deeper. */
+  & :is([data-memo-card]:nth-child(7n + 2), :nth-child(7n + 2) > [data-memo-card]) {
+    --note-top: #d9f7c4;
+    --note-bottom: #bdec9f;
+    --note-ink: #2f4a26;
+  }
+  & :is([data-memo-card]:nth-child(7n + 3), :nth-child(7n + 3) > [data-memo-card]) {
+    --note-top: #ffd8e4;
+    --note-bottom: #ffbfd3;
+    --note-ink: #5e3a46;
+  }
+  & :is([data-memo-card]:nth-child(7n + 4), :nth-child(7n + 4) > [data-memo-card]) {
+    --note-top: #d6ecff;
+    --note-bottom: #b5dafc;
+    --note-ink: #1f3d5c;
+  }
+  & :is([data-memo-card]:nth-child(7n + 5), :nth-child(7n + 5) > [data-memo-card]) {
+    --note-top: #ffe1c2;
+    --note-bottom: #ffc896;
+    --note-ink: #5c3a12;
+  }
+  & :is([data-memo-card]:nth-child(7n + 6), :nth-child(7n + 6) > [data-memo-card]) {
+    --note-top: #e8dcff;
+    --note-bottom: #d3c0fb;
+    --note-ink: #3e2a66;
+  }
+  & :is([data-memo-card]:nth-child(7n + 7), :nth-child(7n + 7) > [data-memo-card]) {
+    --note-top: #cff5ec;
+    --note-bottom: #a9ead9;
+    --note-ink: #1f4a40;
+  }
+  /* Tilts run on their own cycle of five, so color and angle don't repeat together. */
+  & :is([data-memo-card]:nth-child(5n + 2), :nth-child(5n + 2) > [data-memo-card]) {
+    --tilt: 0.9deg;
+  }
+  & :is([data-memo-card]:nth-child(5n + 3), :nth-child(5n + 3) > [data-memo-card]) {
+    --tilt: -0.6deg;
+  }
+  & :is([data-memo-card]:nth-child(5n + 4), :nth-child(5n + 4) > [data-memo-card]) {
+    --tilt: 1.3deg;
+  }
+  & :is([data-memo-card]:nth-child(5n + 5), :nth-child(5n + 5) > [data-memo-card]) {
+    --tilt: -0.3deg;
+  }
+  & [data-memo-card]:hover {
+    transform: rotate(0deg) translateY(-2px);
+    box-shadow:
+      0 1px 1px rgba(0, 0, 0, 0.18),
+      0 18px 22px -10px rgba(0, 0, 0, 0.5),
+      inset 0 -20px 30px -24px rgba(120, 80, 0, 0.35);
+  }
+  /* A strip of tape across the top. */
+  & [data-memo-card]::before {
+    content: "";
+    position: absolute;
+    top: -11px;
+    left: 50%;
+    width: 96px;
+    height: 24px;
+    transform: translateX(-50%) rotate(calc(var(--tilt) * -2));
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.7), rgba(235, 240, 245, 0.5));
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+    pointer-events: none;
+  }
+  /* The curled corner. */
+  & [data-memo-card]::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 26px;
+    height: 26px;
+    background: linear-gradient(
+      315deg,
+      transparent 48%,
+      rgba(0, 0, 0, 0.12) 50%,
+      rgba(255, 255, 255, 0.55) 56%,
+      rgba(255, 255, 255, 0) 80%
+    );
+    pointer-events: none;
+  }
+  /* Flat while editing, so the editor and focus mode behave. */
+  & [data-memo-card]:has([data-memo-editor]),
+  & [data-memo-card]:focus-within:has([contenteditable="true"]) {
+    transform: none;
+  }
+  & [data-memo-card] [data-memo-editor] {
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+  }
+  /* Pinned: always yellow, with a gold star in the corner. */
+  & [data-memo-card]:has([data-pinned-mark]) {
+    --note-top: #fff8a8;
+    --note-bottom: #fff17a;
+    --note-ink: #3d3200;
+  }
+  & [data-memo-card] [data-pinned-mark] {
+    top: -9px;
+    left: -9px;
+    right: auto;
+    width: 26px;
+    height: 26px;
+    clip-path: none;
+    border-radius: 0;
+    background: url("./icons/ieframe_31060.png") center / contain no-repeat;
+    filter: drop-shadow(0 1px 1px rgba(90, 60, 0, 0.5));
+    z-index: 1;
+  }
+
+  /* Hashtags: glossy Aero pills. */
+  & .mbe-tag {
+    padding: 1px 8px 2px;
+    color: #0d3f78;
+    border: 1px solid #6f9bd1;
+    border-radius: 999px;
+    background: linear-gradient(180deg, #fbfdff 0%, #e3f0fd 48%, #c6def8 52%, #dcecfc 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.95),
+      0 1px 2px rgba(0, 40, 90, 0.25);
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+    opacity: 1;
+    transition:
+      border-color 0.12s,
+      box-shadow 0.12s;
+  }
+  & .mbe-tag:hover {
+    border-color: #3c7fb1;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.95),
+      0 0 6px rgba(80, 170, 255, 0.6),
+      0 1px 2px rgba(0, 40, 90, 0.25);
+  }
+
+  /* Code blocks on a note: translucent paper. */
+  & [data-memo-card] :is(pre, .mbe-code) {
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 3px;
+  }
+
+  /* ---------- 7. Buttons -------------------------------------------------- */
+  & :is(.mu-button-neutral, .mu-select-trigger, .mu-combobox-trigger, .mu-kbd) {
+    color: var(--aero-button-ink);
+    border-radius: 3px;
+    background-color: transparent;
+    background-image: var(--aero-button);
+    text-shadow: none;
+  }
+  & :is(.mu-button-neutral, .mu-select-trigger, .mu-combobox-trigger):hover {
+    background-image: var(--aero-button-hover);
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.7),
+      0 0 0 1px var(--aero-focus-edge);
+  }
+  & :is(.mu-button-neutral, .mu-select-trigger):is(:active, [data-pressed], [data-popup-open]) {
+    background-image: var(--aero-button-pressed);
+  }
+  & .mu-button-primary {
+    color: #fff;
+    font-weight: 600;
+    text-shadow: 0 -1px 0 rgba(0, 40, 90, 0.6);
+    border-radius: 3px;
+    background-color: transparent;
+    background-image: var(--aero-blue-button);
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.35),
+      0 0 0 1px var(--aero-blue-button-edge),
+      0 0 8px var(--aero-blue-button-glow);
+  }
+  & .mu-button-primary:hover:not(:disabled, [data-disabled]) {
+    background-image: var(--aero-blue-button-hover);
+  }
+  & .mu-button-primary:is(:disabled, [data-disabled]) {
+    filter: grayscale(0.7) opacity(0.7);
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.35),
+      0 0 0 1px var(--aero-blue-button-edge);
+  }
+  & .mu-button-danger {
+    color: #fff;
+    border-radius: 3px;
+    background-color: transparent;
+    background-image: linear-gradient(180deg, #f0a59a 0%, #d8634f 50%, #c2331d 51%, #e0765c 100%);
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.3),
+      0 0 0 1px #7a1a0c;
+    text-shadow: 0 -1px 0 rgba(90, 0, 0, 0.5);
+  }
+  /* Ghost and icon buttons: the Vista toolbar hover. */
+  & :is(.mu-button-ghost, .mu-toggle):is(:hover, [data-popup-open]):not([data-app-sidebar] *) {
+    border-radius: 3px;
+    background: var(--aero-hover);
+    box-shadow: inset 0 0 0 1px var(--aero-select-edge);
+  }
+  & .mu-toggle[data-pressed]:not([data-app-sidebar] *) {
+    border-radius: 3px;
+    background: var(--aero-button-pressed);
+    box-shadow: inset 0 1px 2px rgba(0, 40, 90, 0.35);
+  }
+
+  /* ---------- 8. Inputs --------------------------------------------------- */
+  & :is(.mu-input-root, .mu-textarea, .mu-combobox-input-root):not([data-memo-editor] *) {
+    background: var(--aero-field);
+    border-radius: 2px;
+    box-shadow:
+      inset 0 0 0 1px var(--aero-field-edge),
+      inset 0 1px 0 1px var(--aero-field-edge-top),
+      inset 0 2px 3px rgba(0, 0, 0, 0.1);
+  }
+  & :is(.mu-input-root, .mu-textarea, .mu-combobox-input-root):focus-within {
+    box-shadow:
+      inset 0 0 0 1px var(--aero-focus-edge),
+      inset 0 2px 3px rgba(0, 0, 0, 0.1),
+      0 0 0 1px color-mix(in srgb, var(--aero-focus-edge) 35%, transparent);
+  }
+
+  /* ---------- 9. Menus, popovers, dialogs, tooltips, toasts --------------- */
+  & :is(.mu-menu-popup, .mu-select-popup, .mu-combobox-popup) {
+    background: var(--aero-menu);
+    border-radius: 3px;
+    box-shadow:
+      0 0 0 1px var(--aero-menu-edge),
+      2px 3px 6px rgba(0, 0, 0, 0.35);
+    text-shadow: none;
+  }
+  & :is(.mu-menu-item, .mu-select-item, .mu-combobox-item) {
+    border: 1px solid transparent;
+    border-radius: 3px;
+  }
+  & :is(.mu-menu-item, .mu-select-item, .mu-combobox-item):is([data-highlighted]) {
+    background: var(--aero-select);
+    border-color: var(--aero-menu-hover-edge);
+    color: var(--mu-ink);
+  }
+  & .mu-popover-popup {
+    border-radius: 6px;
+    box-shadow:
+      0 0 0 1px var(--aero-menu-edge),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.5),
+      0 0 0 4px color-mix(in srgb, #96bee6 55%, transparent),
+      3px 4px 12px rgba(0, 0, 0, 0.4);
+    text-shadow: none;
+  }
+
+  /* Dialogs and side panels: a glass frame around a white window body. */
+  & :is(.mu-dialog-popup, .mu-drawer-popup):not(:has([data-app-sidebar])):not(.mu-dialog-bare, .mu-drawer-bare) {
+    border: 8px solid transparent;
+    border-radius: 8px;
+    background:
+      linear-gradient(var(--mu-surface), var(--mu-surface)) padding-box,
+      var(--aero-glass-sheen) border-box,
+      var(--aero-glass-tint) border-box;
+    backdrop-filter: blur(16px) saturate(150%);
+    box-shadow:
+      0 0 0 1px rgba(0, 0, 0, 0.55),
+      inset 0 0 0 1px var(--aero-window-body-edge),
+      0 12px 40px rgba(0, 0, 0, 0.5);
+    text-shadow: none;
+  }
+  & :is(.mu-dialog-backdrop, .mu-drawer-backdrop) {
+    background: var(--mu-overlay);
+  }
+
+  & .mu-tooltip-popup {
+    background: var(--aero-tooltip);
+    color: var(--aero-tooltip-ink);
+    border-radius: 3px;
+    box-shadow:
+      0 0 0 1px var(--aero-tooltip-edge),
+      2px 2px 4px rgba(0, 0, 0, 0.25);
+    text-shadow: none;
+  }
+
+  /* Toasts: a notification-area balloon with the Vista message icons. */
+  & .mu-toast {
+    color: var(--mu-ink);
+    border-radius: 6px;
+    background: linear-gradient(180deg, var(--mu-surface) 0%, var(--mu-surface) 55%, var(--mu-canvas) 100%);
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.4),
+      0 0 0 1px #44617f,
+      0 0 0 4px color-mix(in srgb, #96bee6 55%, transparent),
+      0 0 0 5px rgba(40, 70, 110, 0.5),
+      4px 6px 16px rgba(0, 0, 0, 0.4);
+  }
+  & .mu-toast-icon {
+    width: 32px;
+    height: 32px;
+    flex: none;
+    color: transparent;
+    background: url("./ui/info.png") center / contain no-repeat;
+  }
+  & .mu-toast-icon > * {
+    display: none;
+  }
+  & .mu-toast-success .mu-toast-icon {
+    background-image: url("./ui/success.png");
+  }
+  & :is(.mu-toast-danger, .mu-toast-warning) .mu-toast-icon {
+    background-image: url("./ui/error.png");
+  }
+
+  /* ---------- 10. Checkboxes and switches: Vista square boxes ------------ */
+  & :is(.mu-checkbox, .mbe-checkbox) {
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    border: 1px solid var(--aero-check-edge);
+    border-radius: 2px;
+    background: var(--aero-check-box);
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.4),
+      inset 1px 1px 2px rgba(0, 0, 0, 0.15);
+    color: transparent;
+    cursor: pointer;
+  }
+  & .mu-checkbox {
+    width: 16px;
+    height: 16px;
+  }
+  & :is(.mu-checkbox, .mbe-checkbox):hover {
+    border-color: var(--aero-focus-edge);
+    background: var(--aero-check-box-hover);
+  }
+  & :is(.mu-checkbox[data-checked], .mbe-checkbox:checked) {
+    border-color: var(--aero-focus-edge);
+    background:
+      var(--aero-check) center / 11px 11px no-repeat,
+      var(--aero-check-box-hover);
+  }
+  & .mu-checkbox .mu-checkbox-indicator {
+    display: none;
+  }
+  /* A note's tasks stay light paper in every variant. */
+  & [data-memo-card] .mbe-checkbox {
+    border-color: #8e8f8f;
+    background: linear-gradient(135deg, #f4f4f4, #fff);
+  }
+  & [data-memo-card] .mbe-checkbox:checked {
+    border-color: #3c7fb1;
+    background:
+      url("./toolbar/check-small.svg") center / 11px no-repeat,
+      linear-gradient(135deg, #f4f4f4, #fff);
+  }
+
+  /* On/off switches become Vista checkboxes too. */
+  & .mu-switch {
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    justify-content: center;
+    border: 1px solid var(--aero-check-edge);
+    border-radius: 3px;
+    background: var(--aero-check-box);
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.4),
+      inset 1px 1px 2px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+  }
+  & .mu-switch:hover,
+  & .mu-switch[data-checked] {
+    border-color: var(--aero-focus-edge);
+    background: var(--aero-check-box-hover);
+  }
+  & .mu-switch .mu-switch-thumb {
+    width: 14px;
+    height: 14px;
+    margin: 0 auto;
+    border-radius: 0;
+    transform: none;
+    translate: none;
+    background: none;
+    box-shadow: none;
+  }
+  & .mu-switch[data-checked] .mu-switch-thumb {
+    background: var(--aero-check) center / 14px 14px no-repeat;
+  }
+
+  /* Badges (spaces, roles): small glossy silver-blue pills. */
+  & .mu-badge:not([style*="--mu-badge-color"]) {
+    color: #1e395b;
+    border-radius: 999px;
+    background: linear-gradient(180deg, #ffffff 0%, #f1f5fa 48%, #dde6f0 52%, #eaf0f7 100%);
+    box-shadow:
+      inset 0 1px 0 #fff,
+      0 0 0 1px #9db3cc,
+      0 1px 2px rgba(0, 30, 70, 0.2);
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+  }
+
+  /* Scrollbars: Vista-ish. */
+  & *::-webkit-scrollbar {
+    width: 14px;
+    height: 14px;
+  }
+  & *::-webkit-scrollbar-track {
+    background: var(--aero-scroll-track);
+  }
+  & *::-webkit-scrollbar-thumb {
+    background: var(--aero-scroll-thumb);
+    border: 1px solid var(--aero-scroll-thumb-edge);
+    border-radius: 2px;
+  }
+  & *::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(90deg, #e3f4fc, #bee6fd 50%, #a7d9f5 51%, #c6e7f8);
+    border-color: #3c7fb1;
+  }
+
+  /* ---------- 11. Calendar page: Windows Calendar on a spiral pad -------- */
+  & [data-app-window][data-page="calendar"] section:has(> [role="group"] [data-calendar-date]) > header {
+    position: relative;
+    height: auto;
+    margin-top: 14px;
+    padding: 26px 16px 12px;
+    border: 1px solid var(--aero-gadget-edge);
+    border-bottom: 0;
+    border-radius: 7px 7px 0 0;
+    background: var(--aero-gadget);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55);
+    --mu-ink: var(--aero-gadget-ink);
+    --mu-ink-muted: var(--aero-gadget-ink);
+    --mu-hover: rgba(255, 255, 255, 0.22);
+    color: var(--aero-gadget-ink);
+    text-shadow: 0 1px 2px rgba(110, 40, 0, 0.6);
+  }
+  & [data-app-window][data-page="calendar"] section:has(> [role="group"] [data-calendar-date]) > header::before {
+    content: "";
+    position: absolute;
+    top: -9px;
+    left: 18px;
+    right: 18px;
+    height: 22px;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse 3px 3.5px at 50% 17px, var(--aero-spiral-hole) 0 90%, transparent 100%) 0 0 / 18px 22px repeat-x,
+      var(--aero-spiral-wire) 0 0 / 18px 17px repeat-x;
+    filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.35));
+  }
+  & [data-app-window][data-page="calendar"] section > header :is(.mu-button-ghost):hover {
+    background: rgba(255, 255, 255, 0.22);
+    box-shadow: none;
+  }
+  /* The page: paper right under the orange band, with a stack of sheets below it. */
+  & [data-app-window][data-page="calendar"] [role="group"]:has([data-calendar-date]) {
+    background: var(--mu-surface);
+    border: 1px solid #8e8f8f;
+    border-top: 0;
+    border-radius: 0 0 4px 4px;
+    box-shadow:
+      0 2px 0 #fafafa,
+      0 3px 0 #d9d9d9,
+      0 5px 0 #f5f5f5,
+      0 6px 0 #cfcfcf,
+      0 10px 18px rgba(0, 0, 0, 0.4);
+    overflow: hidden;
+  }
+  /* Weekday names: a Vista column-header strip. */
+  & [data-app-window][data-page="calendar"] [role="group"]:has([data-calendar-date]) > div:first-child {
+    padding: 0;
+    background: linear-gradient(180deg, var(--mu-surface) 0%, var(--mu-canvas) 50%, var(--mu-well) 51%, var(--mu-canvas) 100%);
+    border-bottom: 1px solid var(--mu-edge);
+  }
+  & [data-app-window][data-page="calendar"] [role="group"]:has([data-calendar-date]) > div:first-child > * {
+    height: 26px;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border-inline-end: 1px solid var(--mu-line);
+  }
+  & [data-app-window][data-page="calendar"] [role="group"]:has([data-calendar-date]) > div:last-child {
+    border: 0;
+    border-radius: 0;
+  }
+  /* Dates sit top-right, like Windows Calendar. */
+  & [data-app-window][data-page="calendar"] [data-calendar-date] > span:first-child {
+    justify-content: flex-end;
+  }
+  & [data-app-window][data-page="calendar"] [data-calendar-date][data-level]:not([data-level="0"]) > span:first-child > span {
+    font-weight: 700;
+  }
+  /* Today: the red box around the date. */
+  & [data-app-window][data-page="calendar"] [data-calendar-date][data-today] > span:first-child > span {
+    background: transparent;
+    color: var(--mu-ink);
+    border: 1px solid #c0392b;
+    border-radius: 0;
+  }
+  /* The open day: Windows Calendar's blue frame. */
+  & [data-app-window][data-page="calendar"] [data-calendar-date][aria-current="page"] {
+    box-shadow: inset 0 0 0 2px #3399ff;
+  }
+
+  /* ---------- 12. Empty states: large Vista icons ------------------------ */
+  & svg[data-testid="placeholder-illustration"] {
+    width: 96px;
+    height: 96px;
+    max-width: 96px;
+    margin: 0 auto;
+    overflow: visible;
+    background: url("./icons/imageres_3.png") center / contain no-repeat;
+    filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.35));
+  }
+  & svg[data-testid="placeholder-illustration"] > * {
+    display: none;
+  }
+  & svg[data-testid="placeholder-illustration"][data-scene="search"] {
+    background-image: url("./icons/imageres_177.png");
+  }
+  & svg[data-testid="placeholder-illustration"][data-scene="inbox"] {
+    background-image: url("./icons/imageres_20.png");
+  }
+
+  /* ---------- 13. Icons: Lucide → Vista ---------------------------------- */
+  /* A mapped icon sets --vi to the Vista picture and hides its strokes. Unmapped icons keep
+     their Lucide look. To swap one, change its url. */
+  & svg.lucide {
+    background: var(--vi, none) center / contain no-repeat;
+  }
+  & svg.lucide > * {
+    opacity: var(--vi-hide, 1);
+  }
+}
+
+/* The icon table: each mapped Lucide icon shows its Vista picture and hides its strokes. */
+:where([data-theme^="aero-"]) {
+  & svg.lucide:is(.lucide-library, .lucide-house, .lucide-home) {
+    --vi: url("./icons/netprof_3006.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-compass, .lucide-map) {
+    --vi: url("./icons/netcenter_7.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-calendar-days, .lucide-calendar) {
+    --vi: url("./icons/WinCal_100.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-search) {
+    --vi: url("./ui/search.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-paperclip, .lucide-file-text, .lucide-file) {
+    --vi: url("./icons/shell32_2.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-hash, .lucide-tag, .lucide-tags) {
+    --vi: url("./icons/shell32_16775.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-list-todo, .lucide-list-checks) {
+    --vi: url("./icons/imageres_165.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-square-check, .lucide-square-check-big, .lucide-circle-check, .lucide-check-check) {
+    --vi: url("./icons/SyncCenter_1213.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-list-restart, .lucide-rotate-ccw) {
+    --vi: url("./icons/SyncCenter_1221.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-file-code) {
+    --vi: url("./icons/notepad_2.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-link, .lucide-arrow-up-right, .lucide-external-link) {
+    --vi: url("./icons/shell32_16769.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-lock, .lucide-user-lock) {
+    --vi: url("./icons/imageres_59.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-users) {
+    --vi: url("./icons/imageres_79.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-earth, .lucide-globe) {
+    --vi: url("./icons/ieframe_12770.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-archive, .lucide-archive-restore) {
+    --vi: url("./icons/zipfldr_101.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-inbox, .lucide-bell, .lucide-mail) {
+    --vi: url("./icons/imageres_20.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-settings, .lucide-settings-2, .lucide-cog) {
+    --vi: url("./icons/shell32_153.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-image) {
+    --vi: url("./icons/imageres_72.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-mic) {
+    --vi: url("./icons/SoundRecorder_201.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-bookmark-plus, .lucide-bookmark-minus) {
+    --vi: url("./icons/ieframe_191.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-pen-line, .lucide-pencil, .lucide-pen, .lucide-square-pen) {
+    --vi: url("./icons/TabletPC_10204.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-copy, .lucide-files) {
+    --vi: url("./icons/shell32_243.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-folder-input, .lucide-folder-symlink, .lucide-move, .lucide-replace, .lucide-folder-output) {
+    --vi: url("./icons/shell32_46.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-trash, .lucide-trash-2) {
+    --vi: url("./icons/imageres_54.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-download) {
+    --vi: url("./icons/shell32_231.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-share, .lucide-share-2) {
+    --vi: url("./icons/msra_4010.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-palette, .lucide-paintbrush) {
+    --vi: url("./icons/themecpl_1.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-user, .lucide-user-round, .lucide-circle-user, .lucide-circle-user-round, .lucide-user-cog, .lucide-contact) {
+    --vi: url("./icons/dsuiext_4126.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-square-user, .lucide-square-user-round, .lucide-id-card) {
+    --vi: url("./ui/user-tile.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-info, .lucide-circle-alert) {
+    --vi: url("./icons/imageres_81.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-log-out, .lucide-door-open) {
+    --vi: url("./icons/shell32_27.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-map-pin, .lucide-map-pinned, .lucide-locate) {
+    --vi: url("./icons/imageres_179.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-maximize-2, .lucide-maximize, .lucide-expand, .lucide-minimize-2, .lucide-minimize) {
+    --vi: url("./icons/shell32_268.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-type, .lucide-text, .lucide-baseline, .lucide-pilcrow) {
+    --vi: url("./icons/shell32_155.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-list) {
+    --vi: url("./icons/imageres_116.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-file-audio, .lucide-file-headphone, .lucide-file-music, .lucide-headphones, .lucide-audio-waveform) {
+    --vi: url("./icons/mmsys_3015.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-astroid, .lucide-sparkle, .lucide-sparkles) {
+    --vi: url("./icons/netprof_3008.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-key-round) {
+    --vi: url("./icons/imageres_82.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-webhook) {
+    --vi: url("./icons/networkmap_222.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-arrow-left-right, .lucide-arrow-right-left) {
+    --vi: url("./icons/sdclt_5503.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-database, .lucide-hard-drive) {
+    --vi: url("./icons/imageres_32.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-key) {
+    --vi: url("./icons/tpmcompc_500.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-heart-handshake) {
+    --vi: url("./icons/msra_4003.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-chart-column, .lucide-chart-bar) {
+    --vi: url("./icons/RelMon_201.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-gauge) {
+    --vi: url("./icons/perfmon_105.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-folder) {
+    --vi: url("./icons/imageres_3.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-cloud) {
+    --vi: url("./icons/netcenter_7.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-notebook-pen, .lucide-notebook, .lucide-notebook-text, .lucide-sticky-note) {
+    --vi: url("./icons/StikyNot_100.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-book-open, .lucide-book-open-text, .lucide-graduation-cap, .lucide-school, .lucide-library-big) {
+    --vi: url("./icons/pnidui_2411.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  /* Formatting toolbar: Office 2007 style icons. */
+  & svg.lucide:is(.lucide-bold) {
+    --vi: url("./toolbar/bold.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-italic) {
+    --vi: url("./toolbar/italic.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-strikethrough) {
+    --vi: url("./toolbar/strikethrough.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-list-ordered) {
+    --vi: url("./toolbar/list-ordered.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-code, .lucide-code-xml, .lucide-square-code) {
+    --vi: url("./toolbar/code.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  /* Space icon picker. */
+  & svg.lucide:is(.lucide-briefcase, .lucide-briefcase-business) {
+    --vi: url("./icons/netprof_3007.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-camera) {
+    --vi: url("./icons/imageres_57.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-chart-no-axes-combined, .lucide-chart-line, .lucide-trending-up) {
+    --vi: url("./icons/imageres_150.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-coffee, .lucide-cup-soda) {
+    --vi: url("./icons/netprof_3002.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-feather, .lucide-pen-tool) {
+    --vi: url("./icons/TabletPC_10203.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-flower-2, .lucide-flower) {
+    --vi: url("./icons/imageres_83.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-mountain, .lucide-mountain-snow) {
+    --vi: url("./icons/imageres_71.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-music, .lucide-music-2, .lucide-music-4) {
+    --vi: url("./icons/imageres_131.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-plane) {
+    --vi: url("./icons/netprof_3004.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-star) {
+    --vi: url("./icons/ieframe_31060.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-sun) {
+    --vi: url("./icons/mblctr_141.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-trophy, .lucide-award) {
+    --vi: url("./icons/imageres_14.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-wrench, .lucide-hammer) {
+    --vi: url("./icons/mmc_128.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-gamepad-2, .lucide-gamepad) {
+    --vi: url("./icons/joy_102.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  /* Views and filters. */
+  & svg.lucide:is(.lucide-funnel, .lucide-filter, .lucide-list-filter) {
+    --vi: url("./toolbar/funnel.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-clock-3, .lucide-clock, .lucide-history) {
+    --vi: url("./toolbar/clock.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-pin, .lucide-pin-off) {
+    --vi: url("./toolbar/pin.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-parentheses, .lucide-braces, .lucide-sigma) {
+    --vi: url("./toolbar/fx.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-save) {
+    --vi: url("./toolbar/save.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-clipboard-check, .lucide-clipboard-list) {
+    --vi: url("./toolbar/clipboard.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-shield, .lucide-shield-check) {
+    --vi: url("./ui/shield.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+}
+
+/* ---------- 14. Small screens and reduced motion ------------------------- */
+@media (max-width: 767px) {
+  [data-theme^="aero-"] [data-app-window] {
+    width: calc(100% - 16px);
+    margin: 8px;
+    padding-inline: 6px;
+  }
+  [data-theme^="aero-"] [data-memo-card] {
+    margin: 14px 2px 10px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-theme^="aero-"] [data-memo-card] {
+    transition: none;
+  }
+}

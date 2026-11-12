@@ -187,6 +187,10 @@ export const CalendarDayCell = memo(
         tabIndex={tabIndex}
         aria-label={getTooltipText(count, day.date, t, timeBasis)}
         aria-current={day.isSelected ? "page" : undefined}
+        // Styling hooks for app themes (themes/aero): days of other months, today and activity.
+        data-outside-month={day.isCurrentMonth ? undefined : ""}
+        data-today={day.isToday ? "" : undefined}
+        data-level={day.isCurrentMonth ? level : undefined}
         className={cn(
           "group/day relative flex min-h-14 min-w-0 flex-col overflow-hidden border-mu-line/70 px-1.5 py-2 text-start no-underline transition-colors sm:px-3 sm:min-h-20 md:min-h-[5.5rem]",
           layout.slim && "sm:px-2",

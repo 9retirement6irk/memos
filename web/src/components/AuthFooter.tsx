@@ -1,5 +1,5 @@
 import { Toggle, ToggleGroup, Tooltip } from "@usememos/ui";
-import { MonitorIcon, MoonIcon, PaletteIcon, SunIcon } from "lucide-react";
+import { AppWindowMacIcon, MonitorIcon, MoonIcon, PaletteIcon, SunIcon } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
@@ -13,7 +13,12 @@ const THEMES: { value: Theme; icon: React.ReactElement; labelKey: Translations }
   { value: "default", icon: <SunIcon />, labelKey: "setting.preference.theme-light" },
   { value: "default-dark", icon: <MoonIcon />, labelKey: "setting.preference.theme-dark" },
   { value: "paper", icon: <PaletteIcon />, labelKey: "setting.preference.theme-paper" },
+  // One button for the Aero family: it follows the system; the other Aero variants are in Preferences.
+  { value: "aero-system", icon: <AppWindowMacIcon />, labelKey: "setting.preference.theme-aero-system" },
 ];
+
+/** The toggle that stands for a saved theme: any Aero variant lights the Aero button. */
+const toggleValue = (theme: Theme): Theme => (theme.startsWith("aero") ? "aero-system" : theme);
 
 interface Props {
   className?: string;
@@ -39,7 +44,7 @@ const AuthFooter = ({ className }: Props) => {
       <ToggleGroup
         size="sm"
         aria-label={t("setting.preference.theme")}
-        value={[theme]}
+        value={[toggleValue(theme)]}
         // One theme always stays chosen: pressing the chosen item again keeps it.
         onValueChange={([next]) => next && handleThemeChange(next as Theme)}
       >

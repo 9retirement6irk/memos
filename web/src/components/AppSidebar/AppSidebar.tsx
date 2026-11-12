@@ -42,7 +42,7 @@ import { User_Role, UserNotification_Status } from "@/types/proto/api/user_servi
 import { useTranslate } from "@/utils/i18n";
 import CommonSidebarContent from "./CommonSidebarContent";
 import { getSidebarRouteKind } from "./routes";
-import SidebarRow, { SIDEBAR_ROW_CLASSES, SidebarRowIconSlot, sidebarRowStateClasses } from "./SidebarRow";
+import SidebarRow, { SIDEBAR_ROW_CLASSES, SidebarRowIconSlot, sidebarRowStateAttributes, sidebarRowStateClasses } from "./SidebarRow";
 import SidebarSection, { SIDEBAR_SECTION_STACK_CLASSES } from "./SidebarSection";
 import SpaceSwitcher from "./SpaceSwitcher";
 import {
@@ -211,6 +211,7 @@ const SettingsSidebarContent = () => {
         key={section.key}
         to={`${ROUTES.SETTING}#${section.key}`}
         onClick={() => setMobileOpen(false)}
+        {...sidebarRowStateAttributes(currentSection === section.key ? "current" : "idle")}
         className={cn(SIDEBAR_ROW_CLASSES, sidebarRowStateClasses(currentSection === section.key ? "current" : "idle"))}
       >
         <SidebarRowIconSlot icon={section.icon} />
@@ -392,7 +393,7 @@ const AppSidebar = ({ className }: { className?: string }) => {
   const { setMobileOpen } = useAppSidebar();
   const { canOpen: canCompose, openEditor } = useGlobalMemoEditor();
   return (
-    <aside className={cn("mu-compact flex h-full w-full select-none flex-col bg-mu-canvas text-mu-ink-muted", className)}>
+    <aside data-app-sidebar className={cn("mu-compact flex h-full w-full select-none flex-col bg-mu-canvas text-mu-ink-muted", className)}>
       <div data-sidebar-header className={cn("flex h-13 shrink-0 items-center justify-between gap-2", SIDEBAR_RAIL_CLASSES)}>
         <SpaceSwitcher className="min-w-0" size="header" />
         {canCompose && <NewMemoAction onClick={openEditor} />}

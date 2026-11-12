@@ -612,7 +612,11 @@
       "theme-system-short": "System",
       "theme-light": "Ljust",
       "theme-dark": "Mörkt",
-      "theme-paper": "Papper"
+      "theme-paper": "Papper",
+      "theme-aero-system": "Aero · Följ systemet",
+      "theme-aero-light": "Aero · Ljust",
+      "theme-aero-dark": "Aero · Mörkt",
+      "theme-aero-paper": "Aero · Papper"
     },
     "editor": {
       "label": "Redigerare",

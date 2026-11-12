@@ -19,12 +19,12 @@ import { useAppSidebar } from "@/contexts/AppSidebarContext";
 import { useAuth } from "@/contexts/AuthContext";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import { useSSEConnectionStatus } from "@/hooks/useLiveMemoRefresh";
+import { useSignOut } from "@/hooks/useSignOut";
 import { useNotifications, useUpdateUserGeneralSetting } from "@/hooks/useUserQueries";
 import { locales } from "@/i18n";
 import { cn } from "@/lib/utils";
 import { Routes } from "@/router";
 import { UserNotification_Status } from "@/types/proto/api/user_service_pb";
-import { buildAuthRoute } from "@/utils/auth-redirect";
 import { getLocaleDisplayName, getLocaleWithFallback, loadLocale, useTranslate } from "@/utils/i18n";
 import { getThemeWithFallback, loadTheme, THEME_OPTIONS } from "@/utils/theme";
 
@@ -146,7 +146,7 @@ const UserMenu = ({ onClose }: { onClose: () => void }) => {
   const { setMobileOpen } = useAppSidebar();
   const currentUser = useCurrentUser();
   const sseStatus = useSSEConnectionStatus();
-  const { logout } = useAuth();
+  const handleSignOut = useSignOut();
   const { data: notifications = [] } = useNotifications();
   const unreadCount = notifications.filter((notification) => notification.status === UserNotification_Status.UNREAD).length;
   const inboxLabel = unreadCount > 0 ? `${t("common.inbox")}, ${unreadCount} ${t("inbox.unread")}` : t("common.inbox");
@@ -157,22 +157,6 @@ const UserMenu = ({ onClose }: { onClose: () => void }) => {
   const closePanel = () => {
     onClose();
     setMobileOpen(false);
-  };
-
-  const handleSignOut = async () => {
-    await logout();
-    try {
-      const keysToPreserve = ["memos-theme", "memos-locale", "memos-view-setting", "tag-view-as-tree"];
-      const keysToRemove: string[] = [];
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (key && !keysToPreserve.includes(key)) keysToRemove.push(key);
-      }
-      keysToRemove.forEach((key) => localStorage.removeItem(key));
-    } catch {
-      // Ignore errors from localStorage operations.
-    }
-    window.location.replace(buildAuthRoute({ autoSignIn: false }));
   };
 
   return (

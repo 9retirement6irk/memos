@@ -729,7 +729,11 @@
       "theme-system-short": "Sistem",
       "theme-light": "Luminos",
       "theme-dark": "Întunecat",
-      "theme-paper": "Hârtie"
+      "theme-paper": "Hârtie",
+      "theme-aero-system": "Aero · Sincronizare cu sistemul",
+      "theme-aero-light": "Aero · Luminos",
+      "theme-aero-dark": "Aero · Întunecat",
+      "theme-aero-paper": "Aero · Hârtie"
     },
     "editor": {
       "label": "Editor",

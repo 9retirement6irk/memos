@@ -3,25 +3,22 @@ import { resolve } from "node:path";
 import { themeTokens } from "@usememos/ui";
 import { describe, expect, it } from "vitest";
 
-// Read from disk: Vitest replaces CSS imports, `?raw` included, with empty strings.
-const paper = readFileSync(resolve(import.meta.dirname, "../src/themes/paper.css"), "utf8");
+// memos' app themes: each is one rule in its own file that must set every theme token.
+const THEMES = ["paper", "aero-light", "aero-dark", "aero-paper"];
 
-/** The custom properties Paper declares, with `var()` references resolved. */
-const declarations = (() => {
+// Read from disk: Vitest replaces CSS imports, `?raw` included, with empty strings.
+const readTheme = (name: string): string => readFileSync(resolve(import.meta.dirname, `../src/themes/${name}.css`), "utf8");
+
+/** The custom properties a theme declares, with `var()` references resolved. */
+const declarationsOf = (css: string) => {
   const raw = new Map<string, string>();
-  const block = paper.slice(paper.indexOf("{") + 1, paper.lastIndexOf("}"));
+  const block = css.slice(css.indexOf("{") + 1, css.lastIndexOf("}"));
   for (const line of block.split(";")) {
     const match = line.trim().match(/^(--mu-[\w-]+):\s*(.+)$/s);
     if (match) raw.set(match[1], match[2].trim());
   }
   const resolve = (value: string): string => value.replace(/var\((--mu-[\w-]+)\)/g, (_, name) => resolve(raw.get(name) ?? ""));
   return new Map([...raw].map(([name, value]) => [name, resolve(value)]));
-})();
-
-const token = (name: string): string => {
-  const value = declarations.get(`--mu-${name}`);
-  if (!value) throw new Error(`Paper does not set --mu-${name}`);
-  return value;
 };
 
 // WCAG 2 relative luminance, from sRGB or OKLCH (CSS Color 4 conversion matrices).
@@ -55,12 +52,18 @@ const luminance = (color: string): number => {
   throw new Error(`Opaque hex or oklch expected for a text pair, got ${color}`);
 };
 
-const contrast = (text: string, background: string): number => {
-  const [light, dark] = [luminance(token(text)), luminance(token(background))].sort((a, b) => b - a);
-  return (light + 0.05) / (dark + 0.05);
-};
+describe.each(THEMES)("%s theme", (theme) => {
+  const declarations = declarationsOf(readTheme(theme));
+  const token = (name: string): string => {
+    const value = declarations.get(`--mu-${name}`);
+    if (!value) throw new Error(`${theme} does not set --mu-${name}`);
+    return value;
+  };
+  const contrast = (text: string, background: string): number => {
+    const [light, dark] = [luminance(token(text)), luminance(token(background))].sort((a, b) => b - a);
+    return (light + 0.05) / (dark + 0.05);
+  };
 
-describe("Paper theme", () => {
   it("sets every theme token", () => {
     expect(themeTokens.filter((name) => !declarations.has(name))).toEqual([]);
   });

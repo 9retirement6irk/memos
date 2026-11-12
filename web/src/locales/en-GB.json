@@ -612,7 +612,11 @@
       "theme-system-short": "System",
       "theme-light": "Light",
       "theme-dark": "Dark",
-      "theme-paper": "Paper"
+      "theme-paper": "Paper",
+      "theme-aero-system": "Aero · Sync with system",
+      "theme-aero-light": "Aero · Light",
+      "theme-aero-dark": "Aero · Dark",
+      "theme-aero-paper": "Aero · Paper"
     },
     "editor": {
       "label": "Editor",

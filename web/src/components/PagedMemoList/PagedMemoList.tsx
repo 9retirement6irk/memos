@@ -31,7 +31,7 @@ export const getMemoKey = (memo: Memo) => memo.name;
 
 // Columns never stretch past this, so 2 columns on a wide monitor stay readable and the
 // grid centers in the leftover space instead of filling it.
-const MAX_COLUMN_WIDTH = 420;
+export const MAX_COLUMN_WIDTH = 420;
 
 /** Memos still loading: skeleton cards in the shape of the memos about to appear. */
 const Loader = ({ count = 3 }: { count?: number }) => {

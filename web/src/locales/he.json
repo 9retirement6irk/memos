@@ -761,7 +761,11 @@
       "theme-system-short": "מערכת",
       "theme-light": "בהיר",
       "theme-dark": "כהה",
-      "theme-paper": "נייר"
+      "theme-paper": "נייר",
+      "theme-aero-system": "Aero · סנכרון עם המערכת",
+      "theme-aero-light": "Aero · בהיר",
+      "theme-aero-dark": "Aero · כהה",
+      "theme-aero-paper": "Aero · נייר"
     },
     "editor": {
       "label": "עורך",

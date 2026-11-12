@@ -612,7 +612,11 @@
       "theme-system-short": "Rendszer",
       "theme-light": "Világos",
       "theme-dark": "Sötét",
-      "theme-paper": "Papír"
+      "theme-paper": "Papír",
+      "theme-aero-system": "Aero · Rendszerbeállítás követése",
+      "theme-aero-light": "Aero · Világos",
+      "theme-aero-dark": "Aero · Sötét",
+      "theme-aero-paper": "Aero · Papír"
     },
     "editor": {
       "label": "Szerkesztő",

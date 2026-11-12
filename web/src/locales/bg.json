@@ -728,7 +728,11 @@
       "theme-system-short": "Системна",
       "theme-light": "Светла",
       "theme-dark": "Тъмна",
-      "theme-paper": "Хартия"
+      "theme-paper": "Хартия",
+      "theme-aero-system": "Aero · Според системата",
+      "theme-aero-light": "Aero · Светла",
+      "theme-aero-dark": "Aero · Тъмна",
+      "theme-aero-paper": "Aero · Хартия"
     },
     "editor": {
       "label": "Редактор",

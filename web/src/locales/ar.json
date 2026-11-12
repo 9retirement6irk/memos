@@ -525,7 +525,11 @@
       "theme-system-short": "النظام",
       "theme-light": "فاتح",
       "theme-dark": "داكن",
-      "theme-paper": "ورقي"
+      "theme-paper": "ورقي",
+      "theme-aero-system": "Aero · مطابقة النظام",
+      "theme-aero-light": "Aero · فاتح",
+      "theme-aero-dark": "Aero · داكن",
+      "theme-aero-paper": "Aero · ورقي"
     },
     "editor": {
       "label": "المحرر",

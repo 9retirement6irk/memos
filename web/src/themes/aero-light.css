@@ -1,0 +1,41 @@
+/*
+ * Aero Light: the Windows Vista look on @usememos/ui's tokens. Like paper.css it sets all 32
+ * names in `themeTokens`; tests/app-themes.test.ts checks that and the contrast of every text
+ * pair. These are the colors of a window's body (white panes, silver keys, Vista blue for the
+ * one primary action); the glass, wallpaper and gloss are drawn by aero/aero.css.
+ */
+[data-theme="aero-light"] {
+  color-scheme: light;
+  --mu-canvas: #eef3f9;
+  --mu-surface: #ffffff;
+  --mu-well: #e3e9f1;
+  --mu-hover: #e5f1fb;
+  --mu-key: #f0f0f0;
+  --mu-key-hover: #e5f4fc;
+  --mu-key-sheen: rgba(255, 255, 255, 0.7);
+  --mu-edge: #abadb3;
+  --mu-line: #d5dfea;
+  --mu-overlay: rgba(0, 20, 40, 0.35);
+  --mu-ink: #1e1e1e;
+  --mu-ink-muted: #4a5a6e;
+  --mu-primary: #1e6cc0;
+  --mu-primary-hover: #185ca8;
+  --mu-on-primary: #ffffff;
+  --mu-accent: #0066cc;
+  --mu-selection: rgba(51, 153, 255, 0.3);
+  --mu-success: #2c7a1f;
+  --mu-success-soft: #e6f5df;
+  --mu-warning: #8a5a00;
+  --mu-warning-soft: #fdf3d6;
+  --mu-danger: #c2331d;
+  --mu-danger-key: #c2331d;
+  --mu-danger-soft: #fbe7e3;
+  --mu-on-danger: #ffffff;
+  --mu-focus: #3c7fb1;
+  --mu-focus-edge: #3c7fb1;
+  --mu-shadow-track: inset 0 1px 2px rgba(0, 0, 0, 0.12);
+  --mu-shadow-key: 0 1px 2px rgba(0, 30, 80, 0.25), inset 0 0 0 1px rgba(255, 255, 255, 0.7);
+  --mu-shadow-raised: inset 0 0 0 1px rgba(255, 255, 255, 0.7), 0 0 0 1px #707070, 0 1px 1px rgba(0, 0, 0, 0.1);
+  --mu-shadow-pressed: inset 0 1px 3px rgba(0, 40, 90, 0.35), 0 0 0 1px #2c628b;
+  --mu-shadow-pop: 2px 3px 6px rgba(0, 0, 0, 0.35), 0 0 0 1px #979797;
+}

@@ -4,14 +4,21 @@ import type { Translations } from "@/utils/i18n";
 // Types and Constants
 // ============================================================================
 
-/** The saved preference: the account setting `theme` and localStorage keep these values. */
-const VALID_THEMES = ["system", "default", "default-dark", "paper"] as const;
+/**
+ * The saved preference: the account setting `theme` and localStorage keep these values.
+ * The `aero` family is this build's Windows Vista look (themes/aero); `aero-system` follows the OS
+ * between Aero Light and Aero Dark the way `system` does between Light and Dark.
+ */
+const VALID_THEMES = ["system", "default", "default-dark", "paper", "aero-system", "aero", "aero-dark", "aero-paper"] as const;
 
 export type Theme = (typeof VALID_THEMES)[number];
-export type ResolvedTheme = Exclude<Theme, "system">;
+export type ResolvedTheme = Exclude<Theme, "system" | "aero-system">;
 
-/** The `data-theme` value on <html>: `light` and `dark` are @usememos/ui's themes, `paper` is memos' own. */
-export type Appearance = "light" | "dark" | "paper";
+/**
+ * The `data-theme` value on <html>: `light` and `dark` are @usememos/ui's themes, `paper` is memos' own,
+ * and the `aero-*` values are the Aero themes.
+ */
+export type Appearance = "light" | "dark" | "paper" | "aero-light" | "aero-dark" | "aero-paper";
 
 export interface ThemeOption {
   value: string;
@@ -24,6 +31,9 @@ const APPEARANCES: Record<ResolvedTheme, Appearance> = {
   default: "light",
   "default-dark": "dark",
   paper: "paper",
+  aero: "aero-light",
+  "aero-dark": "aero-dark",
+  "aero-paper": "aero-paper",
 };
 
 /** Each theme's canvas, for the browser chrome on phones; the values in index.html match. */
@@ -31,6 +41,10 @@ const THEME_COLORS: Record<Appearance, string> = {
   light: "#fafafa",
   dark: "#0f0f0f",
   paper: "#f5ede4",
+  // The Aero themes color the browser chrome like their window caption bars.
+  "aero-light": "#165caa",
+  "aero-dark": "#0b1726",
+  "aero-paper": "#7a4a1c",
 };
 
 export const THEME_OPTIONS: ThemeOption[] = [
@@ -38,6 +52,10 @@ export const THEME_OPTIONS: ThemeOption[] = [
   { value: "default", labelKey: "setting.preference.theme-light" },
   { value: "default-dark", labelKey: "setting.preference.theme-dark" },
   { value: "paper", labelKey: "setting.preference.theme-paper" },
+  { value: "aero-system", labelKey: "setting.preference.theme-aero-system" },
+  { value: "aero", labelKey: "setting.preference.theme-aero-light" },
+  { value: "aero-dark", labelKey: "setting.preference.theme-aero-dark" },
+  { value: "aero-paper", labelKey: "setting.preference.theme-aero-paper" },
 ];
 
 // ============================================================================
@@ -52,30 +70,40 @@ const validateTheme = (theme: string): Theme => {
   return VALID_THEMES.includes(theme as Theme) ? (theme as Theme) : "default";
 };
 
+/** Whether a preference follows the OS color scheme: `system` and `aero-system`. */
+export const isSystemTheme = (theme: Theme): theme is "system" | "aero-system" => theme === "system" || theme === "aero-system";
+
 /**
- * Detects the system's preferred color scheme.
- * @returns "default-dark" for dark mode, "default" for light mode
+ * Detects the system's preferred color scheme within a theme family.
+ * @returns "default-dark" or "default" for `system`; "aero-dark" or "aero" for `aero-system`
  */
-export const getSystemTheme = (): ResolvedTheme => {
-  if (typeof window !== "undefined" && window.matchMedia?.("(prefers-color-scheme: dark)").matches) {
-    return "default-dark";
+export const getSystemTheme = (theme: "system" | "aero-system" = "system"): ResolvedTheme => {
+  const dark = typeof window !== "undefined" && Boolean(window.matchMedia?.("(prefers-color-scheme: dark)").matches);
+  if (theme === "aero-system") {
+    return dark ? "aero-dark" : "aero";
   }
-  return "default";
+  return dark ? "default-dark" : "default";
 };
 
 /**
- * Resolves "system" theme to the actual theme based on OS preference.
+ * Resolves `system` and `aero-system` to the actual theme based on OS preference.
  * Other themes are returned as-is after validation.
  */
 export const resolveTheme = (theme: string): ResolvedTheme => {
   const validTheme = validateTheme(theme);
-  return validTheme === "system" ? getSystemTheme() : validTheme;
+  return isSystemTheme(validTheme) ? getSystemTheme(validTheme) : validTheme;
 };
 
 /** The `data-theme` value a resolved theme selects. */
 const toAppearance = (theme: ResolvedTheme): Appearance => APPEARANCES[theme];
 
-export const isDarkTheme = (theme: ResolvedTheme): boolean => toAppearance(theme) === "dark";
+export const isDarkTheme = (theme: ResolvedTheme): boolean => {
+  const appearance = toAppearance(theme);
+  return appearance === "dark" || appearance === "aero-dark";
+};
+
+/** Whether a resolved theme is one of the Aero themes. */
+export const isAeroTheme = (theme: ResolvedTheme): boolean => toAppearance(theme).startsWith("aero-");
 
 // ============================================================================
 // LocalStorage Helpers
@@ -160,12 +188,13 @@ const updateThemeColorMeta = (theme: Theme): void => {
   const lightMeta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"][media*="light"]');
   const darkMeta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"][media*="dark"]');
 
-  if (theme === "system") {
+  if (isSystemTheme(theme)) {
+    const family = theme === "aero-system" ? (["aero-light", "aero-dark"] as const) : (["light", "dark"] as const);
     if (lightMeta) {
-      lightMeta.content = THEME_COLORS.light;
+      lightMeta.content = THEME_COLORS[family[0]];
     }
     if (darkMeta) {
-      darkMeta.content = THEME_COLORS.dark;
+      darkMeta.content = THEME_COLORS[family[1]];
     }
     return;
   }
