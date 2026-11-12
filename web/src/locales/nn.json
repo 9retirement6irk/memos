@@ -1418,6 +1418,11 @@
     "unlink-identity-failed": "Klarte ikkje å kople frå identitetsleverandøren.",
     "link-identity-failed": "Kunne ikkje starte tilkopling av kontoen. Prøv igjen."
   },
+  "attachment-pdf": {
+    "page-of": "Side {{current}} av {{total}}",
+    "previous-page": "Førre",
+    "next-page": "Neste"
+  },
   "attachment-preview": {
     "title": "Førehandsvising av vedlegg",
     "description": "Dialog for førehandsvising av vedlegg. Trykk Escape for å lukke, bruk venstre eller høgre piltast for å byte element, og zoom inn på bilete med kontrollane, musehjulet, dobbelttrykk eller knipe-rørsle.",

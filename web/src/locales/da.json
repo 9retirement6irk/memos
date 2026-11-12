@@ -1418,6 +1418,11 @@
     "unlink-identity-failed": "Kunne ikke fjerne tilknytningen til identitetsudbyderen.",
     "link-identity-failed": "Kunne ikke starte tilknytning af kontoen. Prøv igen."
   },
+  "attachment-pdf": {
+    "page-of": "Side {{current}} af {{total}}",
+    "previous-page": "Forrige",
+    "next-page": "Næste"
+  },
   "attachment-preview": {
     "title": "Forhåndsvisning af vedhæftet fil",
     "description": "Dialog til forhåndsvisning af vedhæftede filer. Tryk på Escape for at lukke, brug venstre og højre piletast til at skifte element, og zoom i billeder med knapperne, musehjulet, dobbelttryk eller knibebevægelse.",

@@ -1418,6 +1418,11 @@
     "unlink-identity-failed": "Gagal memutuskan tautan penyedia identitas.",
     "link-identity-failed": "Gagal memulai penautan akun. Silakan coba lagi."
   },
+  "attachment-pdf": {
+    "page-of": "Halaman {{current}} dari {{total}}",
+    "previous-page": "Sebelumnya",
+    "next-page": "Berikutnya"
+  },
   "attachment-preview": {
     "title": "Pratinjau lampiran",
     "description": "Dialog pratinjau lampiran. Tekan Escape untuk menutup, gunakan tombol panah kiri atau kanan untuk berpindah item, dan perbesar gambar dengan kontrol, roda mouse, ketuk dua kali, atau gerakan cubit.",

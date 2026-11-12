@@ -1418,6 +1418,11 @@
     "unlink-identity-failed": "解除身份提供商关联失败。",
     "link-identity-failed": "无法开始关联账号，请重试。"
   },
+  "attachment-pdf": {
+    "page-of": "第 {{current}} 页，共 {{total}} 页",
+    "previous-page": "上一个",
+    "next-page": "下一个"
+  },
   "attachment-preview": {
     "title": "附件预览",
     "description": "附件预览对话框。按 Esc 关闭，使用左右方向键切换项目，可通过控件、鼠标滚轮、双击或双指捏合缩放图片。",

@@ -1418,6 +1418,11 @@
     "unlink-identity-failed": "ID プロバイダーのリンク解除に失敗しました。",
     "link-identity-failed": "アカウント連携を開始できませんでした。もう一度お試しください。"
   },
+  "attachment-pdf": {
+    "page-of": "{{total}} ページ中 {{current}} ページ",
+    "previous-page": "前へ",
+    "next-page": "次へ"
+  },
   "attachment-preview": {
     "title": "添付ファイルのプレビュー",
     "description": "添付ファイルのプレビューダイアログです。Esc キーで閉じ、左右の矢印キーで項目を切り替えます。画像はコントロール、マウスホイール、ダブルタップ、ピンチ操作で拡大できます。",

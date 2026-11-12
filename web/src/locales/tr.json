@@ -1418,6 +1418,11 @@
     "unlink-identity-failed": "Kimlik sağlayıcının bağlantısı kaldırılamadı.",
     "link-identity-failed": "Hesap bağlama başlatılamadı. Lütfen tekrar deneyin."
   },
+  "attachment-pdf": {
+    "page-of": "Sayfa {{current}} / {{total}}",
+    "previous-page": "Önceki",
+    "next-page": "Sonraki"
+  },
   "attachment-preview": {
     "title": "Ek önizlemesi",
     "description": "Ek önizleme penceresi. Kapatmak için Escape tuşuna basın, öğeler arasında geçiş yapmak için sol veya sağ ok tuşlarını kullanın ve görselleri kontrollerle, fare tekerleğiyle, çift dokunarak veya iki parmakla yakınlaştırın.",

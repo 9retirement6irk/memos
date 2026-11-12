@@ -1418,6 +1418,11 @@
     "unlink-identity-failed": "Failed to unlink identity provider.",
     "link-identity-failed": "Failed to initiate account linking. Please try again."
   },
+  "attachment-pdf": {
+    "page-of": "Page {{current}} of {{total}}",
+    "previous-page": "Previous page",
+    "next-page": "Next page"
+  },
   "attachment-preview": {
     "title": "Attachment preview",
     "description": "Attachment preview dialog. Press Escape to close, use left or right arrow keys to switch items, and zoom images with the controls, mouse wheel, double tap, or a pinch gesture.",

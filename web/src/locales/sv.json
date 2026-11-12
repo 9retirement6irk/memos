@@ -1418,6 +1418,11 @@
     "unlink-identity-failed": "Det gick inte att koppla från identitetsleverantören.",
     "link-identity-failed": "Det gick inte att starta kontokopplingen. Försök igen."
   },
+  "attachment-pdf": {
+    "page-of": "Sida {{current}} av {{total}}",
+    "previous-page": "Föregående",
+    "next-page": "Nästa"
+  },
   "attachment-preview": {
     "title": "Förhandsgranskning av bilaga",
     "description": "Dialog för förhandsgranskning av bilagor. Tryck på Escape för att stänga, använd vänster- och högerpilarna för att byta objekt och zooma bilder med kontrollerna, mushjulet, dubbeltryck eller nypgest.",

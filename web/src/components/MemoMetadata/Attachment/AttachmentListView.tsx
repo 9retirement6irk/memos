@@ -23,7 +23,7 @@ import {
   MetadataRowIconSlot,
 } from "../MetadataSection";
 import AudioAttachmentItem from "./AudioAttachmentItem";
-import { getAttachmentMetadata } from "./attachmentHelpers";
+import { getAttachmentMetadata, isServedHere } from "./attachmentHelpers";
 import {
   COLLAGE_VIDEO_PLAY_BADGE_CLASS,
   COVER_MEDIA_CLASS,
@@ -320,15 +320,6 @@ export const AttachmentGallery = ({ visual, onImagePreview, drawings }: Attachme
 /** The file server renders only images and PDFs inline; it serves every other file as a download. */
 const opensInline = (mimeType: string) => mimeType === "application/pdf" || isImage(mimeType);
 
-/** Share links carry an external link too, but it still points at this instance's file server. A link that does not parse is not ours. */
-const isServedHere = (url: string) => {
-  try {
-    return new URL(url, window.location.origin).origin === window.location.origin;
-  } catch {
-    return false;
-  }
-};
-
 /**
  * A document is a row: file glyph in the slot, name, type and size on the detail rail.
  * A file the browser can show, or a link to another site, opens in a new tab; any other
@@ -336,7 +327,7 @@ const isServedHere = (url: string) => {
  * controls only appear over the detail rail once the row is engaged, so the rail stays on
  * the same edge as every other row's at rest.
  */
-const DocumentRow = ({ attachment }: { attachment: Attachment }) => {
+export const DocumentRow = ({ attachment }: { attachment: Attachment }) => {
   const t = useTranslate();
   const { fileTypeLabel, fileSizeLabel } = getAttachmentMetadata(attachment);
   const url = getAttachmentUrl(attachment);

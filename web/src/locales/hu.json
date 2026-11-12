@@ -1418,6 +1418,11 @@
     "unlink-identity-failed": "Nem sikerült leválasztani az identitásszolgáltatót.",
     "link-identity-failed": "Nem sikerült elindítani a fiók összekapcsolását. Próbáld újra."
   },
+  "attachment-pdf": {
+    "page-of": "{{current}}. oldal, összesen {{total}}",
+    "previous-page": "Előző",
+    "next-page": "Következő"
+  },
   "attachment-preview": {
     "title": "Melléklet előnézete",
     "description": "Melléklet-előnézeti párbeszédablak. A bezáráshoz nyomd meg az Escape billentyűt, az elemek között a bal és jobb nyíllal válthatsz, a képeket pedig a vezérlőkkel, egérgörgővel, dupla koppintással vagy csípő mozdulattal nagyíthatod.",

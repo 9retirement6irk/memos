@@ -1421,6 +1421,11 @@
     "unlink-identity-failed": "Odpojení poskytovatele identity se nezdařilo.",
     "link-identity-failed": "Propojení účtu se nepodařilo zahájit. Zkuste to znovu."
   },
+  "attachment-pdf": {
+    "page-of": "Strana {{current}} z {{total}}",
+    "previous-page": "Předchozí",
+    "next-page": "Další"
+  },
   "attachment-preview": {
     "title": "Náhled přílohy",
     "description": "Dialog náhledu přílohy. Stisknutím Escape jej zavřete, šipkami vlevo a vpravo přepínáte položky a obrázky můžete přibližovat ovládacími prvky, kolečkem myši, dvojitým klepnutím nebo gestem sevření prstů.",

@@ -1418,6 +1418,11 @@
     "unlink-identity-failed": "Identiteetintarjoajan yhteyden poistaminen epäonnistui.",
     "link-identity-failed": "Tilin linkittämisen aloittaminen epäonnistui. Yritä uudelleen."
   },
+  "attachment-pdf": {
+    "page-of": "Sivu {{current}} / {{total}}",
+    "previous-page": "Edellinen",
+    "next-page": "Seuraava"
+  },
   "attachment-preview": {
     "title": "Liitteen esikatselu",
     "description": "Liitteen esikatseluikkuna. Sulje painamalla Escape, vaihda kohdetta vasemmalla ja oikealla nuolinäppäimellä ja zoomaa kuvia säätimillä, hiiren rullalla, kaksoisnapautuksella tai nipistyseleellä.",

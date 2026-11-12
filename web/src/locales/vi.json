@@ -1418,6 +1418,11 @@
     "unlink-identity-failed": "Không thể hủy liên kết nhà cung cấp danh tính.",
     "link-identity-failed": "Không thể bắt đầu liên kết tài khoản. Vui lòng thử lại."
   },
+  "attachment-pdf": {
+    "page-of": "Trang {{current}} / {{total}}",
+    "previous-page": "Trước",
+    "next-page": "Tiếp"
+  },
   "attachment-preview": {
     "title": "Xem trước tệp đính kèm",
     "description": "Hộp thoại xem trước tệp đính kèm. Nhấn Escape để đóng, dùng phím mũi tên trái hoặc phải để chuyển mục, và phóng to hình ảnh bằng các nút điều khiển, con lăn chuột, chạm hai lần hoặc thao tác chụm.",

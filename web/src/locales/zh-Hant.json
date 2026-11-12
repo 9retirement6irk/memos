@@ -1418,6 +1418,11 @@
     "unlink-identity-failed": "解除身分提供者連結失敗。",
     "link-identity-failed": "無法開始連結帳號，請再試一次。"
   },
+  "attachment-pdf": {
+    "page-of": "第 {{current}} 頁，共 {{total}} 頁",
+    "previous-page": "上一個",
+    "next-page": "下一個"
+  },
   "attachment-preview": {
     "title": "附件預覽",
     "description": "附件預覽對話框。按 Esc 關閉，使用左右方向鍵切換項目，並可透過控制項、滑鼠滾輪、點兩下或雙指縮放手勢縮放圖片。",

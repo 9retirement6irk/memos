@@ -1419,6 +1419,11 @@
     "unlink-identity-failed": "No s'ha pogut desvincular el proveïdor d'identitat.",
     "link-identity-failed": "No s'ha pogut iniciar la vinculació del compte. Torna-ho a provar."
   },
+  "attachment-pdf": {
+    "page-of": "Pàgina {{current}} de {{total}}",
+    "previous-page": "Anterior",
+    "next-page": "Següent"
+  },
   "attachment-preview": {
     "title": "Previsualització de l'adjunt",
     "description": "Diàleg de previsualització d'adjunts. Prem Escape per tancar, fes servir les fletxes esquerra i dreta per canviar d'element i amplia les imatges amb els controls, la roda del ratolí, un doble toc o pinçant amb els dits.",

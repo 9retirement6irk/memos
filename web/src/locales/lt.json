@@ -1420,6 +1420,11 @@
     "unlink-identity-failed": "Nepavyko atsieti tapatybės teikėjo.",
     "link-identity-failed": "Nepavyko pradėti paskyros susiejimo. Bandykite dar kartą."
   },
+  "attachment-pdf": {
+    "page-of": "{{current}} puslapis iš {{total}}",
+    "previous-page": "Ankstesnis",
+    "next-page": "Kitas"
+  },
   "attachment-preview": {
     "title": "Priedo peržiūra",
     "description": "Priedo peržiūros langas. Paspauskite Escape, kad uždarytumėte, kairiuoju arba dešiniuoju rodyklės klavišu perjunkite elementus, o vaizdus didinkite valdikliais, pelės ratuku, dvigubu bakstelėjimu arba suspaudimo gestu.",
