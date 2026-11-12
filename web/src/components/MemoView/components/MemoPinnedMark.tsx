@@ -8,6 +8,7 @@ const MemoPinnedMark = () => {
     <span
       role="img"
       aria-label={t("memo.pinned")}
+      data-pinned-mark
       className="absolute -right-px -top-px size-5 rounded-tr-mu-lg bg-mu-warning [clip-path:polygon(0_0,100%_0,100%_100%)] transition-[width,height] duration-160 ease-out pointer-fine:group-hover/memo:size-6 motion-reduce:transition-none"
     />
   );

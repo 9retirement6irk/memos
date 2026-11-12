@@ -522,7 +522,11 @@
       "theme-system-short": "Sistema",
       "theme-light": "Claro",
       "theme-dark": "Escuro",
-      "theme-paper": "Papel"
+      "theme-paper": "Papel",
+      "theme-aero-system": "Aero · Seguir o sistema",
+      "theme-aero-light": "Aero · Claro",
+      "theme-aero-dark": "Aero · Escuro",
+      "theme-aero-paper": "Aero · Papel"
     },
     "editor": {
       "label": "Editor",

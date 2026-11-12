@@ -730,7 +730,11 @@
       "theme-system-short": "Systém",
       "theme-light": "Svetlá",
       "theme-dark": "Tmavá",
-      "theme-paper": "Papier"
+      "theme-paper": "Papier",
+      "theme-aero-system": "Aero · Podľa systému",
+      "theme-aero-light": "Aero · Svetlá",
+      "theme-aero-dark": "Aero · Tmavá",
+      "theme-aero-paper": "Aero · Papier"
     },
     "editor": {
       "label": "Editor",

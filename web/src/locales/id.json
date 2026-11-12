@@ -521,7 +521,11 @@
       "theme-system-short": "Sistem",
       "theme-light": "Terang",
       "theme-dark": "Gelap",
-      "theme-paper": "Kertas"
+      "theme-paper": "Kertas",
+      "theme-aero-system": "Aero · Ikuti sistem",
+      "theme-aero-light": "Aero · Terang",
+      "theme-aero-dark": "Aero · Gelap",
+      "theme-aero-paper": "Aero · Kertas"
     },
     "editor": {
       "label": "Editor",

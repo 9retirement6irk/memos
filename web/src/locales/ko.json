@@ -521,7 +521,11 @@
       "theme-system-short": "시스템",
       "theme-light": "라이트",
       "theme-dark": "다크",
-      "theme-paper": "페이퍼"
+      "theme-paper": "페이퍼",
+      "theme-aero-system": "Aero · 시스템 설정과 동기화",
+      "theme-aero-light": "Aero · 라이트",
+      "theme-aero-dark": "Aero · 다크",
+      "theme-aero-paper": "Aero · 페이퍼"
     },
     "editor": {
       "label": "편집기",

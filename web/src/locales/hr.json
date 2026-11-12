@@ -613,7 +613,11 @@
       "theme-system-short": "Sustav",
       "theme-light": "Svijetla",
       "theme-dark": "Tamna",
-      "theme-paper": "Papir"
+      "theme-paper": "Papir",
+      "theme-aero-system": "Aero · Prema sustavu",
+      "theme-aero-light": "Aero · Svijetla",
+      "theme-aero-dark": "Aero · Tamna",
+      "theme-aero-paper": "Aero · Papir"
     },
     "editor": {
       "label": "Uređivač",

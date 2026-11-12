@@ -612,7 +612,11 @@
       "theme-system-short": "システム",
       "theme-light": "ライト",
       "theme-dark": "ダーク",
-      "theme-paper": "ペーパー"
+      "theme-paper": "ペーパー",
+      "theme-aero-system": "Aero · システムに合わせる",
+      "theme-aero-light": "Aero · ライト",
+      "theme-aero-dark": "Aero · ダーク",
+      "theme-aero-paper": "Aero · ペーパー"
     },
     "editor": {
       "label": "エディター",

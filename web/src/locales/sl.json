@@ -614,7 +614,11 @@
       "theme-system-short": "Sistemska",
       "theme-light": "Svetla",
       "theme-dark": "Temna",
-      "theme-paper": "Papir"
+      "theme-paper": "Papir",
+      "theme-aero-system": "Aero · Sledi sistemu",
+      "theme-aero-light": "Aero · Svetla",
+      "theme-aero-dark": "Aero · Temna",
+      "theme-aero-paper": "Aero · Papir"
     },
     "editor": {
       "label": "Urejevalnik",

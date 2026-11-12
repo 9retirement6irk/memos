@@ -612,7 +612,11 @@
       "theme-system-short": "სისტემა",
       "theme-light": "ღია",
       "theme-dark": "მუქი",
-      "theme-paper": "ქაღალდი"
+      "theme-paper": "ქაღალდი",
+      "theme-aero-system": "Aero · სისტემასთან სინქრონიზაცია",
+      "theme-aero-light": "Aero · ღია",
+      "theme-aero-dark": "Aero · მუქი",
+      "theme-aero-paper": "Aero · ქაღალდი"
     },
     "editor": {
       "label": "რედაქტორი",

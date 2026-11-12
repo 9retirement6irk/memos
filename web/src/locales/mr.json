@@ -521,7 +521,11 @@
       "theme-system-short": "सिस्टम",
       "theme-light": "लाइट",
       "theme-dark": "डार्क",
-      "theme-paper": "पेपर"
+      "theme-paper": "पेपर",
+      "theme-aero-system": "Aero · सिस्टमनुसार",
+      "theme-aero-light": "Aero · लाइट",
+      "theme-aero-dark": "Aero · डार्क",
+      "theme-aero-paper": "Aero · पेपर"
     },
     "editor": {
       "label": "संपादक",

@@ -929,7 +929,11 @@
       "theme-system-short": "Sistem",
       "theme-light": "Açıq",
       "theme-dark": "Tünd",
-      "theme-paper": "Kağız"
+      "theme-paper": "Kağız",
+      "theme-aero-system": "Aero · Sistemlə sinxronlaşdır",
+      "theme-aero-light": "Aero · Açıq",
+      "theme-aero-dark": "Aero · Tünd",
+      "theme-aero-paper": "Aero · Kağız"
     },
     "editor": {
       "label": "Redaktor",

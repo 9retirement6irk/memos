@@ -769,7 +769,11 @@
       "theme-system-short": "系統",
       "theme-light": "淺色",
       "theme-dark": "深色",
-      "theme-paper": "紙張"
+      "theme-paper": "紙張",
+      "theme-aero-system": "Aero · 跟隨系統",
+      "theme-aero-light": "Aero · 淺色",
+      "theme-aero-dark": "Aero · 深色",
+      "theme-aero-paper": "Aero · 紙張"
     },
     "editor": {
       "label": "編輯器",

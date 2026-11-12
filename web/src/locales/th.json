@@ -521,7 +521,11 @@
       "theme-system-short": "ระบบ",
       "theme-light": "สว่าง",
       "theme-dark": "มืด",
-      "theme-paper": "กระดาษ"
+      "theme-paper": "กระดาษ",
+      "theme-aero-system": "Aero · ตามระบบ",
+      "theme-aero-light": "Aero · สว่าง",
+      "theme-aero-dark": "Aero · มืด",
+      "theme-aero-paper": "Aero · กระดาษ"
     },
     "editor": {
       "label": "โปรแกรมแก้ไข",

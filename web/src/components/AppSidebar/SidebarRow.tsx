@@ -76,9 +76,13 @@ export const sidebarRowStateClasses = (state: SidebarRowState = "idle") => {
   return `text-mu-ink-muted ${SIDEBAR_ROW_HOVER_CLASSES}`;
 };
 
-/** Goes on the row box so the icon slot and count rail inside it can take the checked colour. */
+/**
+ * Goes on the row box so the icon slot and count rail inside it can take the checked colour.
+ * `data-current` lets app themes (themes/aero) draw the place you are.
+ */
 export const sidebarRowStateAttributes = (state: SidebarRowState) => ({
   "data-checked": state === "checked" ? "" : undefined,
+  "data-current": state === "current" ? "" : undefined,
 });
 
 interface Props {

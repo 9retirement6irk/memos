@@ -728,7 +728,11 @@
       "theme-system-short": "Järjestelmä",
       "theme-light": "Vaalea",
       "theme-dark": "Tumma",
-      "theme-paper": "Paperi"
+      "theme-paper": "Paperi",
+      "theme-aero-system": "Aero · Järjestelmän mukaan",
+      "theme-aero-light": "Aero · Vaalea",
+      "theme-aero-dark": "Aero · Tumma",
+      "theme-aero-paper": "Aero · Paperi"
     },
     "editor": {
       "label": "Editori",

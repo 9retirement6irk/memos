@@ -288,7 +288,7 @@ function ColumnGrid<T>({
   };
 
   return (
-    <div ref={containerRef} className="relative w-full" style={{ height: containerHeight }}>
+    <div ref={containerRef} data-column-grid className="relative w-full" style={{ height: containerHeight }}>
       {header != null && (
         // Spans the packed columns; positioned with left/top like the leading tile so it is
         // never a containing block for fixed descendants either.

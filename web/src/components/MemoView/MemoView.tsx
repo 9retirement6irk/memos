@@ -185,6 +185,9 @@ const MemoView = forwardRef<MemoViewHandle, MemoViewProps>((props, ref) => {
       className={cn(MEMO_CARD_BASE_CLASSES, "group/memo", showCommentPreview ? "mb-0 rounded-b-none" : "mb-2", className)}
       ref={cardRef}
       tabIndex={readonly ? -1 : 0}
+      // Styling hooks for app themes (themes/aero): every memo card, and whether it shows as pinned.
+      data-memo-card
+      data-pinned={showPinned && memoData.pinned ? "" : undefined}
     >
       {/* The pinned mark steps aside while the memo is edited in place. */}
       {showPinned && memoData.pinned && !isEditing && <MemoPinnedMark />}

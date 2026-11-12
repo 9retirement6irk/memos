@@ -728,7 +728,11 @@
       "theme-system-short": "Σύστημα",
       "theme-light": "Φωτεινό",
       "theme-dark": "Σκοτεινό",
-      "theme-paper": "Χαρτί"
+      "theme-paper": "Χαρτί",
+      "theme-aero-system": "Aero · Συγχρονισμός με το σύστημα",
+      "theme-aero-light": "Aero · Φωτεινό",
+      "theme-aero-dark": "Aero · Σκοτεινό",
+      "theme-aero-paper": "Aero · Χαρτί"
     },
     "editor": {
       "label": "Πρόγραμμα επεξεργασίας",

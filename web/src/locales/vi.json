@@ -521,7 +521,11 @@
       "theme-system-short": "Hệ thống",
       "theme-light": "Sáng",
       "theme-dark": "Tối",
-      "theme-paper": "Giấy"
+      "theme-paper": "Giấy",
+      "theme-aero-system": "Aero · Theo hệ thống",
+      "theme-aero-light": "Aero · Sáng",
+      "theme-aero-dark": "Aero · Tối",
+      "theme-aero-paper": "Aero · Giấy"
     },
     "editor": {
       "label": "Trình chỉnh sửa",

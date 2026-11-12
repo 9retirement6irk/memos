@@ -1,0 +1,39 @@
+/*
+ * Aero Dark: smoked Aero glass at night. Sets all 32 names in `themeTokens`;
+ * tests/app-themes.test.ts checks that and the contrast of every text pair.
+ */
+[data-theme="aero-dark"] {
+  color-scheme: dark;
+  --mu-canvas: #11161d;
+  --mu-surface: #1b232e;
+  --mu-well: #10161d;
+  --mu-hover: #26313e;
+  --mu-key: #333c47;
+  --mu-key-hover: #24476e;
+  --mu-key-sheen: rgba(255, 255, 255, 0.12);
+  --mu-edge: #4a5a6e;
+  --mu-line: #34404e;
+  --mu-overlay: rgba(0, 0, 0, 0.6);
+  --mu-ink: #e6edf5;
+  --mu-ink-muted: #a9b8c9;
+  --mu-primary: #5aa3e8;
+  --mu-primary-hover: #7fb8ec;
+  --mu-on-primary: #0b1726;
+  --mu-accent: #7fc0ff;
+  --mu-selection: rgba(90, 163, 232, 0.35);
+  --mu-success: #7ad36a;
+  --mu-success-soft: #14261a;
+  --mu-warning: #e2b44a;
+  --mu-warning-soft: #2a2112;
+  --mu-danger: #ff8a75;
+  --mu-danger-key: #b8321e;
+  --mu-danger-soft: #2c1616;
+  --mu-on-danger: #ffffff;
+  --mu-focus: #5aa3e8;
+  --mu-focus-edge: #5aa3e8;
+  --mu-shadow-track: inset 0 1px 2px rgba(0, 0, 0, 0.55), inset 0 -0.5px 0 rgba(255, 255, 255, 0.06);
+  --mu-shadow-key: 0 1px 2px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+  --mu-shadow-raised: inset 0 0 0 1px rgba(255, 255, 255, 0.15), 0 0 0 1px #0a0f15, 0 1px 2px rgba(0, 0, 0, 0.5);
+  --mu-shadow-pressed: inset 0 1px 3px rgba(0, 0, 0, 0.6), 0 0 0 1px #0a0f15;
+  --mu-shadow-pop: 2px 3px 8px rgba(0, 0, 0, 0.6), 0 0 0 1px #0a0f15, inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}

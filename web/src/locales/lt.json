@@ -730,7 +730,11 @@
       "theme-system-short": "Sistema",
       "theme-light": "Šviesi",
       "theme-dark": "Tamsi",
-      "theme-paper": "Popierius"
+      "theme-paper": "Popierius",
+      "theme-aero-system": "Aero · Pagal sistemą",
+      "theme-aero-light": "Aero · Šviesi",
+      "theme-aero-dark": "Aero · Tamsi",
+      "theme-aero-paper": "Aero · Popierius"
     },
     "editor": {
       "label": "Redaktorius",

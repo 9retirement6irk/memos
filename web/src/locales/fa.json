@@ -521,7 +521,11 @@
       "theme-system-short": "سیستم",
       "theme-light": "روشن",
       "theme-dark": "تیره",
-      "theme-paper": "کاغذی"
+      "theme-paper": "کاغذی",
+      "theme-aero-system": "Aero · همگام با سیستم",
+      "theme-aero-light": "Aero · روشن",
+      "theme-aero-dark": "Aero · تیره",
+      "theme-aero-paper": "Aero · کاغذی"
     },
     "editor": {
       "label": "ویرایشگر",

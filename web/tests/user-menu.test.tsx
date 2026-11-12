@@ -149,6 +149,10 @@ describe("User menu panel", () => {
       "setting.preference.theme-light",
       "setting.preference.theme-dark",
       "setting.preference.theme-paper",
+      "setting.preference.theme-aero-system",
+      "setting.preference.theme-aero-light",
+      "setting.preference.theme-aero-dark",
+      "setting.preference.theme-aero-paper",
     ]);
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });

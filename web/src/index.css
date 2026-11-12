@@ -5,6 +5,10 @@
 @import "@usememos/ui/tailwind.css";
 @import "./themes/default.css";
 @import "./themes/paper.css";
+@import "./themes/aero-light.css";
+@import "./themes/aero-dark.css";
+@import "./themes/aero-paper.css";
+@import "./themes/aero/aero.css";
 
 /*
  * Rich text in the memo editor: everything outside its source mode, which shows the
@@ -14,7 +18,7 @@
  */
 @custom-variant rich (&:not(.mbe-source-mode *));
 /* The package switches themes with data-theme, so `dark:` follows the app's choice, not the OS. */
-@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *, [data-theme="aero-dark"], [data-theme="aero-dark"] *));
 
 @layer base {
   * {

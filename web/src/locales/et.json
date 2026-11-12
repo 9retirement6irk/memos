@@ -728,7 +728,11 @@
       "theme-system-short": "Süsteem",
       "theme-light": "Hele",
       "theme-dark": "Tume",
-      "theme-paper": "Paber"
+      "theme-paper": "Paber",
+      "theme-aero-system": "Aero · Süsteemi järgi",
+      "theme-aero-light": "Aero · Hele",
+      "theme-aero-dark": "Aero · Tume",
+      "theme-aero-paper": "Aero · Paber"
     },
     "editor": {
       "label": "Redaktor",

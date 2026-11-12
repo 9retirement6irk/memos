@@ -600,7 +600,11 @@
       "theme-system-short": "系统",
       "theme-light": "浅色",
       "theme-dark": "深色",
-      "theme-paper": "纸张"
+      "theme-paper": "纸张",
+      "theme-aero-system": "Aero · 跟随系统",
+      "theme-aero-light": "Aero · 浅色",
+      "theme-aero-dark": "Aero · 深色",
+      "theme-aero-paper": "Aero · 纸张"
     },
     "editor": {
       "label": "编辑器",

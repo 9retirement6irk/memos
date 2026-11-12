@@ -780,7 +780,11 @@
       "theme-system-short": "Sistem",
       "theme-light": "Açık",
       "theme-dark": "Koyu",
-      "theme-paper": "Kâğıt"
+      "theme-paper": "Kâğıt",
+      "theme-aero-system": "Aero · Sistemle eşitle",
+      "theme-aero-light": "Aero · Açık",
+      "theme-aero-dark": "Aero · Koyu",
+      "theme-aero-paper": "Aero · Kâğıt"
     },
     "editor": {
       "label": "Editör",

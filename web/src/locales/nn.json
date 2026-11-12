@@ -965,7 +965,11 @@
       "theme-system-short": "System",
       "theme-light": "Lyst",
       "theme-dark": "Mørkt",
-      "theme-paper": "Papir"
+      "theme-paper": "Papir",
+      "theme-aero-system": "Aero · Følg systemet",
+      "theme-aero-light": "Aero · Lyst",
+      "theme-aero-dark": "Aero · Mørkt",
+      "theme-aero-paper": "Aero · Papir"
     },
     "editor": {
       "label": "Redigering",
