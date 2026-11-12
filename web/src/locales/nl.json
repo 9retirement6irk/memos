@@ -917,18 +917,6 @@
       "users-description": "The entry applies to each of these users.",
       "users-required": "Name at least one user."
     },
-    "immich": {
-      "label": "Immich",
-      "description": "Kies foto's van je Immich-server terwijl je schrijft. Je API-sleutel blijft op deze server.",
-      "status-connected": "Verbonden met {{url}}",
-      "status-not-connected": "Niet verbonden",
-      "server-url": "Serveradres",
-      "api-key": "API-sleutel",
-      "api-key-keep": "Laat leeg om de opgeslagen sleutel te houden",
-      "api-key-help": "Maak er een aan in Immich onder Accountinstellingen → API-sleutels. Benodigde rechten: asset.read, asset.view, asset.download, album.read, user.read.",
-      "connect": "Verbinden",
-      "disconnect": "Verbinding verbreken"
-    },
     "webhook": {
       "create-dialog": {
         "an-easy-to-remember-name": "Een makkelijk te onthouden naam",
@@ -1192,6 +1180,18 @@
       "you": "Jij",
       "your-access": "Jouw toegang",
       "your-spaces": "Jouw ruimtes"
+    },
+    "immich": {
+      "label": "Immich",
+      "description": "Kies foto's van je Immich-server terwijl je schrijft. Je API-sleutel blijft op deze server.",
+      "status-connected": "Verbonden met {{url}}",
+      "status-not-connected": "Niet verbonden",
+      "server-url": "Serveradres",
+      "api-key": "API-sleutel",
+      "api-key-keep": "Laat leeg om de opgeslagen sleutel te houden",
+      "api-key-help": "Maak er een aan in Immich onder Accountinstellingen → API-sleutels. Benodigde rechten: asset.read, asset.view, asset.download, album.read, user.read.",
+      "connect": "Verbinden",
+      "disconnect": "Verbinding verbreken"
     }
   },
   "tooltip": {
@@ -1430,16 +1430,10 @@
     "unlink-identity-failed": "Ontkoppelen van identiteitsprovider mislukt.",
     "link-identity-failed": "Koppelen van het account kon niet worden gestart. Probeer het opnieuw."
   },
-  "immich": {
-    "insert": "Foto's uit Immich",
-    "title": "Foto's uit Immich kiezen",
-    "album": "Album",
-    "all-photos": "Alle foto's",
-    "add-photos": "Foto's toevoegen ({{count}})",
-    "load-more": "Meer laden",
-    "empty": "Geen foto's hier.",
-    "not-connected": "Verbind eerst je Immich-server in Instellingen.",
-    "add-failed": "Sommige foto's konden niet worden toegevoegd."
+  "attachment-pdf": {
+    "page-of": "Pagina {{current}} van {{total}}",
+    "previous-page": "Vorige",
+    "next-page": "Volgende"
   },
   "attachment-preview": {
     "title": "Voorbeeld van bijlage",
@@ -1457,5 +1451,16 @@
     "back": "{{seconds}} seconden terug",
     "forward": "{{seconds}} seconden vooruit",
     "speed": "Afspeelsnelheid {{rate}}x"
+  },
+  "immich": {
+    "insert": "Foto's uit Immich",
+    "title": "Foto's uit Immich kiezen",
+    "album": "Album",
+    "all-photos": "Alle foto's",
+    "add-photos": "Foto's toevoegen ({{count}})",
+    "load-more": "Meer laden",
+    "empty": "Geen foto's hier.",
+    "not-connected": "Verbind eerst je Immich-server in Instellingen.",
+    "add-failed": "Sommige foto's konden niet worden toegevoegd."
   }
 }

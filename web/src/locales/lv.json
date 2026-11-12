@@ -1034,18 +1034,6 @@
       "users-description": "The entry applies to each of these users.",
       "users-required": "Name at least one user."
     },
-    "immich": {
-      "label": "Immich",
-      "description": "Rakstot izvēlies fotoattēlus no sava Immich servera. Tava API atslēga paliek šajā serverī.",
-      "status-connected": "Savienots ar {{url}}",
-      "status-not-connected": "Nav savienots",
-      "server-url": "Servera adrese",
-      "api-key": "API atslēga",
-      "api-key-keep": "Atstāj tukšu, lai paturētu saglabāto atslēgu",
-      "api-key-help": "Izveido to Immich sadaļā Konta iestatījumi → API atslēgas. Nepieciešamās atļaujas: asset.read, asset.view, asset.download, album.read, user.read.",
-      "connect": "Savienot",
-      "disconnect": "Atvienot"
-    },
     "webhook": {
       "create-dialog": {
         "an-easy-to-remember-name": "Viegli iegaumējams nosaukums",
@@ -1231,6 +1219,18 @@
       "you": "Jūs",
       "your-access": "Jūsu piekļuve",
       "your-spaces": "Jūsu telpas"
+    },
+    "immich": {
+      "label": "Immich",
+      "description": "Rakstot izvēlies fotoattēlus no sava Immich servera. Tava API atslēga paliek šajā serverī.",
+      "status-connected": "Savienots ar {{url}}",
+      "status-not-connected": "Nav savienots",
+      "server-url": "Servera adrese",
+      "api-key": "API atslēga",
+      "api-key-keep": "Atstāj tukšu, lai paturētu saglabāto atslēgu",
+      "api-key-help": "Izveido to Immich sadaļā Konta iestatījumi → API atslēgas. Nepieciešamās atļaujas: asset.read, asset.view, asset.download, album.read, user.read.",
+      "connect": "Savienot",
+      "disconnect": "Atvienot"
     }
   },
   "tooltip": {
@@ -1431,16 +1431,10 @@
     "unlink-identity-failed": "Neizdevās atsaistīt identitātes nodrošinātāju.",
     "link-identity-failed": "Neizdevās sākt konta sasaisti. Mēģiniet vēlreiz."
   },
-  "immich": {
-    "insert": "Fotoattēli no Immich",
-    "title": "Izvēlies fotoattēlus no Immich",
-    "album": "Albums",
-    "all-photos": "Visi fotoattēli",
-    "add-photos": "Pievienot fotoattēlus ({{count}})",
-    "load-more": "Ielādēt vairāk",
-    "empty": "Šeit nav fotoattēlu.",
-    "not-connected": "Vispirms savieno savu Immich serveri iestatījumos.",
-    "add-failed": "Dažus fotoattēlus neizdevās pievienot."
+  "attachment-pdf": {
+    "page-of": "{{current}}. lapa no {{total}}",
+    "previous-page": "Iepriekšējais",
+    "next-page": "Nākamais"
   },
   "attachment-preview": {
     "title": "Pielikuma priekšskatījums",
@@ -1458,5 +1452,16 @@
     "back": "Atpakaļ {{seconds}} sekundes",
     "forward": "Uz priekšu {{seconds}} sekundes",
     "speed": "Atskaņošanas ātrums {{rate}}x"
+  },
+  "immich": {
+    "insert": "Fotoattēli no Immich",
+    "title": "Izvēlies fotoattēlus no Immich",
+    "album": "Albums",
+    "all-photos": "Visi fotoattēli",
+    "add-photos": "Pievienot fotoattēlus ({{count}})",
+    "load-more": "Ielādēt vairāk",
+    "empty": "Šeit nav fotoattēlu.",
+    "not-connected": "Vispirms savieno savu Immich serveri iestatījumos.",
+    "add-failed": "Dažus fotoattēlus neizdevās pievienot."
   }
 }

@@ -1034,18 +1034,6 @@
       "users-description": "The entry applies to each of these users.",
       "users-required": "Name at least one user."
     },
-    "immich": {
-      "label": "Immich",
-      "description": "Alege fotografii de pe serverul tău Immich în timp ce scrii. Cheia ta API rămâne pe acest server.",
-      "status-connected": "Conectat la {{url}}",
-      "status-not-connected": "Neconectat",
-      "server-url": "Adresa serverului",
-      "api-key": "Cheie API",
-      "api-key-keep": "Lasă gol pentru a păstra cheia salvată",
-      "api-key-help": "Creează una în Immich la Setări cont → Chei API. Permisiuni necesare: asset.read, asset.view, asset.download, album.read, user.read.",
-      "connect": "Conectează",
-      "disconnect": "Deconectează"
-    },
     "webhook": {
       "create-dialog": {
         "an-easy-to-remember-name": "Un nume ușor de reținut",
@@ -1231,6 +1219,18 @@
       "you": "Dvs.",
       "your-access": "Accesul dvs.",
       "your-spaces": "Spațiile dvs."
+    },
+    "immich": {
+      "label": "Immich",
+      "description": "Alege fotografii de pe serverul tău Immich în timp ce scrii. Cheia ta API rămâne pe acest server.",
+      "status-connected": "Conectat la {{url}}",
+      "status-not-connected": "Neconectat",
+      "server-url": "Adresa serverului",
+      "api-key": "Cheie API",
+      "api-key-keep": "Lasă gol pentru a păstra cheia salvată",
+      "api-key-help": "Creează una în Immich la Setări cont → Chei API. Permisiuni necesare: asset.read, asset.view, asset.download, album.read, user.read.",
+      "connect": "Conectează",
+      "disconnect": "Deconectează"
     }
   },
   "tooltip": {
@@ -1431,16 +1431,10 @@
     "unlink-identity-failed": "Deconectarea furnizorului de identitate a eșuat.",
     "link-identity-failed": "Nu s-a putut începe conectarea contului. Încearcă din nou."
   },
-  "immich": {
-    "insert": "Fotografii din Immich",
-    "title": "Alege fotografii din Immich",
-    "album": "Album",
-    "all-photos": "Toate fotografiile",
-    "add-photos": "Adaugă fotografii ({{count}})",
-    "load-more": "Încarcă mai multe",
-    "empty": "Nu există fotografii aici.",
-    "not-connected": "Mai întâi conectează serverul Immich în Setări.",
-    "add-failed": "Unele fotografii nu au putut fi adăugate."
+  "attachment-pdf": {
+    "page-of": "Pagina {{current}} din {{total}}",
+    "previous-page": "Anterior",
+    "next-page": "Următor"
   },
   "attachment-preview": {
     "title": "Previzualizare atașament",
@@ -1458,5 +1452,16 @@
     "back": "Înapoi {{seconds}} secunde",
     "forward": "Înainte {{seconds}} secunde",
     "speed": "Viteză de redare {{rate}}x"
+  },
+  "immich": {
+    "insert": "Fotografii din Immich",
+    "title": "Alege fotografii din Immich",
+    "album": "Album",
+    "all-photos": "Toate fotografiile",
+    "add-photos": "Adaugă fotografii ({{count}})",
+    "load-more": "Încarcă mai multe",
+    "empty": "Nu există fotografii aici.",
+    "not-connected": "Mai întâi conectează serverul Immich în Setări.",
+    "add-failed": "Unele fotografii nu au putut fi adăugate."
   }
 }

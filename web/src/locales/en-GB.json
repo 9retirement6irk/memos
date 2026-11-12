@@ -917,18 +917,6 @@
       "users-description": "The entry applies to each of these users.",
       "users-required": "Name at least one user."
     },
-    "immich": {
-      "label": "Immich",
-      "description": "Pick photos from your Immich server while you write. Your API key stays on this server.",
-      "status-connected": "Connected to {{url}}",
-      "status-not-connected": "Not connected",
-      "server-url": "Server address",
-      "api-key": "API key",
-      "api-key-keep": "Leave empty to keep the saved key",
-      "api-key-help": "Create one in Immich under Account Settings → API Keys. It needs: asset.read, asset.view, asset.download, album.read, user.read.",
-      "connect": "Connect",
-      "disconnect": "Disconnect"
-    },
     "webhook": {
       "create-dialog": {
         "an-easy-to-remember-name": "An easy-to-remember name",
@@ -1192,6 +1180,18 @@
       "you": "You",
       "your-access": "Your access",
       "your-spaces": "Your spaces"
+    },
+    "immich": {
+      "label": "Immich",
+      "description": "Pick photos from your Immich server while you write. Your API key stays on this server.",
+      "status-connected": "Connected to {{url}}",
+      "status-not-connected": "Not connected",
+      "server-url": "Server address",
+      "api-key": "API key",
+      "api-key-keep": "Leave empty to keep the saved key",
+      "api-key-help": "Create one in Immich under Account Settings → API Keys. It needs: asset.read, asset.view, asset.download, album.read, user.read.",
+      "connect": "Connect",
+      "disconnect": "Disconnect"
     }
   },
   "tooltip": {
@@ -1430,16 +1430,10 @@
     "unlink-identity-failed": "Failed to unlink identity provider.",
     "link-identity-failed": "Failed to initiate account linking. Please try again."
   },
-  "immich": {
-    "insert": "Photos from Immich",
-    "title": "Choose photos from Immich",
-    "album": "Album",
-    "all-photos": "All photos",
-    "add-photos": "Add photos ({{count}})",
-    "load-more": "Load more",
-    "empty": "No photos here.",
-    "not-connected": "Connect your Immich server in Settings first.",
-    "add-failed": "Some photos could not be added."
+  "attachment-pdf": {
+    "page-of": "Page {{current}} of {{total}}",
+    "previous-page": "Previous page",
+    "next-page": "Next page"
   },
   "attachment-preview": {
     "title": "Attachment preview",
@@ -1457,5 +1451,16 @@
     "back": "Back {{seconds}} seconds",
     "forward": "Forward {{seconds}} seconds",
     "speed": "Playback speed {{rate}}x"
+  },
+  "immich": {
+    "insert": "Photos from Immich",
+    "title": "Choose photos from Immich",
+    "album": "Album",
+    "all-photos": "All photos",
+    "add-photos": "Add photos ({{count}})",
+    "load-more": "Load more",
+    "empty": "No photos here.",
+    "not-connected": "Connect your Immich server in Settings first.",
+    "add-failed": "Some photos could not be added."
   }
 }

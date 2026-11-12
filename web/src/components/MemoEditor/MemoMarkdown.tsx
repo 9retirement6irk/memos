@@ -1,4 +1,4 @@
-import type { Editor, EditorMode, Extension, Theme } from "@usememos/editor";
+import type { Editor, EditorMode, Extension, Icons, Theme } from "@usememos/editor";
 import { MarkdownEditor, type MarkdownEditorProps } from "@usememos/editor/react";
 import "@usememos/editor/style.css";
 import { type Ref, useCallback, useMemo, useState } from "react";
@@ -41,6 +41,8 @@ export interface MemoMarkdownProps {
   slashMenu?: MarkdownEditorProps["slashMenu"];
   /** The editor's look. Default MEMO_EDITOR_THEME. Updates live. */
   theme?: Theme;
+  /** Replacements for built-in icons. Read once: change the component's `key` to apply new ones. */
+  icons?: Icons;
   className?: string;
 }
 
@@ -76,6 +78,7 @@ export const MemoMarkdown = (props: MemoMarkdownProps) => {
     toolbar,
     slashMenu,
     theme = MEMO_EDITOR_THEME,
+    icons,
     className,
   } = props;
   const t = useTranslate();
@@ -119,6 +122,7 @@ export const MemoMarkdown = (props: MemoMarkdownProps) => {
       onLinkClick={onLinkClick}
       toolbar={toolbar}
       slashMenu={slashMenu}
+      icons={icons}
       className={className}
     />
   );

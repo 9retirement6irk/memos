@@ -920,18 +920,6 @@
       "users-description": "Záznam platí pro každého z těchto uživatelů.",
       "users-required": "Uveďte alespoň jednoho uživatele."
     },
-    "immich": {
-      "label": "Immich",
-      "description": "Při psaní vybírejte fotky ze svého serveru Immich. Váš klíč API zůstává na tomto serveru.",
-      "status-connected": "Připojeno k {{url}}",
-      "status-not-connected": "Nepřipojeno",
-      "server-url": "Adresa serveru",
-      "api-key": "Klíč API",
-      "api-key-keep": "Ponechte prázdné, chcete-li zachovat uložený klíč",
-      "api-key-help": "Vytvořte jej v Immichi v Nastavení účtu → Klíče API. Potřebná oprávnění: asset.read, asset.view, asset.download, album.read, user.read.",
-      "connect": "Připojit",
-      "disconnect": "Odpojit"
-    },
     "webhook": {
       "create-dialog": {
         "an-easy-to-remember-name": "Snadno zapamatovatelný název",
@@ -1195,6 +1183,18 @@
       "you": "Vy",
       "your-access": "Váš přístup",
       "your-spaces": "Vaše prostory"
+    },
+    "immich": {
+      "label": "Immich",
+      "description": "Při psaní vybírejte fotky ze svého serveru Immich. Váš klíč API zůstává na tomto serveru.",
+      "status-connected": "Připojeno k {{url}}",
+      "status-not-connected": "Nepřipojeno",
+      "server-url": "Adresa serveru",
+      "api-key": "Klíč API",
+      "api-key-keep": "Ponechte prázdné, chcete-li zachovat uložený klíč",
+      "api-key-help": "Vytvořte jej v Immichi v Nastavení účtu → Klíče API. Potřebná oprávnění: asset.read, asset.view, asset.download, album.read, user.read.",
+      "connect": "Připojit",
+      "disconnect": "Odpojit"
     }
   },
   "tooltip": {
@@ -1433,16 +1433,10 @@
     "unlink-identity-failed": "Odpojení poskytovatele identity se nezdařilo.",
     "link-identity-failed": "Propojení účtu se nepodařilo zahájit. Zkuste to znovu."
   },
-  "immich": {
-    "insert": "Fotky z Immiche",
-    "title": "Vybrat fotky z Immiche",
-    "album": "Album",
-    "all-photos": "Všechny fotky",
-    "add-photos": "Přidat fotky ({{count}})",
-    "load-more": "Načíst další",
-    "empty": "Žádné fotky.",
-    "not-connected": "Nejprve v Nastavení připojte svůj server Immich.",
-    "add-failed": "Některé fotky se nepodařilo přidat."
+  "attachment-pdf": {
+    "page-of": "Strana {{current}} z {{total}}",
+    "previous-page": "Předchozí",
+    "next-page": "Další"
   },
   "attachment-preview": {
     "title": "Náhled přílohy",
@@ -1460,5 +1454,16 @@
     "back": "Zpět o {{seconds}} sekund",
     "forward": "Vpřed o {{seconds}} sekund",
     "speed": "Rychlost přehrávání {{rate}}x"
+  },
+  "immich": {
+    "insert": "Fotky z Immiche",
+    "title": "Vybrat fotky z Immiche",
+    "album": "Album",
+    "all-photos": "Všechny fotky",
+    "add-photos": "Přidat fotky ({{count}})",
+    "load-more": "Načíst další",
+    "empty": "Žádné fotky.",
+    "not-connected": "Nejprve v Nastavení připojte svůj server Immich.",
+    "add-failed": "Některé fotky se nepodařilo přidat."
   }
 }

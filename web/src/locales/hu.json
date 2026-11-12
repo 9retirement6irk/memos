@@ -917,18 +917,6 @@
       "users-description": "The entry applies to each of these users.",
       "users-required": "Name at least one user."
     },
-    "immich": {
-      "label": "Immich",
-      "description": "Írás közben válassz fotókat a saját Immich-szerveredről. Az API-kulcsod ezen a szerveren marad.",
-      "status-connected": "Csatlakozva: {{url}}",
-      "status-not-connected": "Nincs csatlakoztatva",
-      "server-url": "Szerver címe",
-      "api-key": "API-kulcs",
-      "api-key-keep": "Hagyd üresen a mentett kulcs megtartásához",
-      "api-key-help": "Hozz létre egyet az Immichben: Fiókbeállítások → API-kulcsok. Szükséges jogosultságok: asset.read, asset.view, asset.download, album.read, user.read.",
-      "connect": "Csatlakozás",
-      "disconnect": "Leválasztás"
-    },
     "webhook": {
       "create-dialog": {
         "an-easy-to-remember-name": "Könnyen megjegyezhető név",
@@ -1192,6 +1180,18 @@
       "your-spaces": "A terei",
       "delete-confirm-description": "Ez véglegesen törli a teret és a benne elhelyezett jegyzeteket. Ez a művelet nem vonható vissza.",
       "delete-confirm-title": "Törlöd ezt a teret: {{space}}?"
+    },
+    "immich": {
+      "label": "Immich",
+      "description": "Írás közben válassz fotókat a saját Immich-szerveredről. Az API-kulcsod ezen a szerveren marad.",
+      "status-connected": "Csatlakozva: {{url}}",
+      "status-not-connected": "Nincs csatlakoztatva",
+      "server-url": "Szerver címe",
+      "api-key": "API-kulcs",
+      "api-key-keep": "Hagyd üresen a mentett kulcs megtartásához",
+      "api-key-help": "Hozz létre egyet az Immichben: Fiókbeállítások → API-kulcsok. Szükséges jogosultságok: asset.read, asset.view, asset.download, album.read, user.read.",
+      "connect": "Csatlakozás",
+      "disconnect": "Leválasztás"
     }
   },
   "tooltip": {
@@ -1430,16 +1430,10 @@
     "unlink-identity-failed": "Nem sikerült leválasztani az identitásszolgáltatót.",
     "link-identity-failed": "Nem sikerült elindítani a fiók összekapcsolását. Próbáld újra."
   },
-  "immich": {
-    "insert": "Fotók az Immichből",
-    "title": "Fotók kiválasztása az Immichből",
-    "album": "Album",
-    "all-photos": "Minden fotó",
-    "add-photos": "Fotók hozzáadása ({{count}})",
-    "load-more": "Továbbiak betöltése",
-    "empty": "Itt nincsenek fotók.",
-    "not-connected": "Először csatlakoztasd az Immich-szerveredet a Beállításokban.",
-    "add-failed": "Néhány fotót nem sikerült hozzáadni."
+  "attachment-pdf": {
+    "page-of": "{{current}}. oldal, összesen {{total}}",
+    "previous-page": "Előző",
+    "next-page": "Következő"
   },
   "attachment-preview": {
     "title": "Melléklet előnézete",
@@ -1457,5 +1451,16 @@
     "back": "{{seconds}} másodperc vissza",
     "forward": "{{seconds}} másodperc előre",
     "speed": "Lejátszási sebesség: {{rate}}x"
+  },
+  "immich": {
+    "insert": "Fotók az Immichből",
+    "title": "Fotók kiválasztása az Immichből",
+    "album": "Album",
+    "all-photos": "Minden fotó",
+    "add-photos": "Fotók hozzáadása ({{count}})",
+    "load-more": "Továbbiak betöltése",
+    "empty": "Itt nincsenek fotók.",
+    "not-connected": "Először csatlakoztasd az Immich-szerveredet a Beállításokban.",
+    "add-failed": "Néhány fotót nem sikerült hozzáadni."
   }
 }

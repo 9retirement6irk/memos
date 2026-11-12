@@ -991,18 +991,6 @@
       "label": "备忘录",
       "reactions-required": "反应列表不能为空"
     },
-    "immich": {
-      "label": "Immich",
-      "description": "写作时可从你的 Immich 服务器选择照片。API 密钥只保存在此服务器上。",
-      "status-connected": "已连接到 {{url}}",
-      "status-not-connected": "未连接",
-      "server-url": "服务器地址",
-      "api-key": "API 密钥",
-      "api-key-keep": "留空则保留已保存的密钥",
-      "api-key-help": "在 Immich 的“账户设置 → API 密钥”中创建。所需权限：asset.read, asset.view, asset.download, album.read, user.read。",
-      "connect": "连接",
-      "disconnect": "断开连接"
-    },
     "webhook": {
       "create-dialog": {
         "an-easy-to-remember-name": "请输入一个容易记住的标题",
@@ -1223,6 +1211,18 @@
       "you": "您",
       "your-access": "您的访问权限",
       "your-spaces": "您的空间"
+    },
+    "immich": {
+      "label": "Immich",
+      "description": "写作时可从你的 Immich 服务器选择照片。API 密钥只保存在此服务器上。",
+      "status-connected": "已连接到 {{url}}",
+      "status-not-connected": "未连接",
+      "server-url": "服务器地址",
+      "api-key": "API 密钥",
+      "api-key-keep": "留空则保留已保存的密钥",
+      "api-key-help": "在 Immich 的“账户设置 → API 密钥”中创建。所需权限：asset.read, asset.view, asset.download, album.read, user.read。",
+      "connect": "连接",
+      "disconnect": "断开连接"
     }
   },
   "tooltip": {
@@ -1430,16 +1430,10 @@
     "unlink-identity-failed": "解除身份提供商关联失败。",
     "link-identity-failed": "无法开始关联账号，请重试。"
   },
-  "immich": {
-    "insert": "来自 Immich 的照片",
-    "title": "从 Immich 选择照片",
-    "album": "相册",
-    "all-photos": "所有照片",
-    "add-photos": "添加照片（{{count}}）",
-    "load-more": "加载更多",
-    "empty": "这里没有照片。",
-    "not-connected": "请先在设置中连接你的 Immich 服务器。",
-    "add-failed": "部分照片未能添加。"
+  "attachment-pdf": {
+    "page-of": "第 {{current}} 页，共 {{total}} 页",
+    "previous-page": "上一个",
+    "next-page": "下一个"
   },
   "attachment-preview": {
     "title": "附件预览",
@@ -1457,5 +1451,16 @@
     "back": "后退 {{seconds}} 秒",
     "forward": "前进 {{seconds}} 秒",
     "speed": "播放速度 {{rate}}x"
+  },
+  "immich": {
+    "insert": "来自 Immich 的照片",
+    "title": "从 Immich 选择照片",
+    "album": "相册",
+    "all-photos": "所有照片",
+    "add-photos": "添加照片（{{count}}）",
+    "load-more": "加载更多",
+    "empty": "这里没有照片。",
+    "not-connected": "请先在设置中连接你的 Immich 服务器。",
+    "add-failed": "部分照片未能添加。"
   }
 }

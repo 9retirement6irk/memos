@@ -1269,18 +1269,6 @@
       "title": "Emneknaggmetadata",
       "used-count": "{{count}} notat"
     },
-    "immich": {
-      "label": "Immich",
-      "description": "Vel bilete frå Immich-tenaren din medan du skriv. API-nøkkelen din blir på denne tenaren.",
-      "status-connected": "Kopla til {{url}}",
-      "status-not-connected": "Ikkje kopla til",
-      "server-url": "Tenaradresse",
-      "api-key": "API-nøkkel",
-      "api-key-keep": "La feltet stå tomt for å halde på den lagra nøkkelen",
-      "api-key-help": "Lag ein i Immich under Kontoinnstillingar → API-nøklar. Treng: asset.read, asset.view, asset.download, album.read, user.read.",
-      "connect": "Kopla til",
-      "disconnect": "Kopla frå"
-    },
     "webhook": {
       "create-dialog": {
         "an-easy-to-remember-name": "Eit namn som er lett å hugse",
@@ -1308,6 +1296,18 @@
       "no-webhooks-found": "Ingen vevkrokar funne.",
       "title": "Vevkrokar",
       "url": "Adresse"
+    },
+    "immich": {
+      "label": "Immich",
+      "description": "Vel bilete frå Immich-tenaren din medan du skriv. API-nøkkelen din blir på denne tenaren.",
+      "status-connected": "Kopla til {{url}}",
+      "status-not-connected": "Ikkje kopla til",
+      "server-url": "Tenaradresse",
+      "api-key": "API-nøkkel",
+      "api-key-keep": "La feltet stå tomt for å halde på den lagra nøkkelen",
+      "api-key-help": "Lag ein i Immich under Kontoinnstillingar → API-nøklar. Treng: asset.read, asset.view, asset.download, album.read, user.read.",
+      "connect": "Kopla til",
+      "disconnect": "Kopla frå"
     }
   },
   "space": {
@@ -1430,16 +1430,10 @@
     "unlink-identity-failed": "Klarte ikkje å kople frå identitetsleverandøren.",
     "link-identity-failed": "Kunne ikkje starte tilkopling av kontoen. Prøv igjen."
   },
-  "immich": {
-    "insert": "Bilete frå Immich",
-    "title": "Vel bilete frå Immich",
-    "album": "Album",
-    "all-photos": "Alle bilete",
-    "add-photos": "Legg til bilete ({{count}})",
-    "load-more": "Last inn fleire",
-    "empty": "Ingen bilete her.",
-    "not-connected": "Kopla til Immich-tenaren din under Innstillingar først.",
-    "add-failed": "Nokre bilete kunne ikkje leggjast til."
+  "attachment-pdf": {
+    "page-of": "Side {{current}} av {{total}}",
+    "previous-page": "Førre",
+    "next-page": "Neste"
   },
   "attachment-preview": {
     "title": "Førehandsvising av vedlegg",
@@ -1457,5 +1451,16 @@
     "back": "{{seconds}} sekund tilbake",
     "forward": "{{seconds}} sekund fram",
     "speed": "Avspelingsfart {{rate}}x"
+  },
+  "immich": {
+    "insert": "Bilete frå Immich",
+    "title": "Vel bilete frå Immich",
+    "album": "Album",
+    "all-photos": "Alle bilete",
+    "add-photos": "Legg til bilete ({{count}})",
+    "load-more": "Last inn fleire",
+    "empty": "Ingen bilete her.",
+    "not-connected": "Kopla til Immich-tenaren din under Innstillingar først.",
+    "add-failed": "Nokre bilete kunne ikkje leggjast til."
   }
 }

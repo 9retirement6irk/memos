@@ -3,8 +3,8 @@ import { EyeIcon } from "lucide-react";
 import { useMemo } from "react";
 import ClampedSection from "@/components/ClampedSection";
 import { MemoEditor } from "@/components/MemoEditor/MemoEditor";
-import { AttachmentGallery, MemoMetadataRows } from "@/components/MemoMetadata";
-import { separateAttachments } from "@/components/MemoMetadata/Attachment/attachmentHelpers";
+import { AttachmentGallery, MemoMetadataRows, PdfAttachment } from "@/components/MemoMetadata";
+import { isInlinePdf, separateAttachments } from "@/components/MemoMetadata/Attachment/attachmentHelpers";
 import { isReferenceRelation } from "@/components/MemoMetadata/Relation/relationHelpers";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import { cn } from "@/lib/utils";
@@ -55,6 +55,9 @@ const MemoBody: React.FC<MemoBodyProps> = ({ compact, showCreator }) => {
     [memo.content, memo.attachments],
   );
   const { visual, audio, docs } = useMemo(() => separateAttachments(attachmentOnlyItems), [attachmentOnlyItems]);
+  // PDFs this instance serves show their pages in the memo; other files stay rows.
+  const pdfs = useMemo(() => docs.filter(isInlinePdf), [docs]);
+  const otherDocs = useMemo(() => docs.filter((attachment) => !isInlinePdf(attachment)), [docs]);
 
   // Editing takes the body's place inside the card's own frame: the session brings its
   // attachments, metadata and toolbar, so the read-only rows and reactions step aside.
@@ -104,9 +107,12 @@ const MemoBody: React.FC<MemoBodyProps> = ({ compact, showCreator }) => {
               onImagePreview={openPreview}
               drawings={{ memo, canEdit: !readonly && canManageMemo(memo, currentUser) }}
             />
+            {pdfs.map((attachment) => (
+              <PdfAttachment key={attachment.name} attachment={attachment} />
+            ))}
             <MemoMetadataRows
               audio={audio}
-              docs={docs}
+              docs={otherDocs}
               relations={referencedMemos}
               currentMemoName={memo.name}
               parentPage={parentPage}

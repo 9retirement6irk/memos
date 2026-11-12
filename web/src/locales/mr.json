@@ -912,18 +912,6 @@
       "reactions-description": "वापरकर्ते मेमोंवर लागू करू शकतील असे प्रतिक्रिया पर्याय परिभाषित करा.",
       "remove-reaction": "प्रतिक्रिया काढून टाका"
     },
-    "immich": {
-      "label": "Immich",
-      "description": "लिहिताना तुमच्या Immich सर्व्हरवरून फोटो निवडा. तुमची API की याच सर्व्हरवर राहते.",
-      "status-connected": "{{url}} शी जोडलेले",
-      "status-not-connected": "जोडलेले नाही",
-      "server-url": "सर्व्हरचा पत्ता",
-      "api-key": "API की",
-      "api-key-keep": "जतन केलेली की ठेवण्यासाठी रिकामे ठेवा",
-      "api-key-help": "Immich मध्ये खाते सेटिंग्ज → API की येथे एक तयार करा. आवश्यक परवानग्या: asset.read, asset.view, asset.download, album.read, user.read.",
-      "connect": "जोडा",
-      "disconnect": "डिस्कनेक्ट करा"
-    },
     "webhook": {
       "create-dialog": {
         "an-easy-to-remember-name": "स्मरणात राहणारे नाव",
@@ -1187,6 +1175,18 @@
       "last-updated": "शेवटचे अपडेट {{ago}}",
       "refresh": "रिफ्रेश करा",
       "load-error": "आकडेवारी लोड करण्यात अयशस्वी"
+    },
+    "immich": {
+      "label": "Immich",
+      "description": "लिहिताना तुमच्या Immich सर्व्हरवरून फोटो निवडा. तुमची API की याच सर्व्हरवर राहते.",
+      "status-connected": "{{url}} शी जोडलेले",
+      "status-not-connected": "जोडलेले नाही",
+      "server-url": "सर्व्हरचा पत्ता",
+      "api-key": "API की",
+      "api-key-keep": "जतन केलेली की ठेवण्यासाठी रिकामे ठेवा",
+      "api-key-help": "Immich मध्ये खाते सेटिंग्ज → API की येथे एक तयार करा. आवश्यक परवानग्या: asset.read, asset.view, asset.download, album.read, user.read.",
+      "connect": "जोडा",
+      "disconnect": "डिस्कनेक्ट करा"
     }
   },
   "tooltip": {
@@ -1430,16 +1430,10 @@
     "unlink-identity-failed": "ओळख प्रदाता अनलिंक करण्यात अयशस्वी.",
     "link-identity-failed": "खाते जोडणे सुरू करता आले नाही. पुन्हा प्रयत्न करा."
   },
-  "immich": {
-    "insert": "Immich मधील फोटो",
-    "title": "Immich मधून फोटो निवडा",
-    "album": "अल्बम",
-    "all-photos": "सर्व फोटो",
-    "add-photos": "फोटो जोडा ({{count}})",
-    "load-more": "आणखी लोड करा",
-    "empty": "येथे कोणतेही फोटो नाहीत.",
-    "not-connected": "आधी सेटिंग्जमध्ये तुमचा Immich सर्व्हर जोडा.",
-    "add-failed": "काही फोटो जोडता आले नाहीत."
+  "attachment-pdf": {
+    "page-of": "पृष्ठ {{current}} / {{total}}",
+    "previous-page": "मागील",
+    "next-page": "पुढील"
   },
   "attachment-preview": {
     "title": "संलग्नक पूर्वावलोकन",
@@ -1457,5 +1451,16 @@
     "back": "{{seconds}} सेकंद मागे",
     "forward": "{{seconds}} सेकंद पुढे",
     "speed": "प्लेबॅक वेग {{rate}}x"
+  },
+  "immich": {
+    "insert": "Immich मधील फोटो",
+    "title": "Immich मधून फोटो निवडा",
+    "album": "अल्बम",
+    "all-photos": "सर्व फोटो",
+    "add-photos": "फोटो जोडा ({{count}})",
+    "load-more": "आणखी लोड करा",
+    "empty": "येथे कोणतेही फोटो नाहीत.",
+    "not-connected": "आधी सेटिंग्जमध्ये तुमचा Immich सर्व्हर जोडा.",
+    "add-failed": "काही फोटो जोडता आले नाहीत."
   }
 }

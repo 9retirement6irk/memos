@@ -1033,18 +1033,6 @@
       "users-description": "The entry applies to each of these users.",
       "users-required": "Name at least one user."
     },
-    "immich": {
-      "label": "Immich",
-      "description": "Επιλέξτε φωτογραφίες από τον διακομιστή Immich σας ενώ γράφετε. Το κλειδί API σας μένει σε αυτόν τον διακομιστή.",
-      "status-connected": "Συνδέθηκε με {{url}}",
-      "status-not-connected": "Δεν έχει συνδεθεί",
-      "server-url": "Διεύθυνση διακομιστή",
-      "api-key": "Κλειδί API",
-      "api-key-keep": "Αφήστε το κενό για να κρατήσετε το αποθηκευμένο κλειδί",
-      "api-key-help": "Δημιουργήστε ένα στο Immich στις Ρυθμίσεις λογαριασμού → Κλειδιά API. Απαιτούνται: asset.read, asset.view, asset.download, album.read, user.read.",
-      "connect": "Σύνδεση",
-      "disconnect": "Αποσύνδεση"
-    },
     "webhook": {
       "create-dialog": {
         "an-easy-to-remember-name": "Ένα όνομα που θυμάται εύκολα",
@@ -1230,6 +1218,18 @@
       "you": "Εσείς",
       "your-access": "Η πρόσβασή σας",
       "your-spaces": "Οι χώροι σας"
+    },
+    "immich": {
+      "label": "Immich",
+      "description": "Επιλέξτε φωτογραφίες από τον διακομιστή Immich σας ενώ γράφετε. Το κλειδί API σας μένει σε αυτόν τον διακομιστή.",
+      "status-connected": "Συνδέθηκε με {{url}}",
+      "status-not-connected": "Δεν έχει συνδεθεί",
+      "server-url": "Διεύθυνση διακομιστή",
+      "api-key": "Κλειδί API",
+      "api-key-keep": "Αφήστε το κενό για να κρατήσετε το αποθηκευμένο κλειδί",
+      "api-key-help": "Δημιουργήστε ένα στο Immich στις Ρυθμίσεις λογαριασμού → Κλειδιά API. Απαιτούνται: asset.read, asset.view, asset.download, album.read, user.read.",
+      "connect": "Σύνδεση",
+      "disconnect": "Αποσύνδεση"
     }
   },
   "tooltip": {
@@ -1430,16 +1430,10 @@
     "unlink-identity-failed": "Η αποσύνδεση του παρόχου ταυτότητας απέτυχε.",
     "link-identity-failed": "Δεν ήταν δυνατή η έναρξη της σύνδεσης λογαριασμού. Δοκιμάστε ξανά."
   },
-  "immich": {
-    "insert": "Φωτογραφίες από το Immich",
-    "title": "Επιλογή φωτογραφιών από το Immich",
-    "album": "Άλμπουμ",
-    "all-photos": "Όλες οι φωτογραφίες",
-    "add-photos": "Προσθήκη φωτογραφιών ({{count}})",
-    "load-more": "Φόρτωση περισσότερων",
-    "empty": "Δεν υπάρχουν φωτογραφίες εδώ.",
-    "not-connected": "Συνδέστε πρώτα τον διακομιστή Immich σας στις Ρυθμίσεις.",
-    "add-failed": "Ορισμένες φωτογραφίες δεν προστέθηκαν."
+  "attachment-pdf": {
+    "page-of": "Σελίδα {{current}} από {{total}}",
+    "previous-page": "Προηγούμενο",
+    "next-page": "Επόμενο"
   },
   "attachment-preview": {
     "title": "Προεπισκόπηση συνημμένου",
@@ -1457,5 +1451,16 @@
     "back": "Πίσω {{seconds}} δευτερόλεπτα",
     "forward": "Μπροστά {{seconds}} δευτερόλεπτα",
     "speed": "Ταχύτητα αναπαραγωγής {{rate}}x"
+  },
+  "immich": {
+    "insert": "Φωτογραφίες από το Immich",
+    "title": "Επιλογή φωτογραφιών από το Immich",
+    "album": "Άλμπουμ",
+    "all-photos": "Όλες οι φωτογραφίες",
+    "add-photos": "Προσθήκη φωτογραφιών ({{count}})",
+    "load-more": "Φόρτωση περισσότερων",
+    "empty": "Δεν υπάρχουν φωτογραφίες εδώ.",
+    "not-connected": "Συνδέστε πρώτα τον διακομιστή Immich σας στις Ρυθμίσεις.",
+    "add-failed": "Ορισμένες φωτογραφίες δεν προστέθηκαν."
   }
 }

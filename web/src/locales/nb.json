@@ -917,18 +917,6 @@
       "users-description": "The entry applies to each of these users.",
       "users-required": "Name at least one user."
     },
-    "immich": {
-      "label": "Immich",
-      "description": "Velg bilder fra Immich-serveren din mens du skriver. API-nøkkelen din blir på denne serveren.",
-      "status-connected": "Koblet til {{url}}",
-      "status-not-connected": "Ikke koblet til",
-      "server-url": "Serveradresse",
-      "api-key": "API-nøkkel",
-      "api-key-keep": "La feltet stå tomt for å beholde den lagrede nøkkelen",
-      "api-key-help": "Opprett en i Immich under Kontoinnstillinger → API-nøkler. Trenger: asset.read, asset.view, asset.download, album.read, user.read.",
-      "connect": "Koble til",
-      "disconnect": "Koble fra"
-    },
     "webhook": {
       "create-dialog": {
         "an-easy-to-remember-name": "Et lett å huske navn",
@@ -1192,6 +1180,18 @@
       "you": "Du",
       "your-access": "Din tilgang",
       "your-spaces": "Dine rom"
+    },
+    "immich": {
+      "label": "Immich",
+      "description": "Velg bilder fra Immich-serveren din mens du skriver. API-nøkkelen din blir på denne serveren.",
+      "status-connected": "Koblet til {{url}}",
+      "status-not-connected": "Ikke koblet til",
+      "server-url": "Serveradresse",
+      "api-key": "API-nøkkel",
+      "api-key-keep": "La feltet stå tomt for å beholde den lagrede nøkkelen",
+      "api-key-help": "Opprett en i Immich under Kontoinnstillinger → API-nøkler. Trenger: asset.read, asset.view, asset.download, album.read, user.read.",
+      "connect": "Koble til",
+      "disconnect": "Koble fra"
     }
   },
   "tooltip": {
@@ -1430,16 +1430,10 @@
     "unlink-identity-failed": "Kunne ikke koble fra identitetsleverandøren.",
     "link-identity-failed": "Kunne ikke starte tilkobling av kontoen. Prøv igjen."
   },
-  "immich": {
-    "insert": "Bilder fra Immich",
-    "title": "Velg bilder fra Immich",
-    "album": "Album",
-    "all-photos": "Alle bilder",
-    "add-photos": "Legg til bilder ({{count}})",
-    "load-more": "Last inn flere",
-    "empty": "Ingen bilder her.",
-    "not-connected": "Koble til Immich-serveren din under Innstillinger først.",
-    "add-failed": "Noen bilder kunne ikke legges til."
+  "attachment-pdf": {
+    "page-of": "Side {{current}} av {{total}}",
+    "previous-page": "Forrige",
+    "next-page": "Neste"
   },
   "attachment-preview": {
     "title": "Forhåndsvisning av vedlegg",
@@ -1457,5 +1451,16 @@
     "back": "{{seconds}} sekunder tilbake",
     "forward": "{{seconds}} sekunder frem",
     "speed": "Avspillingshastighet {{rate}}x"
+  },
+  "immich": {
+    "insert": "Bilder fra Immich",
+    "title": "Velg bilder fra Immich",
+    "album": "Album",
+    "all-photos": "Alle bilder",
+    "add-photos": "Legg til bilder ({{count}})",
+    "load-more": "Last inn flere",
+    "empty": "Ingen bilder her.",
+    "not-connected": "Koble til Immich-serveren din under Innstillinger først.",
+    "add-failed": "Noen bilder kunne ikke legges til."
   }
 }

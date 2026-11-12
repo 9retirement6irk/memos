@@ -1234,18 +1234,6 @@
       "users-description": "The entry applies to each of these users.",
       "users-required": "Name at least one user."
     },
-    "immich": {
-      "label": "Immich",
-      "description": "Yazarkən Immich serverinizdən foto seçin. API açarınız bu serverdə qalır.",
-      "status-connected": "{{url}} ünvanına qoşulub",
-      "status-not-connected": "Qoşulmayıb",
-      "server-url": "Server ünvanı",
-      "api-key": "API açarı",
-      "api-key-keep": "Saxlanmış açarı saxlamaq üçün boş buraxın",
-      "api-key-help": "Immich-də Hesab ayarları → API açarları bölməsində yaradın. Lazım olan icazələr: asset.read, asset.view, asset.download, album.read, user.read.",
-      "connect": "Qoşul",
-      "disconnect": "Əlaqəni kəs"
-    },
     "webhook": {
       "create-dialog": {
         "an-easy-to-remember-name": "Yadda saxlaması asan bir ad",
@@ -1308,6 +1296,18 @@
       "last-updated": "Son yenilənmə {{ago}}",
       "refresh": "Yenilə",
       "load-error": "Statistikanı yükləmək alınmadı"
+    },
+    "immich": {
+      "label": "Immich",
+      "description": "Yazarkən Immich serverinizdən foto seçin. API açarınız bu serverdə qalır.",
+      "status-connected": "{{url}} ünvanına qoşulub",
+      "status-not-connected": "Qoşulmayıb",
+      "server-url": "Server ünvanı",
+      "api-key": "API açarı",
+      "api-key-keep": "Saxlanmış açarı saxlamaq üçün boş buraxın",
+      "api-key-help": "Immich-də Hesab ayarları → API açarları bölməsində yaradın. Lazım olan icazələr: asset.read, asset.view, asset.download, album.read, user.read.",
+      "connect": "Qoşul",
+      "disconnect": "Əlaqəni kəs"
     }
   },
   "space": {
@@ -1430,16 +1430,10 @@
     "unlink-identity-failed": "Kimlik provayderinin əlaqəsini kəsmək alınmadı.",
     "link-identity-failed": "Hesabın əlaqələndirilməsinə başlamaq alınmadı. Yenidən cəhd edin."
   },
-  "immich": {
-    "insert": "Immich-dən fotolar",
-    "title": "Immich-dən foto seçin",
-    "album": "Albom",
-    "all-photos": "Bütün fotolar",
-    "add-photos": "Foto əlavə et ({{count}})",
-    "load-more": "Daha çox yüklə",
-    "empty": "Burada foto yoxdur.",
-    "not-connected": "Əvvəlcə Ayarlarda Immich serverinizi qoşun.",
-    "add-failed": "Bəzi fotolar əlavə edilə bilmədi."
+  "attachment-pdf": {
+    "page-of": "Səhifə {{current}} / {{total}}",
+    "previous-page": "Əvvəlki",
+    "next-page": "Növbəti"
   },
   "attachment-preview": {
     "title": "Qoşma önizləməsi",
@@ -1457,5 +1451,16 @@
     "back": "{{seconds}} saniyə geri",
     "forward": "{{seconds}} saniyə irəli",
     "speed": "Oynatma sürəti {{rate}}x"
+  },
+  "immich": {
+    "insert": "Immich-dən fotolar",
+    "title": "Immich-dən foto seçin",
+    "album": "Albom",
+    "all-photos": "Bütün fotolar",
+    "add-photos": "Foto əlavə et ({{count}})",
+    "load-more": "Daha çox yüklə",
+    "empty": "Burada foto yoxdur.",
+    "not-connected": "Əvvəlcə Ayarlarda Immich serverinizi qoşun.",
+    "add-failed": "Bəzi fotolar əlavə edilə bilmədi."
   }
 }

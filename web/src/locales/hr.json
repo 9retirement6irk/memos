@@ -918,18 +918,6 @@
       "users-description": "The entry applies to each of these users.",
       "users-required": "Name at least one user."
     },
-    "immich": {
-      "label": "Immich",
-      "description": "Odaberite fotografije sa svog Immich poslužitelja dok pišete. Vaš API ključ ostaje na ovom poslužitelju.",
-      "status-connected": "Povezano s {{url}}",
-      "status-not-connected": "Nije povezano",
-      "server-url": "Adresa poslužitelja",
-      "api-key": "API ključ",
-      "api-key-keep": "Ostavite prazno da zadržite spremljeni ključ",
-      "api-key-help": "Stvorite ga u Immichu pod Postavke računa → API ključevi. Potrebna dopuštenja: asset.read, asset.view, asset.download, album.read, user.read.",
-      "connect": "Poveži",
-      "disconnect": "Prekini vezu"
-    },
     "webhook": {
       "create-dialog": {
         "an-easy-to-remember-name": "Jednostavno ime za pamćenje",
@@ -1193,6 +1181,18 @@
       "you": "Vi",
       "your-access": "Vaš pristup",
       "your-spaces": "Vaši prostori"
+    },
+    "immich": {
+      "label": "Immich",
+      "description": "Odaberite fotografije sa svog Immich poslužitelja dok pišete. Vaš API ključ ostaje na ovom poslužitelju.",
+      "status-connected": "Povezano s {{url}}",
+      "status-not-connected": "Nije povezano",
+      "server-url": "Adresa poslužitelja",
+      "api-key": "API ključ",
+      "api-key-keep": "Ostavite prazno da zadržite spremljeni ključ",
+      "api-key-help": "Stvorite ga u Immichu pod Postavke računa → API ključevi. Potrebna dopuštenja: asset.read, asset.view, asset.download, album.read, user.read.",
+      "connect": "Poveži",
+      "disconnect": "Prekini vezu"
     }
   },
   "tooltip": {
@@ -1431,16 +1431,10 @@
     "unlink-identity-failed": "Odspajanje pružatelja identiteta nije uspjelo.",
     "link-identity-failed": "Povezivanje računa nije uspjelo započeti. Pokušajte ponovno."
   },
-  "immich": {
-    "insert": "Fotografije iz Immicha",
-    "title": "Odaberite fotografije iz Immicha",
-    "album": "Album",
-    "all-photos": "Sve fotografije",
-    "add-photos": "Dodaj fotografije ({{count}})",
-    "load-more": "Učitaj više",
-    "empty": "Ovdje nema fotografija.",
-    "not-connected": "Najprije povežite svoj Immich poslužitelj u Postavkama.",
-    "add-failed": "Neke fotografije nije bilo moguće dodati."
+  "attachment-pdf": {
+    "page-of": "Stranica {{current}} od {{total}}",
+    "previous-page": "Prethodno",
+    "next-page": "Sljedeće"
   },
   "attachment-preview": {
     "title": "Pregled privitka",
@@ -1458,5 +1452,16 @@
     "back": "Natrag {{seconds}} sekundi",
     "forward": "Naprijed {{seconds}} sekundi",
     "speed": "Brzina reprodukcije {{rate}}x"
+  },
+  "immich": {
+    "insert": "Fotografije iz Immicha",
+    "title": "Odaberite fotografije iz Immicha",
+    "album": "Album",
+    "all-photos": "Sve fotografije",
+    "add-photos": "Dodaj fotografije ({{count}})",
+    "load-more": "Učitaj više",
+    "empty": "Ovdje nema fotografija.",
+    "not-connected": "Najprije povežite svoj Immich poslužitelj u Postavkama.",
+    "add-failed": "Neke fotografije nije bilo moguće dodati."
   }
 }

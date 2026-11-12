@@ -1,5 +1,5 @@
 import type { Attachment } from "@/types/proto/api/attachment_service_pb";
-import { getAttachmentType } from "@/utils/attachment";
+import { getAttachmentType, getAttachmentUrl } from "@/utils/attachment";
 import { formatFileSize, getFileTypeLabel } from "@/utils/format";
 
 export interface AttachmentGroups {
@@ -16,6 +16,19 @@ export interface AttachmentMetadata {
 export const isImageAttachment = (attachment: Attachment): boolean => getAttachmentType(attachment) === "image/*";
 export const isVideoAttachment = (attachment: Attachment): boolean => getAttachmentType(attachment) === "video/*";
 export const isAudioAttachment = (attachment: Attachment): boolean => getAttachmentType(attachment) === "audio/*";
+
+/** Share links carry an external link too, but it still points at this instance's file server. A link that does not parse is not ours. */
+export const isServedHere = (url: string) => {
+  try {
+    return new URL(url, window.location.origin).origin === window.location.origin;
+  } catch {
+    return false;
+  }
+};
+
+/** A PDF this instance serves: the memo shows its pages inline. A PDF on another site stays a link. */
+export const isInlinePdf = (attachment: Attachment): boolean =>
+  attachment.type === "application/pdf" && isServedHere(getAttachmentUrl(attachment));
 
 export const separateAttachments = (attachments: Attachment[]): AttachmentGroups => {
   return attachments.reduce<AttachmentGroups>(

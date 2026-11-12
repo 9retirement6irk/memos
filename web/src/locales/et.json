@@ -1033,18 +1033,6 @@
       "users-description": "The entry applies to each of these users.",
       "users-required": "Name at least one user."
     },
-    "immich": {
-      "label": "Immich",
-      "description": "Vali kirjutamise ajal pilte oma Immichi serverist. Sinu API-võti jääb sellesse serverisse.",
-      "status-connected": "Ühendatud: {{url}}",
-      "status-not-connected": "Pole ühendatud",
-      "server-url": "Serveri aadress",
-      "api-key": "API-võti",
-      "api-key-keep": "Jäta tühjaks, et salvestatud võti alles jätta",
-      "api-key-help": "Loo see Immichis jaotises Konto seaded → API-võtmed. Vajalikud õigused: asset.read, asset.view, asset.download, album.read, user.read.",
-      "connect": "Ühenda",
-      "disconnect": "Katkesta ühendus"
-    },
     "webhook": {
       "create-dialog": {
         "an-easy-to-remember-name": "Kergesti meeldejääv nimi",
@@ -1230,6 +1218,18 @@
       "you": "Sina",
       "your-access": "Sinu juurdepääs",
       "your-spaces": "Sinu ruumid"
+    },
+    "immich": {
+      "label": "Immich",
+      "description": "Vali kirjutamise ajal pilte oma Immichi serverist. Sinu API-võti jääb sellesse serverisse.",
+      "status-connected": "Ühendatud: {{url}}",
+      "status-not-connected": "Pole ühendatud",
+      "server-url": "Serveri aadress",
+      "api-key": "API-võti",
+      "api-key-keep": "Jäta tühjaks, et salvestatud võti alles jätta",
+      "api-key-help": "Loo see Immichis jaotises Konto seaded → API-võtmed. Vajalikud õigused: asset.read, asset.view, asset.download, album.read, user.read.",
+      "connect": "Ühenda",
+      "disconnect": "Katkesta ühendus"
     }
   },
   "tooltip": {
@@ -1430,16 +1430,10 @@
     "unlink-identity-failed": "Identiteedipakkuja lahtiühendamine ebaõnnestus.",
     "link-identity-failed": "Konto sidumist ei õnnestunud alustada. Proovi uuesti."
   },
-  "immich": {
-    "insert": "Pildid Immichist",
-    "title": "Vali pilte Immichist",
-    "album": "Album",
-    "all-photos": "Kõik pildid",
-    "add-photos": "Lisa pilte ({{count}})",
-    "load-more": "Laadi rohkem",
-    "empty": "Siin pole pilte.",
-    "not-connected": "Ühenda esmalt oma Immichi server seadetes.",
-    "add-failed": "Mõnda pilti ei õnnestunud lisada."
+  "attachment-pdf": {
+    "page-of": "Leht {{current}} / {{total}}",
+    "previous-page": "Eelmine",
+    "next-page": "Järgmine"
   },
   "attachment-preview": {
     "title": "Manuse eelvaade",
@@ -1457,5 +1451,16 @@
     "back": "{{seconds}} sekundit tagasi",
     "forward": "{{seconds}} sekundit edasi",
     "speed": "Taasesituse kiirus {{rate}}x"
+  },
+  "immich": {
+    "insert": "Pildid Immichist",
+    "title": "Vali pilte Immichist",
+    "album": "Album",
+    "all-photos": "Kõik pildid",
+    "add-photos": "Lisa pilte ({{count}})",
+    "load-more": "Laadi rohkem",
+    "empty": "Siin pole pilte.",
+    "not-connected": "Ühenda esmalt oma Immichi server seadetes.",
+    "add-failed": "Mõnda pilti ei õnnestunud lisada."
   }
 }

@@ -913,18 +913,6 @@
       "reactions-description": "Definir as opções de reação que os usuários podem aplicar aos memorandos.",
       "remove-reaction": "Remover reação"
     },
-    "immich": {
-      "label": "Immich",
-      "description": "Escolha fotos do seu servidor Immich enquanto escreve. Sua chave de API fica neste servidor.",
-      "status-connected": "Conectado a {{url}}",
-      "status-not-connected": "Não conectado",
-      "server-url": "Endereço do servidor",
-      "api-key": "Chave de API",
-      "api-key-keep": "Deixe em branco para manter a chave salva",
-      "api-key-help": "Crie uma no Immich em Configurações da conta → Chaves de API. Permissões necessárias: asset.read, asset.view, asset.download, album.read, user.read.",
-      "connect": "Conectar",
-      "disconnect": "Desconectar"
-    },
     "webhook": {
       "create-dialog": {
         "an-easy-to-remember-name": "Um nome fácil de lembrar",
@@ -1188,6 +1176,18 @@
       "last-updated": "Última atualização {{ago}}",
       "refresh": "Atualizar",
       "load-error": "Falha ao carregar estatísticas"
+    },
+    "immich": {
+      "label": "Immich",
+      "description": "Escolha fotos do seu servidor Immich enquanto escreve. Sua chave de API fica neste servidor.",
+      "status-connected": "Conectado a {{url}}",
+      "status-not-connected": "Não conectado",
+      "server-url": "Endereço do servidor",
+      "api-key": "Chave de API",
+      "api-key-keep": "Deixe em branco para manter a chave salva",
+      "api-key-help": "Crie uma no Immich em Configurações da conta → Chaves de API. Permissões necessárias: asset.read, asset.view, asset.download, album.read, user.read.",
+      "connect": "Conectar",
+      "disconnect": "Desconectar"
     }
   },
   "tooltip": {
@@ -1431,16 +1431,10 @@
     "unlink-identity-failed": "Falha ao desvincular o provedor de identidade.",
     "link-identity-failed": "Não foi possível iniciar a vinculação da conta. Tente novamente."
   },
-  "immich": {
-    "insert": "Fotos do Immich",
-    "title": "Escolher fotos do Immich",
-    "album": "Álbum",
-    "all-photos": "Todas as fotos",
-    "add-photos": "Adicionar fotos ({{count}})",
-    "load-more": "Carregar mais",
-    "empty": "Nenhuma foto aqui.",
-    "not-connected": "Conecte primeiro seu servidor Immich nas Configurações.",
-    "add-failed": "Não foi possível adicionar algumas fotos."
+  "attachment-pdf": {
+    "page-of": "Página {{current}} de {{total}}",
+    "previous-page": "Anterior",
+    "next-page": "Próximo"
   },
   "attachment-preview": {
     "title": "Visualização do anexo",
@@ -1458,5 +1452,16 @@
     "back": "Voltar {{seconds}} segundos",
     "forward": "Avançar {{seconds}} segundos",
     "speed": "Velocidade de reprodução {{rate}}x"
+  },
+  "immich": {
+    "insert": "Fotos do Immich",
+    "title": "Escolher fotos do Immich",
+    "album": "Álbum",
+    "all-photos": "Todas as fotos",
+    "add-photos": "Adicionar fotos ({{count}})",
+    "load-more": "Carregar mais",
+    "empty": "Nenhuma foto aqui.",
+    "not-connected": "Conecte primeiro seu servidor Immich nas Configurações.",
+    "add-failed": "Não foi possível adicionar algumas fotos."
   }
 }
