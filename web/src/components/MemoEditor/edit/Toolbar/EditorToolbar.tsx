@@ -23,15 +23,19 @@ export const EditorToolbar: FC<EditorToolbarProps> = ({
   onInsertImages,
   onDrawingClick,
   onAttachFiles,
+  journalMode,
+  hasExtraContent,
 }) => {
   const t = useTranslate();
   const { actions, dispatch } = useEditorContext();
   // Subscribe to narrow/derived slices so typing (which only changes content)
   // doesn't re-render the toolbar or the heavy InsertMenu it hosts. `valid`
   // flips only on empty↔non-empty / loading transitions, not per keystroke.
-  const valid = useEditorSelector((s) => validationService.canSave(s).valid);
+  const ownValid = useEditorSelector((s) => validationService.canSave(s).valid);
   const blockedReason = useEditorSelector((s) => validationService.canSave(s).reason);
   const blockedReasonDetail = useEditorSelector((s) => validationService.canSave(s).detail);
+  // A journal entry with a mood or activities picked is worth saving without text.
+  const valid = ownValid || (Boolean(hasExtraContent) && blockedReason === "editor.validation.content-required");
   const isSaving = useEditorSelector((s) => s.ui.isLoading.saving);
   const justSaved = useEditorSelector((s) => s.ui.justSaved);
   const isUploading = useEditorSelector((s) => s.ui.isLoading.uploading);
@@ -118,6 +122,7 @@ export const EditorToolbar: FC<EditorToolbarProps> = ({
           onAudioRecorderClick={onAudioRecorderClick}
           viewToggles={viewToggles}
           sourceMode={sourceMode}
+          journalMode={journalMode}
           onInsertImages={onInsertImages}
           onDrawingClick={onDrawingClick}
           onAttachFiles={onAttachFiles}

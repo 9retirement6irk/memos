@@ -28,6 +28,10 @@ interface UseMemoSaveOptions {
   discardDraft: () => void;
   onConfirm?: (memoName: string) => void;
   onCancel?: () => void;
+  /** Rewrites the text just before saving, leaving the draft as written; journaling mode writes its entry this way. */
+  transformContent?: (content: string, moment: Date) => string;
+  /** Runs once a save has landed and the draft is cleared. */
+  onSaved?: () => void;
 }
 
 /**
@@ -45,6 +49,8 @@ export function useMemoSave({
   discardDraft,
   onConfirm,
   onCancel,
+  transformContent,
+  onSaved,
 }: UseMemoSaveOptions): () => Promise<void> {
   const t = useTranslate();
   const queryClient = useQueryClient();
@@ -54,7 +60,10 @@ export function useMemoSave({
   const { actions, dispatch, getState } = useEditorContext();
 
   return useCallback(async () => {
-    const state = getState();
+    const draft = getState();
+    const state = transformContent
+      ? { ...draft, content: transformContent(draft.content, draft.timestamps.createTime ?? new Date()) }
+      : draft;
     // A repeated shortcut during the saved confirmation is not an error worth
     // a toast; the save already landed and the host is closing.
     if (state.ui.justSaved) return;
@@ -143,6 +152,7 @@ export function useMemoSave({
       }
 
       dispatch(actions.reset());
+      onSaved?.();
       if (!memoName && defaultVisibility) {
         dispatch(actions.setMetadata({ visibility: defaultVisibility }));
       }
@@ -192,9 +202,11 @@ export function useMemoSave({
     memoName,
     onCancel,
     onConfirm,
+    onSaved,
     parentMemoName,
     queryClient,
     t,
+    transformContent,
     updateMemo,
   ]);
 }

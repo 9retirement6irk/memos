@@ -13,6 +13,7 @@ import {
   LibraryIcon,
   type LucideIcon,
   MailIcon,
+  NotebookPenIcon,
   Settings2Icon,
   SquarePenIcon,
   TagsIcon,
@@ -27,6 +28,7 @@ import ConfigurationSection from "@/components/Settings/ConfigurationSection";
 import EditorSection from "@/components/Settings/EditorSection";
 import ImmichSection from "@/components/Settings/ImmichSection";
 import InstanceSection from "@/components/Settings/InstanceSection";
+import JournalSection from "@/components/Settings/JournalSection";
 import MemberSection from "@/components/Settings/MemberSection";
 import MemoExportSection from "@/components/Settings/MemoExportSection";
 import MemoRelatedSettings from "@/components/Settings/MemoRelatedSettings";
@@ -51,6 +53,7 @@ export type SettingSectionKey =
   | "editor"
   | "webhook"
   | "immich"
+  | "journal"
   | "member"
   | "system"
   | "memo"
@@ -123,6 +126,13 @@ export const SETTINGS_SECTIONS: SettingSectionDefinition[] = [
     labelKey: "setting.immich.label",
     icon: ImagesIcon,
     component: ImmichSection,
+  },
+  {
+    key: "journal",
+    scope: "basic",
+    labelKey: "setting.journal.label",
+    icon: NotebookPenIcon,
+    component: JournalSection,
   },
   {
     key: "member",

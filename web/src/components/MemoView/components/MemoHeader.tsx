@@ -1,6 +1,7 @@
 import { Badge, Button, buttonClasses, Popover, Tooltip } from "@usememos/ui";
 import { SmilePlusIcon } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
+import { EntryMood } from "@/components/Journal/EntryMood";
 import RelativeTime from "@/components/RelativeTime";
 import { useNewMemo } from "@/contexts/NewMemoContext";
 import i18n from "@/i18n";
@@ -80,6 +81,7 @@ const MemoHeader: React.FC<MemoHeaderProps> = ({ timeDisplay = "relative", showC
             isCurrentPage={isMemoDetailPath(location.pathname, memo.name)}
           />
           {spaceMetadata}
+          <EntryMood tags={memo.tags} />
         </div>
         {isNew && <NewBadge />}
       </div>

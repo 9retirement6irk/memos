@@ -68,6 +68,12 @@ export interface EditorViewToggles {
   onToggleFocusMode: () => void;
 }
 
+/** Journaling mode's switch: a checked item in the ＋ menu, offered for new memos of their own. */
+export interface EditorJournalModeToggle {
+  active: boolean;
+  onToggle: () => void;
+}
+
 /** The composer's source-mode switch: a checked item in the ＋ menu. The text itself shows the mode. */
 export interface EditorSourceModeToggle {
   isSourceMode: boolean;
@@ -92,6 +98,9 @@ export interface EditorToolbarProps {
   onDrawingClick?: () => void;
   /** Adds files to the memo's attachment list, such as photos picked from Immich. */
   onAttachFiles?: (files: File[]) => void;
+  journalMode?: EditorJournalModeToggle;
+  /** Journaling mode has picks that make an entry worth saving without text. */
+  hasExtraContent?: boolean;
 }
 
 export interface EditorMetadataProps {
@@ -142,6 +151,7 @@ export interface InsertMenuProps {
   onInsertImages: (files: File[]) => void;
   onDrawingClick?: () => void;
   onAttachFiles?: (files: File[]) => void;
+  journalMode?: EditorJournalModeToggle;
 }
 
 export interface AudienceMenuProps {
