@@ -1420,6 +1420,11 @@
     "unlink-identity-failed": "Nie udało się odłączyć dostawcy tożsamości.",
     "link-identity-failed": "Nie udało się rozpocząć łączenia konta. Spróbuj ponownie."
   },
+  "attachment-pdf": {
+    "page-of": "Strona {{current}} z {{total}}",
+    "previous-page": "Poprzedni",
+    "next-page": "Następny"
+  },
   "attachment-preview": {
     "title": "Podgląd załącznika",
     "description": "Okno podglądu załącznika. Naciśnij Escape, aby zamknąć, użyj strzałek w lewo i w prawo, aby przełączać elementy, a obrazy powiększaj przyciskami, kółkiem myszy, dwukrotnym dotknięciem lub gestem szczypania.",

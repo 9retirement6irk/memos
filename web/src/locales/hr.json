@@ -1419,6 +1419,11 @@
     "unlink-identity-failed": "Odspajanje pružatelja identiteta nije uspjelo.",
     "link-identity-failed": "Povezivanje računa nije uspjelo započeti. Pokušajte ponovno."
   },
+  "attachment-pdf": {
+    "page-of": "Stranica {{current}} od {{total}}",
+    "previous-page": "Prethodno",
+    "next-page": "Sljedeće"
+  },
   "attachment-preview": {
     "title": "Pregled privitka",
     "description": "Dijalog za pregled privitka. Pritisnite Escape za zatvaranje, strelicama lijevo i desno mijenjajte stavke, a slike zumirajte kontrolama, kotačićem miša, dvostrukim dodirom ili pokretom štipanja.",

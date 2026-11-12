@@ -1419,6 +1419,11 @@
     "unlink-identity-failed": "Échec de la dissociation du fournisseur d'identité.",
     "link-identity-failed": "Impossible de lancer l’association du compte. Veuillez réessayer."
   },
+  "attachment-pdf": {
+    "page-of": "Page {{current}} sur {{total}}",
+    "previous-page": "Précédent",
+    "next-page": "Suivant"
+  },
   "attachment-preview": {
     "title": "Aperçu de la pièce jointe",
     "description": "Fenêtre d'aperçu des pièces jointes. Appuyez sur Échap pour fermer, utilisez les flèches gauche et droite pour changer d'élément, et zoomez sur les images avec les commandes, la molette de la souris, un double appui ou un pincement.",

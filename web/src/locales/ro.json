@@ -1419,6 +1419,11 @@
     "unlink-identity-failed": "Deconectarea furnizorului de identitate a eșuat.",
     "link-identity-failed": "Nu s-a putut începe conectarea contului. Încearcă din nou."
   },
+  "attachment-pdf": {
+    "page-of": "Pagina {{current}} din {{total}}",
+    "previous-page": "Anterior",
+    "next-page": "Următor"
+  },
   "attachment-preview": {
     "title": "Previzualizare atașament",
     "description": "Fereastră de previzualizare a atașamentelor. Apăsați Escape pentru a închide, folosiți săgețile stânga sau dreapta pentru a schimba elementele și măriți imaginile cu butoanele, rotița mouse-ului, atingere dublă sau gestul de ciupire.",

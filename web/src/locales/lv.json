@@ -1419,6 +1419,11 @@
     "unlink-identity-failed": "Neizdevās atsaistīt identitātes nodrošinātāju.",
     "link-identity-failed": "Neizdevās sākt konta sasaisti. Mēģiniet vēlreiz."
   },
+  "attachment-pdf": {
+    "page-of": "{{current}}. lapa no {{total}}",
+    "previous-page": "Iepriekšējais",
+    "next-page": "Nākamais"
+  },
   "attachment-preview": {
     "title": "Pielikuma priekšskatījums",
     "description": "Pielikuma priekšskatījuma dialoglodziņš. Nospiediet Escape, lai aizvērtu, izmantojiet kreiso vai labo bultiņas taustiņu, lai pārslēgtu vienumus, un tuviniet attēlus ar vadīklām, peles ritenīti, dubultpieskārienu vai savilkšanas žestu.",

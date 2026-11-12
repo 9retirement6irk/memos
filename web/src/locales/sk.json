@@ -1420,6 +1420,11 @@
     "unlink-identity-failed": "Poskytovateľa identity sa nepodarilo odpojiť.",
     "link-identity-failed": "Prepojenie účtu sa nepodarilo spustiť. Skúste to znova."
   },
+  "attachment-pdf": {
+    "page-of": "Strana {{current}} z {{total}}",
+    "previous-page": "Predchádzajúce",
+    "next-page": "Ďalšie"
+  },
   "attachment-preview": {
     "title": "Ukážka prílohy",
     "description": "Okno ukážky príloh. Stlačením klávesu Escape ho zatvoríte, šípkami doľava a doprava prepínate položky a obrázky zväčšíte ovládacími prvkami, kolieskom myši, dvojitým ťuknutím alebo gestom roztiahnutia prstov.",

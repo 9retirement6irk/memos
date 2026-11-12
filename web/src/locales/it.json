@@ -1419,6 +1419,11 @@
     "unlink-identity-failed": "Impossibile scollegare il provider di identità.",
     "link-identity-failed": "Impossibile avviare il collegamento dell'account. Riprova."
   },
+  "attachment-pdf": {
+    "page-of": "Pagina {{current}} di {{total}}",
+    "previous-page": "Precedente",
+    "next-page": "Successivo"
+  },
   "attachment-preview": {
     "title": "Anteprima allegato",
     "description": "Finestra di anteprima dell'allegato. Premi Esc per chiudere, usa le frecce sinistra e destra per passare da un elemento all'altro e ingrandisci le immagini con i controlli, la rotellina del mouse, il doppio tocco o il pizzico.",

@@ -1419,6 +1419,11 @@
     "unlink-identity-failed": "Falha ao desassociar o fornecedor de identidade.",
     "link-identity-failed": "Não foi possível iniciar a associação da conta. Tente novamente."
   },
+  "attachment-pdf": {
+    "page-of": "Página {{current}} de {{total}}",
+    "previous-page": "Anterior",
+    "next-page": "Seguinte"
+  },
   "attachment-preview": {
     "title": "Pré-visualização do anexo",
     "description": "Janela de pré-visualização de anexos. Prima Escape para fechar, utilize as setas para a esquerda ou para a direita para mudar de item e amplie imagens com os controlos, a roda do rato, um toque duplo ou um gesto de pinça.",

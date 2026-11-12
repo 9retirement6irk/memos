@@ -1418,6 +1418,11 @@
     "unlink-identity-failed": "Verknüpfung mit dem Identitätsanbieter konnte nicht aufgehoben werden.",
     "link-identity-failed": "Kontoverknüpfung konnte nicht gestartet werden. Bitte versuche es erneut."
   },
+  "attachment-pdf": {
+    "page-of": "Seite {{current}} von {{total}}",
+    "previous-page": "Zurück",
+    "next-page": "Weiter"
+  },
   "attachment-preview": {
     "title": "Anhangvorschau",
     "description": "Dialog zur Anhangvorschau. Drücken Sie Escape zum Schließen, wechseln Sie mit den Pfeiltasten links und rechts zwischen Elementen und zoomen Sie Bilder mit den Steuerelementen, dem Mausrad, Doppeltippen oder einer Zwei-Finger-Geste.",

@@ -1418,6 +1418,11 @@
     "unlink-identity-failed": "Identiteedipakkuja lahtiühendamine ebaõnnestus.",
     "link-identity-failed": "Konto sidumist ei õnnestunud alustada. Proovi uuesti."
   },
+  "attachment-pdf": {
+    "page-of": "Leht {{current}} / {{total}}",
+    "previous-page": "Eelmine",
+    "next-page": "Järgmine"
+  },
   "attachment-preview": {
     "title": "Manuse eelvaade",
     "description": "Manuse eelvaate dialoog. Sulgemiseks vajutage Escape, üksuste vahetamiseks kasutage vasak- ja paremnoolt ning suumige pilte nuppude, hiireratta, topeltpuudutuse või näpistusžestiga.",

@@ -1419,6 +1419,11 @@
     "unlink-identity-failed": "No se pudo desvincular el proveedor de identidad.",
     "link-identity-failed": "No se pudo iniciar la vinculación de la cuenta. Inténtalo de nuevo."
   },
+  "attachment-pdf": {
+    "page-of": "Página {{current}} de {{total}}",
+    "previous-page": "Anterior",
+    "next-page": "Siguiente"
+  },
   "attachment-preview": {
     "title": "Vista previa del adjunto",
     "description": "Diálogo de vista previa de adjuntos. Pulsa Escape para cerrar, usa las flechas izquierda y derecha para cambiar de elemento y amplía las imágenes con los controles, la rueda del ratón, un doble toque o el gesto de pellizcar.",

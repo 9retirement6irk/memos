@@ -1418,6 +1418,11 @@
     "unlink-identity-failed": "Kimlik provayderinin əlaqəsini kəsmək alınmadı.",
     "link-identity-failed": "Hesabın əlaqələndirilməsinə başlamaq alınmadı. Yenidən cəhd edin."
   },
+  "attachment-pdf": {
+    "page-of": "Səhifə {{current}} / {{total}}",
+    "previous-page": "Əvvəlki",
+    "next-page": "Növbəti"
+  },
   "attachment-preview": {
     "title": "Qoşma önizləməsi",
     "description": "Qoşma önizləmə pəncərəsi. Bağlamaq üçün Escape düyməsini basın, elementlər arasında keçmək üçün sol və ya sağ ox düymələrindən istifadə edin, şəkilləri idarəetmə düymələri, siçan təkəri, iki dəfə toxunma və ya iki barmaqla sıxma jesti ilə böyüdün.",

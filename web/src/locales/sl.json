@@ -1420,6 +1420,11 @@
     "unlink-identity-failed": "Odklop ponudnika identitete ni uspel.",
     "link-identity-failed": "Povezovanja računa ni bilo mogoče začeti. Poskusite znova."
   },
+  "attachment-pdf": {
+    "page-of": "Stran {{current}} od {{total}}",
+    "previous-page": "Prejšnje",
+    "next-page": "Naslednje"
+  },
   "attachment-preview": {
     "title": "Predogled priloge",
     "description": "Okno za predogled prilog. Pritisnite Escape za zapiranje, s puščicama levo in desno preklapljajte med elementi, slike pa povečajte z gumbi, kolescem miške, dvojnim dotikom ali potegom s prsti.",

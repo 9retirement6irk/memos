@@ -1418,6 +1418,11 @@
     "unlink-identity-failed": "Ontkoppelen van identiteitsprovider mislukt.",
     "link-identity-failed": "Koppelen van het account kon niet worden gestart. Probeer het opnieuw."
   },
+  "attachment-pdf": {
+    "page-of": "Pagina {{current}} van {{total}}",
+    "previous-page": "Vorige",
+    "next-page": "Volgende"
+  },
   "attachment-preview": {
     "title": "Voorbeeld van bijlage",
     "description": "Voorbeeldvenster voor bijlagen. Druk op Escape om te sluiten, gebruik de pijltoetsen links of rechts om van item te wisselen en zoom in op afbeeldingen met de knoppen, het muiswiel, dubbeltikken of knijpen.",
