@@ -214,3 +214,25 @@ func TestConnectionSaysWhyItFailed(t *testing.T) {
 	require.Contains(t, response.Body.String(), "not the Immich API")
 	require.NotContains(t, response.Body.String(), "good-key")
 }
+
+func TestPhotosTakenCarriesPlaceAndChecksRange(t *testing.T) {
+	t.Parallel()
+	ctx := context.Background()
+	mux := http.NewServeMux()
+	mux.HandleFunc("POST /api/search/metadata", func(w http.ResponseWriter, _ *http.Request) {
+		_, _ = io.WriteString(w, `{"assets":{"items":[{"id":"`+testPhotoID+`","originalFileName":"IMG_2.jpg","originalMimeType":"image/jpeg","localDateTime":"2026-11-11T14:14:00.000Z","exifInfo":{"latitude":42.3,"longitude":-71.12,"city":"Boston","dateTimeOriginal":"2026-11-11T14:14:00-05:00"}}],"nextCursor":null}}`)
+	})
+	immichServer := httptest.NewServer(mux)
+	defer immichServer.Close()
+	env := newTestEnv(ctx, t, immichServer)
+	require.NoError(t, env.store.UpsertImmichConnection(ctx, env.user.ID, &store.ImmichConnection{URL: immichServer.URL, APIKey: "good-key"}))
+
+	response := env.request(http.MethodGet, "/api/immich/photos/taken?after=2026-11-11T05:00:00Z&before=2026-11-12T05:00:00Z", "", true)
+	require.Equal(t, http.StatusOK, response.Code, response.Body.String())
+	require.JSONEq(t, `{"photos":[{"id":"`+testPhotoID+`","fileName":"IMG_2.jpg","mimeType":"image/jpeg","takenAt":"2026-11-11T14:14:00.000Z","width":0,"height":0,"takenAtUtc":"2026-11-11T19:14:00Z","latitude":42.3,"longitude":-71.12,"city":"Boston"}],"next":""}`, response.Body.String())
+
+	for _, query := range []string{"after=2026-11-12T05:00:00Z&before=2026-11-11T05:00:00Z", "after=2026-11-01T00:00:00Z&before=2026-11-12T00:00:00Z", "after=yesterday&before=today"} {
+		response = env.request(http.MethodGet, "/api/immich/photos/taken?"+query, "", true)
+		require.Equal(t, http.StatusBadRequest, response.Code, query)
+	}
+}

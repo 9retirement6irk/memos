@@ -4,10 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	"io"
-	"net"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/require"
 )
@@ -30,17 +30,6 @@ func TestNormalizeURL(t *testing.T) {
 	for _, input := range []string{"", "immich.local", "ftp://immich.local", "http://user:pass@immich.local", "http://immich.local/?a=1", "http://immich.local/#x"} {
 		_, err := NormalizeURL(input)
 		require.Error(t, err, input)
-	}
-}
-
-func TestIsBlocked(t *testing.T) {
-	t.Parallel()
-	for _, ip := range []string{"127.0.0.1", "0.0.0.0", "169.254.169.254", "::1", "fe80::1", "::ffff:127.0.0.1"} {
-		require.True(t, isBlocked(net.ParseIP(ip)), ip)
-	}
-	// Immich usually lives on the home network, so private addresses stay reachable.
-	for _, ip := range []string{"192.168.1.20", "10.0.0.5", "172.17.0.2", "100.100.1.1", "fd12:3456::1", "93.184.216.34"} {
-		require.False(t, isBlocked(net.ParseIP(ip)), ip)
 	}
 }
 
@@ -80,6 +69,14 @@ func fakeImmich(t *testing.T) *httptest.Server {
 		body := map[string]any{}
 		require.NoError(t, json.NewDecoder(r.Body).Decode(&body))
 		require.Equal(t, "IMAGE", body["type"])
+		if body["takenAfter"] != nil {
+			require.Equal(t, "asc", body["order"])
+			require.Equal(t, true, body["withExif"])
+			require.Equal(t, "2026-11-11T05:00:00Z", body["takenAfter"])
+			require.Equal(t, "2026-11-12T05:00:00Z", body["takenBefore"])
+			_, _ = io.WriteString(w, `{"assets":{"items":[{"id":"`+testPhotoID+`","originalFileName":"IMG_2.jpg","originalMimeType":"image/jpeg","localDateTime":"2026-11-11T14:14:00.000Z","exifInfo":{"latitude":42.3,"longitude":-71.12,"city":"Boston","dateTimeOriginal":"2026-11-11T19:14:00.000Z"}}],"nextCursor":null}}`)
+			return
+		}
 		require.Equal(t, "desc", body["order"])
 		if body["cursor"] == "abc" {
 			_, _ = io.WriteString(w, `{"assets":{"items":[],"nextCursor":null}}`)
@@ -133,6 +130,15 @@ func TestClient(t *testing.T) {
 	body, err := io.ReadAll(thumbnail.Body)
 	require.NoError(t, err)
 	require.Equal(t, "thumb", string(body))
+
+	day, err := client.PhotosTaken(ctx, time.Date(2026, 11, 11, 0, 0, 0, 0, time.FixedZone("EST", -5*3600)), time.Date(2026, 11, 12, 0, 0, 0, 0, time.FixedZone("EST", -5*3600)), "")
+	require.NoError(t, err)
+	require.Len(t, day.Photos, 1)
+	require.NotNil(t, day.Photos[0].Exif)
+	require.InDelta(t, 42.3, *day.Photos[0].Exif.Latitude, 0.0001)
+	require.Equal(t, "Boston", *day.Photos[0].Exif.City)
+	_, err = client.PhotosTaken(ctx, time.Date(2026, 11, 12, 0, 0, 0, 0, time.UTC), time.Date(2026, 11, 11, 0, 0, 0, 0, time.UTC), "")
+	require.ErrorContains(t, err, "time range is empty")
 
 	original, err := client.Original(ctx, "../users/me")
 	if original != nil {

@@ -20,9 +20,11 @@ import (
 	"github.com/usememos/memos/internal/profile"
 	storepb "github.com/usememos/memos/proto/gen/store"
 	"github.com/usememos/memos/server/api"
+	"github.com/usememos/memos/server/dawarich"
 	"github.com/usememos/memos/server/fileserver"
 	"github.com/usememos/memos/server/frontend"
 	"github.com/usememos/memos/server/immich"
+	"github.com/usememos/memos/server/journal"
 	"github.com/usememos/memos/server/mcp"
 	"github.com/usememos/memos/store"
 )
@@ -109,6 +111,10 @@ func NewServer(ctx context.Context, profile *profile.Profile, store *store.Store
 	fileServerService.RegisterRoutes(mux, apiHandler)
 	// Each user's Immich photo picker: their saved connection and a read-only photo proxy.
 	immich.NewService(s.Store, s.Secret).RegisterRoutes(mux)
+	// Each user's Dawarich location history: their saved connection and a read-only proxy.
+	dawarich.NewService(s.Store, s.Secret).RegisterRoutes(mux)
+	// Each user's journal settings and Home Assistant streak reminder.
+	journal.NewService(s.Store, s.Secret).RegisterRoutes(mux)
 	// Preserve unclean-path routing without ServeMux's automatic redirects.
 	fallback := frontendService.Handler(apiHandler)
 	router := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -178,6 +184,9 @@ func (s *Server) startBackgroundJobs() {
 			slog.Error("failed to rebuild memo payloads; retrying on next start", slog.String("error", err.Error()))
 		}
 	})
+	// Journal streak reminders, sent through each user's Home Assistant.
+	reminders := journal.NewService(s.Store, s.Secret)
+	s.backgroundJobs.Go(func() { reminders.RunReminders(ctx) })
 }
 
 func (s *Server) stopBackgroundJobs() {

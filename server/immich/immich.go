@@ -12,6 +12,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/usememos/memos/internal/httphandler"
 	immichclient "github.com/usememos/memos/internal/immich"
@@ -43,6 +44,7 @@ func (s *Service) RegisterRoutes(mux *http.ServeMux) {
 	mux.Handle("DELETE /api/immich/connection", httphandler.Func(s.deleteConnection))
 	mux.Handle("GET /api/immich/albums", httphandler.Func(s.listAlbums))
 	mux.Handle("GET /api/immich/photos", httphandler.Func(s.listPhotos))
+	mux.Handle("GET /api/immich/photos/taken", httphandler.Func(s.listPhotosTaken))
 	mux.Handle("GET /api/immich/photos/{id}/thumbnail", httphandler.Func(s.servePhotoThumbnail))
 	mux.Handle("GET /api/immich/photos/{id}/original", httphandler.Func(s.servePhotoOriginal))
 }
@@ -226,6 +228,68 @@ type PhotoResponse struct {
 type PhotoPageResponse struct {
 	Photos []PhotoResponse `json:"photos"`
 	Next   string          `json:"next"`
+}
+
+// maxTakenRange bounds a dated photo search, which journal suggestions use
+// for a day or a few.
+const maxTakenRange = 8 * 24 * time.Hour
+
+// TakenPhotoResponse is one photo of a dated search, with where and when
+// exactly it was taken when the photo says.
+type TakenPhotoResponse struct {
+	PhotoResponse
+	// TakenAtUTC is the moment with its offset applied, empty when unknown.
+	TakenAtUTC string   `json:"takenAtUtc,omitempty"`
+	Latitude   *float64 `json:"latitude,omitempty"`
+	Longitude  *float64 `json:"longitude,omitempty"`
+	City       string   `json:"city,omitempty"`
+}
+
+// TakenPhotoPageResponse is one page of a dated search, oldest first.
+type TakenPhotoPageResponse struct {
+	Photos []TakenPhotoResponse `json:"photos"`
+	Next   string               `json:"next"`
+}
+
+func (s *Service) listPhotosTaken(w http.ResponseWriter, r *http.Request) error {
+	user, err := s.currentUser(r)
+	if err != nil {
+		return err
+	}
+	after, errAfter := time.Parse(time.RFC3339, r.URL.Query().Get("after"))
+	before, errBefore := time.Parse(time.RFC3339, r.URL.Query().Get("before"))
+	if errAfter != nil || errBefore != nil || !before.After(after) || before.Sub(after) > maxTakenRange {
+		return &httphandler.Error{Code: http.StatusBadRequest, Message: "after and before must be RFC 3339 times at most 8 days apart"}
+	}
+	client, err := s.clientFor(r.Context(), user)
+	if err != nil {
+		return err
+	}
+	page, err := client.PhotosTaken(r.Context(), after, before, r.URL.Query().Get("next"))
+	if err != nil {
+		return immichError(err)
+	}
+	response := TakenPhotoPageResponse{Photos: make([]TakenPhotoResponse, 0, len(page.Photos)), Next: page.Next}
+	for _, photo := range page.Photos {
+		item := TakenPhotoResponse{PhotoResponse: PhotoResponse{
+			ID: photo.ID, FileName: photo.FileName, MimeType: photo.MimeType, TakenAt: photo.TakenAt, Width: photo.Width, Height: photo.Height,
+		}}
+		if exif := photo.Exif; exif != nil {
+			if exif.TakenAt != nil {
+				if at, err := time.Parse(time.RFC3339, *exif.TakenAt); err == nil {
+					item.TakenAtUTC = at.UTC().Format(time.RFC3339)
+				}
+			}
+			if exif.Latitude != nil && exif.Longitude != nil {
+				item.Latitude, item.Longitude = exif.Latitude, exif.Longitude
+			}
+			if exif.City != nil {
+				item.City = *exif.City
+			}
+		}
+		response.Photos = append(response.Photos, item)
+	}
+	return httphandler.JSON(w, http.StatusOK, response)
 }
 
 func (s *Service) listPhotos(w http.ResponseWriter, r *http.Request) error {
