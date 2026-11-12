@@ -212,7 +212,11 @@
       "open-failed": "Crtež nije moguće otvoriti. Pokušajte ponovno.",
       "export-failed": "Crtež nije moguće spremiti. Pokušajte ponovno.",
       "image-failed": "Sliku nije moguće dodati u crtež.",
-      "saved-without-drawing": "Memo je spremljen, ali crtež nije. Sačuvajte ponovno za novi pokušaj."
+      "saved-without-drawing": "Memo je spremljen, ali crtež nije. Sačuvajte ponovno za novi pokušaj.",
+      "kidpix": "Način Kid Pix",
+      "kidpix-exit": "Natrag na alate za crtanje",
+      "kidpix-sounds": "Zvukovi Kid Pixa",
+      "kidpix-clear": "Izbriši boju Kid Pixa"
     },
     "no-changes-detected": "Nema promjena",
     "save": "Sačuvaj",

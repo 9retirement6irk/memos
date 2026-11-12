@@ -250,7 +250,11 @@
       "open-failed": "Tegningen kunne ikke åbnes. Prøv igen.",
       "export-failed": "Tegningen kunne ikke gemmes. Prøv igen.",
       "image-failed": "Billedet kunne ikke føjes til tegningen.",
-      "saved-without-drawing": "Notatet er gemt, men det er tegningen ikke. Gem igen for at prøve en gang til."
+      "saved-without-drawing": "Notatet er gemt, men det er tegningen ikke. Gem igen for at prøve en gang til.",
+      "kidpix": "Kid Pix-tilstand",
+      "kidpix-exit": "Tilbage til tegneværktøjer",
+      "kidpix-sounds": "Kid Pix-lyde",
+      "kidpix-clear": "Slet Kid Pix-malingen"
     },
     "no-changes-detected": "Ingen ændringer registreret",
     "save": "Spare",

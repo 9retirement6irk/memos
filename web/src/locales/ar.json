@@ -214,7 +214,11 @@
       "open-failed": "تعذر فتح الرسم. حاول مرة أخرى.",
       "export-failed": "تعذر حفظ الرسم. حاول مرة أخرى.",
       "image-failed": "تعذرت إضافة الصورة إلى الرسم.",
-      "saved-without-drawing": "تم حفظ المذكرة، لكن لم يتم حفظ الرسم. احفظ مرة أخرى لإعادة المحاولة."
+      "saved-without-drawing": "تم حفظ المذكرة، لكن لم يتم حفظ الرسم. احفظ مرة أخرى لإعادة المحاولة.",
+      "kidpix": "وضع Kid Pix",
+      "kidpix-exit": "العودة إلى أدوات الرسم",
+      "kidpix-sounds": "أصوات Kid Pix",
+      "kidpix-clear": "مسح طلاء Kid Pix"
     },
     "audio-recorder": {
       "attachment-label": "تسجيل صوتي",

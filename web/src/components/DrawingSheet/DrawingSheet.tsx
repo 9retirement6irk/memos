@@ -13,15 +13,19 @@ import {
   SquareIcon,
   TypeIcon,
   Undo2Icon,
+  Volume2Icon,
+  VolumeXIcon,
 } from "lucide-react";
-import { type ClipboardEvent, type ReactElement, useEffect, useRef, useState } from "react";
+import { type ClipboardEvent, lazy, type ReactElement, Suspense, useEffect, useRef, useState } from "react";
 import useMediaQuery from "@/hooks/useMediaQuery";
 import { showErrorToast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 import { type Translations, useTranslate } from "@/utils/i18n";
 import { primaryModifierGlyph } from "@/utils/platform";
 import { DrawingDialogPopup, FloatingAction, FloatingBar, FloatingRow } from "./DrawingFrame";
-import { DRAWING_HUES, useCanvasTheme } from "./useCanvasTheme";
+import kidPixToolsUrl from "./kidpix/assets/tools.png";
+import type { KidPixHandle, KidPixView } from "./kidpix/KidPixLayer";
+import { DRAWING_HUES, DRAWING_PAPER, useCanvasTheme } from "./useCanvasTheme";
 
 const TOOLS: { name: ToolName; label: Translations; shortcut: string; icon: ReactElement }[] = [
   { name: "select", label: "editor.drawing.tool-select", shortcut: "V", icon: <MousePointer2Icon /> },
@@ -34,6 +38,15 @@ const TOOLS: { name: ToolName; label: Translations; shortcut: string; icon: Reac
 ];
 // One stable list, so the canvas does not reset its tools on every render.
 const TOOL_NAMES = TOOLS.map((tool) => tool.name);
+
+/** Kid Pix mode and its art load on first use, not with the sheet. */
+const KidPixLayer = lazy(() => import("./kidpix/KidPixLayer"));
+
+/** Below this height the tube and tray do not fit; Kid Pix mode uses its one-panel chrome, as on a phone. */
+const KIDPIX_FULL_CHROME_HEIGHT = 560;
+
+/** The canvas shrinks any picture over 1440 px a side, and one over 80% of the view. */
+const KIDPIX_TILE_LIMIT = 1440;
 
 const WIDTHS: { value: number; label: Translations }[] = [
   { value: 1, label: "editor.drawing.width-thin" },
@@ -80,6 +93,12 @@ const DrawingSheet = ({ mode, initialScene, background, onDone, onClose }: Drawi
   const [discardOpen, setDiscardOpen] = useState(false);
   // Drawing waits for a background picture, so no stroke can land before it and be marked saved with it.
   const [isPreparing, setIsPreparing] = useState(Boolean(background));
+  // Kid Pix mode: a paint layer over the drawing, added to it as a picture when the mode ends.
+  const kidPixRef = useRef<KidPixHandle | null>(null);
+  const [kidPix, setKidPix] = useState<KidPixView | null>(null);
+  const [kidPixSounds, setKidPixSounds] = useState(true);
+  const [isLeavingKidPix, setIsLeavingKidPix] = useState(false);
+  const kidPixCompact = !isWide || (kidPix !== null && kidPix.height < KIDPIX_FULL_CHROME_HEIGHT);
   const title = t(mode === "edit" ? "editor.drawing.edit" : "editor.drawing.new-title");
   const currentColor = color ?? ink;
 
@@ -129,6 +148,57 @@ const DrawingSheet = ({ mode, initialScene, background, onDone, onClose }: Drawi
     }
   };
 
+  const enterKidPix = () => {
+    const canvas = canvasRef.current;
+    const surface = surfaceRef.current;
+    if (!canvas || !surface || isPreparing) return;
+    // Text still being typed is part of the drawing, and handles are not part of the picture.
+    canvas.commitText();
+    canvas.setSelection([]);
+    // One layer pixel is one drawing px; zoomed out, the layer would be larger than the screen.
+    if (canvas.getViewport().zoom < 1) canvas.zoomTo(1);
+    setKidPix({ ...canvas.getViewport(), width: surface.clientWidth, height: surface.clientHeight });
+  };
+
+  /**
+   * Lifts the Kid Pix paint off its layer and adds it to the drawing, where it painted. The
+   * canvas places a picture by its center, at its own pixel size unless it is over 80% of the
+   * view, so the paint goes in as tiles small enough to keep their size, grouped as one.
+   */
+  const addKidPixPaint = async () => {
+    const canvas = canvasRef.current;
+    const layer = kidPixRef.current;
+    if (!canvas || !layer || !kidPix) return;
+    const maxSide = Math.max(64, Math.min(KIDPIX_TILE_LIMIT, Math.floor((0.8 * Math.min(kidPix.width, kidPix.height)) / kidPix.zoom)));
+    const ids: string[] = [];
+    for (const tile of await layer.takeTiles(maxSide)) {
+      const id = await canvas.insertImage(tile.blob, {
+        at: [tile.x + tile.width / 2 - kidPix.scrollX, tile.y + tile.height / 2 - kidPix.scrollY],
+      });
+      if (id) ids.push(id);
+    }
+    if (ids.length > 1) {
+      canvas.setSelection(ids);
+      canvas.groupSelection();
+    }
+  };
+
+  const leaveKidPix = async () => {
+    if (isLeavingKidPix) return;
+    setIsLeavingKidPix(true);
+    try {
+      await addKidPixPaint();
+      setKidPix(null);
+      syncHistory();
+    } catch (error) {
+      console.error(error);
+      // The mode stays open with the paint on it, to try again.
+      showErrorToast(t("editor.drawing.image-failed"));
+    } finally {
+      setIsLeavingKidPix(false);
+    }
+  };
+
   // The drawing surface inserts pasted pictures itself; a paste anywhere else on the sheet lands there too.
   const handlePaste = (event: ClipboardEvent) => {
     if (surfaceRef.current?.contains(event.target as Node)) return;
@@ -137,7 +207,7 @@ const DrawingSheet = ({ mode, initialScene, background, onDone, onClose }: Drawi
 
   // Cancel, Escape and the system back gesture all ask first when the drawing has changes.
   const requestClose = () => {
-    if (canvasRef.current?.isDirty()) {
+    if (canvasRef.current?.isDirty() || kidPixRef.current?.hasPaint()) {
       setDiscardOpen(true);
       return;
     }
@@ -146,11 +216,16 @@ const DrawingSheet = ({ mode, initialScene, background, onDone, onClose }: Drawi
 
   const handleDone = async () => {
     const canvas = canvasRef.current;
-    if (!canvas || isExporting || isPreparing) return;
+    if (!canvas || isExporting || isPreparing || isLeavingKidPix) return;
     // Text still being typed is part of the drawing.
     canvas.commitText();
     setIsExporting(true);
     try {
+      // Paint still on the Kid Pix layer is part of the drawing.
+      if (kidPix) {
+        await addKidPixPaint();
+        setKidPix(null);
+      }
       const blob = await canvas.exportPng();
       await onDone(new File([blob], drawingFileName(), { type: "image/png" }));
       // Only once Done went through: after a failed save, Cancel still asks before discarding.
@@ -290,6 +365,39 @@ const DrawingSheet = ({ mode, initialScene, background, onDone, onClose }: Drawi
       />
     </>
   );
+  // The Wacky Brush button from the Kid Pix tube, so the way in looks like where it leads.
+  const kidPixIcon = (
+    <span aria-hidden className="mu-icon block overflow-hidden rounded-mu-sm">
+      <span
+        className="block h-[60px] w-[58px] origin-top-left scale-[0.3]"
+        style={{ backgroundImage: `url(${kidPixToolsUrl})`, backgroundPosition: "-2px -62px" }}
+      />
+    </span>
+  );
+  const kidPixEnter = (
+    <IconAction size={size} label={t("editor.drawing.kidpix")} icon={kidPixIcon} disabled={isPreparing} onClick={enterKidPix} />
+  );
+  const kidPixControls = (
+    <>
+      <Button variant="ghost" size={size} loading={isLeavingKidPix} loadingLabel={t("editor.drawing.kidpix-exit")} onClick={leaveKidPix}>
+        {t("editor.drawing.kidpix-exit")}
+      </Button>
+      <Tooltip.Root>
+        <Tooltip.Trigger
+          render={
+            <Toggle
+              size={size}
+              aria-label={t("editor.drawing.kidpix-sounds")}
+              icon={kidPixSounds ? <Volume2Icon /> : <VolumeXIcon />}
+              pressed={kidPixSounds}
+              onPressedChange={setKidPixSounds}
+            />
+          }
+        />
+        <Tooltip.Popup>{t("editor.drawing.kidpix-sounds")}</Tooltip.Popup>
+      </Tooltip.Root>
+    </>
+  );
   const cancelButton = (
     <Button variant="ghost" size={size} onClick={requestClose}>
       {t("common.cancel")}
@@ -348,7 +456,35 @@ const DrawingSheet = ({ mode, initialScene, background, onDone, onClose }: Drawi
             <CanvasMounted onMounted={setUpCanvas} />
           </div>
 
-          {isWide ? (
+          {kidPix && (
+            <Suspense fallback={null}>
+              <KidPixLayer
+                ref={kidPixRef}
+                view={kidPix}
+                paper={theme.paper ?? DRAWING_PAPER}
+                muted={!kidPixSounds}
+                compact={kidPixCompact}
+                backdropSources={() => Array.from(surfaceRef.current?.querySelectorAll("canvas") ?? [])}
+                labels={{
+                  tools: t("editor.drawing.tools"),
+                  color: t("editor.drawing.color"),
+                  undo: t("editor.drawing.undo"),
+                  clear: t("editor.drawing.kidpix-clear"),
+                  previous: t("common.previous"),
+                  next: t("common.next"),
+                }}
+              />
+            </Suspense>
+          )}
+
+          {kidPix ? (
+            // Cancel and Done stay memos' own; past the tube when the full chrome is up.
+            <FloatingRow edge="top" className={cn(!kidPixCompact && "left-[148px]")}>
+              <FloatingAction>{cancelButton}</FloatingAction>
+              <FloatingBar>{kidPixControls}</FloatingBar>
+              <FloatingAction>{doneButton}</FloatingAction>
+            </FloatingRow>
+          ) : isWide ? (
             <FloatingRow edge="top">
               <FloatingAction>{cancelButton}</FloatingAction>
               <FloatingBar>
@@ -359,6 +495,8 @@ const DrawingSheet = ({ mode, initialScene, background, onDone, onClose }: Drawi
                 {historyControls}
                 <Divider />
                 {viewControls}
+                <Divider />
+                {kidPixEnter}
               </FloatingBar>
               <FloatingAction>{doneButton}</FloatingAction>
             </FloatingRow>
@@ -380,6 +518,10 @@ const DrawingSheet = ({ mode, initialScene, background, onDone, onClose }: Drawi
                   <Divider className="mx-0 max-[380px]:hidden" />
                   {styleControl}
                 </FloatingBar>
+              </FloatingRow>
+              {/* The way into Kid Pix mode sits alone above the tools: neither phone bar has room for it. */}
+              <FloatingRow edge="bottom" className="bottom-[calc(72px+env(safe-area-inset-bottom))] justify-end">
+                <FloatingBar>{kidPixEnter}</FloatingBar>
               </FloatingRow>
             </>
           )}

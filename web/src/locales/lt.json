@@ -250,7 +250,11 @@
       "open-failed": "Nepavyko atidaryti piešinio. Bandykite dar kartą.",
       "export-failed": "Nepavyko išsaugoti piešinio. Bandykite dar kartą.",
       "image-failed": "Nepavyko pridėti vaizdo prie piešinio.",
-      "saved-without-drawing": "Atmintinė išsaugota, bet piešinys – ne. Išsaugokite dar kartą, kad bandytumėte iš naujo."
+      "saved-without-drawing": "Atmintinė išsaugota, bet piešinys – ne. Išsaugokite dar kartą, kad bandytumėte iš naujo.",
+      "kidpix": "Kid Pix režimas",
+      "kidpix-exit": "Grįžti prie piešimo įrankių",
+      "kidpix-sounds": "Kid Pix garsai",
+      "kidpix-clear": "Ištrinti Kid Pix dažus"
     },
     "no-changes-detected": "Pakeitimų neaptikta",
     "save": "Išsaugoti",

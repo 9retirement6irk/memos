@@ -212,7 +212,11 @@
       "open-failed": "Risbe ni bilo mogoče odpreti. Poskusite znova.",
       "export-failed": "Risbe ni bilo mogoče shraniti. Poskusite znova.",
       "image-failed": "Slike ni bilo mogoče dodati risbi.",
-      "saved-without-drawing": "Beležka je shranjena, risba pa ne. Za ponoven poskus znova shranite."
+      "saved-without-drawing": "Beležka je shranjena, risba pa ne. Za ponoven poskus znova shranite.",
+      "kidpix": "Način Kid Pix",
+      "kidpix-exit": "Nazaj na orodja za risanje",
+      "kidpix-sounds": "Zvoki Kid Pix",
+      "kidpix-clear": "Izbriši barvo Kid Pix"
     },
     "no-changes-detected": "Ni zaznanih sprememb",
     "save": "Shrani",

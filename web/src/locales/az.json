@@ -332,7 +332,11 @@
       "open-failed": "Rəsmi açmaq mümkün olmadı. Yenidən cəhd edin.",
       "export-failed": "Rəsmi saxlamaq mümkün olmadı. Yenidən cəhd edin.",
       "image-failed": "Şəkli rəsmə əlavə etmək mümkün olmadı.",
-      "saved-without-drawing": "Qeyd yadda saxlanıldı, amma rəsm saxlanılmadı. Yenidən cəhd etmək üçün təkrar yadda saxlayın."
+      "saved-without-drawing": "Qeyd yadda saxlanıldı, amma rəsm saxlanılmadı. Yenidən cəhd etmək üçün təkrar yadda saxlayın.",
+      "kidpix": "Kid Pix rejimi",
+      "kidpix-exit": "Rəsm alətlərinə qayıt",
+      "kidpix-sounds": "Kid Pix səsləri",
+      "kidpix-clear": "Kid Pix boyasını sil"
     },
     "new-memo": "Yeni qeyd",
     "no-changes-detected": "Dəyişiklik aşkarlanmadı",

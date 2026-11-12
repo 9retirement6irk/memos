@@ -214,7 +214,11 @@
       "open-failed": "Não foi possível abrir o desenho. Tente novamente.",
       "export-failed": "Não foi possível salvar o desenho. Tente novamente.",
       "image-failed": "Não foi possível adicionar a imagem ao desenho.",
-      "saved-without-drawing": "O memo foi salvo, mas o desenho não. Salve novamente para tentar de novo."
+      "saved-without-drawing": "O memo foi salvo, mas o desenho não. Salve novamente para tentar de novo.",
+      "kidpix": "Modo Kid Pix",
+      "kidpix-exit": "Voltar às ferramentas de desenho",
+      "kidpix-sounds": "Sons do Kid Pix",
+      "kidpix-clear": "Apagar a tinta do Kid Pix"
     },
     "audio-recorder": {
       "attachment-label": "Gravação de áudio",

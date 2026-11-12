@@ -250,7 +250,11 @@
       "open-failed": "Piirroksen avaaminen epäonnistui. Yritä uudelleen.",
       "export-failed": "Piirroksen tallentaminen epäonnistui. Yritä uudelleen.",
       "image-failed": "Kuvan lisääminen piirrokseen epäonnistui.",
-      "saved-without-drawing": "Muistio on tallennettu, mutta piirrosta ei. Tallenna uudelleen yrittääksesi uudestaan."
+      "saved-without-drawing": "Muistio on tallennettu, mutta piirrosta ei. Tallenna uudelleen yrittääksesi uudestaan.",
+      "kidpix": "Kid Pix -tila",
+      "kidpix-exit": "Takaisin piirtotyökaluihin",
+      "kidpix-sounds": "Kid Pix -äänet",
+      "kidpix-clear": "Pyyhi Kid Pix -maali"
     },
     "no-changes-detected": "Muutoksia ei havaittu",
     "save": "Tallentaa",
