@@ -1218,6 +1218,18 @@
       "you": "Вие",
       "your-access": "Вашият достъп",
       "your-spaces": "Вашите пространства"
+    },
+    "immich": {
+      "label": "Immich",
+      "description": "Избирайте снимки от своя Immich сървър, докато пишете. API ключът ви остава на този сървър.",
+      "status-connected": "Свързано с {{url}}",
+      "status-not-connected": "Не е свързано",
+      "server-url": "Адрес на сървъра",
+      "api-key": "API ключ",
+      "api-key-keep": "Оставете празно, за да запазите записания ключ",
+      "api-key-help": "Създайте такъв в Immich от Настройки на акаунта → API ключове. Нужни права: asset.read, asset.view, asset.download, album.read, user.read.",
+      "connect": "Свързване",
+      "disconnect": "Прекъсване"
     }
   },
   "tooltip": {
@@ -1439,5 +1451,16 @@
     "back": "Назад с {{seconds}} секунди",
     "forward": "Напред с {{seconds}} секунди",
     "speed": "Скорост на възпроизвеждане {{rate}}x"
+  },
+  "immich": {
+    "insert": "Снимки от Immich",
+    "title": "Изберете снимки от Immich",
+    "album": "Албум",
+    "all-photos": "Всички снимки",
+    "add-photos": "Добавяне на снимки ({{count}})",
+    "load-more": "Зареди още",
+    "empty": "Тук няма снимки.",
+    "not-connected": "Първо свържете своя Immich сървър в Настройки.",
+    "add-failed": "Някои снимки не можаха да бъдат добавени."
   }
 }

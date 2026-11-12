@@ -1219,6 +1219,18 @@
       "you": "Dvs.",
       "your-access": "Accesul dvs.",
       "your-spaces": "Spațiile dvs."
+    },
+    "immich": {
+      "label": "Immich",
+      "description": "Alege fotografii de pe serverul tău Immich în timp ce scrii. Cheia ta API rămâne pe acest server.",
+      "status-connected": "Conectat la {{url}}",
+      "status-not-connected": "Neconectat",
+      "server-url": "Adresa serverului",
+      "api-key": "Cheie API",
+      "api-key-keep": "Lasă gol pentru a păstra cheia salvată",
+      "api-key-help": "Creează una în Immich la Setări cont → Chei API. Permisiuni necesare: asset.read, asset.view, asset.download, album.read, user.read.",
+      "connect": "Conectează",
+      "disconnect": "Deconectează"
     }
   },
   "tooltip": {
@@ -1440,5 +1452,16 @@
     "back": "Înapoi {{seconds}} secunde",
     "forward": "Înainte {{seconds}} secunde",
     "speed": "Viteză de redare {{rate}}x"
+  },
+  "immich": {
+    "insert": "Fotografii din Immich",
+    "title": "Alege fotografii din Immich",
+    "album": "Album",
+    "all-photos": "Toate fotografiile",
+    "add-photos": "Adaugă fotografii ({{count}})",
+    "load-more": "Încarcă mai multe",
+    "empty": "Nu există fotografii aici.",
+    "not-connected": "Mai întâi conectează serverul Immich în Setări.",
+    "add-failed": "Unele fotografii nu au putut fi adăugate."
   }
 }

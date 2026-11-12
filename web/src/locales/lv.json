@@ -1219,6 +1219,18 @@
       "you": "Jūs",
       "your-access": "Jūsu piekļuve",
       "your-spaces": "Jūsu telpas"
+    },
+    "immich": {
+      "label": "Immich",
+      "description": "Rakstot izvēlies fotoattēlus no sava Immich servera. Tava API atslēga paliek šajā serverī.",
+      "status-connected": "Savienots ar {{url}}",
+      "status-not-connected": "Nav savienots",
+      "server-url": "Servera adrese",
+      "api-key": "API atslēga",
+      "api-key-keep": "Atstāj tukšu, lai paturētu saglabāto atslēgu",
+      "api-key-help": "Izveido to Immich sadaļā Konta iestatījumi → API atslēgas. Nepieciešamās atļaujas: asset.read, asset.view, asset.download, album.read, user.read.",
+      "connect": "Savienot",
+      "disconnect": "Atvienot"
     }
   },
   "tooltip": {
@@ -1440,5 +1452,16 @@
     "back": "Atpakaļ {{seconds}} sekundes",
     "forward": "Uz priekšu {{seconds}} sekundes",
     "speed": "Atskaņošanas ātrums {{rate}}x"
+  },
+  "immich": {
+    "insert": "Fotoattēli no Immich",
+    "title": "Izvēlies fotoattēlus no Immich",
+    "album": "Albums",
+    "all-photos": "Visi fotoattēli",
+    "add-photos": "Pievienot fotoattēlus ({{count}})",
+    "load-more": "Ielādēt vairāk",
+    "empty": "Šeit nav fotoattēlu.",
+    "not-connected": "Vispirms savieno savu Immich serveri iestatījumos.",
+    "add-failed": "Dažus fotoattēlus neizdevās pievienot."
   }
 }

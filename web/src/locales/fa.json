@@ -1175,6 +1175,18 @@
       "last-updated": "آخرین به‌روزرسانی {{ago}}",
       "refresh": "به‌روزرسانی",
       "load-error": "آمار بارگیری نشد"
+    },
+    "immich": {
+      "label": "Immich",
+      "description": "هنگام نوشتن از سرور Immich خود عکس انتخاب کنید. کلید API شما روی همین سرور می‌ماند.",
+      "status-connected": "متصل به {{url}}",
+      "status-not-connected": "متصل نیست",
+      "server-url": "نشانی سرور",
+      "api-key": "کلید API",
+      "api-key-keep": "برای نگه داشتن کلید ذخیره‌شده خالی بگذارید",
+      "api-key-help": "در Immich از تنظیمات حساب ← کلیدهای API یکی بسازید. مجوزهای لازم: asset.read, asset.view, asset.download, album.read, user.read.",
+      "connect": "اتصال",
+      "disconnect": "قطع اتصال"
     }
   },
   "tooltip": {
@@ -1439,5 +1451,16 @@
     "back": "{{seconds}} ثانیه عقب",
     "forward": "{{seconds}} ثانیه جلو",
     "speed": "سرعت پخش {{rate}}x"
+  },
+  "immich": {
+    "insert": "عکس‌ها از Immich",
+    "title": "انتخاب عکس از Immich",
+    "album": "آلبوم",
+    "all-photos": "همه عکس‌ها",
+    "add-photos": "افزودن عکس ({{count}})",
+    "load-more": "بارگذاری بیشتر",
+    "empty": "عکسی اینجا نیست.",
+    "not-connected": "ابتدا سرور Immich خود را در تنظیمات متصل کنید.",
+    "add-failed": "برخی عکس‌ها افزوده نشدند."
   }
 }

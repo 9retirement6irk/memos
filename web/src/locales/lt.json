@@ -1220,6 +1220,18 @@
       "your-spaces": "Jūsų erdvės",
       "delete-confirm-description": "Erdvė ir visi joje esantys užrašai bus visam laikui ištrinti. Šio veiksmo negalima atšaukti.",
       "delete-confirm-title": "Ištrinti {{space}}?"
+    },
+    "immich": {
+      "label": "Immich",
+      "description": "Rinkitės nuotraukas iš savo Immich serverio rašydami. Jūsų API raktas lieka šiame serveryje.",
+      "status-connected": "Prisijungta prie {{url}}",
+      "status-not-connected": "Neprisijungta",
+      "server-url": "Serverio adresas",
+      "api-key": "API raktas",
+      "api-key-keep": "Palikite tuščią, kad liktų išsaugotas raktas",
+      "api-key-help": "Sukurkite jį Immich skiltyje Paskyros nustatymai → API raktai. Reikia teisių: asset.read, asset.view, asset.download, album.read, user.read.",
+      "connect": "Prisijungti",
+      "disconnect": "Atsijungti"
     }
   },
   "tooltip": {
@@ -1441,5 +1453,16 @@
     "back": "Atgal {{seconds}} sekundžių",
     "forward": "Pirmyn {{seconds}} sekundžių",
     "speed": "Atkūrimo greitis {{rate}}x"
+  },
+  "immich": {
+    "insert": "Nuotraukos iš Immich",
+    "title": "Pasirinkite nuotraukas iš Immich",
+    "album": "Albumas",
+    "all-photos": "Visos nuotraukos",
+    "add-photos": "Pridėti nuotraukas ({{count}})",
+    "load-more": "Įkelti daugiau",
+    "empty": "Čia nuotraukų nėra.",
+    "not-connected": "Pirmiausia prijunkite savo Immich serverį nustatymuose.",
+    "add-failed": "Kai kurių nuotraukų nepavyko pridėti."
   }
 }

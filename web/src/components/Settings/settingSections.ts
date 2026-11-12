@@ -7,6 +7,7 @@ import {
   FileCogIcon,
   GaugeIcon,
   HeartHandshakeIcon,
+  ImagesIcon,
   KeyIcon,
   KeyRoundIcon,
   LibraryIcon,
@@ -24,6 +25,7 @@ import AccessTokenSection from "@/components/Settings/AccessTokenSection";
 import AISection from "@/components/Settings/AISection";
 import ConfigurationSection from "@/components/Settings/ConfigurationSection";
 import EditorSection from "@/components/Settings/EditorSection";
+import ImmichSection from "@/components/Settings/ImmichSection";
 import InstanceSection from "@/components/Settings/InstanceSection";
 import MemberSection from "@/components/Settings/MemberSection";
 import MemoExportSection from "@/components/Settings/MemoExportSection";
@@ -48,6 +50,7 @@ export type SettingSectionKey =
   | "preference"
   | "editor"
   | "webhook"
+  | "immich"
   | "member"
   | "system"
   | "memo"
@@ -113,6 +116,13 @@ export const SETTINGS_SECTIONS: SettingSectionDefinition[] = [
     labelKey: "setting.webhook.label",
     icon: WebhookIcon,
     component: WebhookSection,
+  },
+  {
+    key: "immich",
+    scope: "basic",
+    labelKey: "setting.immich.label",
+    icon: ImagesIcon,
+    component: ImmichSection,
   },
   {
     key: "member",

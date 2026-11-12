@@ -248,5 +248,6 @@ func (s *Store) DeleteUser(ctx context.Context, delete *DeleteUser) (*DeleteUser
 	if err := s.RemoveUserFromUsageLimits(ctx, delete.ID); err != nil {
 		slog.Warn("failed to remove deleted user from usage limits", slog.Int("userID", int(delete.ID)), slog.String("error", err.Error()))
 	}
+	s.removeDeletedUserImmichConnection(ctx, delete.ID)
 	return result, nil
 }

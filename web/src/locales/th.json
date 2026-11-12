@@ -1175,6 +1175,18 @@
       "last-updated": "อัปเดตล่าสุด {{ago}}",
       "refresh": "รีเฟรช",
       "load-error": "โหลดสถิติไม่สำเร็จ"
+    },
+    "immich": {
+      "label": "Immich",
+      "description": "เลือกรูปจากเซิร์ฟเวอร์ Immich ของคุณขณะเขียน คีย์ API ของคุณจะอยู่บนเซิร์ฟเวอร์นี้",
+      "status-connected": "เชื่อมต่อกับ {{url}} แล้ว",
+      "status-not-connected": "ยังไม่ได้เชื่อมต่อ",
+      "server-url": "ที่อยู่เซิร์ฟเวอร์",
+      "api-key": "คีย์ API",
+      "api-key-keep": "เว้นว่างไว้เพื่อใช้คีย์ที่บันทึกไว้",
+      "api-key-help": "สร้างคีย์ใน Immich ที่ การตั้งค่าบัญชี → คีย์ API สิทธิ์ที่ต้องใช้: asset.read, asset.view, asset.download, album.read, user.read",
+      "connect": "เชื่อมต่อ",
+      "disconnect": "ยกเลิกการเชื่อมต่อ"
     }
   },
   "tooltip": {
@@ -1439,5 +1451,16 @@
     "back": "ย้อนกลับ {{seconds}} วินาที",
     "forward": "ข้ามไป {{seconds}} วินาที",
     "speed": "ความเร็วในการเล่น {{rate}}x"
+  },
+  "immich": {
+    "insert": "รูปจาก Immich",
+    "title": "เลือกรูปจาก Immich",
+    "album": "อัลบั้ม",
+    "all-photos": "รูปทั้งหมด",
+    "add-photos": "เพิ่มรูป ({{count}})",
+    "load-more": "โหลดเพิ่ม",
+    "empty": "ไม่มีรูปที่นี่",
+    "not-connected": "เชื่อมต่อเซิร์ฟเวอร์ Immich ในการตั้งค่าก่อน",
+    "add-failed": "เพิ่มรูปบางรูปไม่สำเร็จ"
   }
 }

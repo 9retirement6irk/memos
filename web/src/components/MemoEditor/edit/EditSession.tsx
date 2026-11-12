@@ -278,6 +278,9 @@ export const EditSession: React.FC<EditSessionProps> = ({
     [actions, createBlobUrl, dispatch, getState, inlineImageUpload.insertLocalImages, saveMediaMetadata],
   );
 
+  /** Photos picked from Immich join the attachment list, like an upload. */
+  const handleAttachFiles = useCallback((files: File[]) => handleFiles(files, { inline: false }), [handleFiles]);
+
   /** The ＋ menu's Insert image: inline at the caret. */
   const handleInsertImages = useCallback((files: File[]) => handleFiles(files, { inline: true }), [handleFiles]);
 
@@ -422,6 +425,7 @@ export const EditSession: React.FC<EditSessionProps> = ({
             sourceMode={sourceMode}
             onInsertImages={handleInsertImages}
             onDrawingClick={drawing.openNew}
+            onAttachFiles={handleAttachFiles}
           />
         </div>
       </div>

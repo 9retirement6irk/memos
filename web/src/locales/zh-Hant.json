@@ -1259,6 +1259,18 @@
       "review-new": "將建立",
       "export-admin-only": "只有管理員可以匯出備忘錄。請向管理員索取你的匯出檔案。",
       "export-busy": "另一個匯出正在進行。請稍後再試。"
+    },
+    "immich": {
+      "label": "Immich",
+      "description": "寫作時可從你的 Immich 伺服器選擇照片。API 金鑰只會保存在此伺服器上。",
+      "status-connected": "已連線到 {{url}}",
+      "status-not-connected": "未連線",
+      "server-url": "伺服器位址",
+      "api-key": "API 金鑰",
+      "api-key-keep": "留空即保留已儲存的金鑰",
+      "api-key-help": "在 Immich 的「帳號設定 → API 金鑰」中建立。所需權限：asset.read, asset.view, asset.download, album.read, user.read。",
+      "connect": "連線",
+      "disconnect": "中斷連線"
     }
   },
   "space": {
@@ -1439,5 +1451,16 @@
     "back": "倒退 {{seconds}} 秒",
     "forward": "快轉 {{seconds}} 秒",
     "speed": "播放速度 {{rate}}x"
+  },
+  "immich": {
+    "insert": "來自 Immich 的照片",
+    "title": "從 Immich 選擇照片",
+    "album": "相簿",
+    "all-photos": "所有照片",
+    "add-photos": "加入照片（{{count}}）",
+    "load-more": "載入更多",
+    "empty": "這裡沒有照片。",
+    "not-connected": "請先在設定中連線你的 Immich 伺服器。",
+    "add-failed": "部分照片無法加入。"
   }
 }

@@ -1218,6 +1218,18 @@
       "your-spaces": "Tilasi",
       "delete-confirm-description": "Tämä poistaa pysyvästi tilan ja siihen sijoitetut muistiot. Toimintoa ei voi kumota.",
       "delete-confirm-title": "Poistetaanko {{space}}?"
+    },
+    "immich": {
+      "label": "Immich",
+      "description": "Valitse kuvia Immich-palvelimeltasi kirjoittaessasi. API-avaimesi pysyy tällä palvelimella.",
+      "status-connected": "Yhdistetty: {{url}}",
+      "status-not-connected": "Ei yhdistetty",
+      "server-url": "Palvelimen osoite",
+      "api-key": "API-avain",
+      "api-key-keep": "Jätä tyhjäksi säilyttääksesi tallennetun avaimen",
+      "api-key-help": "Luo avain Immichissä kohdassa Tilin asetukset → API-avaimet. Tarvittavat oikeudet: asset.read, asset.view, asset.download, album.read, user.read.",
+      "connect": "Yhdistä",
+      "disconnect": "Katkaise yhteys"
     }
   },
   "tooltip": {
@@ -1439,5 +1451,16 @@
     "back": "{{seconds}} sekuntia taaksepäin",
     "forward": "{{seconds}} sekuntia eteenpäin",
     "speed": "Toistonopeus {{rate}}x"
+  },
+  "immich": {
+    "insert": "Kuvat Immichistä",
+    "title": "Valitse kuvia Immichistä",
+    "album": "Albumi",
+    "all-photos": "Kaikki kuvat",
+    "add-photos": "Lisää kuvia ({{count}})",
+    "load-more": "Lataa lisää",
+    "empty": "Täällä ei ole kuvia.",
+    "not-connected": "Yhdistä ensin Immich-palvelimesi asetuksissa.",
+    "add-failed": "Joitakin kuvia ei voitu lisätä."
   }
 }

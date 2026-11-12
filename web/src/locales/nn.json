@@ -1296,6 +1296,18 @@
       "no-webhooks-found": "Ingen vevkrokar funne.",
       "title": "Vevkrokar",
       "url": "Adresse"
+    },
+    "immich": {
+      "label": "Immich",
+      "description": "Vel bilete frå Immich-tenaren din medan du skriv. API-nøkkelen din blir på denne tenaren.",
+      "status-connected": "Kopla til {{url}}",
+      "status-not-connected": "Ikkje kopla til",
+      "server-url": "Tenaradresse",
+      "api-key": "API-nøkkel",
+      "api-key-keep": "La feltet stå tomt for å halde på den lagra nøkkelen",
+      "api-key-help": "Lag ein i Immich under Kontoinnstillingar → API-nøklar. Treng: asset.read, asset.view, asset.download, album.read, user.read.",
+      "connect": "Kopla til",
+      "disconnect": "Kopla frå"
     }
   },
   "space": {
@@ -1439,5 +1451,16 @@
     "back": "{{seconds}} sekund tilbake",
     "forward": "{{seconds}} sekund fram",
     "speed": "Avspelingsfart {{rate}}x"
+  },
+  "immich": {
+    "insert": "Bilete frå Immich",
+    "title": "Vel bilete frå Immich",
+    "album": "Album",
+    "all-photos": "Alle bilete",
+    "add-photos": "Legg til bilete ({{count}})",
+    "load-more": "Last inn fleire",
+    "empty": "Ingen bilete her.",
+    "not-connected": "Kopla til Immich-tenaren din under Innstillingar først.",
+    "add-failed": "Nokre bilete kunne ikkje leggjast til."
   }
 }

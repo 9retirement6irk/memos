@@ -1175,6 +1175,18 @@
       "last-updated": "Terakhir diperbarui {{ago}}",
       "refresh": "Segarkan",
       "load-error": "Gagal memuat statistik"
+    },
+    "immich": {
+      "label": "Immich",
+      "description": "Pilih foto dari server Immich Anda saat menulis. Kunci API Anda tetap di server ini.",
+      "status-connected": "Terhubung ke {{url}}",
+      "status-not-connected": "Tidak terhubung",
+      "server-url": "Alamat server",
+      "api-key": "Kunci API",
+      "api-key-keep": "Biarkan kosong untuk mempertahankan kunci yang tersimpan",
+      "api-key-help": "Buat di Immich pada Pengaturan Akun → Kunci API. Izin yang diperlukan: asset.read, asset.view, asset.download, album.read, user.read.",
+      "connect": "Hubungkan",
+      "disconnect": "Putuskan"
     }
   },
   "tooltip": {
@@ -1439,5 +1451,16 @@
     "back": "Mundur {{seconds}} detik",
     "forward": "Maju {{seconds}} detik",
     "speed": "Kecepatan putar {{rate}}x"
+  },
+  "immich": {
+    "insert": "Foto dari Immich",
+    "title": "Pilih foto dari Immich",
+    "album": "Album",
+    "all-photos": "Semua foto",
+    "add-photos": "Tambahkan foto ({{count}})",
+    "load-more": "Muat lebih banyak",
+    "empty": "Tidak ada foto di sini.",
+    "not-connected": "Hubungkan server Immich Anda di Pengaturan terlebih dahulu.",
+    "add-failed": "Beberapa foto tidak dapat ditambahkan."
   }
 }

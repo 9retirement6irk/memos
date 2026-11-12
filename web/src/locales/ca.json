@@ -1181,6 +1181,18 @@
       "you": "Tu",
       "your-access": "El teu accés",
       "your-spaces": "Els teus espais"
+    },
+    "immich": {
+      "label": "Immich",
+      "description": "Tria fotos del teu servidor Immich mentre escrius. La teva clau d'API es queda en aquest servidor.",
+      "status-connected": "Connectat a {{url}}",
+      "status-not-connected": "No connectat",
+      "server-url": "Adreça del servidor",
+      "api-key": "Clau d'API",
+      "api-key-keep": "Deixa-ho buit per conservar la clau desada",
+      "api-key-help": "Crea'n una a Immich a Configuració del compte → Claus d'API. Permisos necessaris: asset.read, asset.view, asset.download, album.read, user.read.",
+      "connect": "Connecta",
+      "disconnect": "Desconnecta"
     }
   },
   "tooltip": {
@@ -1440,5 +1452,16 @@
     "back": "Enrere {{seconds}} segons",
     "forward": "Endavant {{seconds}} segons",
     "speed": "Velocitat de reproducció {{rate}}x"
+  },
+  "immich": {
+    "insert": "Fotos d'Immich",
+    "title": "Tria fotos d'Immich",
+    "album": "Àlbum",
+    "all-photos": "Totes les fotos",
+    "add-photos": "Afegeix fotos ({{count}})",
+    "load-more": "Carrega'n més",
+    "empty": "No hi ha fotos aquí.",
+    "not-connected": "Primer connecta el teu servidor Immich a Configuració.",
+    "add-failed": "No s'han pogut afegir algunes fotos."
   }
 }

@@ -1220,6 +1220,18 @@
       "you": "Vy",
       "your-access": "Váš prístup",
       "your-spaces": "Vaše priestory"
+    },
+    "immich": {
+      "label": "Immich",
+      "description": "Pri písaní vyberajte fotky zo svojho servera Immich. Váš kľúč API zostáva na tomto serveri.",
+      "status-connected": "Pripojené k {{url}}",
+      "status-not-connected": "Nepripojené",
+      "server-url": "Adresa servera",
+      "api-key": "Kľúč API",
+      "api-key-keep": "Nechajte prázdne, ak chcete ponechať uložený kľúč",
+      "api-key-help": "Vytvorte ho v Immichi v Nastaveniach účtu → Kľúče API. Potrebné oprávnenia: asset.read, asset.view, asset.download, album.read, user.read.",
+      "connect": "Pripojiť",
+      "disconnect": "Odpojiť"
     }
   },
   "tooltip": {
@@ -1441,5 +1453,16 @@
     "back": "Späť o {{seconds}} sekúnd",
     "forward": "Dopredu o {{seconds}} sekúnd",
     "speed": "Rýchlosť prehrávania {{rate}}x"
+  },
+  "immich": {
+    "insert": "Fotky z Immichu",
+    "title": "Vybrať fotky z Immichu",
+    "album": "Album",
+    "all-photos": "Všetky fotky",
+    "add-photos": "Pridať fotky ({{count}})",
+    "load-more": "Načítať ďalšie",
+    "empty": "Žiadne fotky.",
+    "not-connected": "Najprv v Nastaveniach pripojte svoj server Immich.",
+    "add-failed": "Niektoré fotky sa nepodarilo pridať."
   }
 }

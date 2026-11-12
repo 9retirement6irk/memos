@@ -1180,6 +1180,18 @@
       "you": "Ti",
       "your-access": "O teu acceso",
       "your-spaces": "Os teus espazos"
+    },
+    "immich": {
+      "label": "Immich",
+      "description": "Escolle fotos do teu servidor Immich mentres escribes. A túa chave de API queda neste servidor.",
+      "status-connected": "Conectado a {{url}}",
+      "status-not-connected": "Non conectado",
+      "server-url": "Enderezo do servidor",
+      "api-key": "Chave de API",
+      "api-key-keep": "Déixao baleiro para manter a chave gardada",
+      "api-key-help": "Crea unha en Immich en Configuración da conta → Chaves de API. Permisos necesarios: asset.read, asset.view, asset.download, album.read, user.read.",
+      "connect": "Conectar",
+      "disconnect": "Desconectar"
     }
   },
   "tooltip": {
@@ -1439,5 +1451,16 @@
     "back": "Retroceder {{seconds}} segundos",
     "forward": "Avanzar {{seconds}} segundos",
     "speed": "Velocidade de reprodución {{rate}}x"
+  },
+  "immich": {
+    "insert": "Fotos de Immich",
+    "title": "Escoller fotos de Immich",
+    "album": "Álbum",
+    "all-photos": "Todas as fotos",
+    "add-photos": "Engadir fotos ({{count}})",
+    "load-more": "Cargar máis",
+    "empty": "Non hai fotos aquí.",
+    "not-connected": "Primeiro conecta o teu servidor Immich en Configuración.",
+    "add-failed": "Non se puideron engadir algunhas fotos."
   }
 }

@@ -1180,6 +1180,18 @@
       "you": "Du",
       "your-access": "Din tilgang",
       "your-spaces": "Dine rom"
+    },
+    "immich": {
+      "label": "Immich",
+      "description": "Velg bilder fra Immich-serveren din mens du skriver. API-nøkkelen din blir på denne serveren.",
+      "status-connected": "Koblet til {{url}}",
+      "status-not-connected": "Ikke koblet til",
+      "server-url": "Serveradresse",
+      "api-key": "API-nøkkel",
+      "api-key-keep": "La feltet stå tomt for å beholde den lagrede nøkkelen",
+      "api-key-help": "Opprett en i Immich under Kontoinnstillinger → API-nøkler. Trenger: asset.read, asset.view, asset.download, album.read, user.read.",
+      "connect": "Koble til",
+      "disconnect": "Koble fra"
     }
   },
   "tooltip": {
@@ -1439,5 +1451,16 @@
     "back": "{{seconds}} sekunder tilbake",
     "forward": "{{seconds}} sekunder frem",
     "speed": "Avspillingshastighet {{rate}}x"
+  },
+  "immich": {
+    "insert": "Bilder fra Immich",
+    "title": "Velg bilder fra Immich",
+    "album": "Album",
+    "all-photos": "Alle bilder",
+    "add-photos": "Legg til bilder ({{count}})",
+    "load-more": "Last inn flere",
+    "empty": "Ingen bilder her.",
+    "not-connected": "Koble til Immich-serveren din under Innstillinger først.",
+    "add-failed": "Noen bilder kunne ikke legges til."
   }
 }

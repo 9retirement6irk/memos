@@ -1218,6 +1218,18 @@
       "you": "Dig",
       "your-access": "Din adgang",
       "your-spaces": "Dine rum"
+    },
+    "immich": {
+      "label": "Immich",
+      "description": "Vælg billeder fra din Immich-server, mens du skriver. Din API-nøgle bliver på denne server.",
+      "status-connected": "Forbundet til {{url}}",
+      "status-not-connected": "Ikke forbundet",
+      "server-url": "Serveradresse",
+      "api-key": "API-nøgle",
+      "api-key-keep": "Lad feltet være tomt for at beholde den gemte nøgle",
+      "api-key-help": "Opret en i Immich under Kontoindstillinger → API-nøgler. Kræver: asset.read, asset.view, asset.download, album.read, user.read.",
+      "connect": "Forbind",
+      "disconnect": "Afbryd forbindelse"
     }
   },
   "tooltip": {
@@ -1439,5 +1451,16 @@
     "back": "{{seconds}} sekunder tilbage",
     "forward": "{{seconds}} sekunder frem",
     "speed": "Afspilningshastighed {{rate}}x"
+  },
+  "immich": {
+    "insert": "Billeder fra Immich",
+    "title": "Vælg billeder fra Immich",
+    "album": "Album",
+    "all-photos": "Alle billeder",
+    "add-photos": "Tilføj billeder ({{count}})",
+    "load-more": "Indlæs flere",
+    "empty": "Ingen billeder her.",
+    "not-connected": "Forbind først din Immich-server under Indstillinger.",
+    "add-failed": "Nogle billeder kunne ikke tilføjes."
   }
 }

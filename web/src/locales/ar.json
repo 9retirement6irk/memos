@@ -1179,6 +1179,18 @@
       "last-updated": "آخر تحديث {{ago}}",
       "refresh": "تحديث",
       "load-error": "فشل تحميل الإحصائيات"
+    },
+    "immich": {
+      "label": "Immich",
+      "description": "اختر صورًا من خادم Immich الخاص بك أثناء الكتابة. يبقى مفتاح API على هذا الخادم.",
+      "status-connected": "متصل بـ {{url}}",
+      "status-not-connected": "غير متصل",
+      "server-url": "عنوان الخادم",
+      "api-key": "مفتاح API",
+      "api-key-keep": "اتركه فارغًا للإبقاء على المفتاح المحفوظ",
+      "api-key-help": "أنشئ مفتاحًا في Immich من إعدادات الحساب ← مفاتيح API. الأذونات المطلوبة: asset.read, asset.view, asset.download, album.read, user.read.",
+      "connect": "اتصال",
+      "disconnect": "قطع الاتصال"
     }
   },
   "tooltip": {
@@ -1443,5 +1455,16 @@
     "back": "الرجوع {{seconds}} ثوانٍ",
     "forward": "التقدم {{seconds}} ثوانٍ",
     "speed": "سرعة التشغيل {{rate}}x"
+  },
+  "immich": {
+    "insert": "صور من Immich",
+    "title": "اختيار صور من Immich",
+    "album": "الألبوم",
+    "all-photos": "كل الصور",
+    "add-photos": "إضافة صور ({{count}})",
+    "load-more": "تحميل المزيد",
+    "empty": "لا توجد صور هنا.",
+    "not-connected": "اربط خادم Immich من الإعدادات أولًا.",
+    "add-failed": "تعذّرت إضافة بعض الصور."
   }
 }

@@ -1182,6 +1182,18 @@
       "you": "Вы",
       "your-access": "Ваш доступ",
       "your-spaces": "Ваши пространства"
+    },
+    "immich": {
+      "label": "Immich",
+      "description": "Выбирайте фото со своего сервера Immich прямо во время написания. Ваш API-ключ остаётся на этом сервере.",
+      "status-connected": "Подключено к {{url}}",
+      "status-not-connected": "Не подключено",
+      "server-url": "Адрес сервера",
+      "api-key": "API-ключ",
+      "api-key-keep": "Оставьте пустым, чтобы сохранить текущий ключ",
+      "api-key-help": "Создайте его в Immich: Настройки аккаунта → API-ключи. Нужные права: asset.read, asset.view, asset.download, album.read, user.read.",
+      "connect": "Подключить",
+      "disconnect": "Отключить"
     }
   },
   "tooltip": {
@@ -1441,5 +1453,16 @@
     "back": "Назад на {{seconds}} секунд",
     "forward": "Вперёд на {{seconds}} секунд",
     "speed": "Скорость воспроизведения {{rate}}x"
+  },
+  "immich": {
+    "insert": "Фото из Immich",
+    "title": "Выбор фото из Immich",
+    "album": "Альбом",
+    "all-photos": "Все фото",
+    "add-photos": "Добавить фото ({{count}})",
+    "load-more": "Загрузить ещё",
+    "empty": "Здесь нет фото.",
+    "not-connected": "Сначала подключите сервер Immich в настройках.",
+    "add-failed": "Не удалось добавить некоторые фото."
   }
 }

@@ -1175,6 +1175,18 @@
       "last-updated": "Cập nhật lần cuối {{ago}}",
       "refresh": "Làm mới",
       "load-error": "Không thể tải số liệu thống kê"
+    },
+    "immich": {
+      "label": "Immich",
+      "description": "Chọn ảnh từ máy chủ Immich của bạn khi đang viết. Khóa API của bạn được giữ trên máy chủ này.",
+      "status-connected": "Đã kết nối với {{url}}",
+      "status-not-connected": "Chưa kết nối",
+      "server-url": "Địa chỉ máy chủ",
+      "api-key": "Khóa API",
+      "api-key-keep": "Để trống để giữ khóa đã lưu",
+      "api-key-help": "Tạo khóa trong Immich tại Cài đặt tài khoản → Khóa API. Quyền cần có: asset.read, asset.view, asset.download, album.read, user.read.",
+      "connect": "Kết nối",
+      "disconnect": "Ngắt kết nối"
     }
   },
   "tooltip": {
@@ -1439,5 +1451,16 @@
     "back": "Lùi {{seconds}} giây",
     "forward": "Tiến {{seconds}} giây",
     "speed": "Tốc độ phát {{rate}}x"
+  },
+  "immich": {
+    "insert": "Ảnh từ Immich",
+    "title": "Chọn ảnh từ Immich",
+    "album": "Album",
+    "all-photos": "Tất cả ảnh",
+    "add-photos": "Thêm ảnh ({{count}})",
+    "load-more": "Tải thêm",
+    "empty": "Không có ảnh nào ở đây.",
+    "not-connected": "Hãy kết nối máy chủ Immich của bạn trong Cài đặt trước.",
+    "add-failed": "Không thể thêm một số ảnh."
   }
 }
