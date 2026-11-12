@@ -1,5 +1,5 @@
 # Builds a Docker image of this fork and pushes it to
-# ghcr.io/<your-account>/memos. Lives in its own file so syncing the fork
+# ghcr.io/<owner>/<repo>. Lives in its own file so syncing the fork
 # with upstream never conflicts with it.
 name: Fork Image
 
@@ -37,7 +37,8 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/${{ github.repository_owner }}/memos
+          # Named after this repository, so it never shares a package with another copy of memos.
+          images: ghcr.io/${{ github.repository }}
           flavor: latest=false
           tags: |
             type=ref,event=branch
