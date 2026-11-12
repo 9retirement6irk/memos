@@ -342,8 +342,9 @@ func (c *Client) Tracks(ctx context.Context, start, end time.Time) ([]Track, err
 				Path:     path,
 			})
 		}
-		totalPages, err := strconv.Atoi(header.Get("X-Total-Pages"))
-		if err != nil || page >= totalPages {
+		// Without a page count, the first page is all there is.
+		totalPages, parseErr := strconv.Atoi(header.Get("X-Total-Pages"))
+		if parseErr != nil || page >= totalPages {
 			break
 		}
 	}
