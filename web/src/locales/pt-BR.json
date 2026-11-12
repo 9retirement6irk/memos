@@ -1191,6 +1191,11 @@
     },
     "journal": {
       "label": "Diário"
+    },
+    "dawarich": {
+      "api-key-help": "Encontre-a no Dawarich em Account › API access.",
+      "label": "Dawarich",
+      "description": "Seu próprio histórico de localização, para lugares do diário e imagens de trajeto em qualquer memo. Sua chave de API fica neste servidor."
     }
   },
   "tooltip": {
@@ -1588,8 +1593,6 @@
       "goals-description": "Marcadas em cada entrada e salvas como checklist.",
       "add-goal": "Nova meta",
       "remove": "Remover {{name}}",
-      "dawarich-description": "Seu próprio histórico de localização, para o lugar e o trajeto de uma entrada. Sua chave de API fica neste servidor.",
-      "dawarich-key-help": "Encontre-a no Dawarich em Account › API access.",
       "reminder-title": "Lembrete de sequência",
       "reminder-description": "Enviado ao seu celular pelo seu Home Assistant quando você não escreveu.",
       "reminder-enabled": "Enviar lembretes",
@@ -1608,6 +1611,20 @@
       "reminder-saved": "Lembrete salvo",
       "test": "Enviar um teste",
       "test-sent": "Teste enviado"
+    }
+  },
+  "dawarich": {
+    "route": {
+      "insert": "Trajeto do Dawarich",
+      "title": "Adicionar um trajeto do Dawarich",
+      "day": "Dia",
+      "which": "Qual trajeto",
+      "whole-day": "O dia inteiro",
+      "empty": "O Dawarich não tem trajeto para este dia.",
+      "map": "Mostrar o mapa por baixo",
+      "map-description": "O mapa vem do OpenStreetMap, que vê a área mostrada.",
+      "add": "Adicionar imagem",
+      "preview": "Prévia da imagem do trajeto"
     }
   }
 }

@@ -8,7 +8,7 @@ nothing from `store`, `core`, `server`, `provider`, `markdown`, `filter`, or
 | Package | Purpose |
 | --- | --- |
 | `clientip/` | trusted-proxy aware client IP resolution middleware |
-| `dawarich/` | read-only client for a Dawarich location history: points and visits, position and time only |
+| `dawarich/` | read-only client for a Dawarich location history: points, visits and tracks (journeys with their line, times, distance and travel mode); never Wi-Fi or device details |
 | `email/` | SMTP client, config, and message types |
 | `homeassistant/` | Home Assistant client: token check, notify services, notifications with a tap link |
 | `httphandler/` | HTTP response errors, panic recovery, and routing compatibility |

@@ -1190,6 +1190,11 @@
     },
     "journal": {
       "label": "Jurnal"
+    },
+    "dawarich": {
+      "api-key-help": "Temukan di Dawarich di Account › API access.",
+      "label": "Dawarich",
+      "description": "Riwayat lokasimu sendiri, untuk tempat di jurnal dan gambar rute di memo mana pun. Kunci API-mu tetap di server ini."
     }
   },
   "tooltip": {
@@ -1587,8 +1592,6 @@
       "goals-description": "Dicentang di setiap entri dan disimpan sebagai daftar periksa.",
       "add-goal": "Target baru",
       "remove": "Hapus {{name}}",
-      "dawarich-description": "Riwayat lokasimu sendiri, untuk tempat dan rute entri. Kunci API-mu tetap di server ini.",
-      "dawarich-key-help": "Temukan di Dawarich di Account › API access.",
       "reminder-title": "Pengingat beruntun",
       "reminder-description": "Dikirim ke ponselmu oleh Home Assistant saat kamu belum menulis.",
       "reminder-enabled": "Kirim pengingat",
@@ -1607,6 +1610,20 @@
       "reminder-saved": "Pengingat disimpan",
       "test": "Kirim uji coba",
       "test-sent": "Uji coba terkirim"
+    }
+  },
+  "dawarich": {
+    "route": {
+      "insert": "Rute dari Dawarich",
+      "title": "Tambahkan rute dari Dawarich",
+      "day": "Hari",
+      "which": "Rute mana",
+      "whole-day": "Sepanjang hari",
+      "empty": "Dawarich tidak punya rute untuk hari ini.",
+      "map": "Tampilkan peta di bawahnya",
+      "map-description": "Peta berasal dari OpenStreetMap, yang melihat area yang ditampilkan.",
+      "add": "Tambahkan gambar",
+      "preview": "Pratinjau gambar rute"
     }
   }
 }

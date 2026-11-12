@@ -1195,6 +1195,11 @@
     },
     "journal": {
       "label": "ジャーナル"
+    },
+    "dawarich": {
+      "api-key-help": "Dawarich の Account › API access にあります。",
+      "label": "Dawarich",
+      "description": "ジャーナルの場所や、どのメモにも使える経路画像のための、あなた自身の位置履歴。API キーはこのサーバーに保存されます。"
     }
   },
   "tooltip": {
@@ -1587,8 +1592,6 @@
       "goals-description": "各エントリーでチェックし、チェックリストとして保存します。",
       "add-goal": "新しい目標",
       "remove": "{{name}} を削除",
-      "dawarich-description": "エントリーの場所と経路に使う、あなた自身の位置履歴。API キーはこのサーバーに保存されます。",
-      "dawarich-key-help": "Dawarich の Account › API access にあります。",
       "reminder-title": "連続記録のリマインダー",
       "reminder-description": "まだ書いていないとき、Home Assistant からスマートフォンに送られます。",
       "reminder-enabled": "リマインダーを送る",
@@ -1607,6 +1610,20 @@
       "reminder-saved": "リマインダーを保存しました",
       "test": "テストを送信",
       "test-sent": "テストを送信しました"
+    }
+  },
+  "dawarich": {
+    "route": {
+      "insert": "Dawarich の経路",
+      "title": "Dawarich から経路を追加",
+      "day": "日付",
+      "which": "どの経路",
+      "whole-day": "一日全体",
+      "empty": "この日の経路は Dawarich にありません。",
+      "map": "下に地図を表示",
+      "map-description": "地図は OpenStreetMap から取得し、表示範囲が OpenStreetMap に伝わります。",
+      "add": "画像を追加",
+      "preview": "経路画像のプレビュー"
     }
   }
 }

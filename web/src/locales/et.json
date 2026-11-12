@@ -1233,6 +1233,11 @@
     },
     "journal": {
       "label": "Päevik"
+    },
+    "dawarich": {
+      "api-key-help": "Leiad selle Dawarichist jaotisest Account › API access.",
+      "label": "Dawarich",
+      "description": "Sinu enda asukohaajalugu, päeviku kohtade ja marsruudipiltide jaoks igas märkmes. Sinu API-võti jääb sellesse serverisse."
     }
   },
   "tooltip": {
@@ -1587,8 +1592,6 @@
       "goals-description": "Märgitakse igas sissekandes ja salvestatakse kontrollnimekirjana.",
       "add-goal": "Uus eesmärk",
       "remove": "Eemalda {{name}}",
-      "dawarich-description": "Sinu enda asukohaajalugu, sissekande koha ja marsruudi jaoks. Sinu API-võti jääb sellesse serverisse.",
-      "dawarich-key-help": "Leiad selle Dawarichist jaotisest Account › API access.",
       "reminder-title": "Seeria meeldetuletus",
       "reminder-description": "Sinu Home Assistant saadab selle telefoni, kui sa pole kirjutanud.",
       "reminder-enabled": "Saada meeldetuletusi",
@@ -1607,6 +1610,20 @@
       "reminder-saved": "Meeldetuletus salvestatud",
       "test": "Saada test",
       "test-sent": "Test saadetud"
+    }
+  },
+  "dawarich": {
+    "route": {
+      "insert": "Marsruut Dawarichist",
+      "title": "Lisa marsruut Dawarichist",
+      "day": "Päev",
+      "which": "Milline marsruut",
+      "whole-day": "Kogu päev",
+      "empty": "Dawarichil pole selle päeva kohta marsruuti.",
+      "map": "Näita kaarti all",
+      "map-description": "Kaart tuleb OpenStreetMapist, mis näeb näidatud ala.",
+      "add": "Lisa pilt",
+      "preview": "Marsruudipildi eelvaade"
     }
   }
 }

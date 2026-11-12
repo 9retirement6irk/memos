@@ -4,13 +4,13 @@ import { Button } from "@usememos/ui";
 import { ImagesIcon } from "lucide-react";
 import { useState } from "react";
 import useCurrentUser from "@/hooks/useCurrentUser";
+import { useDawarichConnection } from "@/hooks/useDawarichQueries";
 import { useImmichConnection } from "@/hooks/useImmichQueries";
-import { useDawarichConnection } from "@/hooks/useJournalQueries";
+import { getRoute, placeAt, routeMapTiles } from "@/lib/dawarich";
 import { fetchImmichOriginal, immichThumbnailUrl, listImmichPhotosTaken } from "@/lib/immich";
-import { getRoute, placeAt } from "@/lib/journal/dawarich";
-import { drawRouteImage, formatDistance } from "@/lib/journal/route";
 import { groupPhotos, type PhotoSuggestion, spreadPick } from "@/lib/journal/suggestions";
 import { placeName } from "@/lib/journal/weather";
+import { drawRouteImage, formatDistance } from "@/lib/routeImage";
 import { showErrorToast } from "@/lib/toast";
 import { LocationSchema } from "@/types/proto/api/memo_service_pb";
 import { useTranslate } from "@/utils/i18n";
@@ -121,7 +121,12 @@ export const JournalSuggestions = ({ journal, onAttachFiles }: { journal: Journa
         const image = route
           ? await drawRouteImage(
               route.points,
-              { width: 640, height: 400, caption: formatDistance(route.distanceMeters, settings.temperatureUnit) },
+              {
+                width: 640,
+                height: 400,
+                caption: formatDistance(route.distanceMeters, settings.temperatureUnit),
+                mapTiles: routeMapTiles(),
+              },
               `route-${suggestion.start.toISOString().slice(0, 10)}.png`,
             )
           : undefined;

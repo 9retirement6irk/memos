@@ -1226,6 +1226,11 @@
     },
     "journal": {
       "label": "日记"
+    },
+    "dawarich": {
+      "api-key-help": "在 Dawarich 的 Account › API access 中可以找到。",
+      "label": "Dawarich",
+      "description": "你自己的位置历史，用于日记地点和任意备忘录中的路线图片。你的 API 密钥保存在此服务器上。"
     }
   },
   "tooltip": {
@@ -1587,8 +1592,6 @@
       "goals-description": "在每个条目中勾选，并保存为清单。",
       "add-goal": "新目标",
       "remove": "移除 {{name}}",
-      "dawarich-description": "你自己的位置历史，用于条目的地点和路线。你的 API 密钥保存在此服务器上。",
-      "dawarich-key-help": "在 Dawarich 的 Account › API access 中可以找到。",
       "reminder-title": "连续记录提醒",
       "reminder-description": "你还没写时，由你的 Home Assistant 发送到手机。",
       "reminder-enabled": "发送提醒",
@@ -1607,6 +1610,20 @@
       "reminder-saved": "提醒已保存",
       "test": "发送测试",
       "test-sent": "测试已发送"
+    }
+  },
+  "dawarich": {
+    "route": {
+      "insert": "来自 Dawarich 的路线",
+      "title": "从 Dawarich 添加路线",
+      "day": "日期",
+      "which": "哪条路线",
+      "whole-day": "一整天",
+      "empty": "Dawarich 中没有这一天的路线。",
+      "map": "在下方显示地图",
+      "map-description": "地图来自 OpenStreetMap，它会知道所显示的区域。",
+      "add": "添加图片",
+      "preview": "路线图片预览"
     }
   }
 }

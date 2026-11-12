@@ -13,6 +13,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"slices"
 	"strconv"
 	"strings"
 	"time"
@@ -271,6 +272,120 @@ func (c *Client) Visits(ctx context.Context, start, end time.Time) ([]Visit, err
 		visits = append(visits, item)
 	}
 	return visits, nil
+}
+
+// Track is one journey Dawarich cut from the points: a line with its times,
+// length and the way the user mostly travelled.
+type Track struct {
+	ID       int64
+	Start    time.Time
+	End      time.Time
+	Distance float64 // meters
+	Mode     string  // like "walking" or "driving"; empty when unknown
+	Path     []Point // the line, oldest first; Time is zero
+}
+
+type rawTrackCollection struct {
+	Features []struct {
+		Geometry struct {
+			Type        string          `json:"type"`
+			Coordinates json.RawMessage `json:"coordinates"`
+		} `json:"geometry"`
+		Properties struct {
+			ID           flexFloat `json:"id"`
+			StartAt      string    `json:"start_at"`
+			EndAt        string    `json:"end_at"`
+			Distance     flexFloat `json:"distance"`
+			DominantMode string    `json:"dominant_mode"`
+		} `json:"properties"`
+	} `json:"features"`
+}
+
+// trackPageSize keeps one page of tracks, each with its whole line, small.
+const trackPageSize = 100
+
+// Tracks returns the journeys that overlap start..end, oldest first. Servers
+// from before tracks had an API answer with a *safehttp.StatusError of 404.
+func (c *Client) Tracks(ctx context.Context, start, end time.Time) ([]Track, error) {
+	if !end.After(start) {
+		return nil, errors.New("dawarich: the time range is empty")
+	}
+	tracks := []Track{}
+	for page := 1; page <= maxPages; page++ {
+		query := url.Values{}
+		query.Set("start_at", start.UTC().Format(time.RFC3339))
+		query.Set("end_at", end.UTC().Format(time.RFC3339))
+		query.Set("per_page", strconv.Itoa(trackPageSize))
+		query.Set("page", strconv.Itoa(page))
+		raw := rawTrackCollection{}
+		header, err := c.getJSON(ctx, "/tracks", query, &raw)
+		if err != nil {
+			return nil, err
+		}
+		for _, feature := range raw.Features {
+			startedAt, errStart := time.Parse(time.RFC3339, feature.Properties.StartAt)
+			endedAt, errEnd := time.Parse(time.RFC3339, feature.Properties.EndAt)
+			path := linePoints(feature.Geometry.Type, feature.Geometry.Coordinates)
+			if errStart != nil || errEnd != nil || len(path) < 2 {
+				continue
+			}
+			mode := feature.Properties.DominantMode
+			if mode == "unknown" {
+				mode = ""
+			}
+			tracks = append(tracks, Track{
+				ID:       int64(feature.Properties.ID.value),
+				Start:    startedAt.UTC(),
+				End:      endedAt.UTC(),
+				Distance: feature.Properties.Distance.value,
+				Mode:     mode,
+				Path:     path,
+			})
+		}
+		if lastPage(header, page) {
+			break
+		}
+	}
+	// Dawarich lists the newest first.
+	slices.SortFunc(tracks, func(a, b Track) int { return a.Start.Compare(b.Start) })
+	return tracks, nil
+}
+
+// lastPage reports whether page is the last one; without a page count, the
+// first page is all there is.
+func lastPage(header http.Header, page int) bool {
+	totalPages, err := strconv.Atoi(header.Get("X-Total-Pages"))
+	return err != nil || page >= totalPages
+}
+
+// linePoints reads a GeoJSON LineString or MultiLineString, whose positions
+// are [longitude, latitude, ...].
+func linePoints(kind string, coordinates json.RawMessage) []Point {
+	var lines [][][]float64
+	switch kind {
+	case "LineString":
+		var line [][]float64
+		if json.Unmarshal(coordinates, &line) != nil {
+			return nil
+		}
+		lines = [][][]float64{line}
+	case "MultiLineString":
+		if json.Unmarshal(coordinates, &lines) != nil {
+			return nil
+		}
+	default:
+		return nil
+	}
+	points := []Point{}
+	for _, line := range lines {
+		for _, position := range line {
+			if len(position) < 2 {
+				continue
+			}
+			points = append(points, Point{Latitude: position[1], Longitude: position[0]})
+		}
+	}
+	return points
 }
 
 // flexFloat reads a number Dawarich may send as a JSON number or a string.

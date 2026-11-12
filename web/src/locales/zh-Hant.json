@@ -1274,6 +1274,11 @@
     },
     "journal": {
       "label": "日記"
+    },
+    "dawarich": {
+      "api-key-help": "可在 Dawarich 的 Account › API access 中找到。",
+      "label": "Dawarich",
+      "description": "你自己的位置紀錄，用於日記地點和任何備忘錄中的路線圖片。你的 API 金鑰保存在此伺服器上。"
     }
   },
   "space": {
@@ -1587,8 +1592,6 @@
       "goals-description": "在每個項目中勾選，並儲存為檢查清單。",
       "add-goal": "新目標",
       "remove": "移除 {{name}}",
-      "dawarich-description": "你自己的位置紀錄，用於項目的地點和路線。你的 API 金鑰保存在此伺服器上。",
-      "dawarich-key-help": "可在 Dawarich 的 Account › API access 中找到。",
       "reminder-title": "連續紀錄提醒",
       "reminder-description": "你還沒寫時，由你的 Home Assistant 傳送到手機。",
       "reminder-enabled": "傳送提醒",
@@ -1607,6 +1610,20 @@
       "reminder-saved": "提醒已儲存",
       "test": "傳送測試",
       "test-sent": "測試已傳送"
+    }
+  },
+  "dawarich": {
+    "route": {
+      "insert": "來自 Dawarich 的路線",
+      "title": "從 Dawarich 加入路線",
+      "day": "日期",
+      "which": "哪條路線",
+      "whole-day": "一整天",
+      "empty": "Dawarich 中沒有這一天的路線。",
+      "map": "在下方顯示地圖",
+      "map-description": "地圖來自 OpenStreetMap，它會知道所顯示的區域。",
+      "add": "加入圖片",
+      "preview": "路線圖片預覽"
     }
   }
 }

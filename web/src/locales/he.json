@@ -1266,6 +1266,11 @@
     },
     "journal": {
       "label": "יומן"
+    },
+    "dawarich": {
+      "api-key-help": "תמצאו אותו ב־Dawarich תחת Account › API access.",
+      "label": "Dawarich",
+      "description": "היסטוריית המיקומים שלכם, למקומות ביומן ולתמונות מסלול בכל פתק. מפתח ה־API נשאר בשרת הזה."
     }
   },
   "tooltip": {
@@ -1587,8 +1592,6 @@
       "goals-description": "מסומנים בכל רשומה ונשמרים כרשימת משימות.",
       "add-goal": "יעד חדש",
       "remove": "הסרת {{name}}",
-      "dawarich-description": "היסטוריית המיקומים שלכם, למקום ולמסלול של רשומה. מפתח ה־API נשאר בשרת הזה.",
-      "dawarich-key-help": "תמצאו אותו ב־Dawarich תחת Account › API access.",
       "reminder-title": "תזכורת רצף",
       "reminder-description": "נשלחת לטלפון שלכם על ידי Home Assistant כשעוד לא כתבתם.",
       "reminder-enabled": "לשלוח תזכורות",
@@ -1607,6 +1610,20 @@
       "reminder-saved": "התזכורת נשמרה",
       "test": "שליחת בדיקה",
       "test-sent": "הבדיקה נשלחה"
+    }
+  },
+  "dawarich": {
+    "route": {
+      "insert": "מסלול מ־Dawarich",
+      "title": "הוספת מסלול מ־Dawarich",
+      "day": "יום",
+      "which": "איזה מסלול",
+      "whole-day": "כל היום",
+      "empty": "אין ב־Dawarich מסלול ליום הזה.",
+      "map": "להציג מפה מתחת",
+      "map-description": "המפה מגיעה מ־OpenStreetMap, שרואה את האזור המוצג.",
+      "add": "הוספת תמונה",
+      "preview": "תצוגה מקדימה של תמונת המסלול"
     }
   }
 }

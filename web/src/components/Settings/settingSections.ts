@@ -14,6 +14,7 @@ import {
   type LucideIcon,
   MailIcon,
   NotebookPenIcon,
+  RouteIcon,
   Settings2Icon,
   SquarePenIcon,
   TagsIcon,
@@ -25,6 +26,7 @@ import { type ComponentType } from "react";
 import AccessTokenSection from "@/components/Settings/AccessTokenSection";
 import AISection from "@/components/Settings/AISection";
 import ConfigurationSection from "@/components/Settings/ConfigurationSection";
+import DawarichSection from "@/components/Settings/DawarichSection";
 import EditorSection from "@/components/Settings/EditorSection";
 import ImmichSection from "@/components/Settings/ImmichSection";
 import InstanceSection from "@/components/Settings/InstanceSection";
@@ -53,6 +55,7 @@ export type SettingSectionKey =
   | "editor"
   | "webhook"
   | "immich"
+  | "dawarich"
   | "journal"
   | "member"
   | "system"
@@ -126,6 +129,13 @@ export const SETTINGS_SECTIONS: SettingSectionDefinition[] = [
     labelKey: "setting.immich.label",
     icon: ImagesIcon,
     component: ImmichSection,
+  },
+  {
+    key: "dawarich",
+    scope: "basic",
+    labelKey: "setting.dawarich.label",
+    icon: RouteIcon,
+    component: DawarichSection,
   },
   {
     key: "journal",

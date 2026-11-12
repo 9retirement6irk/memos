@@ -1196,6 +1196,11 @@
     },
     "journal": {
       "label": "Dnevnik"
+    },
+    "dawarich": {
+      "api-key-help": "Naći ćeš ga u Dawarichu pod Account › API access.",
+      "label": "Dawarich",
+      "description": "Tvoja vlastita povijest lokacija, za mjesta u dnevniku i slike ruta u bilo kojoj bilješci. Tvoj API ključ ostaje na ovom poslužitelju."
     }
   },
   "tooltip": {
@@ -1588,8 +1593,6 @@
       "goals-description": "Označavaju se u svakom unosu i spremaju kao popis za provjeru.",
       "add-goal": "Novi cilj",
       "remove": "Ukloni {{name}}",
-      "dawarich-description": "Tvoja vlastita povijest lokacija, za mjesto i rutu unosa. Tvoj API ključ ostaje na ovom poslužitelju.",
-      "dawarich-key-help": "Naći ćeš ga u Dawarichu pod Account › API access.",
       "reminder-title": "Podsjetnik za niz",
       "reminder-description": "Šalje ga tvoj Home Assistant na mobitel kad još nisi pisao.",
       "reminder-enabled": "Šalji podsjetnike",
@@ -1608,6 +1611,20 @@
       "reminder-saved": "Podsjetnik spremljen",
       "test": "Pošalji test",
       "test-sent": "Test poslan"
+    }
+  },
+  "dawarich": {
+    "route": {
+      "insert": "Ruta iz Dawaricha",
+      "title": "Dodaj rutu iz Dawaricha",
+      "day": "Dan",
+      "which": "Koja ruta",
+      "whole-day": "Cijeli dan",
+      "empty": "Dawarich nema rutu za taj dan.",
+      "map": "Prikaži kartu ispod",
+      "map-description": "Karta dolazi s OpenStreetMapa, koji vidi prikazano područje.",
+      "add": "Dodaj sliku",
+      "preview": "Pregled slike rute"
     }
   }
 }

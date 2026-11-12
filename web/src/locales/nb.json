@@ -1195,6 +1195,11 @@
     },
     "journal": {
       "label": "Dagbok"
+    },
+    "dawarich": {
+      "api-key-help": "Du finner den i Dawarich under Account › API access.",
+      "label": "Dawarich",
+      "description": "Din egen posisjonshistorikk, for steder i dagboken og rutebilder i alle notater. API-nøkkelen din blir på denne serveren."
     }
   },
   "tooltip": {
@@ -1587,8 +1592,6 @@
       "goals-description": "Krysses av i hvert innlegg og lagres som sjekkliste.",
       "add-goal": "Nytt mål",
       "remove": "Fjern {{name}}",
-      "dawarich-description": "Din egen posisjonshistorikk, for et innleggs sted og rute. API-nøkkelen din blir på denne serveren.",
-      "dawarich-key-help": "Du finner den i Dawarich under Account › API access.",
       "reminder-title": "Påminnelse om rekke",
       "reminder-description": "Sendes til telefonen din av Home Assistant når du ikke har skrevet.",
       "reminder-enabled": "Send påminnelser",
@@ -1607,6 +1610,20 @@
       "reminder-saved": "Påminnelse lagret",
       "test": "Send en test",
       "test-sent": "Test sendt"
+    }
+  },
+  "dawarich": {
+    "route": {
+      "insert": "Rute fra Dawarich",
+      "title": "Legg til en rute fra Dawarich",
+      "day": "Dag",
+      "which": "Hvilken rute",
+      "whole-day": "Hele dagen",
+      "empty": "Dawarich har ingen rute for denne dagen.",
+      "map": "Vis kartet under",
+      "map-description": "Kartet kommer fra OpenStreetMap, som ser området som vises.",
+      "add": "Legg til bilde",
+      "preview": "Forhåndsvisning av rutebildet"
     }
   }
 }

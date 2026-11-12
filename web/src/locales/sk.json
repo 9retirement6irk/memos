@@ -1235,6 +1235,11 @@
     },
     "journal": {
       "label": "Denník"
+    },
+    "dawarich": {
+      "api-key-help": "Nájdeš ho v Dawarich v Account › API access.",
+      "label": "Dawarich",
+      "description": "Tvoja vlastná história polohy, pre miesta v denníku a obrázky trás v akejkoľvek poznámke. Tvoj kľúč API zostáva na tomto serveri."
     }
   },
   "tooltip": {
@@ -1589,8 +1594,6 @@
       "goals-description": "Odškrtávajú sa v každom zázname a ukladajú sa ako kontrolný zoznam.",
       "add-goal": "Nový cieľ",
       "remove": "Odstrániť {{name}}",
-      "dawarich-description": "Tvoja vlastná história polohy, pre miesto a trasu záznamu. Tvoj kľúč API zostáva na tomto serveri.",
-      "dawarich-key-help": "Nájdeš ho v Dawarich v Account › API access.",
       "reminder-title": "Pripomienka série",
       "reminder-description": "Posiela ju tvoj Home Assistant do telefónu, keď si ešte nepísal.",
       "reminder-enabled": "Posielať pripomienky",
@@ -1609,6 +1612,20 @@
       "reminder-saved": "Pripomienka uložená",
       "test": "Poslať test",
       "test-sent": "Test odoslaný"
+    }
+  },
+  "dawarich": {
+    "route": {
+      "insert": "Trasa z Dawarich",
+      "title": "Pridať trasu z Dawarich",
+      "day": "Deň",
+      "which": "Ktorá trasa",
+      "whole-day": "Celý deň",
+      "empty": "Dawarich pre tento deň nemá žiadnu trasu.",
+      "map": "Zobraziť mapu pod trasou",
+      "map-description": "Mapa pochádza z OpenStreetMap, ktorý vidí zobrazenú oblasť.",
+      "add": "Pridať obrázok",
+      "preview": "Náhľad obrázka trasy"
     }
   }
 }

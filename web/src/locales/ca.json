@@ -1196,6 +1196,11 @@
     },
     "journal": {
       "label": "Diari"
+    },
+    "dawarich": {
+      "api-key-help": "La trobaràs a Dawarich a Account › API access.",
+      "label": "Dawarich",
+      "description": "El teu propi historial d’ubicacions, per als llocs del diari i les imatges de recorreguts en qualsevol nota. La teva clau d’API es queda en aquest servidor."
     }
   },
   "tooltip": {
@@ -1588,8 +1593,6 @@
       "goals-description": "Es marquen a cada entrada i es desen com a llista de verificació.",
       "add-goal": "Objectiu nou",
       "remove": "Treu {{name}}",
-      "dawarich-description": "El teu propi historial d’ubicacions, per al lloc i el recorregut d’una entrada. La teva clau d’API es queda en aquest servidor.",
-      "dawarich-key-help": "La trobaràs a Dawarich a Account › API access.",
       "reminder-title": "Recordatori de ratxa",
       "reminder-description": "El teu Home Assistant l’envia al mòbil quan no has escrit.",
       "reminder-enabled": "Envia recordatoris",
@@ -1608,6 +1611,20 @@
       "reminder-saved": "Recordatori desat",
       "test": "Envia una prova",
       "test-sent": "Prova enviada"
+    }
+  },
+  "dawarich": {
+    "route": {
+      "insert": "Recorregut de Dawarich",
+      "title": "Afegeix un recorregut de Dawarich",
+      "day": "Dia",
+      "which": "Quin recorregut",
+      "whole-day": "Tot el dia",
+      "empty": "Dawarich no té cap recorregut per a aquest dia.",
+      "map": "Mostra el mapa a sota",
+      "map-description": "El mapa ve d’OpenStreetMap, que veu la zona mostrada.",
+      "add": "Afegeix la imatge",
+      "preview": "Previsualització de la imatge del recorregut"
     }
   }
 }

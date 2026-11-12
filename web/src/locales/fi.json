@@ -1233,6 +1233,11 @@
     },
     "journal": {
       "label": "Päiväkirja"
+    },
+    "dawarich": {
+      "api-key-help": "Löydät sen Dawarichista kohdasta Account › API access.",
+      "label": "Dawarich",
+      "description": "Oma sijaintihistoriasi päiväkirjan paikkoja ja minkä tahansa muistion reittikuvia varten. API-avaimesi pysyy tällä palvelimella."
     }
   },
   "tooltip": {
@@ -1587,8 +1592,6 @@
       "goals-description": "Rastitaan jokaisessa merkinnässä ja tallennetaan tarkistuslistana.",
       "add-goal": "Uusi tavoite",
       "remove": "Poista {{name}}",
-      "dawarich-description": "Oma sijaintihistoriasi merkinnän paikkaa ja reittiä varten. API-avaimesi pysyy tällä palvelimella.",
-      "dawarich-key-help": "Löydät sen Dawarichista kohdasta Account › API access.",
       "reminder-title": "Putkimuistutus",
       "reminder-description": "Home Assistant lähettää sen puhelimeesi, kun et ole kirjoittanut.",
       "reminder-enabled": "Lähetä muistutuksia",
@@ -1607,6 +1610,20 @@
       "reminder-saved": "Muistutus tallennettu",
       "test": "Lähetä testi",
       "test-sent": "Testi lähetetty"
+    }
+  },
+  "dawarich": {
+    "route": {
+      "insert": "Reitti Dawarichista",
+      "title": "Lisää reitti Dawarichista",
+      "day": "Päivä",
+      "which": "Mikä reitti",
+      "whole-day": "Koko päivä",
+      "empty": "Dawarichilla ei ole reittiä tälle päivälle.",
+      "map": "Näytä kartta alla",
+      "map-description": "Kartta tulee OpenStreetMapista, joka näkee näytetyn alueen.",
+      "add": "Lisää kuva",
+      "preview": "Reittikuvan esikatselu"
     }
   }
 }

@@ -1195,6 +1195,11 @@
     },
     "journal": {
       "label": "Diario"
+    },
+    "dawarich": {
+      "api-key-help": "Atoparala en Dawarich en Account › API access.",
+      "label": "Dawarich",
+      "description": "O teu propio historial de localizacións, para os lugares do diario e as imaxes de rutas en calquera nota. A túa chave de API queda neste servidor."
     }
   },
   "tooltip": {
@@ -1587,8 +1592,6 @@
       "goals-description": "Márcanse en cada entrada e gárdanse como lista de verificación.",
       "add-goal": "Nova meta",
       "remove": "Quitar {{name}}",
-      "dawarich-description": "O teu propio historial de localizacións, para o lugar e a ruta dunha entrada. A túa chave de API queda neste servidor.",
-      "dawarich-key-help": "Atoparala en Dawarich en Account › API access.",
       "reminder-title": "Lembrete de racha",
       "reminder-description": "O teu Home Assistant envíao ao teu móbil cando non escribiches.",
       "reminder-enabled": "Enviar lembretes",
@@ -1607,6 +1610,20 @@
       "reminder-saved": "Lembrete gardado",
       "test": "Enviar unha proba",
       "test-sent": "Proba enviada"
+    }
+  },
+  "dawarich": {
+    "route": {
+      "insert": "Ruta de Dawarich",
+      "title": "Engadir unha ruta de Dawarich",
+      "day": "Día",
+      "which": "Que ruta",
+      "whole-day": "Todo o día",
+      "empty": "Dawarich non ten ningunha ruta para este día.",
+      "map": "Amosar o mapa debaixo",
+      "map-description": "O mapa vén de OpenStreetMap, que ve a zona amosada.",
+      "add": "Engadir imaxe",
+      "preview": "Vista previa da imaxe da ruta"
     }
   }
 }

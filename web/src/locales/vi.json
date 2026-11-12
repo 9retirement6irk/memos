@@ -1190,6 +1190,11 @@
     },
     "journal": {
       "label": "Nhật ký"
+    },
+    "dawarich": {
+      "api-key-help": "Bạn sẽ thấy nó trong Dawarich tại Account › API access.",
+      "label": "Dawarich",
+      "description": "Lịch sử vị trí của riêng bạn, cho địa điểm trong nhật ký và ảnh lộ trình trong mọi ghi chú. Khóa API của bạn ở lại trên máy chủ này."
     }
   },
   "tooltip": {
@@ -1587,8 +1592,6 @@
       "goals-description": "Được đánh dấu trong mỗi mục và lưu thành danh sách kiểm tra.",
       "add-goal": "Mục tiêu mới",
       "remove": "Xóa {{name}}",
-      "dawarich-description": "Lịch sử vị trí của riêng bạn, cho địa điểm và lộ trình của mục. Khóa API của bạn ở lại trên máy chủ này.",
-      "dawarich-key-help": "Bạn sẽ thấy nó trong Dawarich tại Account › API access.",
       "reminder-title": "Lời nhắc giữ chuỗi",
       "reminder-description": "Home Assistant gửi đến điện thoại khi bạn chưa viết.",
       "reminder-enabled": "Gửi lời nhắc",
@@ -1607,6 +1610,20 @@
       "reminder-saved": "Đã lưu lời nhắc",
       "test": "Gửi thử",
       "test-sent": "Đã gửi thử"
+    }
+  },
+  "dawarich": {
+    "route": {
+      "insert": "Lộ trình từ Dawarich",
+      "title": "Thêm lộ trình từ Dawarich",
+      "day": "Ngày",
+      "which": "Lộ trình nào",
+      "whole-day": "Cả ngày",
+      "empty": "Dawarich không có lộ trình cho ngày này.",
+      "map": "Hiện bản đồ bên dưới",
+      "map-description": "Bản đồ lấy từ OpenStreetMap, nơi thấy khu vực được hiển thị.",
+      "add": "Thêm ảnh",
+      "preview": "Xem trước ảnh lộ trình"
     }
   }
 }

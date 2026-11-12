@@ -1240,6 +1240,11 @@
     },
     "journal": {
       "label": "Günlük"
+    },
+    "dawarich": {
+      "api-key-help": "Dawarich’te Account › API access altında bulabilirsin.",
+      "label": "Dawarich",
+      "description": "Kendi konum geçmişin; günlükteki yerler ve her nottaki rota görselleri için. API anahtarın bu sunucuda kalır."
     }
   },
   "space": {
@@ -1587,8 +1592,6 @@
       "goals-description": "Her kayıtta işaretlenir ve kontrol listesi olarak kaydedilir.",
       "add-goal": "Yeni hedef",
       "remove": "{{name}} öğesini kaldır",
-      "dawarich-description": "Kendi konum geçmişin; kaydın yeri ve rotası için. API anahtarın bu sunucuda kalır.",
-      "dawarich-key-help": "Dawarich’te Account › API access altında bulabilirsin.",
       "reminder-title": "Seri hatırlatıcısı",
       "reminder-description": "Yazmadığında Home Assistant’ın telefonuna gönderir.",
       "reminder-enabled": "Hatırlatıcı gönder",
@@ -1607,6 +1610,20 @@
       "reminder-saved": "Hatırlatıcı kaydedildi",
       "test": "Test gönder",
       "test-sent": "Test gönderildi"
+    }
+  },
+  "dawarich": {
+    "route": {
+      "insert": "Dawarich’ten rota",
+      "title": "Dawarich’ten rota ekle",
+      "day": "Gün",
+      "which": "Hangi rota",
+      "whole-day": "Bütün gün",
+      "empty": "Dawarich’te bu gün için rota yok.",
+      "map": "Haritayı altında göster",
+      "map-description": "Harita, gösterilen bölgeyi gören OpenStreetMap’ten gelir.",
+      "add": "Görsel ekle",
+      "preview": "Rota görselinin önizlemesi"
     }
   }
 }

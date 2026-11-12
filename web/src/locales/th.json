@@ -1190,6 +1190,11 @@
     },
     "journal": {
       "label": "บันทึกประจำวัน"
+    },
+    "dawarich": {
+      "api-key-help": "ดูได้ใน Dawarich ที่ Account › API access",
+      "label": "Dawarich",
+      "description": "ประวัติตำแหน่งของคุณเอง สำหรับสถานที่ในบันทึกประจำวันและรูปเส้นทางในเมโมใดก็ได้ คีย์ API ของคุณอยู่บนเซิร์ฟเวอร์นี้"
     }
   },
   "tooltip": {
@@ -1587,8 +1592,6 @@
       "goals-description": "ติ๊กในทุกบันทึกและบันทึกเป็นเช็กลิสต์",
       "add-goal": "เป้าหมายใหม่",
       "remove": "ลบ {{name}}",
-      "dawarich-description": "ประวัติตำแหน่งของคุณเอง สำหรับสถานที่และเส้นทางของบันทึก คีย์ API ของคุณอยู่บนเซิร์ฟเวอร์นี้",
-      "dawarich-key-help": "ดูได้ใน Dawarich ที่ Account › API access",
       "reminder-title": "การแจ้งเตือนต่อเนื่อง",
       "reminder-description": "Home Assistant ส่งไปที่โทรศัพท์ของคุณเมื่อคุณยังไม่ได้เขียน",
       "reminder-enabled": "ส่งการแจ้งเตือน",
@@ -1607,6 +1610,20 @@
       "reminder-saved": "บันทึกการแจ้งเตือนแล้ว",
       "test": "ส่งทดสอบ",
       "test-sent": "ส่งทดสอบแล้ว"
+    }
+  },
+  "dawarich": {
+    "route": {
+      "insert": "เส้นทางจาก Dawarich",
+      "title": "เพิ่มเส้นทางจาก Dawarich",
+      "day": "วัน",
+      "which": "เส้นทางไหน",
+      "whole-day": "ทั้งวัน",
+      "empty": "Dawarich ไม่มีเส้นทางของวันนี้",
+      "map": "แสดงแผนที่ด้านล่าง",
+      "map-description": "แผนที่มาจาก OpenStreetMap ซึ่งจะเห็นพื้นที่ที่แสดง",
+      "add": "เพิ่มรูปภาพ",
+      "preview": "ตัวอย่างรูปเส้นทาง"
     }
   }
 }
