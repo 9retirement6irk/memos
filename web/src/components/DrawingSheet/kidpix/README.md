@@ -13,6 +13,8 @@ its own bitmap, laid over the drawing:
 - `engine.ts` is the paint layer: one layer pixel per drawing px, 12 undo steps.
 - `raster.ts` is the pixel work (flood fill, mixers, tiles), on plain arrays so it tests without a canvas.
 - `brushes.ts` is the Wacky Brush strokes. `audio.ts` plays clips from one audio sprite.
+- `swf.ts` reads and draws stickers, which are small Flash movies. `library.ts` lists the stamp,
+  sticker and background libraries, whose files are in `web/public/kidpix/`.
 
 When the mode ends, or on Done, `DrawingSheet` lifts the paint off as PNG tiles and adds them to
 the drawing with `insertImage`, where they were painted, grouped as one picture. The canvas
@@ -27,7 +29,7 @@ erasers and the dynamite remove Kid Pix paint only.
 ## What is Kid Pix's and what is not
 
 From the disc, unchanged: the tube, tray, wheel and button art, the option icons, the patterns
-and gradients, the letter stamps, eight fonts, and every sound.
+and gradients, the stamps, stickers, backgrounds, eight fonts, and every sound.
 
 The sounds are wired as Kid Pix wires them:
 
@@ -43,16 +45,30 @@ Stand-ins, written for this mode:
 - The tray's option click, and the startup jingle on entering the mode.
 - Undo Guy's mouth moves at random while a line plays; the disc's scripts time each line exactly.
 
-Not built: stickers, animations, backgrounds and recorded sounds (their libraries are in `.klb`
-files not yet decoded) and the voice brushes.
+## The libraries
+
+Stamps, stickers and backgrounds come from the disc's `Libraries/*.klb` files, which are Mohawk
+archives like the rest. Each tool has a category list in the tray; a category's file is fetched
+when it is first shown.
+
+- Stamps: 2,240 rubber stamps at 32 px, one PNG strip per category, stamped at 64 px with hard
+  pixels. White joined to a stamp's edge is made transparent.
+- Stickers: 935 pictures, kept as the disc's own Flash movies and drawn by `swf.ts`, so a
+  category of 20 is about 100 kB. Four that use text or bitmaps are left out.
+- Backgrounds: 180 pictures at 600 x 452, re-encoded from 70 MB to 7 MB. A background sits
+  behind the paint with the drawing copied over it, and becomes part of the picture the mode
+  adds to the drawing.
+
+Not built: animations and recorded sounds (a saved drawing is a still PNG and cannot hold
+either) and the voice brushes.
 
 Tool, brush and font names are Kid Pix's own product names and are not translated.
 
 ## Where the files come from
 
-Everything in `assets/` and `data.ts` was extracted from a Kid Pix Deluxe 4 disc: bitmaps and
-sounds from its Mohawk (`.MHK`) archives, the tables from `KP.cfg` and `KP.exe`. `data.ts` is
-generated; regenerate it rather than editing it.
+Everything in `assets/`, `web/public/kidpix/`, `data.ts` and `library.ts` was extracted from a Kid Pix Deluxe 4 disc: bitmaps and
+sounds from its Mohawk (`.MHK` and `.klb`) archives, the tables from `KP.cfg` and `KP.exe`. `data.ts`
+and `library.ts` are generated; regenerate them rather than editing them.
 
 Kid Pix and its art, fonts and sounds belong to their owners. They are in this repository for a
 private instance; clear the rights before publishing a build that includes this folder.

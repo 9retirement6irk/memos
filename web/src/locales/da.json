@@ -254,7 +254,8 @@
       "kidpix": "Kid Pix-tilstand",
       "kidpix-exit": "Tilbage til tegneværktøjer",
       "kidpix-sounds": "Kid Pix-lyde",
-      "kidpix-clear": "Slet Kid Pix-malingen"
+      "kidpix-clear": "Slet Kid Pix-malingen",
+      "kidpix-no-background": "Ingen baggrund"
     },
     "no-changes-detected": "Ingen ændringer registreret",
     "save": "Spare",

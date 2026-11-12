@@ -216,7 +216,8 @@
       "kidpix": "Kid-Pix-Modus",
       "kidpix-exit": "Zurück zu den Zeichenwerkzeugen",
       "kidpix-sounds": "Kid-Pix-Töne",
-      "kidpix-clear": "Kid-Pix-Farbe löschen"
+      "kidpix-clear": "Kid-Pix-Farbe löschen",
+      "kidpix-no-background": "Kein Hintergrund"
     },
     "no-changes-detected": "Keine Änderungen erkannt",
     "save": "Speichern",

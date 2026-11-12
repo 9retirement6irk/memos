@@ -1,6 +1,7 @@
 import type { KidPixAudio } from "./audio";
 import { type BrushEnv, brushDown, brushSegment, newStroke, type Point, type StrokeState } from "./brushes";
 import { type Box, floodMask, type MixEffect, mixPixels, paintBounds, planTiles } from "./raster";
+import type { SwfPicture } from "./swf";
 import { ERASER_SIZES, MIXER_EFFECTS, PENCIL_SIZES, TEXT_SIZE, TOOL_NUMBER, WAND_EFFECTS } from "./tools";
 
 /** The sprite sheets the paint tools read pixels from. Each may still be loading. */
@@ -21,6 +22,8 @@ export interface KidPixTile extends Box {
 
 interface EngineOptions {
   paper: string;
+  /** A canvas under the paint and over the drawing, for a Kid Pix background. */
+  backgroundCanvas: HTMLCanvasElement;
   /** The drawing's own canvases, for the Paint Can and the mixers to see what is under the paint. */
   backdropSources: () => HTMLCanvasElement[];
   images: KidPixImages;
@@ -35,7 +38,16 @@ type Stroke =
   | { kind: "wand"; effect: MixEffect; last: Point }
   | { kind: "move"; start: Point; paint: ImageData };
 
+/** One undo step: the paint, and the background behind it. */
+interface Snapshot {
+  paint: ImageData;
+  background: HTMLImageElement | null;
+}
+
 const HISTORY_STEPS = 12;
+/** Rubber stamps are 32 px bitmaps, stamped at twice their size, as Kid Pix's middle size does. */
+const STAMP_CELL = 32;
+const STAMP_SIZE = 64;
 const WAND_RADIUS = 22;
 
 const scratch = (width: number, height: number) => {
@@ -60,8 +72,9 @@ const rgb = (hex: string): [number, number, number] => {
 export class KidPixEngine {
   color = "#ff0080";
   private readonly ctx: CanvasRenderingContext2D;
-  private readonly undoStack: ImageData[] = [];
-  private readonly redoStack: ImageData[] = [];
+  private readonly undoStack: Snapshot[] = [];
+  private readonly redoStack: Snapshot[] = [];
+  private background: HTMLImageElement | null = null;
   private readonly patterns = new Map<number, CanvasPattern | null>();
   private backdrop: HTMLCanvasElement | null = null;
   private stroke: Stroke | null = null;
@@ -88,24 +101,62 @@ export class KidPixEngine {
     return this.options.audio;
   }
 
-  /** True once any paint is on the layer. */
+  /** True once any paint, or a background, is on the layer. */
   hasPaint() {
+    if (this.background) return true;
     return paintBounds(this.ctx.getImageData(0, 0, this.width, this.height).data, this.width, this.height) !== null;
   }
 
   /** Saves the layer before a change, as one undo step. */
   private remember() {
-    this.undoStack.push(this.ctx.getImageData(0, 0, this.width, this.height));
+    this.undoStack.push(this.snapshot());
     if (this.undoStack.length > HISTORY_STEPS) this.undoStack.shift();
     this.redoStack.length = 0;
+  }
+
+  private snapshot(): Snapshot {
+    return { paint: this.ctx.getImageData(0, 0, this.width, this.height), background: this.background };
   }
 
   undo() {
     const previous = this.undoStack.pop();
     if (!previous) return false;
-    this.redoStack.push(this.ctx.getImageData(0, 0, this.width, this.height));
-    this.ctx.putImageData(previous, 0, 0);
+    this.redoStack.push(this.snapshot());
+    this.ctx.putImageData(previous.paint, 0, 0);
+    if (previous.background !== this.background) this.showBackground(previous.background);
     return true;
+  }
+
+  /**
+   * A Kid Pix background goes behind the paint. It would hide the drawing too, so the drawing
+   * is copied over it: the picture reads as paper swapped for the background.
+   */
+  setBackground(image: HTMLImageElement | null) {
+    if (image === this.background) return;
+    this.remember();
+    this.showBackground(image);
+    this.audio.play("misc31500");
+  }
+
+  private showBackground(image: HTMLImageElement | null) {
+    const canvas = this.options.backgroundCanvas;
+    const ctx = canvas.getContext("2d");
+    this.background = image;
+    this.backdrop = null;
+    if (!ctx) return;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (!image) return;
+    // Cover the layer, cropping the picture's longer side.
+    const scale = Math.max(canvas.width / image.naturalWidth, canvas.height / image.naturalHeight);
+    const [width, height] = [image.naturalWidth * scale, image.naturalHeight * scale];
+    ctx.drawImage(image, (canvas.width - width) / 2, (canvas.height - height) / 2, width, height);
+    this.drawSources(ctx);
+  }
+
+  private drawSources(ctx: CanvasRenderingContext2D) {
+    for (const source of this.options.backdropSources()) {
+      if (source.width && source.height) ctx.drawImage(source, 0, 0, this.width, this.height);
+    }
   }
 
   /** The drawing under the paint, captured once: the layer covers it for the whole session. */
@@ -114,9 +165,8 @@ export class KidPixEngine {
     const { canvas, ctx } = scratch(this.width, this.height);
     ctx.fillStyle = this.options.paper;
     ctx.fillRect(0, 0, this.width, this.height);
-    for (const source of this.options.backdropSources()) {
-      if (source.width && source.height) ctx.drawImage(source, 0, 0, this.width, this.height);
-    }
+    if (this.background) ctx.drawImage(this.options.backgroundCanvas, 0, 0);
+    else this.drawSources(ctx);
     this.backdrop = canvas;
     return canvas;
   }
@@ -309,6 +359,37 @@ export class KidPixEngine {
     this.audio.play("w7320");
   }
 
+  /** Stamps one 32 px rubber stamp from a category's strip, with hard pixels. */
+  stampFrom(at: Point, sheet: HTMLImageElement, index: number) {
+    if (!sheet.complete || !sheet.naturalWidth) return;
+    this.remember();
+    this.ctx.save();
+    this.ctx.imageSmoothingEnabled = false;
+    this.ctx.drawImage(
+      sheet,
+      index * STAMP_CELL,
+      0,
+      STAMP_CELL,
+      STAMP_CELL,
+      at.x - STAMP_SIZE / 2,
+      at.y - STAMP_SIZE / 2,
+      STAMP_SIZE,
+      STAMP_SIZE,
+    );
+    this.ctx.restore();
+    this.audio.play("w7320");
+  }
+
+  /** Places a sticker at its own size, centered where the pointer came down. */
+  sticker(at: Point, picture: SwfPicture) {
+    this.remember();
+    this.ctx.save();
+    this.ctx.translate(Math.round(at.x - picture.width / 2), Math.round(at.y - picture.height / 2));
+    picture.draw(this.ctx);
+    this.ctx.restore();
+    this.audio.play("misc31501");
+  }
+
   /** Sets typed text on the paint, its middle line at `at`. */
   text(at: Point, value: string, family: string) {
     if (!value) return;
@@ -370,14 +451,18 @@ export class KidPixEngine {
 
   /**
    * The paint as PNG tiles, each at most `maxSide` px a side, placed in layer px. Empty tiles
-   * are left out; an empty layer gives none.
+   * are left out; an empty layer gives none. A background comes along under the paint.
    */
   async takeTiles(maxSide: number): Promise<KidPixTile[]> {
-    const bounds = paintBounds(this.ctx.getImageData(0, 0, this.width, this.height).data, this.width, this.height);
+    // With a background the whole layer is the picture; without one, only where there is paint.
+    const bounds = this.background
+      ? { x: 0, y: 0, width: this.width, height: this.height }
+      : paintBounds(this.ctx.getImageData(0, 0, this.width, this.height).data, this.width, this.height);
     if (!bounds) return [];
     const tiles: KidPixTile[] = [];
     for (const box of planTiles(bounds, maxSide)) {
       const { canvas, ctx } = scratch(box.width, box.height);
+      if (this.background) ctx.drawImage(this.options.backgroundCanvas, -box.x, -box.y);
       ctx.drawImage(this.canvas, -box.x, -box.y);
       if (!paintBounds(ctx.getImageData(0, 0, box.width, box.height).data, box.width, box.height)) continue;
       const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/png"));

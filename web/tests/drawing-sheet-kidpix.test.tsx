@@ -100,7 +100,7 @@ describe("DrawingSheet in Kid Pix mode", () => {
     expect(layerProps?.compact).toBe(false);
     expect(handle.setSelection).toHaveBeenCalledWith([]);
     expect(screen.queryByRole("button", { name: "editor.drawing.tool-pen" })).toBeNull();
-    // Cancel and Done stay, clear of the tube.
+    // Cancel and Done stay, clear of the tube; Cancel on a bar of its own.
     expect(screen.getByRole("button", { name: "common.cancel" }).closest(".left-\\[148px\\]")).not.toBeNull();
     expect(screen.getByRole("button", { name: "editor.drawing.done" })).toBeInTheDocument();
   });

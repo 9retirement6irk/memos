@@ -2,7 +2,7 @@ import { KIDPIX_TOOL_NAMES } from "./data";
 import type { MixEffect } from "./raster";
 
 /** The tools on the tube. `row` and `frames` locate the button's animation in assets/tools.png. */
-export type KidPixTool = "pencil" | "wacky" | "paint" | "mixer" | "eraser" | "stamp" | "text" | "move";
+export type KidPixTool = "pencil" | "wacky" | "paint" | "mixer" | "eraser" | "stamp" | "text" | "move" | "sticker" | "background";
 
 export interface TubeTool {
   key: KidPixTool;
@@ -12,21 +12,22 @@ export interface TubeTool {
   frames: number;
   /** Clip the button's "selected" script plays (Easel.MHK script 1014 for the pencil, and so on). */
   selectSound: string;
+  /** Clip its hover script plays: one for the paint tools, another for the library tools. */
+  hoverSound: string;
 }
 
 export const TUBE_TOOLS: readonly TubeTool[] = [
-  { key: "pencil", name: "Pencil", row: 0, frames: 5, selectSound: "easel1036" },
-  { key: "wacky", name: "Wacky Brush", row: 1, frames: 6, selectSound: "easel1045" },
-  { key: "paint", name: "Paint Can", row: 2, frames: 6, selectSound: "easel1035" },
-  { key: "mixer", name: "Electric Mixer", row: 3, frames: 6, selectSound: "easel1039" },
-  { key: "eraser", name: "Eraser", row: 4, frames: 6, selectSound: "easel1043" },
-  { key: "stamp", name: "Stamps", row: 5, frames: 5, selectSound: "easel1034" },
-  { key: "text", name: "Text", row: 6, frames: 5, selectSound: "easel1038" },
-  { key: "move", name: "Moving Van", row: 7, frames: 6, selectSound: "easel1040" },
+  { key: "pencil", name: "Pencil", row: 0, frames: 5, selectSound: "easel1036", hoverSound: "easel1002" },
+  { key: "wacky", name: "Wacky Brush", row: 1, frames: 6, selectSound: "easel1045", hoverSound: "easel1002" },
+  { key: "paint", name: "Paint Can", row: 2, frames: 6, selectSound: "easel1035", hoverSound: "easel1002" },
+  { key: "mixer", name: "Electric Mixer", row: 3, frames: 6, selectSound: "easel1039", hoverSound: "easel1002" },
+  { key: "eraser", name: "Eraser", row: 4, frames: 6, selectSound: "easel1043", hoverSound: "easel1002" },
+  { key: "stamp", name: "Stamps", row: 5, frames: 5, selectSound: "easel1034", hoverSound: "easel1002" },
+  { key: "text", name: "Text", row: 6, frames: 5, selectSound: "easel1038", hoverSound: "easel1002" },
+  { key: "move", name: "Moving Van", row: 7, frames: 6, selectSound: "easel1040", hoverSound: "easel1002" },
+  { key: "sticker", name: "Stickers", row: 9, frames: 5, selectSound: "easel1044", hoverSound: "easel1000" },
+  { key: "background", name: "Backgrounds", row: 8, frames: 5, selectSound: "easel1031", hoverSound: "easel1000" },
 ];
-
-/** The clip a tube button's hover script plays. */
-export const TUBE_HOVER_SOUND = "easel1002";
 
 /** Undo Guy's lines; Easel.MHK scripts 1083 to 1102 each pair one with his lip movements. */
 export const UNDO_GUY_LINES: readonly string[] = [

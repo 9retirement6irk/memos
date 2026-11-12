@@ -218,7 +218,8 @@
       "kidpix": "Modo Kid Pix",
       "kidpix-exit": "Voltar às ferramentas de desenho",
       "kidpix-sounds": "Sons do Kid Pix",
-      "kidpix-clear": "Apagar a tinta do Kid Pix"
+      "kidpix-clear": "Apagar a tinta do Kid Pix",
+      "kidpix-no-background": "Sem fundo"
     },
     "audio-recorder": {
       "attachment-label": "Gravação de áudio",

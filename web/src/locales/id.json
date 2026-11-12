@@ -218,7 +218,8 @@
       "kidpix": "Mode Kid Pix",
       "kidpix-exit": "Kembali ke alat gambar",
       "kidpix-sounds": "Suara Kid Pix",
-      "kidpix-clear": "Hapus cat Kid Pix"
+      "kidpix-clear": "Hapus cat Kid Pix",
+      "kidpix-no-background": "Tanpa latar belakang"
     },
     "audio-recorder": {
       "attachment-label": "Rekaman audio",

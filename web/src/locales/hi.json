@@ -218,7 +218,8 @@
       "kidpix": "Kid Pix मोड",
       "kidpix-exit": "ड्रॉइंग टूल पर वापस जाएँ",
       "kidpix-sounds": "Kid Pix की आवाज़ें",
-      "kidpix-clear": "Kid Pix का रंग मिटाएँ"
+      "kidpix-clear": "Kid Pix का रंग मिटाएँ",
+      "kidpix-no-background": "कोई पृष्ठभूमि नहीं"
     },
     "audio-recorder": {
       "attachment-label": "ऑडियो रिकॉर्डिंग",

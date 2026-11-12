@@ -218,7 +218,8 @@
       "kidpix": "Chế độ Kid Pix",
       "kidpix-exit": "Quay lại công cụ vẽ",
       "kidpix-sounds": "Âm thanh Kid Pix",
-      "kidpix-clear": "Xóa màu vẽ Kid Pix"
+      "kidpix-clear": "Xóa màu vẽ Kid Pix",
+      "kidpix-no-background": "Không có nền"
     },
     "audio-recorder": {
       "attachment-label": "Ghi âm",

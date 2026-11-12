@@ -43,7 +43,7 @@ const TOOL_NAMES = TOOLS.map((tool) => tool.name);
 const KidPixLayer = lazy(() => import("./kidpix/KidPixLayer"));
 
 /** Below this height the tube and tray do not fit; Kid Pix mode uses its one-panel chrome, as on a phone. */
-const KIDPIX_FULL_CHROME_HEIGHT = 560;
+const KIDPIX_FULL_CHROME_HEIGHT = 620;
 
 /** The canvas shrinks any picture over 1440 px a side, and one over 80% of the view. */
 const KIDPIX_TILE_LIMIT = 1440;
@@ -472,15 +472,17 @@ const DrawingSheet = ({ mode, initialScene, background, onDone, onClose }: Drawi
                   clear: t("editor.drawing.kidpix-clear"),
                   previous: t("common.previous"),
                   next: t("common.next"),
+                  noBackground: t("editor.drawing.kidpix-no-background"),
                 }}
               />
             </Suspense>
           )}
 
           {kidPix ? (
-            // Cancel and Done stay memos' own; past the tube when the full chrome is up.
+            // Cancel and Done stay memos' own; past the tube when the full chrome is up. Cancel
+            // gets a bar here: a Kid Pix background would swallow a bare ghost button.
             <FloatingRow edge="top" className={cn(!kidPixCompact && "left-[148px]")}>
-              <FloatingAction>{cancelButton}</FloatingAction>
+              <FloatingBar>{cancelButton}</FloatingBar>
               <FloatingBar>{kidPixControls}</FloatingBar>
               <FloatingAction>{doneButton}</FloatingAction>
             </FloatingRow>

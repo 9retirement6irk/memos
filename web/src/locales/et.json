@@ -254,7 +254,8 @@
       "kidpix": "Kid Pixi režiim",
       "kidpix-exit": "Tagasi joonistustööriistade juurde",
       "kidpix-sounds": "Kid Pixi helid",
-      "kidpix-clear": "Kustuta Kid Pixi värv"
+      "kidpix-clear": "Kustuta Kid Pixi värv",
+      "kidpix-no-background": "Taustata"
     },
     "no-changes-detected": "Muudatusi ei tuvastatud",
     "save": "Salvesta",

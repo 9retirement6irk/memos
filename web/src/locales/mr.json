@@ -218,7 +218,8 @@
       "kidpix": "Kid Pix मोड",
       "kidpix-exit": "रेखाचित्र साधनांकडे परत जा",
       "kidpix-sounds": "Kid Pix चे आवाज",
-      "kidpix-clear": "Kid Pix चा रंग पुसा"
+      "kidpix-clear": "Kid Pix चा रंग पुसा",
+      "kidpix-no-background": "पार्श्वभूमी नाही"
     },
     "audio-recorder": {
       "attachment-label": "ऑडिओ रेकॉर्डिंग",

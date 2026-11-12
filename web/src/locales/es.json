@@ -216,7 +216,8 @@
       "kidpix": "Modo Kid Pix",
       "kidpix-exit": "Volver a las herramientas de dibujo",
       "kidpix-sounds": "Sonidos de Kid Pix",
-      "kidpix-clear": "Borrar la pintura de Kid Pix"
+      "kidpix-clear": "Borrar la pintura de Kid Pix",
+      "kidpix-no-background": "Sin fondo"
     },
     "no-changes-detected": "No se detectaron cambios",
     "save": "Guardar",

@@ -216,7 +216,8 @@
       "kidpix": "Mode Kid Pix",
       "kidpix-exit": "Torna a les eines de dibuix",
       "kidpix-sounds": "Sons de Kid Pix",
-      "kidpix-clear": "Esborra la pintura de Kid Pix"
+      "kidpix-clear": "Esborra la pintura de Kid Pix",
+      "kidpix-no-background": "Sense fons"
     },
     "no-changes-detected": "No s'han detectat canvis",
     "save": "Guarda",

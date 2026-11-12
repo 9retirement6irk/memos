@@ -218,7 +218,8 @@
       "kidpix": "حالت Kid Pix",
       "kidpix-exit": "بازگشت به ابزارهای نقاشی",
       "kidpix-sounds": "صداهای Kid Pix",
-      "kidpix-clear": "پاک کردن رنگ Kid Pix"
+      "kidpix-clear": "پاک کردن رنگ Kid Pix",
+      "kidpix-no-background": "بدون پس‌زمینه"
     },
     "audio-recorder": {
       "attachment-label": "ضبط صدا",

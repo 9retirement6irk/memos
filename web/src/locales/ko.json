@@ -218,7 +218,8 @@
       "kidpix": "Kid Pix 모드",
       "kidpix-exit": "그리기 도구로 돌아가기",
       "kidpix-sounds": "Kid Pix 소리",
-      "kidpix-clear": "Kid Pix 물감 지우기"
+      "kidpix-clear": "Kid Pix 물감 지우기",
+      "kidpix-no-background": "배경 없음"
     },
     "audio-recorder": {
       "attachment-label": "오디오 녹음",

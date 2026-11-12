@@ -218,7 +218,8 @@
       "kidpix": "โหมด Kid Pix",
       "kidpix-exit": "กลับไปที่เครื่องมือวาด",
       "kidpix-sounds": "เสียงของ Kid Pix",
-      "kidpix-clear": "ลบสีของ Kid Pix"
+      "kidpix-clear": "ลบสีของ Kid Pix",
+      "kidpix-no-background": "ไม่มีพื้นหลัง"
     },
     "audio-recorder": {
       "attachment-label": "การบันทึกเสียง",
