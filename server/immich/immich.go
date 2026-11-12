@@ -271,9 +271,9 @@ func (s *Service) listPhotosTaken(w http.ResponseWriter, r *http.Request) error 
 	}
 	response := TakenPhotoPageResponse{Photos: make([]TakenPhotoResponse, 0, len(page.Photos)), Next: page.Next}
 	for _, photo := range page.Photos {
-		item := TakenPhotoResponse{PhotoResponse: PhotoResponse{
+		item := TakenPhotoResponse{
 			ID: photo.ID, FileName: photo.FileName, MimeType: photo.MimeType, TakenAt: photo.TakenAt, Width: photo.Width, Height: photo.Height,
-		}}
+		}
 		if exif := photo.Exif; exif != nil {
 			if exif.TakenAt != nil {
 				if at, err := time.Parse(time.RFC3339, *exif.TakenAt); err == nil {
