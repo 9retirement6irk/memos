@@ -32,12 +32,14 @@ describe("icon sizes", () => {
   });
 
   it("leaves Lucide's stroke to the package instead of setting it by hand", () => {
-    // Drawn artwork (illustrations, the avatar fallback, the title's slash, mood faces) sets its own strokes.
+    // Drawn artwork (illustrations, the avatar fallback, the title's slash, mood faces, the mood line) sets its own strokes.
     const allowed = [
       "components/Placeholder/InkIllustration.tsx",
       "components/UserAvatar.tsx",
       "components/AppSidebar/SpaceSwitcher.tsx",
       "components/Journal/MoodFace.tsx",
+      // The "how you've felt" line in the journal panel.
+      "components/Journal/JournalPanel.tsx",
     ];
     const offenders = files.filter(({ path, text }) => /\bstrokeWidth=/.test(text) && !allowed.includes(path)).map(({ path }) => path);
     expect(offenders).toEqual([]);
