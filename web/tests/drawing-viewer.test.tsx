@@ -231,7 +231,8 @@ describe("DrawingViewer pages", () => {
     await waitFor(() => expect(fetch).toHaveBeenCalledTimes(2));
     expect(vi.mocked(fetch).mock.calls[1][0]).toContain(drawing.name.split("/")[1]);
     await waitFor(() => expect(tabs[0]).toHaveAttribute("aria-pressed", "true"));
-    expect(mocks.canvasProps.at(-1)?.readOnly).toBe(true);
+    // The tab turns pressed before the new page's canvas has rendered, so wait for the canvas too.
+    await waitFor(() => expect(mocks.canvasProps.at(-1)?.readOnly).toBe(true));
   });
 
   it("adds a page from Edit as a new drawing right after the page before it", async () => {
