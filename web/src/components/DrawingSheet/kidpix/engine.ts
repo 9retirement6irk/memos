@@ -2,12 +2,14 @@ import type { KidPixAudio } from "./audio";
 import { type BrushEnv, brushDown, brushSegment, newStroke, type Point, type StrokeState } from "./brushes";
 import { type Box, floodMask, type MixEffect, mixPixels, paintBounds, planTiles } from "./raster";
 import type { SwfPicture } from "./swf";
-import { ERASER_SIZES, MIXER_EFFECTS, PENCIL_SIZES, TEXT_SIZE, TOOL_NUMBER, WAND_EFFECTS } from "./tools";
+import { ERASER_SIZES, MIXER_EFFECTS, PENCIL_SHAPES, PENCIL_SIZES, TEXT_SIZE, TOOL_NUMBER, WAND_EFFECTS } from "./tools";
 
 /** The sprite sheets the paint tools read pixels from. Each may still be loading. */
 export interface KidPixImages {
   /** 7 x 7 grid of 160 px pattern tiles. */
   fills?: HTMLImageElement;
+  /** 7 x 6 grid of 160 px tiles for the Solid bucket: how much of the color lands on each pixel. */
+  solidTiles?: HTMLImageElement;
   /** A strip of 48 px gradient swatches. */
   gradients?: HTMLImageElement;
   /** A strip of 48 px letter stamps, A to Z, as alpha masks. */
@@ -37,7 +39,17 @@ type Stroke =
   | { kind: "eraser"; size: number; last: Point }
   | { kind: "wand"; effect: MixEffect; last: Point }
   | { kind: "move"; start: Point; paint: ImageData }
+  | { kind: "shape"; shape: number; size: number; nib: number; start: Point; last: Point; base: ImageData }
+  | { kind: "bend"; size: number; nib: number; from: Point; to: Point; base: ImageData }
   | { kind: "spray"; sheet: HTMLImageElement; frames: SprayFrames; last: Point; owed: number; timer: number };
+
+/** A shape that takes more than one press: a curve waiting to be bent, or a polygon gathering corners. */
+type Pending =
+  | { shape: "curve"; tool: number; size: number; nib: number; from: Point; to: Point; base: ImageData }
+  | { shape: "polygon"; tool: number; filled: boolean; size: number; nib: number; points: Point[]; base: ImageData };
+
+/** A press this close (px) to a polygon's first corner closes it. */
+const POLYGON_CLOSE = 12;
 
 /** Where each picture of a spray set is in its sheet: x, y, width, height. */
 export type SprayFrames = readonly (readonly [number, number, number, number])[];
@@ -88,6 +100,7 @@ export class KidPixEngine {
   private readonly patterns = new Map<number, CanvasPattern | null>();
   private backdrop: HTMLCanvasElement | null = null;
   private stroke: Stroke | null = null;
+  private pending: Pending | null = null;
   private hue = 0;
 
   constructor(
@@ -119,6 +132,7 @@ export class KidPixEngine {
 
   /** Saves the layer before a change, as one undo step. */
   private remember() {
+    this.settle();
     this.undoStack.push(this.snapshot());
     if (this.undoStack.length > HISTORY_STEPS) this.undoStack.shift();
     this.redoStack.length = 0;
@@ -128,7 +142,22 @@ export class KidPixEngine {
     return { paint: this.ctx.getImageData(0, 0, this.width, this.height), background: this.background };
   }
 
+  /**
+   * Drops a shape left half-made (a curve not yet bent, a polygon not yet closed) and the undo
+   * step it took. True if there was one.
+   */
+  settle() {
+    const pending = this.pending;
+    if (!pending) return false;
+    this.pending = null;
+    this.ctx.putImageData(pending.base, 0, 0);
+    this.undoStack.pop();
+    return true;
+  }
+
   undo() {
+    // Taking back a half-made shape is the undo.
+    if (this.settle()) return true;
     const previous = this.undoStack.pop();
     if (!previous) return false;
     this.redoStack.push(this.snapshot());
@@ -277,11 +306,38 @@ export class KidPixEngine {
 
   move(to: Point) {
     const stroke = this.stroke;
-    if (!stroke) return;
+    if (!stroke) {
+      // Between presses, a polygon's next side follows the pointer.
+      if (this.pending?.shape === "polygon") this.polygonPreview(this.pending, to);
+      return;
+    }
     const ctx = this.ctx;
     if (stroke.kind === "move") {
       ctx.clearRect(0, 0, this.width, this.height);
       ctx.putImageData(stroke.paint, Math.round(to.x - stroke.start.x), Math.round(to.y - stroke.start.y));
+      return;
+    }
+    if (stroke.kind === "shape") {
+      stroke.last = to;
+      ctx.putImageData(stroke.base, 0, 0);
+      const { kind, filled } = PENCIL_SHAPES[stroke.shape];
+      if (kind === "line" || kind === "curve") this.pencilPath([stroke.start, to], stroke.size, stroke.nib, false, false);
+      else this.pencilPath(this.shapePoints(kind, stroke.start, to), stroke.size, stroke.nib, true, filled);
+      return;
+    }
+    if (stroke.kind === "bend") {
+      ctx.putImageData(stroke.base, 0, 0);
+      // A curve through the pointer: the control point sits twice as far out as the pointer does.
+      const control = { x: 2 * to.x - (stroke.from.x + stroke.to.x) / 2, y: 2 * to.y - (stroke.from.y + stroke.to.y) / 2 };
+      const points = Array.from({ length: 33 }, (_, step) => {
+        const t = step / 32;
+        const u = 1 - t;
+        return {
+          x: u * u * stroke.from.x + 2 * u * t * control.x + t * t * stroke.to.x,
+          y: u * u * stroke.from.y + 2 * u * t * control.y + t * t * stroke.to.y,
+        };
+      });
+      this.pencilPath(points, stroke.size, stroke.nib, false, false);
       return;
     }
     if (stroke.kind === "spray") {
@@ -324,6 +380,123 @@ export class KidPixEngine {
     this.audio.toolMove();
   }
 
+  /**
+   * The Pencil's shapes (`PENCIL_SHAPES`): a line, rectangle or oval is dragged out corner to
+   * corner; a curve is dragged as a line and bent with a second drag; a polygon takes a press
+   * for each corner and closes on a press at its first.
+   */
+  shapeDown(at: Point, shape: number, sizeIndex: number, nib = 0) {
+    const size = PENCIL_SIZES[sizeIndex] ?? PENCIL_SIZES[1];
+    const kind = PENCIL_SHAPES[shape]?.kind ?? "free";
+    if (kind === "free") {
+      this.pencilDown(at, sizeIndex, nib);
+      return;
+    }
+    const pending = this.pending;
+    if (pending?.shape === "curve") {
+      // The second drag bends the line toward the pointer.
+      this.stroke = { kind: "bend", size: pending.size, nib: pending.nib, from: pending.from, to: pending.to, base: pending.base };
+      this.pending = null;
+      this.audio.toolDown(pending.tool);
+      this.move(at);
+      return;
+    }
+    if (pending?.shape === "polygon") {
+      const first = pending.points[0];
+      if (pending.points.length >= 3 && Math.hypot(at.x - first.x, at.y - first.y) <= POLYGON_CLOSE) {
+        this.pending = null;
+        this.ctx.putImageData(pending.base, 0, 0);
+        this.pencilPath(pending.points, pending.size, pending.nib, true, pending.filled);
+        this.audio.toolOnce(pending.tool);
+        return;
+      }
+      pending.points.push(at);
+      this.audio.toolOnce(pending.tool);
+      this.polygonPreview(pending, at);
+      return;
+    }
+    this.remember();
+    const base = this.ctx.getImageData(0, 0, this.width, this.height);
+    const { tool, filled } = PENCIL_SHAPES[shape];
+    if (kind === "polygon") {
+      this.pending = { shape: "polygon", tool, filled, size, nib, points: [at], base };
+      this.polygonPreview(this.pending, at);
+      this.audio.toolOnce(tool);
+      return;
+    }
+    this.audio.toolDown(tool);
+    this.stroke = { kind: "shape", shape, size, nib, start: at, last: at, base };
+  }
+
+  /** The polygon so far, a line out to the pointer, and a ring on the corner that closes it. */
+  private polygonPreview(pending: Extract<Pending, { shape: "polygon" }>, pointer: Point) {
+    const ctx = this.ctx;
+    ctx.putImageData(pending.base, 0, 0);
+    this.pencilPath([...pending.points, pointer], pending.size, pending.nib, false, false);
+    const first = pending.points[0];
+    ctx.save();
+    ctx.strokeStyle = this.color;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.arc(first.x, first.y, POLYGON_CLOSE / 2, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  private shapePoints(kind: string, from: Point, to: Point): Point[] {
+    if (kind === "rect") {
+      return [from, { x: to.x, y: from.y }, to, { x: from.x, y: to.y }];
+    }
+    // An oval inside the dragged box.
+    const cx = (from.x + to.x) / 2;
+    const cy = (from.y + to.y) / 2;
+    const rx = Math.abs(to.x - from.x) / 2;
+    const ry = Math.abs(to.y - from.y) / 2;
+    const steps = Math.max(24, Math.min(180, Math.ceil((rx + ry) / 3)));
+    return Array.from({ length: steps }, (_, step) => {
+      const angle = (step / steps) * Math.PI * 2;
+      return { x: cx + Math.cos(angle) * rx, y: cy + Math.sin(angle) * ry };
+    });
+  }
+
+  /** A path in the pencil's line: open or closed, and filled with the color if asked. */
+  private pencilPath(points: readonly Point[], size: number, nib: number, closed: boolean, filled: boolean) {
+    if (points.length < 2) return;
+    const ctx = this.ctx;
+    const trace = () => {
+      ctx.beginPath();
+      ctx.moveTo(points[0].x, points[0].y);
+      for (const point of points.slice(1)) ctx.lineTo(point.x, point.y);
+      if (closed) ctx.closePath();
+    };
+    if (filled) {
+      ctx.save();
+      ctx.fillStyle = this.color;
+      // The marker stays see-through when it fills.
+      if (nib === 3) ctx.globalAlpha = 0.6;
+      trace();
+      ctx.fill();
+      ctx.restore();
+      if (nib === 3) return;
+    }
+    if (nib === 1 || nib === 2) {
+      // Chalk and crayon are grains, laid a segment at a time.
+      const ends = closed ? [...points, points[0]] : points;
+      for (let index = 1; index < ends.length; index++) this.pencilSegment(ends[index - 1], ends[index], size, nib);
+      return;
+    }
+    // One stroke for the whole path, so the marker's see-through line does not double at the corners.
+    ctx.save();
+    ctx.strokeStyle = this.color;
+    ctx.lineWidth = nib === 3 ? size * 2.5 : size;
+    ctx.lineCap = nib === 3 ? "butt" : "round";
+    ctx.lineJoin = "round";
+    if (nib === 3) ctx.globalAlpha = 0.6;
+    trace();
+    ctx.stroke();
+    ctx.restore();
+  }
+
   private pencilSegment(from: Point, to: Point, size: number, nib: number) {
     const ctx = this.ctx;
     ctx.save();
@@ -364,6 +537,14 @@ export class KidPixEngine {
     const stroke = this.stroke;
     this.stroke = null;
     if (!stroke) return;
+    if (stroke.kind === "shape" && PENCIL_SHAPES[stroke.shape].kind === "curve") {
+      this.audio.toolUp();
+      const { tool } = PENCIL_SHAPES[stroke.shape];
+      this.pending = { shape: "curve", tool, size: stroke.size, nib: stroke.nib, from: stroke.start, to: stroke.last, base: stroke.base };
+      // The line stays, waiting to be bent; a press without a drag leaves nothing to bend.
+      if (Math.hypot(stroke.last.x - stroke.start.x, stroke.last.y - stroke.start.y) < 2) this.settle();
+      return;
+    }
     if (stroke.kind === "spray") window.clearInterval(stroke.timer);
     else if (stroke.kind === "move") this.audio.play("w7430");
     else this.audio.toolUp();
@@ -371,27 +552,60 @@ export class KidPixEngine {
 
   // ---- one-shot tools ------------------------------------------------------------------
 
-  /** Paint Can: option 0 is the current color, then the patterns, then the gradients. */
-  fill(at: Point, option: number, patternCount: number) {
-    const { fills, gradients } = this.options.images;
+  /**
+   * The Fill Buckets. Solid (bucket 0) lays the color in hand through one of 42 one-color
+   * patterns, the first of which is plain; Blend (1) is a gradient; Pattern (2) a many-colored tile.
+   */
+  fill(at: Point, bucket: number, option: number) {
+    const { fills, gradients, solidTiles } = this.options.images;
     const source = scratch(this.width, this.height);
     const picture = this.composite().ctx.getImageData(0, 0, this.width, this.height);
     const { mask, box } = floodMask(picture.data, this.width, this.height, at.x, at.y);
-    if (option === 0) {
-      source.ctx.fillStyle = this.color;
+    if (bucket === 0) {
+      if (option === 0) {
+        source.ctx.fillStyle = "#fff";
+      } else {
+        if (!solidTiles?.complete || !solidTiles.naturalWidth) return;
+        const tile = scratch(158, 158);
+        tile.ctx.drawImage(solidTiles, (option % 7) * 160 + 1, Math.floor(option / 7) * 160 + 1, 158, 158, 0, 0, 158, 158);
+        const pattern = source.ctx.createPattern(tile.canvas, "repeat");
+        if (!pattern) return;
+        source.ctx.fillStyle = pattern;
+      }
       source.ctx.fillRect(box.x, box.y, box.width, box.height);
-    } else if (option <= patternCount) {
+      // The tile is how much color lands: none leaves what was there, so a second color can go over a first.
+      const amount = source.ctx.getImageData(0, 0, this.width, this.height).data;
+      const [red, green, blue] = rgb(this.color);
+      this.remember();
+      const paint = this.ctx.getImageData(0, 0, this.width, this.height);
+      for (let i = 0; i < mask.length; i++) {
+        if (!mask[i]) continue;
+        const j = i * 4;
+        const over = amount[j] / 255;
+        if (over === 0) continue;
+        const under = (paint.data[j + 3] / 255) * (1 - over);
+        const alpha = over + under;
+        paint.data[j] = (red * over + paint.data[j] * under) / alpha;
+        paint.data[j + 1] = (green * over + paint.data[j + 1] * under) / alpha;
+        paint.data[j + 2] = (blue * over + paint.data[j + 2] * under) / alpha;
+        paint.data[j + 3] = alpha * 255;
+      }
+      this.ctx.putImageData(paint, 0, 0);
+      this.audio.toolOnce(TOOL_NUMBER.fillSolid);
+      return;
+    }
+    if (bucket === 2) {
       if (!fills?.complete || !fills.naturalWidth) return;
       // A pixel in from each edge: neighbors in the sheet bleed into a tile's rim.
       const tile = scratch(158, 158);
-      tile.ctx.drawImage(fills, ((option - 1) % 7) * 160 + 1, Math.floor((option - 1) / 7) * 160 + 1, 158, 158, 0, 0, 158, 158);
+      tile.ctx.drawImage(fills, (option % 7) * 160 + 1, Math.floor(option / 7) * 160 + 1, 158, 158, 0, 0, 158, 158);
       const pattern = source.ctx.createPattern(tile.canvas, "repeat");
       if (!pattern) return;
       source.ctx.fillStyle = pattern;
       source.ctx.fillRect(box.x, box.y, box.width, box.height);
     } else {
       if (!gradients?.complete || !gradients.naturalWidth) return;
-      source.ctx.drawImage(gradients, (option - patternCount - 1) * 48 + 1, 1, 46, 46, box.x, box.y, box.width, box.height);
+      source.ctx.drawImage(gradients, option * 48 + 1, 1, 46, 46, box.x, box.y, box.width, box.height);
     }
     this.remember();
     const fillPixels = source.ctx.getImageData(0, 0, this.width, this.height).data;
@@ -405,7 +619,7 @@ export class KidPixEngine {
       paint.data[j + 3] = 255;
     }
     this.ctx.putImageData(paint, 0, 0);
-    this.audio.toolOnce(option === 0 ? TOOL_NUMBER.fillSolid : option <= patternCount ? TOOL_NUMBER.fillPattern : TOOL_NUMBER.fillGradient);
+    this.audio.toolOnce(bucket === 2 ? TOOL_NUMBER.fillPattern : TOOL_NUMBER.fillGradient);
   }
 
   /** A whole-picture mixer: the result covers the drawing under it. */
@@ -466,13 +680,15 @@ export class KidPixEngine {
   }
 
   /** Places a sticker at its own size, centered where the pointer came down. */
-  sticker(at: Point, picture: SwfPicture) {
+  /** Flattens a sticker into the paint: in `box`, turned over if it was flipped. */
+  sticker(picture: SwfPicture, box: Box, flipX = false, flipY = false) {
     this.remember();
-    this.ctx.save();
-    this.ctx.translate(Math.round(at.x - picture.width / 2), Math.round(at.y - picture.height / 2));
-    picture.draw(this.ctx);
-    this.ctx.restore();
-    this.audio.play("misc31501");
+    const ctx = this.ctx;
+    ctx.save();
+    ctx.translate(box.x + (flipX ? box.width : 0), box.y + (flipY ? box.height : 0));
+    ctx.scale(((flipX ? -1 : 1) * box.width) / picture.width, ((flipY ? -1 : 1) * box.height) / picture.height);
+    picture.draw(ctx);
+    ctx.restore();
   }
 
   /** Sets typed text on the paint, its middle line at `at`. */
@@ -539,6 +755,7 @@ export class KidPixEngine {
    * are left out; an empty layer gives none. A background comes along under the paint.
    */
   async takeTiles(maxSide: number): Promise<KidPixTile[]> {
+    this.settle();
     // With a background the whole layer is the picture; without one, only where there is paint.
     const bounds = this.background
       ? { x: 0, y: 0, width: this.width, height: this.height }
