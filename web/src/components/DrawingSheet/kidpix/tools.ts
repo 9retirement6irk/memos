@@ -30,18 +30,35 @@ export const TUBE_TOOLS: readonly TubeTool[] = [
   { key: "eraser", name: "Eraser", row: 4, frames: 6, selectSound: "easel1043", hoverSound: "easel1002" },
 ];
 
-/** Undo Guy's lines; Easel.MHK scripts 1083 to 1102 each pair one with his lip movements. */
-export const UNDO_GUY_LINES: readonly string[] = [
-  ...[1007, 1008, 1009, 1010, 1011, 1012, 1013, 1014, 1015, 1018, 1019, 1021, 1022, 1023, 1024, 1026, 1046, 1047, 1048, 1049].map(
-    (id) => `easel${id}`,
-  ),
+/**
+ * Undo Guy's lines, with the mouth shapes Kid Pix shows through each one: Easel.MHK scripts 1083
+ * to 1102, a frame of assets/undoguy.png per step, spread evenly over the clip.
+ */
+export const UNDO_GUY_LINES: readonly { clip: string; frames: readonly number[] }[] = [
+  { clip: "easel1007", frames: [35, 2, 9, 22, 3, 7, 25, 1, 21, 35, 23, 38, 41, 42, 41, 25, 48, 0, 13, 15, 12, 7, 0, 35, 35, 35, 35] },
+  { clip: "easel1008", frames: [25, 18, 24, 8, 15, 21, 5, 10, 26, 48, 35, 35, 35] },
+  { clip: "easel1009", frames: [27, 28, 3, 35, 47, 7, 28, 0, 21, 0, 26, 2, 10, 6, 28, 32, 35, 35, 32, 35] },
+  { clip: "easel1010", frames: [9, 37, 41, 26, 39, 44, 35, 35, 35, 35] },
+  { clip: "easel1011", frames: [6, 15, 36, 41, 42, 29, 39, 45, 25, 41, 3, 5, 27, 2, 25, 35, 35, 35, 35] },
+  { clip: "easel1012", frames: [15, 35, 47, 32, 23, 28, 48, 49, 50, 35, 35, 35] },
+  { clip: "easel1013", frames: [35, 4, 15, 7, 37, 41, 35, 35, 35] },
+  { clip: "easel1014", frames: [35, 5, 15, 39, 45, 44, 35, 35, 35, 35] },
+  { clip: "easel1015", frames: [3, 15, 45, 31, 11, 40, 43, 35, 35, 35, 35] },
+  { clip: "easel1046", frames: [38, 0, 15, 19, 28, 25, 35, 0, 43] },
+  { clip: "easel1047", frames: [35, 42, 35, 35, 35] },
+  { clip: "easel1018", frames: [4, 15, 28, 37, 41, 0, 29, 35, 43, 35, 35, 35, 35] },
+  { clip: "easel1019", frames: [35, 44, 14, 28, 34, 1, 31, 4, 25, 35] },
+  { clip: "easel1048", frames: [35, 14, 35, 23, 35, 35, 14, 35] },
+  { clip: "easel1021", frames: [48, 51, 12, 34, 20, 45, 35, 35, 35, 35] },
+  { clip: "easel1022", frames: [30, 51, 35, 7, 35, 25, 28, 35, 35, 35] },
+  { clip: "easel1023", frames: [4, 14, 2, 15, 4, 1, 35, 35, 35, 35] },
+  { clip: "easel1024", frames: [31, 37, 30, 45, 29, 2, 39, 41, 35] },
+  { clip: "easel1049", frames: [0, 35, 0, 35, 35, 34, 17, 35, 0, 35, 0, 35, 35, 0] },
+  { clip: "easel1026", frames: [15, 41, 17, 13, 14, 3, 25, 35] },
 ];
 
-/** Undo Guy's face at rest in assets/undoguy.png: frame 156 of Easel.MHK, the one his idle script shows. */
-export const UNDO_GUY_REST = 43;
-
-/** His mouth shapes; frames 0 to 7 of the strip are other buttons and frame 24 is only his eyes. */
-export const UNDO_GUY_TALKING: readonly number[] = Array.from({ length: 40 }, (_, index) => index + 8).filter((frame) => frame !== 24);
+/** His face at rest: frame 156 of Easel.MHK, the one his idle script shows. */
+export const UNDO_GUY_REST = 35;
 
 /** Kid Pix tool numbers (see KIDPIX_TOOL_NAMES) the tube tools stand for. */
 export const TOOL_NUMBER = {

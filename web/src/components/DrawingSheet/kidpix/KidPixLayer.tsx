@@ -37,7 +37,6 @@ import {
   toolLabel,
   UNDO_GUY_LINES,
   UNDO_GUY_REST,
-  UNDO_GUY_TALKING,
   WAND_COUNT,
 } from "./tools";
 
@@ -487,17 +486,19 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
     commitText();
     engineRef.current?.undo();
     const line = UNDO_GUY_LINES[Math.floor(Math.random() * UNDO_GUY_LINES.length)];
-    play(line);
-    const until = performance.now() + (muted ? 0.6 : (audioRef.current?.duration(line) ?? 0.6)) * 1000;
+    play(line.clip);
+    const length = (muted ? 0.6 : (audioRef.current?.duration(line.clip) ?? 0.6)) * 1000;
+    const started = performance.now();
     window.clearInterval(timersRef.current.guy);
     timersRef.current.guy = window.setInterval(() => {
-      if (performance.now() > until) {
+      const step = Math.floor(((performance.now() - started) / length) * line.frames.length);
+      if (step >= line.frames.length) {
         window.clearInterval(timersRef.current.guy);
         setGuyFrame(UNDO_GUY_REST);
       } else {
-        setGuyFrame(UNDO_GUY_TALKING[Math.floor(Math.random() * UNDO_GUY_TALKING.length)]);
+        setGuyFrame(line.frames[step]);
       }
-    }, 85);
+    }, 40);
   };
 
   // The dynamite: a fuse, then every bit of Kid Pix paint is gone (Undo Guy can bring it back).
@@ -664,7 +665,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
 
   const undoGuy = (
     <button type="button" className="kidpix-undo-guy mu-focus" aria-label={labels.undo} title={labels.undo} onClick={undo}>
-      <span aria-hidden style={{ backgroundPosition: `-${guyFrame * 49}px 0` }} />
+      <span aria-hidden style={{ backgroundPosition: `-${guyFrame * 40}px 0` }} />
     </button>
   );
 
