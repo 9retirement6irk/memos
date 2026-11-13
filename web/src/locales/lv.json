@@ -255,7 +255,10 @@
       "kidpix-exit": "Atpakaļ pie zīmēšanas rīkiem",
       "kidpix-sounds": "Kid Pix skaņas",
       "kidpix-clear": "Dzēst Kid Pix krāsu",
-      "kidpix-no-background": "Bez fona"
+      "kidpix-no-background": "Bez fona",
+      "pages": "Lapas",
+      "page": "{{number}}. lapa",
+      "add-page": "Pievienot lapu"
     },
     "no-changes-detected": "Izmaiņas nav konstatētas",
     "save": "Saglabāt",

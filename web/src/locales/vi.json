@@ -219,7 +219,10 @@
       "kidpix-exit": "Quay lại công cụ vẽ",
       "kidpix-sounds": "Âm thanh Kid Pix",
       "kidpix-clear": "Xóa màu vẽ Kid Pix",
-      "kidpix-no-background": "Không có nền"
+      "kidpix-no-background": "Không có nền",
+      "pages": "Trang",
+      "page": "Trang {{number}}",
+      "add-page": "Thêm trang"
     },
     "audio-recorder": {
       "attachment-label": "Ghi âm",

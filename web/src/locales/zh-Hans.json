@@ -281,7 +281,10 @@
       "kidpix-exit": "返回绘图工具",
       "kidpix-sounds": "Kid Pix 音效",
       "kidpix-clear": "擦除 Kid Pix 颜料",
-      "kidpix-no-background": "无背景"
+      "kidpix-no-background": "无背景",
+      "pages": "页面",
+      "page": "第 {{number}} 页",
+      "add-page": "添加页面"
     },
     "audio-recorder": {
       "attachment-label": "录音",

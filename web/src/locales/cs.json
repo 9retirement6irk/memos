@@ -217,7 +217,10 @@
       "kidpix-exit": "Zpět na nástroje kreslení",
       "kidpix-sounds": "Zvuky Kid Pix",
       "kidpix-clear": "Smazat malbu Kid Pix",
-      "kidpix-no-background": "Bez pozadí"
+      "kidpix-no-background": "Bez pozadí",
+      "pages": "Stránky",
+      "page": "Stránka {{number}}",
+      "add-page": "Přidat stránku"
     },
     "no-changes-detected": "Nebyly zjištěny žádné změny",
     "save": "Uložit",

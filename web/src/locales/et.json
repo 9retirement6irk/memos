@@ -255,7 +255,10 @@
       "kidpix-exit": "Tagasi joonistustööriistade juurde",
       "kidpix-sounds": "Kid Pixi helid",
       "kidpix-clear": "Kustuta Kid Pixi värv",
-      "kidpix-no-background": "Taustata"
+      "kidpix-no-background": "Taustata",
+      "pages": "Leheküljed",
+      "page": "Lehekülg {{number}}",
+      "add-page": "Lisa lehekülg"
     },
     "no-changes-detected": "Muudatusi ei tuvastatud",
     "save": "Salvesta",

@@ -217,7 +217,10 @@
       "kidpix-exit": "Tilbake til tegneverktøy",
       "kidpix-sounds": "Kid Pix-lyder",
       "kidpix-clear": "Slett Kid Pix-malingen",
-      "kidpix-no-background": "Ingen bakgrunn"
+      "kidpix-no-background": "Ingen bakgrunn",
+      "pages": "Sider",
+      "page": "Side {{number}}",
+      "add-page": "Legg til side"
     },
     "no-changes-detected": "Ingen endringer oppdaget",
     "save": "Lagre",

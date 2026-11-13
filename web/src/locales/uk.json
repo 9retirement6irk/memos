@@ -217,7 +217,10 @@
       "kidpix-exit": "Повернутися до інструментів малювання",
       "kidpix-sounds": "Звуки Kid Pix",
       "kidpix-clear": "Стерти фарбу Kid Pix",
-      "kidpix-no-background": "Без тла"
+      "kidpix-no-background": "Без тла",
+      "pages": "Сторінки",
+      "page": "Сторінка {{number}}",
+      "add-page": "Додати сторінку"
     },
     "no-changes-detected": "Змін не виявлено",
     "save": "Зберегти",

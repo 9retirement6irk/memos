@@ -217,7 +217,10 @@
       "kidpix-exit": "Zurück zu den Zeichenwerkzeugen",
       "kidpix-sounds": "Kid-Pix-Töne",
       "kidpix-clear": "Kid-Pix-Farbe löschen",
-      "kidpix-no-background": "Kein Hintergrund"
+      "kidpix-no-background": "Kein Hintergrund",
+      "pages": "Seiten",
+      "page": "Seite {{number}}",
+      "add-page": "Seite hinzufügen"
     },
     "no-changes-detected": "Keine Änderungen erkannt",
     "save": "Speichern",

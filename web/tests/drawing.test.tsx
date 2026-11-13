@@ -6,7 +6,7 @@ import { insertSceneChunk, type Scene } from "@usememos/canvas";
 import type { ReactNode } from "react";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { isDrawingFilename } from "@/components/DrawingSheet";
-import { useDrawing } from "@/components/MemoEditor/edit/hooks";
+import { type DrawingSession, useDrawing } from "@/components/MemoEditor/edit/hooks";
 import { EditorProvider, useEditorContext } from "@/components/MemoEditor/edit/state";
 import type { LocalFile } from "@/components/MemoEditor/edit/types/attachment";
 import AttachmentListEditor from "@/components/MemoMetadata/Attachment/AttachmentListEditor";
@@ -112,6 +112,10 @@ const exportDrawing = async () => new Uint8Array(await insertSceneChunk(fixtureP
 
 const toLocalFile = (file: File): LocalFile => ({ file, previewUrl: `blob:${file.name}`, origin: "upload" });
 
+/** Done on one page of the sheet. */
+const pageDone = (key: string, file: File) => ({ order: [key], files: [{ key, file }] });
+const openedPage = (session?: DrawingSession) => session?.pages.find((page) => page.key === session.initialPage);
+
 const wrapper = ({ children }: { children: ReactNode }) => <EditorProvider>{children}</EditorProvider>;
 const renderDrawing = () =>
   renderHook(
@@ -189,7 +193,7 @@ describe("drawing attachments", () => {
     const [url] = fetchMock.mock.calls[0] as unknown as [string];
     expect(url).toBe(getAttachmentUrl(drawingAttachment));
     expect(url).not.toContain("thumbnail");
-    expect(result.current.drawing.session).toMatchObject({ mode: "edit", target: { kind: "attachment", name: drawingAttachment.name } });
+    expect(result.current.drawing.session).toMatchObject({ mode: "edit", initialPage: drawingAttachment.name });
   });
 
   it("reopens a saved drawing with the same elements, and Done replaces it in the draft", async () => {
@@ -205,7 +209,7 @@ describe("drawing attachments", () => {
 
     await act(() => result.current.drawing.openExisting({ kind: "attachment", attachment: drawingAttachment }));
 
-    const reopened = result.current.drawing.session?.scene;
+    const reopened = openedPage(result.current.drawing.session)?.content?.scene;
     expect(reopened?.elements.map((element) => [element.id, element.type])).toEqual([
       ["r1", "rectangle"],
       ["f1", "freedraw"],
@@ -214,7 +218,7 @@ describe("drawing attachments", () => {
     expect(reopened?.elements).toEqual(scene.elements.map((element) => expect.objectContaining(element)));
 
     const edited = new File([exported], "drawing-20261106-130000.canvas.png", { type: "image/png" });
-    act(() => result.current.drawing.done(edited));
+    act(() => result.current.drawing.done(pageDone(drawingAttachment.name, edited)));
 
     // The saved drawing keeps its place; the edit waits to upload over it on save.
     const state = result.current.editor.getState();
@@ -226,7 +230,13 @@ describe("drawing attachments", () => {
 
     // Editing the pending edit again keeps it a replacement of the same attachment.
     await act(() => result.current.drawing.openExisting({ kind: "local", localFile: state.localFiles[0] }));
-    act(() => result.current.drawing.done(new File([exported], "drawing-20261106-140000.canvas.png", { type: "image/png" })));
+    // The pending edit is the page that stands for the saved drawing.
+    expect(result.current.drawing.session?.pages.map((page) => page.key)).toEqual([state.localFiles[0].previewUrl]);
+    act(() =>
+      result.current.drawing.done(
+        pageDone(state.localFiles[0].previewUrl, new File([exported], "drawing-20261106-140000.canvas.png", { type: "image/png" })),
+      ),
+    );
     expect(result.current.editor.getState().localFiles.map((item) => [item.file.name, item.replaces])).toEqual([
       ["drawing-20261106-140000.canvas.png", drawingAttachment.name],
     ]);
@@ -306,7 +316,9 @@ describe("drawing attachments", () => {
     act(() => result.current.editor.dispatch(result.current.editor.actions.setMetadata({ attachments: [drawingAttachment] })));
 
     await act(() => result.current.drawing.openExisting({ kind: "attachment", attachment: drawingAttachment }));
-    act(() => result.current.drawing.done(new File([fixturePng], "drawing-2.canvas.png", { type: "image/png" })));
+    act(() =>
+      result.current.drawing.done(pageDone(drawingAttachment.name, new File([fixturePng], "drawing-2.canvas.png", { type: "image/png" }))),
+    );
 
     // Only its uploader or an admin may remove it from the memo.
     const state = result.current.editor.getState();
@@ -321,14 +333,104 @@ describe("drawing attachments", () => {
     act(() => result.current.editor.dispatch(result.current.editor.actions.setLocalFiles([first, plain])));
 
     await act(() => result.current.drawing.openExisting({ kind: "local", localFile: first }));
-    act(() => result.current.drawing.done(new File([fixturePng], "drawing-3.canvas.png", { type: "image/png" })));
+    act(() =>
+      result.current.drawing.done(pageDone(first.previewUrl, new File([fixturePng], "drawing-3.canvas.png", { type: "image/png" }))),
+    );
     expect(result.current.editor.getState().localFiles.map((item) => item.file.name)).toEqual([
       "drawing-3.canvas.png",
       "drawing-2.canvas.png",
     ]);
 
+    // The swapped file is the draft's first drawing now, so its page comes first.
+    const swapped = result.current.editor.getState().localFiles[0];
     await act(() => result.current.drawing.openExisting({ kind: "local", localFile: plain }));
-    await waitFor(() => expect(result.current.drawing.session?.background).toBeInstanceOf(Blob));
-    expect(result.current.drawing.session).toMatchObject({ mode: "new", target: { kind: "new" } });
+    await waitFor(() => expect(openedPage(result.current.drawing.session)?.content?.background).toBeInstanceOf(Blob));
+    expect(result.current.drawing.session).toMatchObject({ mode: "new", initialPage: plain.previewUrl });
+    expect(result.current.drawing.session?.pages.map((page) => page.key)).toEqual([swapped.previewUrl, plain.previewUrl]);
+
+    // Drawn over, the picture stays and the drawing joins the draft right after it.
+    act(() =>
+      result.current.drawing.done(pageDone(plain.previewUrl, new File([fixturePng], "drawing-4.canvas.png", { type: "image/png" }))),
+    );
+    const state = result.current.editor.getState();
+    expect(state.localFiles.map((item) => item.file.name)).toEqual([
+      "drawing-3.canvas.png",
+      "drawing-2.canvas.png",
+      "drawing-4.canvas.png",
+    ]);
+    expect(state.attachmentOrder).toEqual([swapped.previewUrl, plain.previewUrl, "blob:drawing-4.canvas.png"]);
+  });
+
+  it("opens a new drawing as a new page after the draft's drawings", () => {
+    const photo = create(AttachmentSchema, { name: "attachments/photo", filename: "photo.png", type: "image/png" });
+    const linked = create(AttachmentSchema, {
+      name: "attachments/linked",
+      filename: "drawing-20261101-093000.canvas.png",
+      type: "image/png",
+      externalLink: "https://example.com/drawing.canvas.png",
+    });
+    const local = toLocalFile(new File([fixturePng], "drawing-20261106-120000.canvas.png", { type: "image/png" }));
+    const { result } = renderDrawing();
+    act(() => {
+      const { actions, dispatch } = result.current.editor;
+      dispatch(actions.setMetadata({ attachments: [drawingAttachment, photo, linked] }));
+      dispatch(actions.setLocalFiles([local]));
+    });
+
+    act(() => result.current.drawing.openNew());
+
+    const session = result.current.drawing.session;
+    // Photos and linked drawings are not pages; the draft's own drawings are, in its order.
+    expect(session?.pages.slice(0, 2).map((page) => page.key)).toEqual([drawingAttachment.name, local.previewUrl]);
+    expect(session?.pages).toHaveLength(3);
+    expect(session?.mode).toBe("new");
+    expect(session?.initialPage).toBe(session?.pages[2].key);
+    // Pages other than the one on show are read when shown, not before.
+    expect(session?.pages[0].load).toBeTypeOf("function");
+    expect(session?.pages[2]).toEqual({ key: session?.initialPage });
+  });
+
+  it("adds each new page as its own drawing, in the draft's order right after the page before it", () => {
+    const second = create(AttachmentSchema, { ...drawingAttachment, name: "attachments/drawing2", filename: "drawing-2.canvas.png" });
+    const photo = create(AttachmentSchema, { name: "attachments/photo", filename: "photo.png", type: "image/png" });
+    const { result } = renderDrawing();
+    act(() =>
+      result.current.editor.dispatch(result.current.editor.actions.setMetadata({ attachments: [drawingAttachment, photo, second] })),
+    );
+    act(() => result.current.drawing.openNew());
+    const added = result.current.drawing.session?.initialPage ?? "";
+
+    // The sheet moved its new page between the two saved drawings, and drew on it and on the first.
+    act(() =>
+      result.current.drawing.done({
+        order: [drawingAttachment.name, added, second.name],
+        files: [
+          { key: drawingAttachment.name, file: new File([fixturePng], "drawing-edit.canvas.png", { type: "image/png" }) },
+          { key: added, file: new File([fixturePng], "drawing-new.canvas.png", { type: "image/png" }) },
+        ],
+      }),
+    );
+
+    const state = result.current.editor.getState();
+    expect(state.metadata.attachments).toEqual([drawingAttachment, photo, second]);
+    expect(state.localFiles.map((item) => [item.file.name, item.replaces])).toEqual([
+      ["drawing-edit.canvas.png", drawingAttachment.name],
+      ["drawing-new.canvas.png", undefined],
+    ]);
+    expect(state.attachmentOrder).toEqual([drawingAttachment.name, "blob:drawing-new.canvas.png", photo.name, second.name]);
+    expect(result.current.drawing.session).toBeUndefined();
+  });
+
+  it("leaves the draft as it was when no page changed", () => {
+    const { result } = renderDrawing();
+    act(() => result.current.editor.dispatch(result.current.editor.actions.setMetadata({ attachments: [drawingAttachment] })));
+    act(() => result.current.drawing.openNew());
+
+    act(() => result.current.drawing.done({ order: result.current.drawing.session?.pages.map((page) => page.key) ?? [], files: [] }));
+
+    const state = result.current.editor.getState();
+    expect(state.localFiles).toEqual([]);
+    expect(state.attachmentOrder).toEqual([]);
+    expect(result.current.drawing.session).toBeUndefined();
   });
 });

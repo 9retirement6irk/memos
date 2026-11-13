@@ -217,7 +217,10 @@
       "kidpix-exit": "Tillbaka till ritverktygen",
       "kidpix-sounds": "Kid Pix-ljud",
       "kidpix-clear": "Radera Kid Pix-färgen",
-      "kidpix-no-background": "Ingen bakgrund"
+      "kidpix-no-background": "Ingen bakgrund",
+      "pages": "Sidor",
+      "page": "Sida {{number}}",
+      "add-page": "Lägg till sida"
     },
     "no-changes-detected": "Inga ändringar upptäckta",
     "save": "Spara",

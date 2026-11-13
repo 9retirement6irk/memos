@@ -217,7 +217,10 @@
       "kidpix-exit": "ხატვის ხელსაწყოებზე დაბრუნება",
       "kidpix-sounds": "Kid Pix-ის ხმები",
       "kidpix-clear": "Kid Pix-ის საღებავის წაშლა",
-      "kidpix-no-background": "ფონის გარეშე"
+      "kidpix-no-background": "ფონის გარეშე",
+      "pages": "გვერდები",
+      "page": "გვერდი {{number}}",
+      "add-page": "გვერდის დამატება"
     },
     "no-changes-detected": "ცვლილებები არ აღმოჩენილა",
     "save": "შენახვა",

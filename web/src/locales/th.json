@@ -219,7 +219,10 @@
       "kidpix-exit": "กลับไปที่เครื่องมือวาด",
       "kidpix-sounds": "เสียงของ Kid Pix",
       "kidpix-clear": "ลบสีของ Kid Pix",
-      "kidpix-no-background": "ไม่มีพื้นหลัง"
+      "kidpix-no-background": "ไม่มีพื้นหลัง",
+      "pages": "หน้า",
+      "page": "หน้า {{number}}",
+      "add-page": "เพิ่มหน้า"
     },
     "audio-recorder": {
       "attachment-label": "การบันทึกเสียง",

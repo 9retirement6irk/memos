@@ -326,7 +326,10 @@
       "kidpix-exit": "Tilbake til teikneverktøy",
       "kidpix-sounds": "Kid Pix-lydar",
       "kidpix-clear": "Slett Kid Pix-målinga",
-      "kidpix-no-background": "Ingen bakgrunn"
+      "kidpix-no-background": "Ingen bakgrunn",
+      "pages": "Sider",
+      "page": "Side {{number}}",
+      "add-page": "Legg til side"
     },
     "new-memo": "Nytt notat",
     "no-changes-detected": "Ingen endringar funne",

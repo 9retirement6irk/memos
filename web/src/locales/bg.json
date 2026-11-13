@@ -255,7 +255,10 @@
       "kidpix-exit": "Назад към инструментите за рисуване",
       "kidpix-sounds": "Звуци на Kid Pix",
       "kidpix-clear": "Изтриване на боята от Kid Pix",
-      "kidpix-no-background": "Без фон"
+      "kidpix-no-background": "Без фон",
+      "pages": "Страници",
+      "page": "Страница {{number}}",
+      "add-page": "Добавяне на страница"
     },
     "no-changes-detected": "Не са открити промени",
     "save": "Запазване",

@@ -217,7 +217,10 @@
       "kidpix-exit": "Nazaj na orodja za risanje",
       "kidpix-sounds": "Zvoki Kid Pix",
       "kidpix-clear": "Izbriši barvo Kid Pix",
-      "kidpix-no-background": "Brez ozadja"
+      "kidpix-no-background": "Brez ozadja",
+      "pages": "Strani",
+      "page": "Stran {{number}}",
+      "add-page": "Dodaj stran"
     },
     "no-changes-detected": "Ni zaznanih sprememb",
     "save": "Shrani",

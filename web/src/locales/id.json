@@ -219,7 +219,10 @@
       "kidpix-exit": "Kembali ke alat gambar",
       "kidpix-sounds": "Suara Kid Pix",
       "kidpix-clear": "Hapus cat Kid Pix",
-      "kidpix-no-background": "Tanpa latar belakang"
+      "kidpix-no-background": "Tanpa latar belakang",
+      "pages": "Halaman",
+      "page": "Halaman {{number}}",
+      "add-page": "Tambah halaman"
     },
     "audio-recorder": {
       "attachment-label": "Rekaman audio",

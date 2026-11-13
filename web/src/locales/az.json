@@ -337,7 +337,10 @@
       "kidpix-exit": "Rəsm alətlərinə qayıt",
       "kidpix-sounds": "Kid Pix səsləri",
       "kidpix-clear": "Kid Pix boyasını sil",
-      "kidpix-no-background": "Fon yoxdur"
+      "kidpix-no-background": "Fon yoxdur",
+      "pages": "Səhifələr",
+      "page": "Səhifə {{number}}",
+      "add-page": "Səhifə əlavə et"
     },
     "new-memo": "Yeni qeyd",
     "no-changes-detected": "Dəyişiklik aşkarlanmadı",

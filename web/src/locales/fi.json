@@ -255,7 +255,10 @@
       "kidpix-exit": "Takaisin piirtotyökaluihin",
       "kidpix-sounds": "Kid Pix -äänet",
       "kidpix-clear": "Pyyhi Kid Pix -maali",
-      "kidpix-no-background": "Ei taustaa"
+      "kidpix-no-background": "Ei taustaa",
+      "pages": "Sivut",
+      "page": "Sivu {{number}}",
+      "add-page": "Lisää sivu"
     },
     "no-changes-detected": "Muutoksia ei havaittu",
     "save": "Tallentaa",
