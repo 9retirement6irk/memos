@@ -432,104 +432,35 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-/* The Pencil's kinds lie in the molded panel Kid Pix keeps them in (TP.MHK frame 429). */
+/*
+ * A tool's kinds lie in the molded panel Kid Pix keeps them in. KindPanel sizes the panel and
+ * places each kind from the disc's button scripts; a kind's art may swing outside its button.
+ */
 .kidpix-kinds {
   position: absolute;
   left: -5px;
   top: -3px;
-  width: 203px;
-  height: 88px;
-  background-image: url("./assets/kinds-panel.png");
+  background-repeat: no-repeat;
 }
 .kidpix-kind {
   position: absolute;
-  top: 4px;
-  width: 44px;
-  height: 80px;
-  border-radius: 16px;
-  transition: transform 0.12s;
+  border-radius: 12px;
 }
-.kidpix-kind:nth-child(1) {
-  --kind-x: 6px;
-}
-.kidpix-kind:nth-child(2) {
-  --kind-x: 52px;
-}
-.kidpix-kind:nth-child(3) {
-  --kind-x: 98px;
-}
-.kidpix-kind:nth-child(4) {
-  --kind-x: 150px;
-}
-.kidpix-kind {
-  left: var(--kind-x);
-}
+/* The one being picked up passes over its neighbors. */
 .kidpix-kind[aria-pressed="true"] {
-  box-shadow: 0 0 0 2px #ffe95c;
-  transform: translateY(-2px);
+  z-index: 1;
 }
-.kidpix-kind > span {
+.kidpix-kind-art {
+  position: absolute;
+  pointer-events: none;
+}
+.kidpix-kind-art > span {
   position: absolute;
   inset: 0;
-  image-rendering: pixelated;
-}
-/* The body takes the color in hand; the art over it carries the shading. */
-.kidpix-kind > span:first-child {
-  -webkit-mask-image: url("./assets/pencils-mask.png");
-  mask-image: url("./assets/pencils-mask.png");
+  background-repeat: no-repeat;
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
-  -webkit-mask-position: calc(0px - var(--kind-x)) -4px;
-  mask-position: calc(0px - var(--kind-x)) -4px;
-}
-.kidpix-kind > span:last-child {
-  background-image: url("./assets/pencils.png");
-  background-repeat: no-repeat;
-  background-position: calc(0px - var(--kind-x)) -4px;
-}
-/* The brush zone's two kinds lie in their own panel (TP.MHK frame 430). */
-.kidpix-kinds[data-art="brush"] {
-  background-image: url("./assets/brushkinds-panel.png");
-}
-.kidpix-kinds[data-art="brush"] > .kidpix-kind {
-  width: 56px;
-}
-.kidpix-kinds[data-art="brush"] > .kidpix-kind:nth-child(1) {
-  --kind-x: 28px;
-}
-.kidpix-kinds[data-art="brush"] > .kidpix-kind:nth-child(2) {
-  --kind-x: 108px;
-  width: 62px;
-}
-.kidpix-kinds[data-art="brush"] > .kidpix-kind > span:first-child {
-  -webkit-mask-image: url("./assets/brushkinds-mask.png");
-  mask-image: url("./assets/brushkinds-mask.png");
-}
-.kidpix-kinds[data-art="brush"] > .kidpix-kind > span:last-child {
-  background-image: url("./assets/brushkinds.png");
-}
-/* The three Fill Buckets, each in its mold (TP.MHK frame 431). */
-.kidpix-kinds[data-art="bucket"] {
-  background-image: url("./assets/bucketkinds-panel.png");
-}
-.kidpix-kinds[data-art="bucket"] > .kidpix-kind {
-  width: 62px;
-}
-.kidpix-kinds[data-art="bucket"] > .kidpix-kind:nth-child(1) {
-  --kind-x: 7px;
-}
-.kidpix-kinds[data-art="bucket"] > .kidpix-kind:nth-child(2) {
-  --kind-x: 71px;
-}
-.kidpix-kinds[data-art="bucket"] > .kidpix-kind:nth-child(3) {
-  --kind-x: 137px;
-}
-.kidpix-kinds[data-art="bucket"] > .kidpix-kind > span:first-child {
-  -webkit-mask-image: url("./assets/bucketkinds-mask.png");
-  mask-image: url("./assets/bucketkinds-mask.png");
-}
-.kidpix-kinds[data-art="bucket"] > .kidpix-kind > span:last-child {
-  background-image: url("./assets/bucketkinds.png");
+  image-rendering: pixelated;
 }
 .kidpix-options {
   position: absolute;

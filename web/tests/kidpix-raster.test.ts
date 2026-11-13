@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { KIDPIX_SOUND_SPRITE, KIDPIX_TOOL_NAMES, KIDPIX_TOOL_SOUNDS } from "@/components/DrawingSheet/kidpix/data";
+import { KIDPIX_KINDS } from "@/components/DrawingSheet/kidpix/kinds";
 import { floodMask, mixPixels, paintBounds, planTiles } from "@/components/DrawingSheet/kidpix/raster";
 import {
   BUCKET_KINDS,
@@ -86,6 +87,25 @@ describe("Kid Pix tables", () => {
     ]);
     for (const shape of PENCIL_SHAPES) expect(KIDPIX_TOOL_SOUNDS[shape.tool], shape.name).toBeDefined();
     expect(BUCKET_KINDS).toHaveLength(3);
+  });
+
+  it("has every frame and clip the tray's tool kinds are scripted to show and play", () => {
+    for (const [name, group] of Object.entries(KIDPIX_KINDS)) {
+      for (const [x, y, width, height] of group.cells) {
+        expect(x + width, name).toBeLessThanOrEqual(group.sheet[0]);
+        expect(y + height, name).toBeLessThanOrEqual(group.sheet[1]);
+      }
+      for (const kind of group.kinds) {
+        for (const script of [kind.putDown, kind.pickUp, kind.wiggle]) {
+          expect(script.length, name).toBeGreaterThan(0);
+          for (const cell of script) expect(group.cells[cell], name).toBeDefined();
+        }
+        for (const clip of kind.sounds) expect(KIDPIX_SOUND_SPRITE[clip], clip).toBeDefined();
+      }
+    }
+    expect(KIDPIX_KINDS.pencil.kinds).toHaveLength(4);
+    expect(KIDPIX_KINDS.brush.kinds).toHaveLength(2);
+    expect(KIDPIX_KINDS.bucket.kinds).toHaveLength(3);
   });
 
   it("names every tool Kid Pix has and finds each of their clips in the sprite", () => {
