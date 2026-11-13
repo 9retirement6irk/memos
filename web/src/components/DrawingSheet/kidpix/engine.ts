@@ -18,6 +18,9 @@ export interface KidPixImages {
   brushes?: HTMLImageElement;
 }
 
+/** Something the layer can hold in a frame and press into the paint: a sticker, or a picture brought in. */
+export type KidPixPicture = Pick<SwfPicture, "width" | "height" | "draw">;
+
 export interface KidPixTile extends Box {
   blob: Blob;
 }
@@ -680,8 +683,8 @@ export class KidPixEngine {
   }
 
   /** Places a sticker at its own size, centered where the pointer came down. */
-  /** Flattens a sticker into the paint: in `box`, turned over if it was flipped. */
-  sticker(picture: SwfPicture, box: Box, flipX = false, flipY = false) {
+  /** Flattens a sticker, or a picture brought in, into the paint: in `box`, turned over if it was flipped. */
+  sticker(picture: KidPixPicture, box: Box, flipX = false, flipY = false) {
     this.remember();
     const ctx = this.ctx;
     ctx.save();

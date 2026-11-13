@@ -322,7 +322,22 @@ const DrawingSheet = ({ mode, pages: initialPages, initialPage, onDone, onClose 
     setWidth(strokeWidth);
   };
 
+  // In Kid Pix mode a picture goes onto the paint layer, in a frame to move, resize and flip.
+  const addKidPixPictures = (files: File[]) => {
+    kidPixRef.current
+      ?.addPictures(files)
+      .then((failed) => {
+        if (failed > 0) showErrorToast(t("editor.drawing.image-failed"));
+      })
+      .catch(() => showErrorToast(t("editor.drawing.image-failed")));
+  };
+
   const insertImages = (files: File[]) => {
+    const images = files.filter((candidate) => candidate.type.startsWith("image/"));
+    if (kidPix) {
+      if (images.length > 0) addKidPixPictures(images);
+      return;
+    }
     for (const file of files.filter((candidate) => candidate.type.startsWith("image/"))) {
       activeCanvas()
         ?.insertImage(file)
@@ -336,6 +351,10 @@ const DrawingSheet = ({ mode, pages: initialPages, initialPage, onDone, onClose 
    * they can be moved as one or spread apart.
    */
   const insertPhotos = async (files: File[]) => {
+    if (kidPix) {
+      addKidPixPictures(files);
+      return;
+    }
     const canvas = activeCanvas();
     const surface = surfaceRef.current;
     if (!canvas || !surface) return;
@@ -412,7 +431,8 @@ const DrawingSheet = ({ mode, pages: initialPages, initialPage, onDone, onClose 
 
   // The drawing surface inserts pasted pictures itself; a paste anywhere else on the sheet lands there too.
   const handlePaste = (event: ClipboardEvent) => {
-    if (surfaceRef.current?.contains(event.target as Node)) return;
+    // In Kid Pix mode the paint layer has the keys, and a pasted picture belongs to it wherever the paste lands.
+    if (!kidPix && surfaceRef.current?.contains(event.target as Node)) return;
     insertImages(Array.from(event.clipboardData.files));
   };
 
@@ -608,39 +628,40 @@ const DrawingSheet = ({ mode, pages: initialPages, initialPage, onDone, onClose 
       />
     </>
   );
+  const imageControl = immichAvailable ? (
+    // With Immich connected, the picture comes from this device or from there.
+    <Menu.Root modal={false} size={size ?? "md"}>
+      <Tooltip.Root>
+        <Tooltip.Trigger
+          render={
+            <Menu.Trigger
+              render={<Button variant="ghost" size={size} aria-label={t("editor.insert-menu.insert-image")} icon={<ImagePlusIcon />} />}
+            />
+          }
+        />
+        <Tooltip.Popup>{t("editor.insert-menu.insert-image")}</Tooltip.Popup>
+      </Tooltip.Root>
+      <Menu.Popup>
+        <Menu.Item icon={<ImageIcon />} onClick={() => fileInputRef.current?.click()}>
+          {t("editor.drawing.image-from-device")}
+        </Menu.Item>
+        <Menu.Item icon={<ImagesIcon />} onClick={() => setImmichOpen(true)}>
+          {t("immich.insert")}
+        </Menu.Item>
+      </Menu.Popup>
+    </Menu.Root>
+  ) : (
+    <IconAction
+      size={size}
+      label={t("editor.insert-menu.insert-image")}
+      icon={<ImagePlusIcon />}
+      onClick={() => fileInputRef.current?.click()}
+    />
+  );
   const viewControls = (
     <>
       <IconAction size={size} label={t("editor.drawing.zoom-to-fit")} icon={<ScanIcon />} onClick={() => activeCanvas()?.zoomToFit()} />
-      {immichAvailable ? (
-        // With Immich connected, the picture comes from this device or from there.
-        <Menu.Root modal={false} size={size ?? "md"}>
-          <Tooltip.Root>
-            <Tooltip.Trigger
-              render={
-                <Menu.Trigger
-                  render={<Button variant="ghost" size={size} aria-label={t("editor.insert-menu.insert-image")} icon={<ImagePlusIcon />} />}
-                />
-              }
-            />
-            <Tooltip.Popup>{t("editor.insert-menu.insert-image")}</Tooltip.Popup>
-          </Tooltip.Root>
-          <Menu.Popup>
-            <Menu.Item icon={<ImageIcon />} onClick={() => fileInputRef.current?.click()}>
-              {t("editor.drawing.image-from-device")}
-            </Menu.Item>
-            <Menu.Item icon={<ImagesIcon />} onClick={() => setImmichOpen(true)}>
-              {t("immich.insert")}
-            </Menu.Item>
-          </Menu.Popup>
-        </Menu.Root>
-      ) : (
-        <IconAction
-          size={size}
-          label={t("editor.insert-menu.insert-image")}
-          icon={<ImagePlusIcon />}
-          onClick={() => fileInputRef.current?.click()}
-        />
-      )}
+      {imageControl}
       {paperControl}
     </>
   );
@@ -658,9 +679,30 @@ const DrawingSheet = ({ mode, pages: initialPages, initialPage, onDone, onClose 
   );
   const kidPixControls = (
     <>
-      <Button variant="ghost" size={size} loading={isLeavingKidPix} loadingLabel={t("editor.drawing.kidpix-exit")} onClick={leaveKidPix}>
-        {t("editor.drawing.kidpix-exit")}
-      </Button>
+      {isWide ? (
+        <Button variant="ghost" size={size} loading={isLeavingKidPix} loadingLabel={t("editor.drawing.kidpix-exit")} onClick={leaveKidPix}>
+          {t("editor.drawing.kidpix-exit")}
+        </Button>
+      ) : (
+        // A phone's top row has no room for the words beside Cancel, the picture button and Done.
+        <Tooltip.Root>
+          <Tooltip.Trigger
+            render={
+              <Button
+                variant="ghost"
+                size={size}
+                aria-label={t("editor.drawing.kidpix-exit")}
+                icon={<PencilIcon />}
+                loading={isLeavingKidPix}
+                loadingLabel={t("editor.drawing.kidpix-exit")}
+                onClick={leaveKidPix}
+              />
+            }
+          />
+          <Tooltip.Popup>{t("editor.drawing.kidpix-exit")}</Tooltip.Popup>
+        </Tooltip.Root>
+      )}
+      {imageControl}
       <Tooltip.Root>
         <Tooltip.Trigger
           render={
