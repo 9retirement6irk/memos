@@ -1,37 +1,118 @@
-> ✨ Featured sponsor: [CodeRabbit — Industry-leading AI code reviews](https://coderabbit.link/usememos).
+# Memos
 
-<h1 id="memos">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/usememos/.github/refs/heads/main/assets/brand/lockup-on-dark.svg" />
-    <img src="https://raw.githubusercontent.com/usememos/.github/refs/heads/main/assets/brand/lockup.svg" alt="Memos" width="220" />
-  </picture>
-</h1>
+A personal fork of [Memos](https://github.com/usememos/memos), the self-hosted note-taking app. It
+adds Windows Vista's Aero look, a journaling mode, connections to Immich, Dawarich and Home
+Assistant, multi-page drawings with Kid Pix mode, and inline PDFs. It stays close to upstream:
+upstream changes come in every day, and the database is left exactly as stock Memos expects, so
+you can go back to stock Memos at any time.
 
-### Simple note-taking for your everyday thoughts.
+- [What this fork adds](#what-this-fork-adds)
+- [Your data stays stock Memos](#your-data-stays-stock-memos)
+- [Install](#install)
+- [What it connects to](#what-it-connects-to)
+- [License](#license)
 
-Memos is an open-source, self-hosted note-taking app that brings your everyday thoughts together in a personal timeline. Your data stays yours, and you choose what to keep private or share.
+## What this fork adds
 
-[Demo](https://demo.usememos.com) · [Install](#quick-start) · [Docs](https://usememos.com/docs) · [Discord](https://discord.gg/tfPJa4UmAv)
+### Aero themes
 
-[![Docker pulls](https://img.shields.io/docker/pulls/neosmemo/memos?style=flat-square&logo=docker)](https://hub.docker.com/r/neosmemo/memos)
-[![Latest release](https://img.shields.io/github/v/release/usememos/memos?style=flat-square&label=Release)](https://github.com/usememos/memos/releases)
+Four extra themes in **Settings → Preferences → Theme**: **Aero · Light**, **Aero · Dark**,
+**Aero · Paper**, and **Aero · Sync with system**, which follows your device's light or dark mode.
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/usememos/.github/refs/heads/main/assets/previews/timeline-dark.png" />
-  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/usememos/.github/refs/heads/main/assets/previews/timeline-light.png" />
-  <img src="https://raw.githubusercontent.com/usememos/.github/refs/heads/main/assets/previews/timeline-light.png" alt="The Memos timeline with a memo composer and recent memos" />
-</picture>
+- **Windows:** a glass sidebar with a spiral binding, and each page in a Vista window. The red
+  close button signs out, and with two or more memo columns the window narrows to fit them.
+- **Memos:** sticky notes in seven colours, with tape, a curled corner and a gold star when
+  pinned. Tags are glossy pills.
+- **Controls:** Vista buttons, fields, menus, checkboxes, switches, dialogs, toast balloons and an
+  orange calendar pad.
+- **Icons:** Vista icons in place of the usual ones, on the editor's formatting toolbar too.
+  Profile pictures are square, in the Vista user frame.
+- **App icon:** while an Aero theme is on, the browser tab, home-screen icon and installed app use
+  a Windows Journal notebook named after your instance.
 
-## About Memos
+### Journaling mode
 
-Memos is an open-source, self-hosted note-taking app for your everyday thoughts.
+Choose a journal Space in **Settings → Journal**. New memos there open as journal entries, and
+the ＋ menu has a **Journaling mode** switch for writing an entry anywhere else.
 
-- **Everyday writing.** A single sentence can be a whole memo, or you can take your time with a longer entry, using Markdown to give your words more structure.
-- **A personal timeline.** Each memo stays with the day you wrote it, bringing your thoughts together in a timeline you can look back through. Tags connect related thoughts across those days, making it easy to pick up a topic again or find something you remember writing.
-- **Your own data.** Your record lives on your own server, and your data stays yours.
-- **Sharing you control.** You choose what stays private, what to share with family and friends, and what to publish on the web. In shared spaces, you can write alongside others while each person keeps their own memos.
+- **Entries:** each one has a dated heading, a rotating prompt, your text, a checklist of daily
+  goals, the activities you did, and an optional place and weather line.
+- **Moods:** modelled on Apple's State of Mind.
+  - Rate the whole day or right now, on a seven-step scale from very unpleasant to very pleasant.
+  - Optionally add feeling words (Apple's 38) and what had the biggest impact (Apple's 18
+    causes).
+  - **Log how I feel** in the ＋ menu adds a quick check-in to any memo.
+- **Place and weather:** the place can be where you are now, where Dawarich says you were, or a
+  search. The weather comes from Open-Meteo for that place and hour, past dates included.
+- **Suggestions from your photos:** recent Immich photos are grouped into outings. **Write about
+  this** starts an entry dated when they were taken, at the place you visited, with the photos
+  and, optionally, a route map attached.
+- **Journal panel:** beside the journal Space you get:
+  - your streak and On This Day from the past five years
+  - a mood calendar for the month and a mood trend over eight weeks
+  - the activities and causes linked with your best and hardest days
+- **Its own view:** the journal Space can keep its own layout, such as a newest-first list,
+  without changing Home's.
+- **Streak reminders:** reminders through Home Assistant at the times and on the days you choose.
+  They can be sent only on days you haven't written, and warn you when a streak is at risk.
 
-## Quick start
+Entries are ordinary Markdown memos with tags such as `#mood/pleasant`, `#felt/grateful` and
+`#did/family`, so they read and search the same in stock Memos.
+
+### Immich
+
+Connect your own [Immich](https://immich.app) server in **Settings → Immich**. Each user connects
+separately. Then:
+
+- **Photos from Immich** in the editor's ＋ menu adds full-size copies to a memo. They keep
+  working if Immich is offline or the photo is deleted there.
+- The drawing sheet can insert Immich photos.
+- The journal uses them for its suggestions.
+
+Your API key stays on the Memos server and is never sent back to the browser.
+
+### Dawarich
+
+Connect [Dawarich](https://dawarich.app) in **Settings → Dawarich**, again per user.
+
+- **Route from Dawarich** in the ＋ menu attaches a map of a day's travel, or of one journey. It
+  shows the times and distance, over OpenStreetMap tiles that you can turn off.
+- The journal uses your visits to name places.
+
+### Drawings
+
+- **Pages:** a memo's drawings work as pages of one drawing, with tabs in the drawing sheet and the
+  viewer. **Add page** puts a new page after the current one.
+- **Notebook paper:** draw on college-ruled, wide-ruled, Gregg-ruled, graph or dot-grid paper.
+- **Kid Pix mode:** a second set of tools in the style of Kid Pix Deluxe 4, with its art, fonts and
+  sounds:
+  - tools: the Wacky Brush, Spray Can, Paint Can, Electric Mixer and dynamite
+  - over 2,000 rubber stamps, over 900 stickers and 180 backgrounds
+  - Undo Guy
+
+  What you paint is added to the drawing when you leave the mode.
+
+Each page is still an ordinary `.canvas.png` attachment, so stock Memos shows every drawing.
+
+### Inline PDFs
+
+A PDF attached to a memo shows in the memo, one page at a time, with page turning, open and
+download. PDFs load only when they scroll into view.
+
+## Your data stays stock Memos
+
+The fork never changes the database schema. Its extras are kept where stock Memos ignores them:
+
+- **Settings and connections:** each user's settings and connections are stored as rows in
+  Memos' existing settings table.
+- **Content:** ordinary memos, tags and attachments.
+- **Some display choices:** kept in your browser.
+
+To go back, point a stock Memos image at the same data folder. Use a version at least as new as
+the fork's last upstream sync. You keep every memo, entry, mood tag, drawing and photo. Only the
+fork's extra features and settings go away.
+
+## Install
 
 With Docker installed, run:
 
@@ -40,43 +121,45 @@ docker run -d \
   --name memos \
   -p 5230:5230 \
   -v ~/.memos:/var/opt/memos \
-  neosmemo/memos:stable
+  ghcr.io/9retirement6irk/memos:main
 ```
 
-Open http://localhost:5230 and create the first account. Everything Memos keeps is in `~/.memos`, so back up that one folder.
+Open http://localhost:5230 and create the first account. Everything Memos keeps is in `~/.memos`,
+so back up that one folder.
 
-Other ways to run Memos, including Docker Compose, Kubernetes, and a plain binary, are in the [deployment guide](https://usememos.com/docs/deploy).
+**Updates:** every change to `main` publishes a new `ghcr.io/9retirement6irk/memos:main` image
+(also tagged with its short commit). Pull it and restart the container to update. Upstream
+changes arrive through a daily pull request and reach the image once it's merged.
 
-## Upgrading
+Memos' own [deployment guide](https://usememos.com/docs/deploy) covers Docker Compose and reverse
+proxies. Use this image in place of `neosmemo/memos`.
 
-Releases are tagged `YY.MM.N`, with release candidates as `YY.MM.N-rc.K` and no `v` prefix. The Docker tag `stable` follows stable releases, a month tag such as `26.10` follows the newest stable release of that month, and `canary` follows development builds. Coming from a release before v0.31.0, run [v0.31.0](https://github.com/usememos/memos/releases/tag/v0.31.0) once first; see the [upgrade requirements](store/migration/README.md).
+## What it connects to
 
-## Around Memos
+The fork's extras reach outside your server only when you use them:
 
-- [Web Clipper](https://usememos.com/web-clipper) for [Chrome](https://chromewebstore.google.com/detail/memos-web-clipper/nebaoebnljalfegiidibihhkebeiklbl) and [Firefox](https://addons.mozilla.org/en-US/firefox/addon/memos-web-clipper/) saves pages, selections, and images to your memos as Markdown with a link to the source.
-- [Memogram](https://github.com/usememos/telegram-integration) is a Telegram bot that saves your messages and images to Memos.
-- The [API](https://usememos.com/docs/api/latest) and [MCP server](https://usememos.com/docs/integrations/mcp) connect Memos to your own scripts and AI tools.
+| Service | When | What it sends |
+| --- | --- | --- |
+| Immich, Dawarich, Home Assistant | After you connect them in Settings | Requests from the Memos server, with the key you gave it. Keys never go back to the browser. |
+| [Open-Meteo](https://open-meteo.com) | Weather in a journal entry | The entry's place and hour, from your browser |
+| [Nominatim](https://nominatim.openstreetmap.org) (OpenStreetMap) | Searching for, or naming, a place | The search text or coordinates, from your browser |
+| OpenStreetMap tiles | Route maps with the map turned on | The map area shown, from your browser |
 
-## Sponsors
+Addresses you enter for Immich, Dawarich and Home Assistant are checked before the server
+connects. Loopback, link-local and cloud metadata addresses are refused, and redirects are
+followed only on the same host.
 
-<p>
-  <a href="https://coderabbit.link/usememos" target="_blank" rel="noopener"><picture><source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/usememos/.github/refs/heads/main/assets/sponsors/coderabbit/white-typemark.svg" /><img src="https://raw.githubusercontent.com/usememos/.github/refs/heads/main/assets/sponsors/coderabbit/orange-typemark.svg" alt="CodeRabbit" height="40" align="middle" /></picture></a>
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  <a href="https://www.testmuai.com/?utm_medium=sponsor&utm_source=memos" target="_blank" rel="noopener"><picture><source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/usememos/.github/refs/heads/main/assets/sponsors/testmuai/white.png" /><img src="https://raw.githubusercontent.com/usememos/.github/refs/heads/main/assets/sponsors/testmuai/black.png" alt="TestMu AI" height="30" align="middle" /></picture></a>
-</p>
+## Based on Memos
 
-Sponsor Memos through [GitHub Sponsors](https://github.com/sponsors/usememos).
+### Simple note-taking for your everyday thoughts.
 
-## Help and contributing
+Memos is an open-source, self-hosted note-taking app that brings your everyday thoughts together in a personal timeline. Your data stays yours, and you choose what to keep private or share.
 
-Questions go to the [docs](https://usememos.com/docs), [Discord](https://discord.gg/tfPJa4UmAv), or [GitHub Discussions](https://github.com/usememos/memos/discussions). Bugs and ideas go to [issues](https://github.com/usememos/memos/issues/new/choose). Code changes start with the [contributing guide](https://usememos.com/docs/development/contributing).
-
-## Star History
-
-<p>
-  <a href="https://www.star-history.com/usememos/memos"><picture><source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/badge?repo=usememos/memos&type=rank&theme=dark" /><source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/badge?repo=usememos/memos&type=rank" /><img alt="Star History Rank" src="https://api.star-history.com/badge?repo=usememos/memos&type=rank" /></picture></a>
-  <a href="https://www.star-history.com/usememos/memos"><picture><source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/badge?repo=usememos/memos&type=trending&theme=dark" /><source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/badge?repo=usememos/memos&type=trending" /><img alt="GitHub Trending Repository of the Day" src="https://api.star-history.com/badge?repo=usememos/memos&type=trending" /></picture></a>
-</p>
+All the credit for Memos itself goes to its authors. For help with Memos itself, see its
+[docs](https://usememos.com/docs), [Discord](https://discord.gg/tfPJa4UmAv) and
+[GitHub](https://github.com/usememos/memos), and consider
+[sponsoring it](https://github.com/sponsors/usememos). Problems with this fork's own features
+belong in [this repository's issues](../../issues), not upstream's.
 
 ## License
 
