@@ -256,7 +256,10 @@
       "kidpix-exit": "Înapoi la instrumentele de desen",
       "kidpix-sounds": "Sunete Kid Pix",
       "kidpix-clear": "Șterge vopseaua Kid Pix",
-      "kidpix-no-background": "Fără fundal"
+      "kidpix-no-background": "Fără fundal",
+      "pages": "Pagini",
+      "page": "Pagina {{number}}",
+      "add-page": "Adăugați o pagină"
     },
     "no-changes-detected": "Nu au fost detectate modificări",
     "save": "Salva",

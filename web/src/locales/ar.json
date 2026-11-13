@@ -220,7 +220,10 @@
       "kidpix-exit": "العودة إلى أدوات الرسم",
       "kidpix-sounds": "أصوات Kid Pix",
       "kidpix-clear": "مسح طلاء Kid Pix",
-      "kidpix-no-background": "بدون خلفية"
+      "kidpix-no-background": "بدون خلفية",
+      "pages": "الصفحات",
+      "page": "الصفحة {{number}}",
+      "add-page": "إضافة صفحة"
     },
     "audio-recorder": {
       "attachment-label": "تسجيل صوتي",

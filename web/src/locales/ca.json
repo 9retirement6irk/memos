@@ -218,7 +218,10 @@
       "kidpix-exit": "Torna a les eines de dibuix",
       "kidpix-sounds": "Sons de Kid Pix",
       "kidpix-clear": "Esborra la pintura de Kid Pix",
-      "kidpix-no-background": "Sense fons"
+      "kidpix-no-background": "Sense fons",
+      "pages": "Pàgines",
+      "page": "Pàgina {{number}}",
+      "add-page": "Afegeix una pàgina"
     },
     "no-changes-detected": "No s'han detectat canvis",
     "save": "Guarda",

@@ -220,7 +220,10 @@
       "kidpix-exit": "ड्रॉइंग टूल पर वापस जाएँ",
       "kidpix-sounds": "Kid Pix की आवाज़ें",
       "kidpix-clear": "Kid Pix का रंग मिटाएँ",
-      "kidpix-no-background": "कोई पृष्ठभूमि नहीं"
+      "kidpix-no-background": "कोई पृष्ठभूमि नहीं",
+      "pages": "पृष्ठ",
+      "page": "पृष्ठ {{number}}",
+      "add-page": "पृष्ठ जोड़ें"
     },
     "audio-recorder": {
       "attachment-label": "ऑडियो रिकॉर्डिंग",

@@ -1,4 +1,4 @@
-import type { CanvasHandle, Scene } from "@usememos/canvas";
+import type { CanvasHandle } from "@usememos/canvas";
 import { Canvas } from "@usememos/canvas/react";
 import { Button, Dialog, Spinner, Tooltip } from "@usememos/ui";
 import { PencilLineIcon, ScanIcon, XIcon } from "lucide-react";
@@ -11,11 +11,14 @@ import { showErrorToast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 import type { Attachment } from "@/types/proto/api/attachment_service_pb";
 import type { Memo } from "@/types/proto/api/memo_service_pb";
+import { getAttachmentUrl } from "@/utils/attachment";
 import { useTranslate } from "@/utils/i18n";
 import { canManageAttachment } from "@/utils/user";
 import { DrawingDialogPopup, FloatingBar, FloatingRow } from "./DrawingFrame";
 import DrawingSheet from "./DrawingSheet";
-import { fetchDrawingFile, readDrawing } from "./drawing";
+import { type DrawingContent, fetchDrawingFile, isDrawingFilename, readDrawing } from "./drawing";
+import { PageTabs } from "./PageTabs";
+import { type DrawingPage, type DrawingPagesResult, isNewPageKey, placeNewPages } from "./pages";
 import { useCanvasTheme } from "./useCanvasTheme";
 
 export interface DrawingViewerProps {
@@ -29,12 +32,20 @@ export interface DrawingViewerProps {
   onNoScene: () => void;
 }
 
+/** The memo's drawings, the pages of the viewer: images named like drawings, stored on this server. */
+const memoDrawings = (attachments: readonly Attachment[]): Attachment[] =>
+  attachments.filter((attachment) => isDrawingFilename(attachment.filename) && !attachment.externalLink);
+
+/** A page's content in the viewer: being read, read (a scene, or a picture without one), or failed. */
+type PageView = { status: "loading" } | { status: "failed" } | { status: "ready"; content: DrawingContent; version: number };
+
 /**
  * A drawing opened from a memo: the canvas in its read-only mode (pan, zoom, copy), with
- * Zoom to fit and, for whoever may change the memo, Edit. Edit turns the viewer
- * into the drawing sheet; Done replaces the drawing's file under the same name, stamps the
- * memo's update time and returns to viewing the new version. An edit of someone else's
- * drawing is added to the memo beside it.
+ * Zoom to fit and, for whoever may change the memo, Edit. The memo's other drawings are its
+ * pages, under page tabs. Edit turns the viewer into the drawing sheet on the same pages;
+ * Done replaces each changed drawing's file under the same name, adds each new page right
+ * after the page before it, stamps the memo's update time and returns to viewing. An edit of
+ * someone else's drawing is added to the memo beside it.
  */
 const DrawingViewer = ({ attachment: initialAttachment, memo, canEdit, onClose, onNoScene }: DrawingViewerProps) => {
   const t = useTranslate();
@@ -45,63 +56,152 @@ const DrawingViewer = ({ attachment: initialAttachment, memo, canEdit, onClose, 
   const { theme, fontFamily } = useCanvasTheme();
   const { mutateAsync: updateMemo } = useUpdateMemo(memo.name);
   const canvasRef = useRef<CanvasHandle>(null);
-  const [attachment, setAttachment] = useState(initialAttachment);
-  const [scene, setScene] = useState<Scene>();
+  const [activeName, setActiveName] = useState(initialAttachment.name);
+  const [views, setViews] = useState<Record<string, PageView | undefined>>({});
   const [isEditing, setIsEditing] = useState(false);
-  // An edit saved as a copy whose memo update failed: the user's own, so a retry replaces it
-  // instead of uploading another.
-  const unlinkedCopy = useRef<Attachment>(undefined);
-  // The load runs once per attachment; it reports through the host's committed callbacks.
+  // Files saved by an edit whose memo update failed: the user's own, so a retry replaces them
+  // instead of uploading more. Keyed by the sheet's page.
+  const unlinkedUploads = useRef(new Map<string, Attachment>());
+  const loads = useRef(new Map<string, AbortController>());
+  // Pages whose file holds no scene: their edit is drawn over the picture, so it joins the memo beside it.
+  const pictures = useRef(new Set<string>());
+  // The pages report through the host's committed callbacks.
   const showNoScene = useEffectEvent(onNoScene);
   const failToOpen = useEffectEvent(() => {
     showErrorToast(t("editor.drawing.open-failed"));
     onClose();
   });
 
-  useEffect(() => {
+  const listed = memoDrawings(memo.attachments);
+  // The drawing opened stays a page even before the memo lists it.
+  const pages = listed.some((item) => item.name === initialAttachment.name) ? listed : [initialAttachment, ...listed];
+  const active = pages.find((item) => item.name === activeName) ?? initialAttachment;
+  const activeView = views[active.name];
+
+  const loadPage = useEffectEvent((attachment: Attachment) => {
+    if (loads.current.has(attachment.name)) return;
     const controller = new AbortController();
-    fetchDrawingFile(initialAttachment, controller.signal)
+    loads.current.set(attachment.name, controller);
+    setViews((current) => ({ ...current, [attachment.name]: { status: "loading" } }));
+    fetchDrawingFile(attachment, controller.signal)
       .then(readDrawing)
       .then((content) => {
         if (controller.signal.aborted) return;
-        if (content.scene) setScene(content.scene);
-        else showNoScene();
+        // The drawing opened from the memo without a scene is the plain image it is.
+        if (!content.scene && attachment.name === initialAttachment.name) showNoScene();
+        else {
+          if (!content.scene) pictures.current.add(attachment.name);
+          setViews((current) => ({ ...current, [attachment.name]: { status: "ready", content, version: 0 } }));
+        }
       })
       .catch((error) => {
         if (controller.signal.aborted) return;
         console.error(error);
-        failToOpen();
+        if (attachment.name === initialAttachment.name) failToOpen();
+        else {
+          showErrorToast(t("editor.drawing.open-failed"));
+          setViews((current) => ({ ...current, [attachment.name]: { status: "failed" } }));
+        }
+      })
+      .finally(() => {
+        if (loads.current.get(attachment.name) === controller) loads.current.delete(attachment.name);
       });
-    return () => controller.abort();
-  }, [initialAttachment]);
+  });
 
-  // Done in the sheet: the edit replaces the drawing's file. A drawing someone else uploaded
-  // stays, since only they or an admin may replace or remove it, and the edit joins the memo
-  // beside it.
-  const saveEdit = async (file: File) => {
-    const replace = canManageAttachment(attachment, currentUser);
-    const replaces = replace ? attachment.name : unlinkedCopy.current?.name;
-    const saved = await uploadService.uploadFile({ file, previewUrl: "", replaces });
-    if (replace) {
-      await updateMemo({ update: { name: memo.name }, updateMask: ["update_time"] });
-    } else {
-      unlinkedCopy.current = saved;
-      // Whole attachments, not names: the optimistic update shows them until the memo reloads.
-      const attachments = memo.attachments.flatMap((item) => (item.name === attachment.name ? [item, saved] : [item]));
-      await updateMemo({ update: { name: memo.name, attachments }, updateMask: ["attachments"] });
-      unlinkedCopy.current = undefined;
+  // A page is read when it is first shown.
+  useEffect(() => {
+    if (activeView === undefined) loadPage(active);
+  }, [active, activeView]);
+  useEffect(() => {
+    const pending = loads.current;
+    return () => {
+      for (const controller of pending.values()) controller.abort();
+    };
+  }, []);
+
+  /** Uploads one finished page: over its own file, or as a new file (a new page, or a copy of someone else's drawing). */
+  const uploadPage = async (key: string, file: File, over?: Attachment): Promise<{ saved: Attachment; isNew: boolean }> => {
+    if (over && canManageAttachment(over, currentUser)) {
+      return { saved: await uploadService.uploadFile({ file, previewUrl: "", replaces: over.name }), isNew: false };
     }
-    const content = await readDrawing(file);
-    setAttachment(saved);
-    if (content.scene) setScene(content.scene);
+    const saved = await uploadService.uploadFile({ file, previewUrl: "", replaces: unlinkedUploads.current.get(key)?.name });
+    unlinkedUploads.current.set(key, saved);
+    return { saved, isNew: true };
+  };
+
+  // Done in the sheet: each changed page replaces its drawing's file. A drawing someone else
+  // uploaded stays, since only they or an admin may replace or remove it, and its edit joins
+  // the memo beside it; a new page joins the memo after the page before it.
+  const saveEdit = async ({ order, files }: DrawingPagesResult) => {
+    const byName = new Map(memo.attachments.map((item) => [item.name, item]));
+    const saved = new Map<string, Attachment>();
+    // Each new file, by the page it belongs after (itself, for a new page).
+    const added = new Map<string, Attachment>();
+    for (const { key, file } of files) {
+      const over =
+        isNewPageKey(key) || pictures.current.has(key)
+          ? undefined
+          : (byName.get(key) ?? (key === initialAttachment.name ? initialAttachment : undefined));
+      const result = await uploadPage(key, file, over);
+      if (result.isNew) added.set(key, result.saved);
+      else saved.set(result.saved.name, result.saved);
+    }
+    if (added.size > 0) {
+      const pageNames = order.flatMap((key) => {
+        const extra = added.get(key);
+        const own = isNewPageKey(key) ? [] : [key];
+        return extra ? [...own, extra.name] : own;
+      });
+      const addedNames = new Set(Array.from(added.values(), (item) => item.name));
+      const all = new Map([...memo.attachments, ...added.values(), ...saved.values()].map((item) => [item.name, item]));
+      const names = placeNewPages(
+        memo.attachments.map((item) => item.name),
+        pageNames,
+        (name) => addedNames.has(name),
+      );
+      // Whole attachments, not names: the optimistic update shows them until the memo reloads.
+      const attachments = names.flatMap((name) => all.get(name) ?? []);
+      await updateMemo({ update: { name: memo.name, attachments }, updateMask: ["attachments"] });
+    } else if (files.length > 0) {
+      await updateMemo({ update: { name: memo.name }, updateMask: ["update_time"] });
+    }
+    unlinkedUploads.current.clear();
+    // The changed pages show their new drawings; added pages are read when they are first shown.
+    const changed = await Promise.all(
+      files.flatMap(({ key, file }) =>
+        isNewPageKey(key) || added.has(key) ? [] : [readDrawing(file).then((content) => [key, content] as const)],
+      ),
+    );
+    setViews((current) => {
+      const next = { ...current };
+      for (const [key, content] of changed) {
+        const previous = current[key];
+        next[key] = { status: "ready", content, version: (previous?.status === "ready" ? previous.version : 0) + 1 };
+      }
+      return next;
+    });
     setIsEditing(false);
   };
 
-  if (isEditing && scene) {
-    return <DrawingSheet mode="edit" initialScene={scene} onDone={saveEdit} onClose={() => setIsEditing(false)} />;
+  if (isEditing && activeView?.status === "ready") {
+    const sheetPages: DrawingPage[] = pages.map((item) => {
+      const view = views[item.name];
+      return view?.status === "ready"
+        ? { key: item.name, content: view.content }
+        : {
+            key: item.name,
+            load: async (signal) => {
+              const content = await readDrawing(await fetchDrawingFile(item, signal));
+              if (!content.scene) pictures.current.add(item.name);
+              return content;
+            },
+          };
+    });
+    return <DrawingSheet mode="edit" pages={sheetPages} initialPage={active.name} onDone={saveEdit} onClose={() => setIsEditing(false)} />;
   }
 
   const title = t("editor.insert-menu.drawing");
+  const scene = activeView?.status === "ready" ? activeView.content.scene : undefined;
   return (
     <Dialog.Root
       open
@@ -111,17 +211,30 @@ const DrawingViewer = ({ attachment: initialAttachment, memo, canEdit, onClose, 
     >
       <DrawingDialogPopup label={title}>
         <div className="relative h-full w-full" style={{ background: theme.paper }}>
-          {scene ? (
+          {activeView?.status === "ready" && scene ? (
             // No autofocus: a viewer should not draw a focus ring around the page as it opens.
+            // A new key per page and per saved edit: the read-only canvas opens its scene once.
             <Canvas
+              key={`${active.name}:${activeView.version}`}
               ref={canvasRef}
               className="absolute inset-0"
               readOnly
-              ariaLabel={title}
+              ariaLabel={pages.length > 1 ? `${title}, ${t("editor.drawing.page", { number: pages.indexOf(active) + 1 })}` : title}
               initialScene={scene}
               theme={theme}
               fontFamily={fontFamily}
             />
+          ) : activeView?.status === "ready" ? (
+            // A page whose file holds no scene is the plain image it is.
+            <img
+              src={getAttachmentUrl(active)}
+              alt={active.filename}
+              className="absolute inset-0 m-auto max-h-full max-w-full object-contain"
+            />
+          ) : activeView?.status === "failed" ? (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="mu-body text-mu-ink-muted">{t("editor.drawing.open-failed")}</span>
+            </div>
           ) : (
             <div className="absolute inset-0 flex items-center justify-center">
               <Spinner label={t("editor.blocks.loading")} />
@@ -149,6 +262,17 @@ const DrawingViewer = ({ attachment: initialAttachment, memo, canEdit, onClose, 
               )}
             </FloatingBar>
           </FloatingRow>
+          {pages.length > 1 && (
+            <FloatingRow edge="bottom">
+              <PageTabs
+                keys={pages.map((item) => item.name)}
+                active={active.name}
+                onSelect={setActiveName}
+                size={size}
+                className={isWide ? undefined : "gap-3"}
+              />
+            </FloatingRow>
+          )}
         </div>
       </DrawingDialogPopup>
     </Dialog.Root>

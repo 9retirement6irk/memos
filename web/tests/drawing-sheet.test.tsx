@@ -77,6 +77,9 @@ vi.mock("@/utils/i18n", async (importOriginal) => ({
   useTranslate: () => (key: string) => key,
 }));
 
+/** One blank page, as a new drawing opens. */
+const blank = [{ key: "p1" }];
+
 beforeAll(() => {
   Object.defineProperty(window, "matchMedia", {
     writable: true,
@@ -102,7 +105,7 @@ beforeEach(() => {
 
 describe("DrawingSheet", () => {
   it("opens as a near-full dialog with its controls floating on the paper, light in every theme", () => {
-    render(<DrawingSheet mode="new" onDone={vi.fn()} onClose={vi.fn()} />);
+    render(<DrawingSheet mode="new" pages={blank} initialPage="p1" onDone={vi.fn()} onClose={vi.fn()} />);
 
     expect(screen.getByRole("dialog")).toHaveClass("w-[calc(100vw-48px)]", "h-[calc(100dvh-48px)]");
     for (const name of ["common.cancel", "editor.drawing.tool-pen", "editor.drawing.undo", "editor.drawing.done"]) {
@@ -116,28 +119,41 @@ describe("DrawingSheet", () => {
   });
 
   it("keeps typed text, exports and hands back a named PNG on Done", async () => {
+    handle.isDirty.mockReturnValue(true);
     const onDone = vi.fn();
-    render(<DrawingSheet mode="new" onDone={onDone} onClose={vi.fn()} />);
+    render(<DrawingSheet mode="new" pages={blank} initialPage="p1" onDone={onDone} onClose={vi.fn()} />);
 
     fireEvent.click(screen.getByRole("button", { name: "editor.drawing.done" }));
 
     await waitFor(() => expect(onDone).toHaveBeenCalledTimes(1));
     expect(calls).toEqual(["commitText", "exportPng"]);
-    const file = onDone.mock.calls[0][0] as File;
-    expect(file.type).toBe("image/png");
-    expect(file.name).toMatch(/^drawing-\d{8}-\d{6}\.canvas\.png$/);
+    const { order, files } = onDone.mock.calls[0][0] as { order: string[]; files: { key: string; file: File }[] };
+    expect(order).toEqual(["p1"]);
+    expect(files.map((item) => item.key)).toEqual(["p1"]);
+    expect(files[0].file.type).toBe("image/png");
+    expect(files[0].file.name).toMatch(/^drawing-\d{8}-\d{6}\.canvas\.png$/);
+  });
+
+  it("hands back no file for a page left as it was", async () => {
+    const onDone = vi.fn();
+    render(<DrawingSheet mode="new" pages={blank} initialPage="p1" onDone={onDone} onClose={vi.fn()} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "editor.drawing.done" }));
+
+    await waitFor(() => expect(onDone).toHaveBeenCalledWith({ order: ["p1"], files: [] }));
+    expect(calls).not.toContain("exportPng");
   });
 
   it("closes at once when nothing changed, and asks first when the drawing has changes", async () => {
     const onClose = vi.fn();
-    const { unmount } = render(<DrawingSheet mode="new" onDone={vi.fn()} onClose={onClose} />);
+    const { unmount } = render(<DrawingSheet mode="new" pages={blank} initialPage="p1" onDone={vi.fn()} onClose={onClose} />);
     fireEvent.click(screen.getByRole("button", { name: "common.cancel" }));
     expect(onClose).toHaveBeenCalledTimes(1);
     unmount();
 
     onClose.mockClear();
     handle.isDirty.mockReturnValue(true);
-    render(<DrawingSheet mode="edit" onDone={vi.fn()} onClose={onClose} />);
+    render(<DrawingSheet mode="edit" pages={blank} initialPage="p1" onDone={vi.fn()} onClose={onClose} />);
     fireEvent.click(screen.getByRole("button", { name: "common.cancel" }));
     expect(await screen.findByText("editor.drawing.discard-edit-title")).toBeInTheDocument();
     expect(onClose).not.toHaveBeenCalled();
@@ -147,7 +163,7 @@ describe("DrawingSheet", () => {
   });
 
   it("drives the canvas from the toolbar", () => {
-    render(<DrawingSheet mode="new" onDone={vi.fn()} onClose={vi.fn()} />);
+    render(<DrawingSheet mode="new" pages={blank} initialPage="p1" onDone={vi.fn()} onClose={vi.fn()} />);
 
     fireEvent.click(screen.getByRole("button", { name: "editor.drawing.tool-rectangle" }));
     expect(handle.setTool).toHaveBeenLastCalledWith("rectangle");
@@ -159,7 +175,7 @@ describe("DrawingSheet", () => {
   });
 
   it("enables Undo as soon as a stroke ends, without waiting for the debounced change", () => {
-    render(<DrawingSheet mode="new" onDone={vi.fn()} onClose={vi.fn()} />);
+    render(<DrawingSheet mode="new" pages={blank} initialPage="p1" onDone={vi.fn()} onClose={vi.fn()} />);
     expect(screen.getByRole("button", { name: "editor.drawing.undo" })).toBeDisabled();
 
     handle.canUndo.mockReturnValue(true);
@@ -172,7 +188,7 @@ describe("DrawingSheet", () => {
     const themes: unknown[] = [];
     for (const theme of ["light", "dark"]) {
       document.documentElement.dataset.theme = theme;
-      const { unmount } = render(<DrawingSheet mode="new" onDone={vi.fn()} onClose={vi.fn()} />);
+      const { unmount } = render(<DrawingSheet mode="new" pages={blank} initialPage="p1" onDone={vi.fn()} onClose={vi.fn()} />);
       themes.push({ paper: canvasProps.theme?.paper, text: canvasProps.theme?.text });
       unmount();
     }
@@ -184,7 +200,15 @@ describe("DrawingSheet", () => {
 
   it("opens the loaded scene in edit mode", () => {
     const scene = { type: "memos-canvas", version: 1, elements: [], files: {}, appState: {} };
-    render(<DrawingSheet mode="edit" initialScene={scene as never} onDone={vi.fn()} onClose={vi.fn()} />);
+    render(
+      <DrawingSheet
+        mode="edit"
+        pages={[{ key: "p1", content: { scene: scene as never } }]}
+        initialPage="p1"
+        onDone={vi.fn()}
+        onClose={vi.fn()}
+      />,
+    );
 
     expect(canvasProps.initialScene).toBe(scene);
   });
@@ -193,22 +217,26 @@ describe("DrawingSheet", () => {
     let finishInsert: (id: string) => void = () => undefined;
     handle.insertImage.mockImplementation(() => new Promise((resolve) => (finishInsert = resolve)));
     const onDone = vi.fn();
-    render(<DrawingSheet mode="new" background={new Blob(["png"], { type: "image/png" })} onDone={onDone} onClose={vi.fn()} />);
+    const background = new Blob(["png"], { type: "image/png" });
+    render(<DrawingSheet mode="new" pages={[{ key: "p1", content: { background } }]} initialPage="p1" onDone={onDone} onClose={vi.fn()} />);
 
+    // The drawing surface holds the page's canvas.
+    const surface = () => screen.getByRole("img").parentElement?.parentElement;
     const done = screen.getByRole("button", { name: "editor.drawing.done" });
     await waitFor(() => expect(handle.insertImage).toHaveBeenCalled());
     expect(done).toBeDisabled();
-    expect(screen.getByRole("img").parentElement).toHaveAttribute("aria-busy", "true");
+    expect(surface()).toHaveAttribute("aria-busy", "true");
 
     finishInsert("image1");
     await waitFor(() => expect(done).toBeEnabled());
-    expect(screen.getByRole("img").parentElement).not.toHaveAttribute("aria-busy");
+    expect(surface()).not.toHaveAttribute("aria-busy");
   });
 
   it("stays dirty when saving fails, so Cancel still asks before discarding", async () => {
+    handle.isDirty.mockReturnValue(true);
     handle.exportPng.mockResolvedValue(new Blob(["png"], { type: "image/png" }));
     const onDone = vi.fn().mockRejectedValue(new Error("offline"));
-    render(<DrawingSheet mode="new" onDone={onDone} onClose={vi.fn()} />);
+    render(<DrawingSheet mode="new" pages={blank} initialPage="p1" onDone={onDone} onClose={vi.fn()} />);
 
     fireEvent.click(await screen.findByRole("button", { name: "editor.drawing.done" }));
     await waitFor(() => expect(onDone).toHaveBeenCalled());
@@ -218,14 +246,22 @@ describe("DrawingSheet", () => {
 
   it("opens a picture without a scene as a locked background", async () => {
     const picture = new Blob(["png"], { type: "image/png" });
-    render(<DrawingSheet mode="new" background={picture} onDone={vi.fn()} onClose={vi.fn()} />);
+    render(
+      <DrawingSheet
+        mode="new"
+        pages={[{ key: "p1", content: { background: picture } }]}
+        initialPage="p1"
+        onDone={vi.fn()}
+        onClose={vi.fn()}
+      />,
+    );
 
     await waitFor(() => expect(handle.insertImage).toHaveBeenCalledWith(picture, { background: true }));
     await waitFor(() => expect(handle.markSaved).toHaveBeenCalled());
   });
 
   it("inserts a picture from this device with one button when Immich isn't connected", () => {
-    render(<DrawingSheet mode="new" onDone={vi.fn()} onClose={vi.fn()} />);
+    render(<DrawingSheet mode="new" pages={blank} initialPage="p1" onDone={vi.fn()} onClose={vi.fn()} />);
 
     const insert = screen.getByRole("button", { name: "editor.insert-menu.insert-image" });
     expect(insert).not.toHaveAttribute("aria-haspopup");
@@ -234,7 +270,7 @@ describe("DrawingSheet", () => {
 
   it("adds photos picked from Immich at preview size, fanned out and selected together", async () => {
     immich.connection = { configured: true, url: "http://immich.example.com" };
-    render(<DrawingSheet mode="new" onDone={vi.fn()} onClose={vi.fn()} />);
+    render(<DrawingSheet mode="new" pages={blank} initialPage="p1" onDone={vi.fn()} onClose={vi.fn()} />);
 
     fireEvent.click(screen.getByRole("button", { name: "editor.insert-menu.insert-image" }));
     expect(await screen.findByRole("menuitem", { name: "editor.drawing.image-from-device" })).toBeInTheDocument();

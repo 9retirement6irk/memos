@@ -220,7 +220,10 @@
       "kidpix-exit": "بازگشت به ابزارهای نقاشی",
       "kidpix-sounds": "صداهای Kid Pix",
       "kidpix-clear": "پاک کردن رنگ Kid Pix",
-      "kidpix-no-background": "بدون پس‌زمینه"
+      "kidpix-no-background": "بدون پس‌زمینه",
+      "pages": "صفحه‌ها",
+      "page": "صفحهٔ {{number}}",
+      "add-page": "افزودن صفحه"
     },
     "audio-recorder": {
       "attachment-label": "ضبط صدا",

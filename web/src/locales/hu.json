@@ -218,7 +218,10 @@
       "kidpix-exit": "Vissza a rajzeszközökhöz",
       "kidpix-sounds": "Kid Pix hangok",
       "kidpix-clear": "Kid Pix festék törlése",
-      "kidpix-no-background": "Nincs háttér"
+      "kidpix-no-background": "Nincs háttér",
+      "pages": "Oldalak",
+      "page": "{{number}}. oldal",
+      "add-page": "Oldal hozzáadása"
     },
     "no-changes-detected": "Nincs változás",
     "save": "Mentés",

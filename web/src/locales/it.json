@@ -218,7 +218,10 @@
       "kidpix-exit": "Torna agli strumenti di disegno",
       "kidpix-sounds": "Suoni di Kid Pix",
       "kidpix-clear": "Cancella la pittura di Kid Pix",
-      "kidpix-no-background": "Nessuno sfondo"
+      "kidpix-no-background": "Nessuno sfondo",
+      "pages": "Pagine",
+      "page": "Pagina {{number}}",
+      "add-page": "Aggiungi pagina"
     },
     "no-changes-detected": "Nessuna modifica rilevata",
     "save": "Salva",

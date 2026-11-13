@@ -29,6 +29,8 @@ const handle = {
   commitText: vi.fn(),
   insertImage: vi.fn(),
   exportPng: vi.fn(),
+  setSelection: vi.fn(),
+  focus: vi.fn(),
 };
 
 vi.mock("@usememos/canvas/react", () => ({
@@ -195,6 +197,69 @@ describe("DrawingViewer", () => {
     await waitFor(() => expect(mocks.updateMemo).toHaveBeenCalledTimes(2));
     expect(mocks.uploadFile.mock.calls[1][0].replaces).toBe(copy.name);
     await waitFor(() => expect(screen.getByRole("button", { name: "editor.drawing.zoom-to-fit" })).toBeInTheDocument());
+  });
+});
+
+describe("DrawingViewer pages", () => {
+  const second = create(AttachmentSchema, {
+    name: "attachments/d2",
+    creator: author.name,
+    filename: "drawing-20261106-111500.canvas.png",
+    type: "image/png",
+  });
+  const photo = create(AttachmentSchema, { name: "attachments/photo", creator: author.name, filename: "photo.png", type: "image/png" });
+  const twoPages = create(MemoSchema, { ...memo, attachments: [drawing, photo, second] });
+
+  it("shows no page tabs for a memo with one drawing", async () => {
+    render(<DrawingViewer attachment={drawing} memo={memo} canEdit onClose={vi.fn()} onNoScene={vi.fn()} />);
+
+    await waitFor(() => expect(mocks.canvasProps.at(-1)?.initialScene?.elements).toHaveLength(1));
+    expect(screen.queryByRole("group", { name: "editor.drawing.pages" })).not.toBeInTheDocument();
+  });
+
+  it("pages through the memo's drawings, reading each one when it is first shown", async () => {
+    render(<DrawingViewer attachment={second} memo={twoPages} canEdit onClose={vi.fn()} onNoScene={vi.fn()} />);
+
+    // The photo is not a page; the drawing opened is page 2.
+    const tabs = await screen.findAllByRole("button", { name: "editor.drawing.page" });
+    expect(tabs).toHaveLength(2);
+    expect(tabs[1]).toHaveAttribute("aria-pressed", "true");
+    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
+
+    fireEvent.click(tabs[0]);
+
+    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(2));
+    expect(vi.mocked(fetch).mock.calls[1][0]).toContain(drawing.name.split("/")[1]);
+    await waitFor(() => expect(tabs[0]).toHaveAttribute("aria-pressed", "true"));
+    expect(mocks.canvasProps.at(-1)?.readOnly).toBe(true);
+  });
+
+  it("adds a page from Edit as a new drawing right after the page before it", async () => {
+    const added = create(AttachmentSchema, {
+      name: "attachments/d3",
+      creator: author.name,
+      filename: "drawing-3.canvas.png",
+      type: "image/png",
+    });
+    handle.exportPng.mockResolvedValue(new Blob([await withScene()], { type: "image/png" }));
+    mocks.uploadFile.mockReset();
+    mocks.uploadFile.mockImplementation(async ({ replaces }: { replaces?: string }) =>
+      replaces === drawing.name ? drawing : replaces === second.name ? second : added,
+    );
+    mocks.updateMemo.mockReset();
+    mocks.updateMemo.mockResolvedValue(undefined);
+    render(<DrawingViewer attachment={drawing} memo={twoPages} canEdit onClose={vi.fn()} onNoScene={vi.fn()} />);
+
+    await startEditing();
+    fireEvent.click(await screen.findByRole("button", { name: "editor.drawing.add-page" }));
+    fireEvent.click(screen.getByRole("button", { name: "editor.drawing.done" }));
+
+    await waitFor(() => expect(mocks.updateMemo).toHaveBeenCalledTimes(1));
+    // Page 1 (shown, and dirty in this mock) is replaced in place; the new page uploads as its own file.
+    expect(mocks.uploadFile.mock.calls.map(([file]) => file.replaces)).toEqual([drawing.name, undefined]);
+    const [{ update, updateMask }] = mocks.updateMemo.mock.calls[0];
+    expect(updateMask).toEqual(["attachments"]);
+    expect(update.attachments.map((item: { name: string }) => item.name)).toEqual([drawing.name, added.name, photo.name, second.name]);
   });
 });
 

@@ -220,7 +220,10 @@
       "kidpix-exit": "描画ツールに戻る",
       "kidpix-sounds": "Kid Pix の効果音",
       "kidpix-clear": "Kid Pix の絵の具を消す",
-      "kidpix-no-background": "背景なし"
+      "kidpix-no-background": "背景なし",
+      "pages": "ページ",
+      "page": "{{number}} ページ",
+      "add-page": "ページを追加"
     },
     "audio-recorder": {
       "attachment-label": "音声録音",

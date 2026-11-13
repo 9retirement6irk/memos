@@ -218,7 +218,10 @@
       "kidpix-exit": "Terug naar tekengereedschappen",
       "kidpix-sounds": "Kid Pix-geluiden",
       "kidpix-clear": "Kid Pix-verf wissen",
-      "kidpix-no-background": "Geen achtergrond"
+      "kidpix-no-background": "Geen achtergrond",
+      "pages": "Pagina's",
+      "page": "Pagina {{number}}",
+      "add-page": "Pagina toevoegen"
     },
     "no-changes-detected": "Geen wijzigingen gedetecteerd",
     "save": "Opslaan",

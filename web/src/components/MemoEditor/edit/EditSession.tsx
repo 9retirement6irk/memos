@@ -455,8 +455,8 @@ export const EditSession: React.FC<EditSessionProps> = ({
           <DrawingSheet
             key={drawing.session.id}
             mode={drawing.session.mode}
-            initialScene={drawing.session.scene}
-            background={drawing.session.background}
+            pages={drawing.session.pages}
+            initialPage={drawing.session.initialPage}
             onDone={drawing.done}
             onClose={drawing.close}
           />

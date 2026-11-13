@@ -256,7 +256,10 @@
       "kidpix-exit": "Späť na nástroje kreslenia",
       "kidpix-sounds": "Zvuky Kid Pix",
       "kidpix-clear": "Vymazať maľbu Kid Pix",
-      "kidpix-no-background": "Bez pozadia"
+      "kidpix-no-background": "Bez pozadia",
+      "pages": "Strany",
+      "page": "Strana {{number}}",
+      "add-page": "Pridať stranu"
     },
     "no-changes-detected": "Nezistili sa žiadne zmeny",
     "save": "Uložiť",

@@ -304,7 +304,10 @@
       "kidpix-exit": "חזרה לכלי הציור",
       "kidpix-sounds": "צלילי Kid Pix",
       "kidpix-clear": "מחיקת הצבע של Kid Pix",
-      "kidpix-no-background": "ללא רקע"
+      "kidpix-no-background": "ללא רקע",
+      "pages": "עמודים",
+      "page": "עמוד {{number}}",
+      "add-page": "הוספת עמוד"
     },
     "no-changes-detected": "לא זוהו שינויים",
     "save": "שמור",

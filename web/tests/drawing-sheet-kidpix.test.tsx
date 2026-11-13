@@ -94,7 +94,7 @@ const enterKidPix = async () => {
 
 describe("DrawingSheet in Kid Pix mode", () => {
   it("opens the paint layer over the view as it is, with the memos tools put away", async () => {
-    render(<DrawingSheet mode="new" onDone={vi.fn()} onClose={vi.fn()} />);
+    render(<DrawingSheet mode="new" pages={[{ key: "p1" }]} initialPage="p1" onDone={vi.fn()} onClose={vi.fn()} />);
     await enterKidPix();
 
     expect(layerProps?.view).toEqual({ zoom: 2, scrollX: 30, scrollY: -10, width: 1000, height: 800 });
@@ -108,7 +108,7 @@ describe("DrawingSheet in Kid Pix mode", () => {
 
   it("zooms in to 1 first when the view is zoomed out, so a layer pixel is a drawing px", async () => {
     viewport = { zoom: 0.5, scrollX: 0, scrollY: 0 };
-    render(<DrawingSheet mode="new" onDone={vi.fn()} onClose={vi.fn()} />);
+    render(<DrawingSheet mode="new" pages={[{ key: "p1" }]} initialPage="p1" onDone={vi.fn()} onClose={vi.fn()} />);
     await enterKidPix();
 
     expect(handle.zoomTo).toHaveBeenCalledWith(1);
@@ -116,7 +116,7 @@ describe("DrawingSheet in Kid Pix mode", () => {
   });
 
   it("adds the paint to the drawing where it was painted, as one group, on the way out", async () => {
-    render(<DrawingSheet mode="new" onDone={vi.fn()} onClose={vi.fn()} />);
+    render(<DrawingSheet mode="new" pages={[{ key: "p1" }]} initialPage="p1" onDone={vi.fn()} onClose={vi.fn()} />);
     await enterKidPix();
     tiles = [tile(100, 40, 200, 100), tile(300, 40, 200, 100)];
 
@@ -131,7 +131,7 @@ describe("DrawingSheet in Kid Pix mode", () => {
   });
 
   it("leaves nothing behind when nothing was painted", async () => {
-    render(<DrawingSheet mode="new" onDone={vi.fn()} onClose={vi.fn()} />);
+    render(<DrawingSheet mode="new" pages={[{ key: "p1" }]} initialPage="p1" onDone={vi.fn()} onClose={vi.fn()} />);
     await enterKidPix();
 
     fireEvent.click(screen.getByRole("button", { name: "editor.drawing.kidpix-exit" }));
@@ -142,8 +142,10 @@ describe("DrawingSheet in Kid Pix mode", () => {
   });
 
   it("puts paint still on the layer into the drawing before Done exports it", async () => {
+    // The paint makes the page a change to export.
+    handle.isDirty.mockReturnValue(true);
     const onDone = vi.fn();
-    render(<DrawingSheet mode="new" onDone={onDone} onClose={vi.fn()} />);
+    render(<DrawingSheet mode="new" pages={[{ key: "p1" }]} initialPage="p1" onDone={onDone} onClose={vi.fn()} />);
     await enterKidPix();
     tiles = [tile(0, 0, 50, 50)];
 
@@ -155,7 +157,7 @@ describe("DrawingSheet in Kid Pix mode", () => {
 
   it("asks before discarding paint that is not in the drawing yet", async () => {
     const onClose = vi.fn();
-    render(<DrawingSheet mode="new" onDone={vi.fn()} onClose={onClose} />);
+    render(<DrawingSheet mode="new" pages={[{ key: "p1" }]} initialPage="p1" onDone={vi.fn()} onClose={onClose} />);
     await enterKidPix();
     tiles = [tile(0, 0, 50, 50)];
 
@@ -166,7 +168,7 @@ describe("DrawingSheet in Kid Pix mode", () => {
   });
 
   it("mutes the layer from the sounds toggle", async () => {
-    render(<DrawingSheet mode="new" onDone={vi.fn()} onClose={vi.fn()} />);
+    render(<DrawingSheet mode="new" pages={[{ key: "p1" }]} initialPage="p1" onDone={vi.fn()} onClose={vi.fn()} />);
     await enterKidPix();
     expect(layerProps?.muted).toBe(false);
 

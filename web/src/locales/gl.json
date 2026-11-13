@@ -218,7 +218,10 @@
       "kidpix-exit": "Volver ás ferramentas de debuxo",
       "kidpix-sounds": "Sons de Kid Pix",
       "kidpix-clear": "Borrar a pintura de Kid Pix",
-      "kidpix-no-background": "Sen fondo"
+      "kidpix-no-background": "Sen fondo",
+      "pages": "Páxinas",
+      "page": "Páxina {{number}}",
+      "add-page": "Engadir páxina"
     },
     "no-changes-detected": "Non se detectaron cambios",
     "save": "Gardar",

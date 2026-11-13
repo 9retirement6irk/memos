@@ -233,7 +233,10 @@
       "kidpix-exit": "Wróć do narzędzi rysowania",
       "kidpix-sounds": "Dźwięki Kid Pix",
       "kidpix-clear": "Wymaż farbę Kid Pix",
-      "kidpix-no-background": "Bez tła"
+      "kidpix-no-background": "Bez tła",
+      "pages": "Strony",
+      "page": "Strona {{number}}",
+      "add-page": "Dodaj stronę"
     },
     "no-changes-detected": "Brak wykrytych zmian",
     "save": "Zapisz",

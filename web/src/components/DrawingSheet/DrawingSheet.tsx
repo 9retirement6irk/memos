@@ -1,9 +1,10 @@
-import { type CanvasError, type CanvasHandle, drawingFileName, type Scene, type ToolName } from "@usememos/canvas";
+import { type CanvasError, type CanvasHandle, drawingFileName, type ToolName } from "@usememos/canvas";
 import { Canvas } from "@usememos/canvas/react";
-import { AlertDialog, Button, Dialog, Menu, Popover, Toggle, ToggleGroup, Tooltip } from "@usememos/ui";
+import { AlertDialog, Button, Dialog, Menu, Popover, Spinner, Toggle, ToggleGroup, Tooltip } from "@usememos/ui";
 import {
   CircleIcon,
   EraserIcon,
+  FilePlusIcon,
   ImageIcon,
   ImagePlusIcon,
   ImagesIcon,
@@ -18,7 +19,7 @@ import {
   Volume2Icon,
   VolumeXIcon,
 } from "lucide-react";
-import { type ClipboardEvent, lazy, type ReactElement, Suspense, useEffect, useRef, useState } from "react";
+import { type ClipboardEvent, type ComponentProps, lazy, type ReactElement, Suspense, useEffect, useRef, useState } from "react";
 import ImmichPickerDialog from "@/components/ImmichPicker/ImmichPickerDialog";
 import { useImmichConnection } from "@/hooks/useImmichQueries";
 import useMediaQuery from "@/hooks/useMediaQuery";
@@ -27,8 +28,11 @@ import { cn } from "@/lib/utils";
 import { type Translations, useTranslate } from "@/utils/i18n";
 import { primaryModifierGlyph } from "@/utils/platform";
 import { DrawingDialogPopup, FloatingAction, FloatingBar, FloatingRow } from "./DrawingFrame";
+import type { DrawingContent } from "./drawing";
 import kidPixToolsUrl from "./kidpix/assets/tools.png";
 import type { KidPixHandle, KidPixView } from "./kidpix/KidPixLayer";
+import { PageTabs } from "./PageTabs";
+import { type DrawingPage, type DrawingPagesResult, newPageKey } from "./pages";
 import { DRAWING_HUES, DRAWING_PAPER, useCanvasTheme } from "./useCanvasTheme";
 
 const TOOLS: { name: ToolName; label: Translations; shortcut: string; icon: ReactElement }[] = [
@@ -64,31 +68,44 @@ const WIDTHS: { value: number; label: Translations }[] = [
 export interface DrawingSheetProps {
   /** `edit` reopens a saved drawing; it changes the sheet's name and the discard prompt. */
   mode: "new" | "edit";
-  /** The scene read from the drawing's original file. */
-  initialScene?: Scene;
-  /** A picture to draw on: a file named like a drawing whose scene could not be read. */
-  background?: Blob;
   /**
-   * The finished drawing, a PNG with the scene embedded, named `drawing-YYYYMMDD-HHMMSS.canvas.png`.
+   * The memo's drawings, one page each, in the memo's order. A page's content is a scene
+   * read from its file or, for a file whose scene could not be read, a picture to draw on.
+   */
+  pages: DrawingPage[];
+  /** The key of the page the sheet opens on. */
+  initialPage: string;
+  /**
+   * The finished drawings: each page that changed, and each added page drawn on, as a PNG with
+   * its scene embedded, named `drawing-YYYYMMDD-HHMMSS.canvas.png`, with the sheet's page order.
    * A promise keeps Done busy until it settles; a rejection keeps the sheet open to retry.
    */
-  onDone: (file: File) => void | Promise<void>;
+  onDone: (result: DrawingPagesResult) => void | Promise<void>;
   onClose: () => void;
 }
+
+/** A page's content: not read yet, being read, failed to read, or ready (blank when `content` is absent). */
+type PageState = { status: "loading" } | { status: "failed" } | { status: "ready"; content?: DrawingContent };
+
+const initialPageState = (page: DrawingPage): PageState | undefined =>
+  page.content || !page.load ? { status: "ready", content: page.content } : undefined;
 
 /**
  * The drawing sheet: the paper fills the drawing dialog, with the controls floating on it.
  * `@usememos/canvas` draws and edits the scene; everything around it (the controls, strings,
  * theme, discard prompt) is memos'. On a phone the tools float at the bottom, in thumb
  * reach, with each control 44 px apart.
+ *
+ * Pages: the memo's drawings, one canvas each, switched by the page tabs. A page's content is
+ * read when it is first shown, and its canvas stays mounted (hidden) after that, so its undo
+ * history survives a switch. Done exports only the pages that changed.
  */
-const DrawingSheet = ({ mode, initialScene, background, onDone, onClose }: DrawingSheetProps) => {
+const DrawingSheet = ({ mode, pages: initialPages, initialPage, onDone, onClose }: DrawingSheetProps) => {
   const t = useTranslate();
   const isWide = useMediaQuery("sm");
   // Small controls on a desktop; a phone keeps the 32px ones, 44px apart, for touch.
   const size = isWide ? "sm" : undefined;
   const { theme, ink, fontFamily } = useCanvasTheme();
-  const canvasRef = useRef<CanvasHandle | null>(null);
   const surfaceRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [tool, setTool] = useState<ToolName>("pen");
@@ -98,8 +115,20 @@ const DrawingSheet = ({ mode, initialScene, background, onDone, onClose }: Drawi
   const [width, setWidth] = useState(2);
   const [isExporting, setIsExporting] = useState(false);
   const [discardOpen, setDiscardOpen] = useState(false);
-  // Drawing waits for a background picture, so no stroke can land before it and be marked saved with it.
-  const [isPreparing, setIsPreparing] = useState(Boolean(background));
+  const [pages, setPages] = useState(initialPages);
+  const [pageStates, setPageStates] = useState<Record<string, PageState | undefined>>(() =>
+    Object.fromEntries(initialPages.map((page) => [page.key, initialPageState(page)])),
+  );
+  const [activeKey, setActiveKey] = useState(initialPage);
+  // Read synchronously by the handlers, which may run before the switch renders.
+  const activeRef = useRef(initialPage);
+  // Pages shown at least once: their canvases stay mounted.
+  const [visited, setVisited] = useState<ReadonlySet<string>>(() => new Set([initialPage]));
+  const canvases = useRef(new Map<string, CanvasHandle>());
+  const loads = useRef(new Map<string, AbortController>());
+  // Drawing on a page waits for its background picture, so no stroke can land before it and be marked saved with it.
+  const [preparing, setPreparing] = useState<ReadonlySet<string>>(() => new Set());
+  const isPreparing = preparing.has(activeKey);
   // Kid Pix mode: a paint layer over the drawing, added to it as a picture when the mode ends.
   const kidPixRef = useRef<KidPixHandle | null>(null);
   const [kidPix, setKidPix] = useState<KidPixView | null>(null);
@@ -112,14 +141,30 @@ const DrawingSheet = ({ mode, initialScene, background, onDone, onClose }: Drawi
   const kidPixCompact = !isWide || (kidPix !== null && kidPix.height < KIDPIX_FULL_CHROME_HEIGHT);
   const title = t(mode === "edit" ? "editor.drawing.edit" : "editor.drawing.new-title");
   const currentColor = color ?? ink;
+  const activeState = pageStates[activeKey];
 
-  // Runs once the canvas has mounted (see CanvasMounted): the pen is ready, and a
+  /** The canvas of the page on show. */
+  const activeCanvas = () => canvases.current.get(activeRef.current);
+
+  const syncHistory = () => {
+    const canvas = activeCanvas();
+    setHistory({ undo: Boolean(canvas?.canUndo()), redo: Boolean(canvas?.canRedo()) });
+  };
+
+  /** The tool and style chosen on another page carry over. The canvas has no selection here, so nothing is restyled. */
+  const applyControls = (canvas: CanvasHandle) => {
+    canvas.setTool(tool);
+    canvas.setStyle(color ? { strokeColor: color, strokeWidth: width } : { strokeWidth: width });
+  };
+
+  // Runs once a page's canvas has mounted (see CanvasMounted): the tools are ready, and a
   // picture without a scene becomes the drawing's locked background.
-  const setUpCanvas = () => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    canvas.setTool("pen");
+  const setUpCanvas = (key: string, canvas: CanvasHandle, background?: Blob) => {
+    canvases.current.set(key, canvas);
+    applyControls(canvas);
+    if (key === activeRef.current) syncHistory();
     if (!background) return;
+    setPreparing((current) => new Set(current).add(key));
     canvas
       .insertImage(background, { background: true })
       .then(() => {
@@ -128,12 +173,79 @@ const DrawingSheet = ({ mode, initialScene, background, onDone, onClose }: Drawi
         canvas.zoomToFit();
       })
       .catch(() => showErrorToast(t("editor.drawing.image-failed")))
-      .finally(() => setIsPreparing(false));
+      .finally(() =>
+        setPreparing((current) => {
+          const next = new Set(current);
+          next.delete(key);
+          return next;
+        }),
+      );
   };
 
-  const syncHistory = () => {
-    const canvas = canvasRef.current;
-    setHistory({ undo: Boolean(canvas?.canUndo()), redo: Boolean(canvas?.canRedo()) });
+  const loadPage = (page: DrawingPage) => {
+    if (!page.load || loads.current.has(page.key)) return;
+    const controller = new AbortController();
+    loads.current.set(page.key, controller);
+    setPageStates((current) => ({ ...current, [page.key]: { status: "loading" } }));
+    page
+      .load(controller.signal)
+      .then((content) => {
+        if (!controller.signal.aborted) setPageStates((current) => ({ ...current, [page.key]: { status: "ready", content } }));
+      })
+      .catch((error) => {
+        if (controller.signal.aborted) return;
+        console.error(error);
+        showErrorToast(t("editor.drawing.open-failed"));
+        setPageStates((current) => ({ ...current, [page.key]: { status: "failed" } }));
+      })
+      .finally(() => {
+        if (loads.current.get(page.key) === controller) loads.current.delete(page.key);
+      });
+  };
+
+  // The page on show is read when it is first shown.
+  const activePage = pages.find((page) => page.key === activeKey);
+  useEffect(() => {
+    if (activePage && pageStates[activePage.key] === undefined) loadPage(activePage);
+  });
+  useEffect(() => {
+    const pending = loads.current;
+    return () => {
+      for (const controller of pending.values()) controller.abort();
+    };
+  }, []);
+
+  const showPage = (key: string) => {
+    if (key === activeRef.current || kidPix) return;
+    // Text still being typed stays on its page; a selection there must not take the next page's style.
+    const leaving = activeCanvas();
+    leaving?.commitText();
+    leaving?.setSelection([]);
+    activeRef.current = key;
+    setActiveKey(key);
+    setVisited((current) => new Set(current).add(key));
+    const next = canvases.current.get(key);
+    if (next) {
+      applyControls(next);
+      next.focus();
+    }
+    syncHistory();
+  };
+
+  // A new page goes right after the one on show.
+  const addPage = () => {
+    if (kidPix) return;
+    const key = newPageKey();
+    // Read now: the update runs after showPage below has made the new page the one on show.
+    const after = activeRef.current;
+    setPages((current) => {
+      const at = current.findIndex((page) => page.key === after);
+      const next = [...current];
+      next.splice(at + 1, 0, { key });
+      return next;
+    });
+    setPageStates((current) => ({ ...current, [key]: { status: "ready" } }));
+    showPage(key);
   };
 
   const handleCanvasError = (error: CanvasError) => {
@@ -145,17 +257,19 @@ const DrawingSheet = ({ mode, initialScene, background, onDone, onClose }: Drawi
 
   const chooseTool = (next: ToolName) => {
     setTool(next);
-    canvasRef.current?.setTool(next);
+    activeCanvas()?.setTool(next);
   };
 
   const applyWidth = (strokeWidth: number) => {
-    canvasRef.current?.setStyle({ strokeWidth });
+    activeCanvas()?.setStyle({ strokeWidth });
     setWidth(strokeWidth);
   };
 
   const insertImages = (files: File[]) => {
     for (const file of files.filter((candidate) => candidate.type.startsWith("image/"))) {
-      canvasRef.current?.insertImage(file).catch(() => showErrorToast(t("editor.drawing.image-failed")));
+      activeCanvas()
+        ?.insertImage(file)
+        .catch(() => showErrorToast(t("editor.drawing.image-failed")));
     }
   };
 
@@ -165,7 +279,7 @@ const DrawingSheet = ({ mode, initialScene, background, onDone, onClose }: Drawi
    * they can be moved as one or spread apart.
    */
   const insertPhotos = async (files: File[]) => {
-    const canvas = canvasRef.current;
+    const canvas = activeCanvas();
     const surface = surfaceRef.current;
     if (!canvas || !surface) return;
     const { zoom, scrollX, scrollY } = canvas.getViewport();
@@ -189,7 +303,7 @@ const DrawingSheet = ({ mode, initialScene, background, onDone, onClose }: Drawi
   };
 
   const enterKidPix = () => {
-    const canvas = canvasRef.current;
+    const canvas = activeCanvas();
     const surface = surfaceRef.current;
     if (!canvas || !surface || isPreparing) return;
     // Text still being typed is part of the drawing, and handles are not part of the picture.
@@ -206,7 +320,7 @@ const DrawingSheet = ({ mode, initialScene, background, onDone, onClose }: Drawi
    * view, so the paint goes in as tiles small enough to keep their size, grouped as one.
    */
   const addKidPixPaint = async () => {
-    const canvas = canvasRef.current;
+    const canvas = activeCanvas();
     const layer = kidPixRef.current;
     if (!canvas || !layer || !kidPix) return;
     const maxSide = Math.max(64, Math.min(KIDPIX_TILE_LIMIT, Math.floor((0.8 * Math.min(kidPix.width, kidPix.height)) / kidPix.zoom)));
@@ -245,9 +359,9 @@ const DrawingSheet = ({ mode, initialScene, background, onDone, onClose }: Drawi
     insertImages(Array.from(event.clipboardData.files));
   };
 
-  // Cancel, Escape and the system back gesture all ask first when the drawing has changes.
+  // Cancel, Escape and the system back gesture all ask first when any page has changes.
   const requestClose = () => {
-    if (canvasRef.current?.isDirty() || kidPixRef.current?.hasPaint()) {
+    if (Array.from(canvases.current.values()).some((canvas) => canvas.isDirty()) || kidPixRef.current?.hasPaint()) {
       setDiscardOpen(true);
       return;
     }
@@ -255,10 +369,9 @@ const DrawingSheet = ({ mode, initialScene, background, onDone, onClose }: Drawi
   };
 
   const handleDone = async () => {
-    const canvas = canvasRef.current;
-    if (!canvas || isExporting || isPreparing || isLeavingKidPix) return;
-    // Text still being typed is part of the drawing.
-    canvas.commitText();
+    if (isExporting || preparing.size > 0 || isLeavingKidPix) return;
+    // Text still being typed is part of its drawing.
+    for (const canvas of canvases.current.values()) canvas.commitText();
     setIsExporting(true);
     try {
       // Paint still on the Kid Pix layer is part of the drawing.
@@ -266,11 +379,20 @@ const DrawingSheet = ({ mode, initialScene, background, onDone, onClose }: Drawi
         await addKidPixPaint();
         setKidPix(null);
       }
-      const blob = await canvas.exportPng();
-      await onDone(new File([blob], drawingFileName(), { type: "image/png" }));
+      // A page never shown, or shown and left as it was, keeps its file. An added page left blank is dropped.
+      const changed = pages.flatMap((page) => {
+        const canvas = canvases.current.get(page.key);
+        return canvas?.isDirty() ? [{ key: page.key, canvas }] : [];
+      });
+      const files: DrawingPagesResult["files"] = [];
+      for (const { key, canvas } of changed) {
+        const blob = await canvas.exportPng();
+        files.push({ key, file: new File([blob], drawingFileName(), { type: "image/png" }) });
+      }
+      await onDone({ order: pages.map((page) => page.key), files });
       // Only once Done went through: after a failed save, Cancel still asks before discarding.
       // The host may have closed the sheet already.
-      canvasRef.current?.markSaved();
+      for (const { canvas } of changed) canvas.markSaved();
     } catch (error) {
       console.error(error);
       showErrorToast(t("editor.drawing.export-failed"));
@@ -336,7 +458,7 @@ const DrawingSheet = ({ mode, initialScene, background, onDone, onClose }: Drawi
                       aria-label={t(`editor.drawing.color-${swatch.key}`)}
                       pressed={currentColor.toLowerCase() === swatch.value.toLowerCase()}
                       onPressedChange={() => {
-                        canvasRef.current?.setStyle({ strokeColor: swatch.value });
+                        activeCanvas()?.setStyle({ strokeColor: swatch.value });
                         setColor(swatch.key === "ink" ? null : swatch.value);
                       }}
                       icon={<CircleIcon style={{ color: swatch.value, fill: swatch.value }} />}
@@ -377,7 +499,7 @@ const DrawingSheet = ({ mode, initialScene, background, onDone, onClose }: Drawi
         icon={<Undo2Icon />}
         disabled={!history.undo}
         onClick={() => {
-          canvasRef.current?.undo();
+          activeCanvas()?.undo();
           syncHistory();
         }}
       />
@@ -388,7 +510,7 @@ const DrawingSheet = ({ mode, initialScene, background, onDone, onClose }: Drawi
         icon={<Redo2Icon />}
         disabled={!history.redo}
         onClick={() => {
-          canvasRef.current?.redo();
+          activeCanvas()?.redo();
           syncHistory();
         }}
       />
@@ -396,7 +518,7 @@ const DrawingSheet = ({ mode, initialScene, background, onDone, onClose }: Drawi
   );
   const viewControls = (
     <>
-      <IconAction size={size} label={t("editor.drawing.zoom-to-fit")} icon={<ScanIcon />} onClick={() => canvasRef.current?.zoomToFit()} />
+      <IconAction size={size} label={t("editor.drawing.zoom-to-fit")} icon={<ScanIcon />} onClick={() => activeCanvas()?.zoomToFit()} />
       {immichAvailable ? (
         // With Immich connected, the picture comes from this device or from there.
         <Menu.Root modal={false} size={size ?? "md"}>
@@ -472,12 +594,24 @@ const DrawingSheet = ({ mode, initialScene, background, onDone, onClose }: Drawi
       variant="primary"
       size={size}
       onClick={handleDone}
-      disabled={isPreparing}
+      disabled={preparing.size > 0}
       loading={isExporting}
       loadingLabel={t("editor.drawing.done")}
     >
       {t("editor.drawing.done")}
     </Button>
+  );
+  const pageTabs = (
+    <PageTabs
+      keys={pages.map((page) => page.key)}
+      active={activeKey}
+      onSelect={showPage}
+      size={size}
+      disabled={isExporting}
+      className={isWide ? undefined : "gap-3"}
+    >
+      <IconAction size={size} label={t("editor.drawing.add-page")} icon={<FilePlusIcon />} disabled={isExporting} onClick={addPage} />
+    </PageTabs>
   );
 
   return (
@@ -500,24 +634,51 @@ const DrawingSheet = ({ mode, initialScene, background, onDone, onClose }: Drawi
           <div
             ref={surfaceRef}
             className={cn("absolute inset-0", isPreparing && "pointer-events-none")}
-            aria-busy={isPreparing || undefined}
+            aria-busy={isPreparing || activeState?.status === "loading" || undefined}
             onPointerUp={syncHistory}
             onKeyUp={syncHistory}
           >
-            <Canvas
-              ref={canvasRef}
-              className="absolute inset-0"
-              autoFocus
-              ariaLabel={title}
-              initialScene={initialScene}
-              theme={theme}
-              tools={TOOL_NAMES}
-              fontFamily={fontFamily}
-              onChange={syncHistory}
-              onToolChange={setTool}
-              onError={handleCanvasError}
-            />
-            <CanvasMounted onMounted={setUpCanvas} />
+            {pages.map((page, index) => {
+              const state = pageStates[page.key];
+              if (!visited.has(page.key) || state?.status !== "ready") return null;
+              const shown = page.key === activeKey;
+              // Hidden pages keep their size, so their view is where it was when they come back.
+              return (
+                <div
+                  key={page.key}
+                  className={cn("absolute inset-0", !shown && "invisible")}
+                  inert={!shown}
+                  data-drawing-page={shown ? "shown" : undefined}
+                >
+                  <PageCanvas
+                    className="absolute inset-0"
+                    autoFocus={page.key === initialPage}
+                    ariaLabel={pages.length > 1 ? `${title}, ${t("editor.drawing.page", { number: index + 1 })}` : title}
+                    initialScene={state.content?.scene}
+                    theme={theme}
+                    tools={TOOL_NAMES}
+                    fontFamily={fontFamily}
+                    onChange={syncHistory}
+                    onToolChange={setTool}
+                    onError={handleCanvasError}
+                    onMounted={(canvas) => setUpCanvas(page.key, canvas, state.content?.background)}
+                  />
+                </div>
+              );
+            })}
+            {activeState?.status === "loading" && (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <Spinner label={t("editor.blocks.loading")} />
+              </div>
+            )}
+            {activeState?.status === "failed" && activePage && (
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
+                <span className="mu-body text-mu-ink-muted">{t("editor.drawing.open-failed")}</span>
+                <Button variant="neutral" size={size} onClick={() => loadPage(activePage)}>
+                  {t("common.retry")}
+                </Button>
+              </div>
+            )}
           </div>
 
           {kidPix && (
@@ -528,7 +689,8 @@ const DrawingSheet = ({ mode, initialScene, background, onDone, onClose }: Drawi
                 paper={theme.paper ?? DRAWING_PAPER}
                 muted={!kidPixSounds}
                 compact={kidPixCompact}
-                backdropSources={() => Array.from(surfaceRef.current?.querySelectorAll("canvas") ?? [])}
+                // Only the page on show is under the paint; hidden pages keep their canvases too.
+                backdropSources={() => Array.from(surfaceRef.current?.querySelectorAll("[data-drawing-page='shown'] canvas") ?? [])}
                 labels={{
                   tools: t("editor.drawing.tools"),
                   color: t("editor.drawing.color"),
@@ -566,7 +728,9 @@ const DrawingSheet = ({ mode, initialScene, background, onDone, onClose }: Drawi
               </FloatingBar>
               <FloatingAction>{doneButton}</FloatingAction>
             </FloatingRow>
-          ) : (
+          ) : null}
+          {!kidPix && isWide && <FloatingRow edge="bottom">{pageTabs}</FloatingRow>}
+          {!kidPix && !isWide && (
             <>
               <FloatingRow edge="top">
                 <FloatingAction>{cancelButton}</FloatingAction>
@@ -585,8 +749,9 @@ const DrawingSheet = ({ mode, initialScene, background, onDone, onClose }: Drawi
                   {styleControl}
                 </FloatingBar>
               </FloatingRow>
-              {/* The way into Kid Pix mode sits alone above the tools: neither phone bar has room for it. */}
-              <FloatingRow edge="bottom" className="bottom-[calc(72px+env(safe-area-inset-bottom))] justify-end">
+              {/* The pages and the way into Kid Pix mode sit above the tools: neither phone bar has room for them. */}
+              <FloatingRow edge="bottom" className="bottom-[calc(72px+env(safe-area-inset-bottom))] justify-between">
+                {pageTabs}
                 <FloatingBar>{kidPixEnter}</FloatingBar>
               </FloatingRow>
             </>
@@ -646,6 +811,17 @@ const CanvasMounted = ({ onMounted }: { onMounted: () => void }) => {
     callback.current();
   }, []);
   return null;
+};
+
+/** One page's canvas, handed to the sheet once it has mounted. */
+const PageCanvas = ({ onMounted, ...props }: ComponentProps<typeof Canvas> & { onMounted: (canvas: CanvasHandle) => void }) => {
+  const ref = useRef<CanvasHandle | null>(null);
+  return (
+    <>
+      <Canvas ref={ref} {...props} />
+      <CanvasMounted onMounted={() => ref.current && onMounted(ref.current)} />
+    </>
+  );
 };
 
 /** An icon-only ghost Button named by its Tooltip, as every icon control in memos. */
