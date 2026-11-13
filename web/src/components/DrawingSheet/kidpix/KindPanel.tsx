@@ -46,6 +46,8 @@ const KindPanel = ({ art, label, names, selected, color, onSelect, play }: KindP
   // The cell each kind shows: the one in hand held up, the rest in their molds.
   const [cells, setCells] = useState(() => group.kinds.map((kind, index) => last(index === selected ? kind.pickUp : kind.putDown)));
   const timers = useRef(new Map<number, number>());
+  // The kind in hand as of the last click, for scripts that finish after a later one.
+  const held = useRef(selected);
 
   useEffect(() => {
     const running = timers.current;
@@ -60,7 +62,11 @@ const KindPanel = ({ art, label, names, selected, color, onSelect, play }: KindP
     window.clearInterval(timers.current.get(index));
     play(clip);
     let step = 0;
-    const show = () => setCells((previous) => previous.map((cell, kind) => (kind === index ? script[step] : cell)));
+    const show = () => {
+      // Read the step now: React may apply the update after later steps have run.
+      const next = script[step];
+      setCells((previous) => previous.map((cell, kind) => (kind === index ? next : cell)));
+    };
     show();
     const timer = window.setInterval(() => {
       step++;
@@ -78,10 +84,13 @@ const KindPanel = ({ art, label, names, selected, color, onSelect, play }: KindP
   const choose = (index: number) => {
     if (index === selected) return;
     const before = selected;
+    held.current = index;
     onSelect(index);
     const kind = group.kinds[index];
-    // The new one comes up first; only then does the old one go back to its mold.
+    // The new one comes up first; only then does the old one go back to its mold, unless a
+    // quicker click has picked it up again meanwhile.
     run(index, kind.pickUp, kind.sounds[1], () => {
+      if (held.current === before) return;
       const old = group.kinds[before];
       run(before, old.putDown, old.sounds[0]);
     });
