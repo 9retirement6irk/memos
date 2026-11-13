@@ -223,7 +223,14 @@
       "kidpix-no-background": "ไม่มีพื้นหลัง",
       "pages": "หน้า",
       "page": "หน้า {{number}}",
-      "add-page": "เพิ่มหน้า"
+      "add-page": "เพิ่มหน้า",
+      "paper": "กระดาษ",
+      "paper-plain": "เปล่า",
+      "paper-college-ruled": "เส้นบรรทัดแคบ",
+      "paper-wide-ruled": "เส้นบรรทัดกว้าง",
+      "paper-gregg-ruled": "ชวเลข",
+      "paper-graph": "ตาราง",
+      "paper-dot-grid": "จุด"
     },
     "audio-recorder": {
       "attachment-label": "การบันทึกเสียง",

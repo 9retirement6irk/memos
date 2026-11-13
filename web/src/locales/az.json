@@ -341,7 +341,14 @@
       "kidpix-no-background": "Fon yoxdur",
       "pages": "Səhifələr",
       "page": "Səhifə {{number}}",
-      "add-page": "Səhifə əlavə et"
+      "add-page": "Səhifə əlavə et",
+      "paper": "Kağız",
+      "paper-plain": "Sadə",
+      "paper-college-ruled": "Dar xətli",
+      "paper-wide-ruled": "Enli xətli",
+      "paper-gregg-ruled": "Stenoqrafiya",
+      "paper-graph": "Dama",
+      "paper-dot-grid": "Nöqtəli"
     },
     "new-memo": "Yeni qeyd",
     "no-changes-detected": "Dəyişiklik aşkarlanmadı",

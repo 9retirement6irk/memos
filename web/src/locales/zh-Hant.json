@@ -315,7 +315,14 @@
       "kidpix-no-background": "無背景",
       "pages": "頁面",
       "page": "第 {{number}} 頁",
-      "add-page": "新增頁面"
+      "add-page": "新增頁面",
+      "paper": "紙張",
+      "paper-plain": "空白",
+      "paper-college-ruled": "窄橫線",
+      "paper-wide-ruled": "寬橫線",
+      "paper-gregg-ruled": "速記",
+      "paper-graph": "方格",
+      "paper-dot-grid": "點陣"
     },
     "new-memo": "新增備忘錄",
     "no-changes-detected": "未發現變更",

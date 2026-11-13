@@ -10,6 +10,7 @@ import {
   ImagesIcon,
   MousePointer2Icon,
   MoveUpRightIcon,
+  NotebookTextIcon,
   PencilIcon,
   Redo2Icon,
   ScanIcon,
@@ -33,6 +34,7 @@ import kidPixToolsUrl from "./kidpix/assets/tools.png";
 import type { KidPixHandle, KidPixView } from "./kidpix/KidPixLayer";
 import { PageTabs } from "./PageTabs";
 import { type DrawingPage, type DrawingPagesResult, newPageKey } from "./pages";
+import { findPaperElement, loadPaper, PAPERS, type PaperId } from "./paper/papers";
 import { DRAWING_HUES, DRAWING_PAPER, useCanvasTheme } from "./useCanvasTheme";
 
 const TOOLS: { name: ToolName; label: Translations; shortcut: string; icon: ReactElement }[] = [
@@ -120,6 +122,8 @@ const DrawingSheet = ({ mode, pages: initialPages, initialPage, onDone, onClose 
     Object.fromEntries(initialPages.map((page) => [page.key, initialPageState(page)])),
   );
   const [activeKey, setActiveKey] = useState(initialPage);
+  // The paper chosen for each page in this sheet, so an added page can follow the page before it.
+  const [paperOf, setPaperOf] = useState<Record<string, PaperId | undefined>>({});
   // Read synchronously by the handlers, which may run before the switch renders.
   const activeRef = useRef(initialPage);
   // Pages shown at least once: their canvases stay mounted.
@@ -232,20 +236,73 @@ const DrawingSheet = ({ mode, pages: initialPages, initialPage, onDone, onClose 
     syncHistory();
   };
 
-  // A new page goes right after the one on show.
+  // A new page goes right after the one on show, on the same paper, as in a notebook. The paper
+  // goes in as the page's starting picture, so a page left blank is still dropped at Done.
   const addPage = () => {
     if (kidPix) return;
     const key = newPageKey();
     // Read now: the update runs after showPage below has made the new page the one on show.
     const after = activeRef.current;
+    const paper = paperOf[after];
     setPages((current) => {
       const at = current.findIndex((page) => page.key === after);
       const next = [...current];
       next.splice(at + 1, 0, { key });
       return next;
     });
-    setPageStates((current) => ({ ...current, [key]: { status: "ready" } }));
+    if (paper) {
+      setPaperOf((current) => ({ ...current, [key]: paper }));
+      setPageStates((current) => ({ ...current, [key]: { status: "loading" } }));
+      loadPaper(paper)
+        .then((background) => setPageStates((current) => ({ ...current, [key]: { status: "ready", content: { background } } })))
+        .catch(() => {
+          showErrorToast(t("editor.drawing.image-failed"));
+          setPageStates((current) => ({ ...current, [key]: { status: "ready" } }));
+        });
+    } else {
+      setPageStates((current) => ({ ...current, [key]: { status: "ready" } }));
+    }
     showPage(key);
+  };
+
+  /**
+   * Puts a paper under the page on show, in place of the paper it has, or takes the paper away.
+   * A picture the drawing was started over stays: only a paper is replaced.
+   */
+  const choosePaper = async (id: PaperId | null) => {
+    const key = activeRef.current;
+    const canvas = activeCanvas();
+    if (!canvas || kidPix || preparing.has(key)) return;
+    canvas.commitText();
+    const wasEmpty = canvas.isEmpty();
+    setPreparing((current) => new Set(current).add(key));
+    try {
+      // Fetched first, so a paper that fails to load leaves the page as it was.
+      const blob = id ? await loadPaper(id) : undefined;
+      const current = findPaperElement(canvas);
+      if (current) {
+        canvas.setLocked([current], false);
+        canvas.setSelection([current]);
+        canvas.deleteSelection();
+      }
+      if (blob) {
+        await canvas.insertImage(blob, { background: true });
+        canvas.setSelection([]);
+        if (wasEmpty) canvas.zoomToFit();
+      }
+      // Selecting the old paper switched to the select tool.
+      canvas.setTool(tool);
+      setPaperOf((papers) => ({ ...papers, [key]: id ?? undefined }));
+    } catch {
+      showErrorToast(t("editor.drawing.image-failed"));
+    } finally {
+      setPreparing((current) => {
+        const next = new Set(current);
+        next.delete(key);
+        return next;
+      });
+      syncHistory();
+    }
   };
 
   const handleCanvasError = (error: CanvasError) => {
@@ -489,6 +546,41 @@ const DrawingSheet = ({ mode, pages: initialPages, initialPage, onDone, onClose 
     </Popover.Root>
   );
 
+  const paperControl = (
+    <Popover.Root>
+      <Tooltip.Root>
+        <Tooltip.Trigger
+          render={
+            <Popover.Trigger
+              render={
+                <Button
+                  variant="ghost"
+                  size={size}
+                  aria-label={t("editor.drawing.paper")}
+                  icon={<NotebookTextIcon />}
+                  disabled={isPreparing || activeState?.status !== "ready"}
+                />
+              }
+            />
+          }
+        />
+        <Tooltip.Popup>{t("editor.drawing.paper")}</Tooltip.Popup>
+      </Tooltip.Root>
+      <Popover.Popup side={isWide ? "bottom" : "top"} aria-label={t("editor.drawing.paper")}>
+        <PaperChoices
+          chosen={() => {
+            // The paper chosen here, or, on a drawing that already had one, a paper of unknown kind.
+            if (paperOf[activeKey]) return paperOf[activeKey];
+            const canvas = canvases.current.get(activeKey);
+            return canvas && findPaperElement(canvas) ? undefined : "plain";
+          }}
+          disabled={isPreparing}
+          onChoose={(id) => void choosePaper(id === "plain" ? null : id)}
+        />
+      </Popover.Popup>
+    </Popover.Root>
+  );
+
   const modifier = primaryModifierGlyph();
   const historyControls = (
     <>
@@ -549,6 +641,7 @@ const DrawingSheet = ({ mode, pages: initialPages, initialPage, onDone, onClose 
           onClick={() => fileInputRef.current?.click()}
         />
       )}
+      {paperControl}
     </>
   );
   // The Wacky Brush button from the Kid Pix tube, so the way in looks like where it leads.
@@ -825,6 +918,51 @@ const PageCanvas = ({ onMounted, ...props }: ComponentProps<typeof Canvas> & { o
 };
 
 /** An icon-only ghost Button named by its Tooltip, as every icon control in memos. */
+/** The papers to choose from, read when the menu opens. */
+const PaperChoices = ({
+  chosen,
+  disabled,
+  onChoose,
+}: {
+  chosen: () => PaperId | "plain" | undefined;
+  disabled: boolean;
+  onChoose: (id: PaperId | "plain") => void;
+}) => {
+  const t = useTranslate();
+  const current = chosen();
+  return (
+    <div role="group" aria-label={t("editor.drawing.paper")} className="grid grid-cols-3 gap-2" data-drawing-papers="">
+      {[{ id: "plain" as const, url: undefined }, ...PAPERS].map((paper) => {
+        const on = current === paper.id;
+        return (
+          <Popover.Close
+            key={paper.id}
+            render={
+              <button
+                type="button"
+                aria-pressed={on}
+                disabled={disabled}
+                onClick={() => onChoose(paper.id)}
+                className={cn(
+                  "mu-focus flex w-20 flex-col items-center gap-1 rounded-mu-md border p-1.5",
+                  on ? "border-mu-edge bg-mu-hover" : "border-transparent hover:bg-mu-hover",
+                )}
+              />
+            }
+          >
+            <span
+              aria-hidden
+              className="block h-[78px] w-[60px] overflow-hidden rounded-mu-sm border border-mu-line"
+              style={{ background: paper.url ? `${DRAWING_PAPER} url(${paper.url}) 0 0 / 200px auto no-repeat` : DRAWING_PAPER }}
+            />
+            <span className="mu-caption text-center">{t(`editor.drawing.paper-${paper.id}`)}</span>
+          </Popover.Close>
+        );
+      })}
+    </div>
+  );
+};
+
 const IconAction = ({
   label,
   icon,

@@ -259,7 +259,14 @@
       "kidpix-no-background": "Bez pozadia",
       "pages": "Strany",
       "page": "Strana {{number}}",
-      "add-page": "Pridať stranu"
+      "add-page": "Pridať stranu",
+      "paper": "Papier",
+      "paper-plain": "Čistý",
+      "paper-college-ruled": "Úzke linajky",
+      "paper-wide-ruled": "Široké linajky",
+      "paper-gregg-ruled": "Rýchlopis",
+      "paper-graph": "Štvorčeky",
+      "paper-dot-grid": "Bodky"
     },
     "no-changes-detected": "Nezistili sa žiadne zmeny",
     "save": "Uložiť",

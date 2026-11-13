@@ -221,7 +221,14 @@
       "kidpix-no-background": "Geen achtergrond",
       "pages": "Pagina's",
       "page": "Pagina {{number}}",
-      "add-page": "Pagina toevoegen"
+      "add-page": "Pagina toevoegen",
+      "paper": "Papier",
+      "paper-plain": "Blanco",
+      "paper-college-ruled": "Smal gelinieerd",
+      "paper-wide-ruled": "Breed gelinieerd",
+      "paper-gregg-ruled": "Steno",
+      "paper-graph": "Ruitjes",
+      "paper-dot-grid": "Stippen"
     },
     "no-changes-detected": "Geen wijzigingen gedetecteerd",
     "save": "Opslaan",

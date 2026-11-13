@@ -223,7 +223,14 @@
       "kidpix-no-background": "Sem fundo",
       "pages": "Páginas",
       "page": "Página {{number}}",
-      "add-page": "Adicionar página"
+      "add-page": "Adicionar página",
+      "paper": "Papel",
+      "paper-plain": "Liso",
+      "paper-college-ruled": "Pautado estreito",
+      "paper-wide-ruled": "Pautado largo",
+      "paper-gregg-ruled": "Estenografia",
+      "paper-graph": "Quadriculado",
+      "paper-dot-grid": "Pontilhado"
     },
     "audio-recorder": {
       "attachment-label": "Gravação de áudio",

@@ -221,7 +221,14 @@
       "kidpix-no-background": "Bez pozadí",
       "pages": "Stránky",
       "page": "Stránka {{number}}",
-      "add-page": "Přidat stránku"
+      "add-page": "Přidat stránku",
+      "paper": "Papír",
+      "paper-plain": "Čistý",
+      "paper-college-ruled": "Úzké linky",
+      "paper-wide-ruled": "Široké linky",
+      "paper-gregg-ruled": "Těsnopis",
+      "paper-graph": "Čtverečky",
+      "paper-dot-grid": "Tečky"
     },
     "no-changes-detected": "Nebyly zjištěny žádné změny",
     "save": "Uložit",

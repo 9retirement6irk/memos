@@ -259,7 +259,14 @@
       "kidpix-no-background": "Fără fundal",
       "pages": "Pagini",
       "page": "Pagina {{number}}",
-      "add-page": "Adăugați o pagină"
+      "add-page": "Adăugați o pagină",
+      "paper": "Hârtie",
+      "paper-plain": "Simplă",
+      "paper-college-ruled": "Dictando îngust",
+      "paper-wide-ruled": "Dictando lat",
+      "paper-gregg-ruled": "Stenografie",
+      "paper-graph": "Matematică",
+      "paper-dot-grid": "Cu puncte"
     },
     "no-changes-detected": "Nu au fost detectate modificări",
     "save": "Salva",

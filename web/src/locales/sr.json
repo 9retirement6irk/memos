@@ -259,7 +259,14 @@
       "kidpix-no-background": "Без позадине",
       "pages": "Странице",
       "page": "Страница {{number}}",
-      "add-page": "Додај страницу"
+      "add-page": "Додај страницу",
+      "paper": "Папир",
+      "paper-plain": "Чист",
+      "paper-college-ruled": "Уске линије",
+      "paper-wide-ruled": "Широке линије",
+      "paper-gregg-ruled": "Стенографија",
+      "paper-graph": "Квадратићи",
+      "paper-dot-grid": "Тачкице"
     },
     "no-changes-detected": "Нису откривене промене",
     "save": "Сачувај",

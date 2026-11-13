@@ -259,7 +259,14 @@
       "kidpix-no-background": "Без фон",
       "pages": "Страници",
       "page": "Страница {{number}}",
-      "add-page": "Добавяне на страница"
+      "add-page": "Добавяне на страница",
+      "paper": "Хартия",
+      "paper-plain": "Бяла",
+      "paper-college-ruled": "Тесни редове",
+      "paper-wide-ruled": "Широки редове",
+      "paper-gregg-ruled": "Стенография",
+      "paper-graph": "Квадратчета",
+      "paper-dot-grid": "Точки"
     },
     "no-changes-detected": "Не са открити промени",
     "save": "Запазване",

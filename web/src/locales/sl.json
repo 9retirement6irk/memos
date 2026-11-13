@@ -221,7 +221,14 @@
       "kidpix-no-background": "Brez ozadja",
       "pages": "Strani",
       "page": "Stran {{number}}",
-      "add-page": "Dodaj stran"
+      "add-page": "Dodaj stran",
+      "paper": "Papir",
+      "paper-plain": "Prazen",
+      "paper-college-ruled": "Ozke črte",
+      "paper-wide-ruled": "Široke črte",
+      "paper-gregg-ruled": "Stenografija",
+      "paper-graph": "Karirasto",
+      "paper-dot-grid": "Pikice"
     },
     "no-changes-detected": "Ni zaznanih sprememb",
     "save": "Shrani",

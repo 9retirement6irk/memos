@@ -221,7 +221,14 @@
       "kidpix-no-background": "Ingen bakgrund",
       "pages": "Sidor",
       "page": "Sida {{number}}",
-      "add-page": "Lägg till sida"
+      "add-page": "Lägg till sida",
+      "paper": "Papper",
+      "paper-plain": "Olinjerat",
+      "paper-college-ruled": "Smalt linjerat",
+      "paper-wide-ruled": "Brett linjerat",
+      "paper-gregg-ruled": "Stenografi",
+      "paper-graph": "Rutat",
+      "paper-dot-grid": "Prickat"
     },
     "no-changes-detected": "Inga ändringar upptäckta",
     "save": "Spara",

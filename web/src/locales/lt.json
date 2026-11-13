@@ -259,7 +259,14 @@
       "kidpix-no-background": "Be fono",
       "pages": "Puslapiai",
       "page": "{{number}} puslapis",
-      "add-page": "Pridėti puslapį"
+      "add-page": "Pridėti puslapį",
+      "paper": "Popierius",
+      "paper-plain": "Švarus",
+      "paper-college-ruled": "Siauros linijos",
+      "paper-wide-ruled": "Plačios linijos",
+      "paper-gregg-ruled": "Stenografija",
+      "paper-graph": "Langeliai",
+      "paper-dot-grid": "Taškeliai"
     },
     "no-changes-detected": "Pakeitimų neaptikta",
     "save": "Išsaugoti",

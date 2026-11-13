@@ -223,7 +223,14 @@
       "kidpix-no-background": "배경 없음",
       "pages": "페이지",
       "page": "{{number}}페이지",
-      "add-page": "페이지 추가"
+      "add-page": "페이지 추가",
+      "paper": "용지",
+      "paper-plain": "무지",
+      "paper-college-ruled": "좁은 줄",
+      "paper-wide-ruled": "넓은 줄",
+      "paper-gregg-ruled": "속기용",
+      "paper-graph": "모눈",
+      "paper-dot-grid": "점선 격자"
     },
     "audio-recorder": {
       "attachment-label": "오디오 녹음",

@@ -221,7 +221,14 @@
       "kidpix-no-background": "ფონის გარეშე",
       "pages": "გვერდები",
       "page": "გვერდი {{number}}",
-      "add-page": "გვერდის დამატება"
+      "add-page": "გვერდის დამატება",
+      "paper": "ქაღალდი",
+      "paper-plain": "სუფთა",
+      "paper-college-ruled": "ვიწრო ხაზები",
+      "paper-wide-ruled": "ფართო ხაზები",
+      "paper-gregg-ruled": "სტენოგრაფია",
+      "paper-graph": "უჯრედები",
+      "paper-dot-grid": "წერტილები"
     },
     "no-changes-detected": "ცვლილებები არ აღმოჩენილა",
     "save": "შენახვა",

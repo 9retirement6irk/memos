@@ -236,7 +236,14 @@
       "kidpix-no-background": "Bez tła",
       "pages": "Strony",
       "page": "Strona {{number}}",
-      "add-page": "Dodaj stronę"
+      "add-page": "Dodaj stronę",
+      "paper": "Papier",
+      "paper-plain": "Gładki",
+      "paper-college-ruled": "Wąska linia",
+      "paper-wide-ruled": "Szeroka linia",
+      "paper-gregg-ruled": "Stenografia",
+      "paper-graph": "Kratka",
+      "paper-dot-grid": "Kropki"
     },
     "no-changes-detected": "Brak wykrytych zmian",
     "save": "Zapisz",

@@ -259,7 +259,14 @@
       "kidpix-no-background": "Ei taustaa",
       "pages": "Sivut",
       "page": "Sivu {{number}}",
-      "add-page": "Lisää sivu"
+      "add-page": "Lisää sivu",
+      "paper": "Paperi",
+      "paper-plain": "Tyhjä",
+      "paper-college-ruled": "Kapea viivoitus",
+      "paper-wide-ruled": "Leveä viivoitus",
+      "paper-gregg-ruled": "Pikakirjoitus",
+      "paper-graph": "Ruutu",
+      "paper-dot-grid": "Pisteet"
     },
     "no-changes-detected": "Muutoksia ei havaittu",
     "save": "Tallentaa",

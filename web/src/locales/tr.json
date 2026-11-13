@@ -270,7 +270,14 @@
       "kidpix-no-background": "Arka plan yok",
       "pages": "Sayfalar",
       "page": "Sayfa {{number}}",
-      "add-page": "Sayfa ekle"
+      "add-page": "Sayfa ekle",
+      "paper": "Kâğıt",
+      "paper-plain": "Düz",
+      "paper-college-ruled": "Dar çizgili",
+      "paper-wide-ruled": "Geniş çizgili",
+      "paper-gregg-ruled": "Stenografi",
+      "paper-graph": "Kareli",
+      "paper-dot-grid": "Noktalı"
     },
     "new-memo": "Yeni not",
     "no-changes-detected": "Değişiklik yok",

@@ -341,7 +341,14 @@
       "kidpix-no-background": "No background",
       "pages": "Pages",
       "page": "Page {{number}}",
-      "add-page": "Add page"
+      "add-page": "Add page",
+      "paper": "Paper",
+      "paper-plain": "Plain",
+      "paper-college-ruled": "College ruled",
+      "paper-wide-ruled": "Wide ruled",
+      "paper-gregg-ruled": "Gregg ruled",
+      "paper-graph": "Graph",
+      "paper-dot-grid": "Dot grid"
     },
     "new-memo": "New memo",
     "no-changes-detected": "No changes detected",

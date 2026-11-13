@@ -221,7 +221,14 @@
       "kidpix-no-background": "Kein Hintergrund",
       "pages": "Seiten",
       "page": "Seite {{number}}",
-      "add-page": "Seite hinzufügen"
+      "add-page": "Seite hinzufügen",
+      "paper": "Papier",
+      "paper-plain": "Blanko",
+      "paper-college-ruled": "Schmal liniert",
+      "paper-wide-ruled": "Breit liniert",
+      "paper-gregg-ruled": "Stenoblock",
+      "paper-graph": "Kariert",
+      "paper-dot-grid": "Gepunktet"
     },
     "no-changes-detected": "Keine Änderungen erkannt",
     "save": "Speichern",

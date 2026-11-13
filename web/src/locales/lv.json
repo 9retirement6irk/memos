@@ -259,7 +259,14 @@
       "kidpix-no-background": "Bez fona",
       "pages": "Lapas",
       "page": "{{number}}. lapa",
-      "add-page": "Pievienot lapu"
+      "add-page": "Pievienot lapu",
+      "paper": "Papīrs",
+      "paper-plain": "Tīrs",
+      "paper-college-ruled": "Šauras līnijas",
+      "paper-wide-ruled": "Platas līnijas",
+      "paper-gregg-ruled": "Stenogrāfija",
+      "paper-graph": "Rūtiņas",
+      "paper-dot-grid": "Punktiņi"
     },
     "no-changes-detected": "Izmaiņas nav konstatētas",
     "save": "Saglabāt",

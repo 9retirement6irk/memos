@@ -221,7 +221,14 @@
       "kidpix-no-background": "Sen fondo",
       "pages": "Páxinas",
       "page": "Páxina {{number}}",
-      "add-page": "Engadir páxina"
+      "add-page": "Engadir páxina",
+      "paper": "Papel",
+      "paper-plain": "Liso",
+      "paper-college-ruled": "Raiado estreito",
+      "paper-wide-ruled": "Raiado ancho",
+      "paper-gregg-ruled": "Taquigrafía",
+      "paper-graph": "Cuadriculado",
+      "paper-dot-grid": "Punteado"
     },
     "no-changes-detected": "Non se detectaron cambios",
     "save": "Gardar",
