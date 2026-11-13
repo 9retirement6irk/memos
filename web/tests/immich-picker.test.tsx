@@ -14,6 +14,7 @@ const mocks = vi.hoisted(() => ({
   listAlbums: vi.fn(),
   listPhotos: vi.fn(),
   fetchOriginal: vi.fn(),
+  fetchPreview: vi.fn(),
   showErrorToast: vi.fn(),
 }));
 
@@ -24,6 +25,7 @@ vi.mock("@/lib/immich", () => ({
   listImmichAlbums: mocks.listAlbums,
   listImmichPhotos: mocks.listPhotos,
   fetchImmichOriginal: mocks.fetchOriginal,
+  fetchImmichPreview: mocks.fetchPreview,
   immichThumbnailUrl: (id: string) => `/api/immich/photos/${id}/thumbnail`,
 }));
 vi.mock("@/lib/toast", () => ({ showErrorToast: mocks.showErrorToast }));
@@ -68,6 +70,18 @@ describe("Immich photo picker", () => {
     await waitFor(() => expect(onPick).toHaveBeenCalledOnce());
     expect(onPick.mock.calls[0][0].map((file: File) => file.name)).toEqual(["IMG_2.jpg", "IMG_1.jpg"]);
     expect(onOpenChange).toHaveBeenCalledWith(false);
+  });
+
+  it("hands back previews instead of originals when asked, as for a drawing", async () => {
+    mocks.fetchPreview.mockImplementation(async (picked: { id: string }) => new File(["x"], `${picked.id}.jpg`, { type: "image/jpeg" }));
+    const onPick = vi.fn();
+    renderWithQueries(<ImmichPickerDialog open size="preview" onOpenChange={vi.fn()} onPick={onPick} />);
+
+    fireEvent.click(await screen.findByRole("button", { name: "IMG_1.jpg" }));
+    fireEvent.click(screen.getByRole("button", { name: 'immich.add-photos {"count":1}' }));
+    await waitFor(() => expect(onPick).toHaveBeenCalledOnce());
+    expect(onPick.mock.calls[0][0].map((file: File) => file.name)).toEqual(["p1.jpg"]);
+    expect(mocks.fetchOriginal).not.toHaveBeenCalled();
   });
 
   it("deselects a photo picked twice and keeps Add disabled with nothing picked", async () => {

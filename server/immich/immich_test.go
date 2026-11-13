@@ -37,6 +37,14 @@ func fakeImmich(t *testing.T, contentType string) *httptest.Server {
 		w.Header().Set("Content-Type", contentType)
 		_, _ = io.WriteString(w, "photo-bytes")
 	})
+	mux.HandleFunc("GET /api/assets/{id}/thumbnail", func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Query().Get("size") != "preview" {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+		w.Header().Set("Content-Type", contentType)
+		_, _ = io.WriteString(w, "preview-bytes")
+	})
 	return httptest.NewServer(mux)
 }
 
@@ -162,7 +170,14 @@ func TestPhotoProxy(t *testing.T) {
 	require.Equal(t, "nosniff", response.Header().Get("X-Content-Type-Options"))
 	require.Equal(t, "photo-bytes", response.Body.String())
 
+	response = env.request(http.MethodGet, "/api/immich/photos/"+testPhotoID+"/preview", "", true)
+	require.Equal(t, http.StatusOK, response.Code)
+	require.Equal(t, "image/jpeg", response.Header().Get("Content-Type"))
+	require.Equal(t, "preview-bytes", response.Body.String())
+
 	response = env.request(http.MethodGet, "/api/immich/photos/not-a-photo/original", "", true)
+	require.Equal(t, http.StatusBadRequest, response.Code)
+	response = env.request(http.MethodGet, "/api/immich/photos/not-a-photo/preview", "", true)
 	require.Equal(t, http.StatusBadRequest, response.Code)
 	response = env.request(http.MethodGet, "/api/immich/photos?album=../albums", "", true)
 	require.Equal(t, http.StatusBadRequest, response.Code)
@@ -179,6 +194,9 @@ func TestPhotoProxyPassesOnlyImages(t *testing.T) {
 	response := env.request(http.MethodGet, "/api/immich/photos/"+testPhotoID+"/original", "", true)
 	require.Equal(t, http.StatusBadGateway, response.Code)
 	require.NotContains(t, response.Body.String(), "photo-bytes")
+	response = env.request(http.MethodGet, "/api/immich/photos/"+testPhotoID+"/preview", "", true)
+	require.Equal(t, http.StatusBadGateway, response.Code)
+	require.NotContains(t, response.Body.String(), "preview-bytes")
 }
 
 func TestConnectionKeepsWhereARedirectLeads(t *testing.T) {

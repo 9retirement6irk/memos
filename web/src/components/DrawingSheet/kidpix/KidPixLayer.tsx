@@ -18,9 +18,11 @@ import type { Point } from "./brushes";
 import { KidPixEngine, type KidPixImages, type KidPixTile } from "./engine";
 import "./kidpix.css";
 import { KIDPIX_BACKGROUNDS, KIDPIX_STAMPS, KIDPIX_STICKERS } from "./library";
+import { KIDPIX_SPRAY_SETS } from "./spray";
 import { readStickers, type SwfPicture } from "./swf";
 import {
   BRUSH_COUNT,
+  BRUSH_KINDS,
   ERASER_SIZES,
   FONTS,
   GRADIENT_COUNT,
@@ -119,6 +121,7 @@ const strip = (url: string, cells: number, index: number, label: string, cell = 
 
 const optionsFor = (
   tool: KidPixTool,
+  spraying: boolean,
   color: string,
   category: number,
   stickerThumbs: readonly string[],
@@ -132,6 +135,7 @@ const optionsFor = (
         content: { className: "kidpix-dot", style: { width: size, height: size, background: color } },
       }));
     case "wacky":
+      if (spraying) return KIDPIX_SPRAY_SETS.map((set, index) => sprite("spray", index, KIDPIX_SPRAY_SETS.length, index, set.name));
       // The first twenty brush icons are shapes without a color of their own: Kid Pix shows them in the color in hand.
       return Array.from({ length: BRUSH_COUNT }, (_, index) => {
         const option = sprite("brushes", index, 57, index, toolLabel(index));
@@ -213,6 +217,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
     stamps: new Map<number, HTMLImageElement>(),
     stickers: new Map<number, SwfPicture[]>(),
     backgrounds: new Map<string, HTMLImageElement>(),
+    sprays: new Map<number, HTMLImageElement>(),
   });
   const optionsRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -237,6 +242,10 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
   // The tray pictures of the sticker category on show, drawn once its file has arrived.
   const [stickerThumbs, setStickerThumbs] = useState<{ category: number; urls: string[] }>({ category: -1, urls: [] });
   const [pencilKind, setPencilKind] = useState(0);
+  // The brush zone's kind (0 the paint brush, 1 the Spray Can) and the picture set in the can.
+  const [brushKind, setBrushKind] = useState(0);
+  const [spraySet, setSpraySet] = useState(0);
+  const spraying = tool === "wacky" && brushKind === 1;
   const [color, setColor] = useState("#ff0080");
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [typing, setTyping] = useState<Point | null>(null);
@@ -291,6 +300,8 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
       window.clearInterval(timers.tool);
       window.clearInterval(timers.guy);
       window.clearInterval(timers.boom);
+      // Lifts the pointer, so a Spray Can still spraying stops.
+      engineRef.current?.up();
       audio.dispose();
       engineRef.current = null;
       audioRef.current = null;
@@ -391,6 +402,17 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
     return sheet;
   };
 
+  /** The sheet of pictures for a spray set, fetched on first use. */
+  const spraySheet = (set: number) => {
+    const sheets = libraryRef.current.sprays;
+    let sheet = sheets.get(set);
+    if (!sheet) {
+      sheet = loadImage(`${LIBRARY_URL}spray/${KIDPIX_SPRAY_SETS[set].file}.png`);
+      sheets.set(set, sheet);
+    }
+    return sheet;
+  };
+
   /** A background takes effect when picked: 0 is none, the rest are the category's pictures. */
   const chooseBackground = (index: number) => {
     const engine = engineRef.current;
@@ -412,8 +434,15 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
   };
 
   const chooseOption = (index: number) => {
-    setChosen((previous) => ({ ...previous, [tool]: index }));
     audioRef.current?.wake();
+    if (spraying) {
+      setSpraySet(index);
+      // Fetched now, so the can is full by the time it is pointed at the paper.
+      spraySheet(index);
+      play("easel1029");
+      return;
+    }
+    setChosen((previous) => ({ ...previous, [tool]: index }));
     if (tool === "background") {
       chooseBackground(index);
       return;
@@ -456,6 +485,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
     const at = pointOf(event);
     const option = chosen[tool];
     if (tool === "pencil") engine.pencilDown(at, option, pencilKind);
+    else if (spraying) engine.sprayDown(at, spraySheet(spraySet), KIDPIX_SPRAY_SETS[spraySet].frames);
     else if (tool === "wacky") engine.brushDown(at, option);
     else if (tool === "paint") engine.fill(at, option, PATTERN_COUNT);
     else if (tool === "mixer") {
@@ -538,6 +568,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
   const toolCategory = isLibraryTool(tool) ? category[tool] : 0;
   const options = optionsFor(
     tool,
+    spraying,
     color,
     toolCategory,
     stickerThumbs.category === category.sticker ? stickerThumbs.urls : [],
@@ -576,7 +607,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
           type="button"
           className="kidpix-option mu-focus"
           aria-label={option.label}
-          aria-pressed={tool !== "background" && chosen[tool] === option.index}
+          aria-pressed={tool !== "background" && (spraying ? spraySet : chosen[tool]) === option.index}
           title={option.label}
           onClick={() => chooseOption(option.index)}
         >
@@ -637,19 +668,21 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
     </select>
   );
 
-  // The Pencil's kinds sit in the tray's first panel, in the current color, as Kid Pix shows them.
-  const pencilKinds = tool === "pencil" && (
-    <div role="group" aria-label={current.name} className="kidpix-kinds">
-      {PENCIL_KINDS.map((name, index) => (
+  // A tool's kinds sit in the tray's first panel, in the current color, as Kid Pix shows them:
+  // the Pencil's four, and the brush zone's paint brush and Spray Can.
+  const kindButtons = (art: "pencil" | "brush", names: readonly string[], selected: number, select: (index: number) => void) => (
+    <div role="group" aria-label={current.name} className="kidpix-kinds" data-art={art}>
+      {names.map((name, index) => (
         <button
           key={name}
           type="button"
           className="kidpix-kind mu-focus"
           aria-label={name}
-          aria-pressed={pencilKind === index}
+          aria-pressed={selected === index}
           title={name}
           onClick={() => {
-            setPencilKind(index);
+            commitText();
+            select(index);
             play("easel1029");
           }}
         >
@@ -659,6 +692,17 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
       ))}
     </div>
   );
+  const chooseBrushKind = (index: number) => {
+    setBrushKind(index);
+    if (index === 1) spraySheet(spraySet);
+    optionsRef.current?.scrollTo({ left: 0 });
+  };
+  const pencilKinds =
+    tool === "pencil"
+      ? kindButtons("pencil", PENCIL_KINDS, pencilKind, setPencilKind)
+      : tool === "wacky"
+        ? kindButtons("brush", BRUSH_KINDS, brushKind, chooseBrushKind)
+        : null;
   const toolPanel = pencilKinds || categorySelect;
 
   const colorButton = (

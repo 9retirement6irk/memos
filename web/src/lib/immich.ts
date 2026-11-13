@@ -119,6 +119,22 @@ export const fetchImmichOriginal = async (photo: ImmichPhoto, signal?: AbortSign
   const blob = await response.blob();
   return new File([blob], photo.fileName || `${photo.id}.jpg`, {
     type: blob.type || photo.mimeType || "image/jpeg",
-    lastModified: photo.takenAt ? Date.parse(photo.takenAt) || Date.now() : Date.now(),
+    lastModified: photoTime(photo),
   });
 };
+
+/**
+ * Downloads Immich's preview of the photo: a JPEG at most 1440 px a side, which every browser
+ * can decode, whatever the original is (HEIC, RAW). For pictures placed in a drawing, which the
+ * canvas shrinks to 1440 px anyway.
+ */
+export const fetchImmichPreview = async (photo: ImmichPhoto, signal?: AbortSignal): Promise<File> => {
+  const response = await request(`/photos/${encodeURIComponent(photo.id)}/preview`, { signal });
+  const blob = await response.blob();
+  const type = blob.type || "image/jpeg";
+  const extension = type === "image/jpeg" ? "jpg" : type.slice("image/".length) || "jpg";
+  const baseName = (photo.fileName || photo.id).replace(/\.[^.]*$/, "");
+  return new File([blob], `${baseName}.${extension}`, { type, lastModified: photoTime(photo) });
+};
+
+const photoTime = (photo: ImmichPhoto) => (photo.takenAt ? Date.parse(photo.takenAt) || Date.now() : Date.now());

@@ -310,6 +310,13 @@ func (c *Client) Thumbnail(ctx context.Context, assetID string) (*http.Response,
 	return c.openAsset(ctx, assetID, "/thumbnail?size=thumbnail")
 }
 
+// Preview opens the asset's preview: a JPEG at most 1440 px a side by
+// default, which any browser can decode whatever the original's format. The
+// caller closes the response body.
+func (c *Client) Preview(ctx context.Context, assetID string) (*http.Response, error) {
+	return c.openAsset(ctx, assetID, "/thumbnail?size=preview")
+}
+
 // Original opens the asset's original file. The caller closes the response
 // body.
 func (c *Client) Original(ctx context.Context, assetID string) (*http.Response, error) {

@@ -85,9 +85,16 @@ func fakeImmich(t *testing.T) *httptest.Server {
 		_, _ = io.WriteString(w, `{"assets":{"items":[{"id":"`+testPhotoID+`","originalFileName":"IMG_1.jpg","originalMimeType":"image/jpeg","localDateTime":"2026-11-01T10:00:00.000Z","width":4032,"height":3024}],"nextCursor":"abc"}}`)
 	}))
 	mux.HandleFunc("GET /api/assets/{id}/thumbnail", authorized(func(w http.ResponseWriter, r *http.Request) {
-		require.Equal(t, "thumbnail", r.URL.Query().Get("size"))
-		w.Header().Set("Content-Type", "image/webp")
-		_, _ = io.WriteString(w, "thumb")
+		switch r.URL.Query().Get("size") {
+		case "thumbnail":
+			w.Header().Set("Content-Type", "image/webp")
+			_, _ = io.WriteString(w, "thumb")
+		case "preview":
+			w.Header().Set("Content-Type", "image/jpeg")
+			_, _ = io.WriteString(w, "preview")
+		default:
+			w.WriteHeader(http.StatusBadRequest)
+		}
 	}))
 	mux.HandleFunc("GET /api/assets/{id}/original", authorized(func(w http.ResponseWriter, _ *http.Request) {
 		w.Header().Set("Content-Type", "image/jpeg")
@@ -130,6 +137,13 @@ func TestClient(t *testing.T) {
 	body, err := io.ReadAll(thumbnail.Body)
 	require.NoError(t, err)
 	require.Equal(t, "thumb", string(body))
+
+	preview, err := client.Preview(ctx, testPhotoID)
+	require.NoError(t, err)
+	defer preview.Body.Close()
+	body, err = io.ReadAll(preview.Body)
+	require.NoError(t, err)
+	require.Equal(t, "preview", string(body))
 
 	day, err := client.PhotosTaken(ctx, time.Date(2026, 11, 11, 0, 0, 0, 0, time.FixedZone("EST", -5*3600)), time.Date(2026, 11, 12, 0, 0, 0, 0, time.FixedZone("EST", -5*3600)), "")
 	require.NoError(t, err)
