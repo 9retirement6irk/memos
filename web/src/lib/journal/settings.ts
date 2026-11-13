@@ -28,13 +28,19 @@ export interface JournalActivity {
 /**
  * How the user's journal works. The server keeps it as one document per user and
  * reads only `space`; everything else is the web app's. Entries never depend on it:
- * they are ordinary memos with their mood and activities written as tags.
+ * they are ordinary memos with their state of mind and activities written as tags.
  */
 export interface JournalSettings {
   /** The Space journal entries go to and that opens in journaling mode, like "spaces/abc"; empty for none. */
   space: string;
   openInJournalMode: boolean;
   moodTagPrefix: string;
+  /** Written before feeling words, like "felt/" for #felt/grateful. */
+  feelingTagPrefix: string;
+  /** Written before what's behind a feeling, like "impact/" for #impact/work. */
+  impactTagPrefix: string;
+  /** Causes left out of "What's having the biggest impact?". */
+  hiddenImpacts: string[];
   activityTagPrefix: string;
   activities: JournalActivity[];
   goals: string[];
@@ -61,6 +67,9 @@ export const defaultJournalSettings = (label: (id: string) => string): JournalSe
   space: "",
   openInJournalMode: true,
   moodTagPrefix: "mood/",
+  feelingTagPrefix: "felt/",
+  impactTagPrefix: "impact/",
+  hiddenImpacts: [],
   activityTagPrefix: "did/",
   activities: (
     [

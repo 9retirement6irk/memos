@@ -1,4 +1,4 @@
-import { Button, Field, Form, Input, Select, Switch } from "@usememos/ui";
+import { Button, Checkbox, Field, Form, Input, Select, Switch } from "@usememos/ui";
 import { PlusIcon, RefreshCwIcon, XIcon } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { ActivityIconView } from "@/components/Journal/ActivityIconView";
@@ -6,6 +6,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useJournalReminder, useJournalSettings, useSaveJournalSettings, useUpdateJournalReminder } from "@/hooks/useJournalQueries";
 import { useSpaces } from "@/hooks/useSpaceQueries";
 import { normalizePrefix, tagSegment } from "@/lib/journal/entry";
+import { IMPACTS } from "@/lib/journal/mood";
 import { listNotifiers, sendTestReminder } from "@/lib/journal/reminder";
 import type { JournalSettings } from "@/lib/journal/settings";
 import { showErrorToast, toast } from "@/lib/toast";
@@ -445,11 +446,30 @@ const JournalSection = () => {
 
       <SettingGroup title={t("journal.settings.tags-title")} description={t("journal.settings.tags-description")} showSeparator>
         <SettingList>
-          <SettingListItem label={t("journal.settings.mood-prefix")} description={`#${normalizePrefix(settings.moodTagPrefix)}good`}>
+          <SettingListItem label={t("journal.settings.mood-prefix")} description={`#${normalizePrefix(settings.moodTagPrefix)}pleasant`}>
             <SavedInput
               aria-label={t("journal.settings.mood-prefix")}
               value={settings.moodTagPrefix}
               onSave={(value) => save({ moodTagPrefix: normalizePrefix(value) })}
+              className="w-36"
+            />
+          </SettingListItem>
+          <SettingListItem
+            label={t("journal.settings.feeling-prefix")}
+            description={`#${normalizePrefix(settings.feelingTagPrefix)}grateful`}
+          >
+            <SavedInput
+              aria-label={t("journal.settings.feeling-prefix")}
+              value={settings.feelingTagPrefix}
+              onSave={(value) => save({ feelingTagPrefix: normalizePrefix(value) })}
+              className="w-36"
+            />
+          </SettingListItem>
+          <SettingListItem label={t("journal.settings.impact-prefix")} description={`#${normalizePrefix(settings.impactTagPrefix)}work`}>
+            <SavedInput
+              aria-label={t("journal.settings.impact-prefix")}
+              value={settings.impactTagPrefix}
+              onSave={(value) => save({ impactTagPrefix: normalizePrefix(value) })}
               className="w-36"
             />
           </SettingListItem>
@@ -465,6 +485,24 @@ const JournalSection = () => {
             />
           </SettingListItem>
         </SettingList>
+      </SettingGroup>
+
+      <SettingGroup title={t("journal.settings.impacts-title")} description={t("journal.settings.impacts-description")} showSeparator>
+        <div className="grid grid-cols-2 gap-x-4 gap-y-1 sm:grid-cols-3" data-journal-impacts="">
+          {IMPACTS.map((id) => (
+            <label key={id} className="mu-body flex min-h-8 cursor-pointer items-center gap-2.5">
+              <Checkbox
+                checked={!settings.hiddenImpacts.includes(id)}
+                onCheckedChange={(offered) =>
+                  save({
+                    hiddenImpacts: offered ? settings.hiddenImpacts.filter((hidden) => hidden !== id) : [...settings.hiddenImpacts, id],
+                  })
+                }
+              />
+              {t(`journal.impact.${id}` as never)}
+            </label>
+          ))}
+        </div>
       </SettingGroup>
 
       <SettingGroup title={t("journal.settings.activities-title")} description={t("journal.settings.activities-description")} showSeparator>

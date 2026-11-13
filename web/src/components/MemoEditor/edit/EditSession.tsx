@@ -31,6 +31,7 @@ import { canChooseSpaceFor } from "./initialState";
 import { JournalHeader } from "./journal/JournalHeader";
 import { JournalGoals, JournalPicks } from "./journal/JournalPicks";
 import { JournalSuggestions } from "./journal/JournalSuggestions";
+import { MoodCheckInChip, MoodCheckInDialog } from "./journal/MoodCheckIn";
 import { useJournalSession } from "./journal/useJournalSession";
 import { cacheService, errorService, transcriptionService } from "./services";
 import { useEditorContext, useEditorSelector } from "./state";
@@ -102,6 +103,7 @@ export const EditSession: React.FC<EditSessionProps> = ({
   const editorSpace = memo ? draftSpace : parentMemoName ? undefined : (defaultSpace ?? draftSpace);
   // Journaling mode: on by itself in the journal Space, or by the ＋ menu, for new memos of their own.
   const journal = useJournalSession({ draftKey, available: !memo && !parentMemoName, space: editorSpace });
+  const [moodCheckInOpen, setMoodCheckInOpen] = useState(false);
   const canTranscribe = useMemo(() => {
     const providerId = aiSetting.transcription?.providerId ?? "";
     if (!providerId) return false;
@@ -336,8 +338,8 @@ export const EditSession: React.FC<EditSessionProps> = ({
     discardDraft,
     onConfirm,
     onCancel: onCancel ? handleCancel : undefined,
-    transformContent: journal.active ? journal.compose : undefined,
-    onSaved: journal.active ? journal.reset : undefined,
+    transformContent: journal.active ? journal.compose : journal.hasCheckIn ? journal.appendCheckIn : undefined,
+    onSaved: journal.active || journal.hasCheckIn ? journal.reset : undefined,
   });
 
   return (
@@ -417,6 +419,7 @@ export const EditSession: React.FC<EditSessionProps> = ({
 
         {/* Metadata and toolbar grouped together at bottom */}
         <div className="w-full flex flex-col gap-2">
+          {!journal.active && <MoodCheckInChip journal={journal} onEdit={() => setMoodCheckInOpen(true)} />}
           <EditorMetadata
             memoName={memoName}
             uploadingLocalFileURLs={inlineImageUpload.uploadingLocalFileURLs}
@@ -444,11 +447,17 @@ export const EditSession: React.FC<EditSessionProps> = ({
             onInsertImages={handleInsertImages}
             onDrawingClick={drawing.openNew}
             onAttachFiles={handleAttachFiles}
-            journalMode={journal.available ? { active: journal.active, onToggle: () => journal.setActive(!journal.active) } : undefined}
-            hasExtraContent={journal.active && journal.hasPicks}
+            journalMode={
+              journal.available
+                ? { active: journal.active, onToggle: () => journal.setActive(!journal.active), onLogMood: () => setMoodCheckInOpen(true) }
+                : undefined
+            }
+            hasExtraContent={(journal.active && journal.hasPicks) || journal.hasCheckIn}
           />
         </div>
       </div>
+
+      {journal.available && <MoodCheckInDialog journal={journal} open={moodCheckInOpen} onOpenChange={setMoodCheckInOpen} />}
 
       {drawing.session && (
         <Suspense fallback={null}>

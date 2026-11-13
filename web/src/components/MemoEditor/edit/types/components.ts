@@ -72,6 +72,8 @@ export interface EditorViewToggles {
 export interface EditorJournalModeToggle {
   active: boolean;
   onToggle: () => void;
+  /** Opens the check-in of how the user feels, for a memo that isn't a journal entry. */
+  onLogMood?: () => void;
 }
 
 /** The composer's source-mode switch: a checked item in the ＋ menu. The text itself shows the mode. */
