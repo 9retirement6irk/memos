@@ -41,6 +41,8 @@ and gradients, the stamps, stickers, backgrounds, 22 fonts, and every sound.
 The sounds are wired as Kid Pix wires them:
 
 - A tube button's hover and select clips come from its button scripts in `Easel.MHK`.
+  Pointed at with a mouse, a button that is not the tool in hand loops its animation until the
+  pointer leaves, as on the disc; the tool in hand rests on its lit frame.
 - Each paint tool's start, loop, stop and effect clips come from its `[<ToolName>Snd]` section in
   `KP.cfg`. `KIDPIX_TOOL_NAMES` is the tool list from `KP.exe`; tray icon 3500 + n is tool n.
 - Undo Guy's 20 lines, the dynamite's fuse and boom, the stamp clip (7320) and the color click

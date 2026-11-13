@@ -278,6 +278,9 @@ const optionsFor = (
   }
 };
 
+/** Kid Pix steps a tube button's animation about nine times a second, as it does the tray's. */
+const TOOL_STEP_MS = 110;
+
 /** Where a moving paint set keeps its clips. */
 const spraySounds = (set: number) => `${LIBRARY_URL}spray/${KIDPIX_SPRAY_SETS[set].file}.m4a`;
 /** A tap of the can is silent in Kid Pix; the hiss starts once it is held this long (ms). */
@@ -337,7 +340,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
   const lastTextRef = useRef("");
   const engineRef = useRef<KidPixEngine | null>(null);
   const audioRef = useRef<KidPixAudio | null>(null);
-  const timersRef = useRef<{ tool?: number; guy?: number; boom?: number }>({});
+  const timersRef = useRef<{ tool?: number; hover?: number; guy?: number; boom?: number }>({});
   // The Spray Can's sound while it is held: the hiss waiting to start or looping, and when the next clip may play.
   const sprayRef = useRef<{ hiss?: number; loop: AudioBufferSourceNode | null; quietUntil: number }>({ loop: null, quietUntil: 0 });
   const frameRef = useRef<HTMLDivElement>(null);
@@ -397,6 +400,8 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
   const [typing, setTyping] = useState<Point | null>(null);
   // The selected tool's button plays its animation once, then rests on its last frame.
   const [toolFrame, setToolFrame] = useState((TUBE_TOOLS.find((item) => item.key === "wacky") ?? TUBE_TOOLS[0]).frames - 1);
+  // A tool pointed at with a mouse runs its animation for as long as the pointer stays on it.
+  const [hovering, setHovering] = useState<{ key: KidPixTool; frame: number } | null>(null);
   const [guyFrame, setGuyFrame] = useState(UNDO_GUY_REST);
   const [boom, setBoom] = useState<number | null>(null);
   const [flash, setFlash] = useState(false);
@@ -445,6 +450,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
     return () => {
       window.clearTimeout(splashTimer);
       window.clearInterval(timers.tool);
+      window.clearInterval(timers.hover);
       window.clearInterval(timers.guy);
       window.clearInterval(timers.boom);
       // Lifts the pointer, so a Spray Can still spraying stops.
@@ -648,8 +654,24 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
     engineRef.current?.settle();
   };
 
+  const stopHover = () => {
+    window.clearInterval(timersRef.current.hover);
+    setHovering(null);
+  };
+  /** Kid Pix loops a tool button's animation while the pointer is on it, about nine frames a second. */
+  const startHover = (item: (typeof TUBE_TOOLS)[number]) => {
+    window.clearInterval(timersRef.current.hover);
+    let frame = 1;
+    setHovering({ key: item.key, frame });
+    timersRef.current.hover = window.setInterval(() => {
+      frame = (frame + 1) % (item.frames - 1);
+      setHovering({ key: item.key, frame });
+    }, TOOL_STEP_MS);
+  };
+
   const chooseTool = (next: (typeof TUBE_TOOLS)[number]) => {
     settle();
+    stopHover();
     setPaletteOpen(false);
     setTool(next.key);
     play(next.selectSound);
@@ -664,7 +686,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
       } else {
         setToolFrame(frame % (next.frames - 1));
       }
-    }, 120);
+    }, TOOL_STEP_MS);
   };
 
   /** The strip of rubber stamps for a stamp category, fetched on first use. */
@@ -936,6 +958,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
 
   const toolButtons = TUBE_TOOLS.map((item) => {
     const selected = item.key === tool;
+    const frame = selected ? toolFrame : hovering?.key === item.key ? hovering.frame : 0;
     return (
       <button
         key={item.key}
@@ -946,14 +969,15 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
         title={item.name}
         onClick={() => chooseTool(item)}
         onPointerEnter={(event) => {
-          if (!selected && event.pointerType === "mouse") play(item.hoverSound, 0.5);
+          if (selected || event.pointerType !== "mouse") return;
+          play(item.hoverSound, 0.5);
+          startHover(item);
+        }}
+        onPointerLeave={() => {
+          if (hovering?.key === item.key) stopHover();
         }}
       >
-        <span
-          aria-hidden
-          className="kidpix-tool-art"
-          style={{ backgroundPosition: `-${(selected ? toolFrame : 0) * 58}px -${item.row * 60}px` }}
-        />
+        <span aria-hidden className="kidpix-tool-art" style={{ backgroundPosition: `-${frame * 58}px -${item.row * 60}px` }} />
       </button>
     );
   });
