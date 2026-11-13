@@ -35,12 +35,15 @@ import {
   PATTERN_COUNT,
   PENCIL_KINDS,
   PENCIL_SHAPES,
-  PENCIL_SIZES,
   SCREEN_ERASER_COUNT,
   SOLID_COUNT,
+  TEXT_LINE,
   TEXT_SIZE,
+  TEXT_SIZES,
+  type TextStyle,
   TOOL_NUMBER,
   TUBE_TOOLS,
+  textFont,
   toolLabel,
   UNDO_GUY_LINES,
   UNDO_GUY_REST,
@@ -88,6 +91,17 @@ export interface KidPixLayerProps {
     resize: string;
     flipHorizontal: string;
     flipVertical: string;
+    /** The size control and its three sizes, small to large. */
+    size: string;
+    sizes: readonly [string, string, string];
+    font: string;
+    fontSize: string;
+    bold: string;
+    italic: string;
+    underline: string;
+    aligns: readonly [string, string, string];
+    readAloud: string;
+    voice: string;
   };
 }
 
@@ -106,8 +120,29 @@ interface FloatingSticker {
   flipY: boolean;
 }
 
-/** The Pencil's tray holds its sizes, then its shapes; a shape's option index starts here. */
-const SHAPE_OPTION = 100;
+/**
+ * The tray's own controls, as Kid Pix draws them. Each is cut from a sheet with three states
+ * side by side; `states` gives a button the three as CSS variables for kidpix.css to pick from.
+ */
+const states = (rest: string, chosen: string, hover: string) =>
+  ({ "--kp-rest": rest, "--kp-chosen": chosen, "--kp-hover": hover }) as CSSProperties;
+
+/** The size control's three balls: where each sits on its panel, and its size (assets/sizes.png). */
+const SIZE_BALLS = [
+  [34, 8, 12, 11],
+  [32, 21, 16, 16],
+  [28, 39, 25, 24],
+] as const;
+/** The mode buttons' rows in assets/modes.png: the brush's two, then the can's. */
+const MODE_ROWS = { brush: [0, 1], spray: [2, 3] } as const;
+const MODE_NAMES = { brush: ["Realistic", "Wacky"], spray: ["3D Shapes", "Moving Paint"] } as const;
+const ALIGNS = ["left", "center", "right"] as const;
+/** An option's cell in the tray's one row, with its gap, and the room the controls before the options take. */
+const OPTION_CELL = 52;
+const SIZES_ROOM = 73;
+const MODES_ROOM = 60;
+/** The text box's padding and border, in CSS px, so its letters sit where they will be painted. */
+const TEXT_PAD = 5;
 
 /** The library tools pick a category first; the tray then shows what is in it. */
 type LibraryTool = "stamp" | "sticker" | "background";
@@ -162,6 +197,8 @@ const strip = (url: string, cells: number, index: number, label: string, cell = 
 const optionsFor = (
   tool: KidPixTool,
   spraying: boolean,
+  brushMode: number,
+  sprayMode: number,
   bucketKind: number,
   color: string,
   category: number,
@@ -170,20 +207,18 @@ const optionsFor = (
 ): Option[] => {
   switch (tool) {
     case "pencil":
-      return [
-        ...PENCIL_SIZES.map((size, index) => ({
-          index,
-          label: `${size} px`,
-          content: { className: "kidpix-dot", style: { width: size, height: size, background: color } },
-        })),
-        ...PENCIL_SHAPES.map((shape, index) => sprite("shapes", index, PENCIL_SHAPES.length, SHAPE_OPTION + index, shape.name)),
-      ];
+      return PENCIL_SHAPES.map((shape, index) => sprite("shapes", index, PENCIL_SHAPES.length, index, shape.name));
     case "wacky":
-      if (spraying) return KIDPIX_SPRAY_SETS.map((set, index) => sprite("spray", index, KIDPIX_SPRAY_SETS.length, index, set.name));
-      // The first twenty brush icons are shapes without a color of their own: Kid Pix shows them in the color in hand.
-      return Array.from({ length: BRUSH_COUNT }, (_, index) => {
+      // The can holds 3D shapes or moving paint; an option keeps its place in the whole list of sets.
+      if (spraying)
+        return KIDPIX_SPRAY_SETS.flatMap((set, index) =>
+          (set.kind === "moving") === (sprayMode === 1) ? [sprite("spray", index, KIDPIX_SPRAY_SETS.length, index, set.name)] : [],
+        );
+      // Realistic is brushes 0 to 19, which have no color of their own and show in the one in hand; Wacky is the rest.
+      return Array.from({ length: brushMode === 0 ? REALISTIC_COUNT : BRUSH_COUNT - REALISTIC_COUNT }, (_, at) => {
+        const index = brushMode === 0 ? at : at + REALISTIC_COUNT;
         const option = sprite("brushes", index, 57, index, toolLabel(index));
-        return index < 20 ? { ...option, content: { sheet: "brushes", cell: index, cells: 57, tint: color } } : option;
+        return brushMode === 0 ? { ...option, content: { sheet: "brushes", cell: index, cells: 57, tint: color } } : option;
       });
     case "paint":
       // Solid: the color in hand, plain or through a one-color pattern. Blend and Pattern bring their own colors.
@@ -236,11 +271,8 @@ const optionsFor = (
       ];
     }
     case "text":
-      return FONTS.map((font, index) => ({
-        index,
-        label: font.name,
-        content: { className: "kidpix-font", style: { fontFamily: font.family }, text: "Aa" },
-      }));
+      // The text tray is controls, not options.
+      return [];
     case "move":
       return [];
   }
@@ -252,6 +284,8 @@ const spraySounds = (set: number) => `${LIBRARY_URL}spray/${KIDPIX_SPRAY_SETS[se
 const SPRAY_HISS_DELAY = 150;
 /** Moving paint's clips start no closer together than this (ms). */
 const SPRAY_CLIP_GAP = 350;
+/** Kid Pix's first twenty brushes are its Realistic ones. */
+const REALISTIC_COUNT = 20;
 
 /** A picture file as something the layer can draw; the browser turns a photo upright by its EXIF. */
 const readPicture = async (file: Blob): Promise<KidPixPicture> => {
@@ -297,7 +331,10 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
     sprays: new Map<number, HTMLImageElement>(),
   });
   const optionsRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+  // For measuring a text box's lines, and the last text pressed in, for Read Aloud.
+  const measureRef = useRef<CanvasRenderingContext2D | null>(null);
+  const lastTextRef = useRef("");
   const engineRef = useRef<KidPixEngine | null>(null);
   const audioRef = useRef<KidPixAudio | null>(null);
   const timersRef = useRef<{ tool?: number; guy?: number; boom?: number }>({});
@@ -333,8 +370,28 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
   const [floating, setFloating] = useState<FloatingSticker | null>(null);
   // The brush zone's kind (0 the paint brush, 1 the Spray Can) and the picture set in the can.
   const [brushKind, setBrushKind] = useState(0);
-  const [spraySet, setSpraySet] = useState(0);
   const spraying = tool === "wacky" && brushKind === 1;
+  // The brush's mode (0 Realistic, 1 Wacky), its size, and the brush each mode last used.
+  const [brushMode, setBrushMode] = useState(1);
+  const [brushSize, setBrushSize] = useState(1);
+  const [brushChoice, setBrushChoice] = useState<readonly number[]>([0, 40]);
+  // The can's mode (0 3D shapes, 1 moving paint) and the set each last used, counted through all the sets.
+  const [sprayMode, setSprayMode] = useState(0);
+  const [sprayChoice, setSprayChoice] = useState<readonly number[]>([0, KIDPIX_SPRAY_SETS.findIndex((set) => set.kind === "moving")]);
+  const spraySet = sprayChoice[sprayMode];
+  // The text box being typed, and how its letters look.
+  const [draft, setDraft] = useState("");
+  const [draftWidth, setDraftWidth] = useState(0);
+  const [textSize, setTextSize] = useState<number>(TEXT_SIZE);
+  const [bold, setBold] = useState(false);
+  const [italic, setItalic] = useState(false);
+  const [underline, setUnderline] = useState(false);
+  const [align, setAlign] = useState<TextStyle["align"]>("left");
+  const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
+  const [voiceName, setVoiceName] = useState("");
+  // The tray shows one row of options, a page at a time; the page belongs to the options on show.
+  const [optionsWidth, setOptionsWidth] = useState(0);
+  const [paging, setPaging] = useState({ key: "", page: 0 });
   const [color, setColor] = useState("#ff0080");
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [typing, setTyping] = useState<Point | null>(null);
@@ -408,6 +465,16 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
   useEffect(() => {
     if (typing) inputRef.current?.focus();
   }, [typing]);
+
+  // How many options fit the tray's one row depends on how wide the sheet is.
+  useEffect(() => {
+    const strip = optionsRef.current;
+    if (!strip || compact || typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver(() => setOptionsWidth(strip.clientWidth));
+    observer.observe(strip);
+    setOptionsWidth(strip.clientWidth);
+    return () => observer.disconnect();
+  }, [compact]);
 
   // A sticker category is one file of Flash pictures; fetch and read it when it first shows.
   const stickerCategory = tool === "sticker" ? category.sticker : -1;
@@ -498,8 +565,9 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
 
   useImperativeHandle(ref, () => ({
     addPictures,
-    hasPaint: () => Boolean(floatingRef.current) || Boolean(engineRef.current?.hasPaint()),
+    hasPaint: () => Boolean(floatingRef.current) || Boolean(typing && draft.trim()) || Boolean(engineRef.current?.hasPaint()),
     takeTiles: (maxSide) => {
+      commitText();
       flattenSticker();
       return engineRef.current?.takeTiles(maxSide) ?? Promise.resolve([]);
     },
@@ -527,16 +595,50 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
     audioRef.current?.play(clip, { volume });
   };
 
+  const textStyle: TextStyle = { family: FONTS[chosen.text].family, size: textSize, bold, italic, underline, align };
+
+  /** Presses the text box into the paint, as it reads. */
   const commitText = () => {
-    const at = typing;
-    const input = inputRef.current;
-    if (!at || !input) return;
-    // Enter and the blur that follows both land here; emptying the field makes the second a no-op.
-    const value = input.value;
-    input.value = "";
-    // The text starts inside the field's padding and border.
-    engineRef.current?.text({ x: at.x + 5 / view.zoom, y: at.y }, value, FONTS[chosen.text].family);
+    if (!typing) return;
+    if (draft.trim()) lastTextRef.current = draft;
+    engineRef.current?.text(typing, draft, textStyle);
     setTyping(null);
+    setDraft("");
+  };
+
+  // The box is as wide as its longest line, measured in the font it will be painted in.
+  const textFontNow = textFont(textStyle);
+  useEffect(() => {
+    measureRef.current ??= document.createElement("canvas").getContext("2d");
+    const ctx = measureRef.current;
+    if (!ctx) return;
+    ctx.font = textFontNow;
+    setDraftWidth(Math.max(...draft.split("\n").map((line) => ctx.measureText(line).width)));
+  }, [draft, textFontNow]);
+
+  // Read Aloud speaks with the browser's voices, where it has any; they can arrive late.
+  useEffect(() => {
+    const speech = window.speechSynthesis;
+    if (!speech) return;
+    const load = () => setVoices(speech.getVoices());
+    load();
+    speech.addEventListener?.("voiceschanged", load);
+    return () => {
+      speech.removeEventListener?.("voiceschanged", load);
+      speech.cancel();
+    };
+  }, []);
+
+  /** Reads the text box out, or the last one pressed in when none is open. */
+  const readAloud = () => {
+    const speech = window.speechSynthesis;
+    const words = draft.trim() || lastTextRef.current.trim();
+    if (!speech || !words) return;
+    speech.cancel();
+    const utterance = new SpeechSynthesisUtterance(words);
+    const voice = voices.find((candidate) => candidate.name === voiceName);
+    if (voice) utterance.voice = voice;
+    speech.speak(utterance);
   };
 
   /** Whatever is half-done is finished or dropped before the tray changes under it. */
@@ -653,8 +755,8 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
   const chooseOption = (index: number) => {
     audioRef.current?.wake();
     settle();
-    if (tool === "pencil" && index >= SHAPE_OPTION) {
-      setPencilShape(index - SHAPE_OPTION);
+    if (tool === "pencil") {
+      setPencilShape(index);
       play("easel1029");
       return;
     }
@@ -664,9 +766,14 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
       return;
     }
     if (spraying) {
-      setSpraySet(index);
+      setSprayChoice((previous) => previous.map((choice, mode) => (mode === sprayMode ? index : choice)));
       // Fetched now, so the can is full by the time it is pointed at the paper.
       spraySheet(index);
+      play("easel1029");
+      return;
+    }
+    if (tool === "wacky") {
+      setBrushChoice((previous) => previous.map((choice, mode) => (mode === brushMode ? index : choice)));
       play("easel1029");
       return;
     }
@@ -735,9 +842,9 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
       return;
     }
     event.currentTarget.setPointerCapture(event.pointerId);
-    if (tool === "pencil") engine.shapeDown(at, pencilShape, option, pencilKind);
+    if (tool === "pencil") engine.shapeDown(at, pencilShape, chosen.pencil, pencilKind);
     else if (spraying) engine.sprayDown(at, spraySheet(spraySet), KIDPIX_SPRAY_SETS[spraySet].frames, startSpraySound(spraySet));
-    else if (tool === "wacky") engine.brushDown(at, option);
+    else if (tool === "wacky") engine.brushDown(at, brushChoice[brushMode], brushSize);
     else if (tool === "paint") engine.fill(at, bucketKind, bucketChoice[bucketKind]);
     else if (tool === "mixer") {
       if (option < MIXER_COUNT) engine.mix(option);
@@ -749,17 +856,21 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
       const sheet = stampSheet(category.stamp);
       if (sheet) engine.stampFrom(at, sheet, option);
       else engine.stamp(at, option);
-    } else if (tool === "text") setTyping(at);
-    else if (tool === "move") engine.moveDown(at);
+    } else if (tool === "text") {
+      // The press is the middle of the first line; the box grows right and down from there.
+      setDraft("");
+      setTyping({ x: at.x, y: at.y - (textSize * TEXT_LINE) / 2 });
+    } else if (tool === "move") engine.moveDown(at);
   };
 
-  const handleTextKey = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") commitText();
+  const handleTextKey = (event: KeyboardEvent<HTMLTextAreaElement>) => {
+    // Enter starts a new line, as in Kid Pix; a press on the paper, or another tool, presses the text in.
     if (event.key === "Escape") {
       // Escape leaves the text, not the sheet.
       event.stopPropagation();
       event.nativeEvent.stopPropagation();
       setTyping(null);
+      setDraft("");
     }
   };
 
@@ -809,18 +920,13 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
     }, 110);
   };
 
-  const scrollOptions = (direction: 1 | -1) => {
-    const strip = optionsRef.current;
-    if (!strip) return;
-    strip.scrollBy({ left: direction * Math.max(84, strip.clientWidth - 42), behavior: "smooth" });
-    play("easel1029");
-  };
-
   const current = TUBE_TOOLS.find((item) => item.key === tool) ?? TUBE_TOOLS[0];
   const toolCategory = isLibraryTool(tool) ? category[tool] : 0;
   const options = optionsFor(
     tool,
     spraying,
+    brushMode,
+    sprayMode,
     bucketKind,
     color,
     toolCategory,
@@ -855,8 +961,9 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
   // Which option is in hand: the Pencil has a size and a shape, the can a set, each bucket its own fill.
   const pressedOption = (index: number) => {
     if (tool === "background") return false;
-    if (tool === "pencil" && index >= SHAPE_OPTION) return pencilShape === index - SHAPE_OPTION;
+    if (tool === "pencil") return pencilShape === index;
     if (spraying) return spraySet === index;
+    if (tool === "wacky") return brushChoice[brushMode] === index;
     if (tool === "paint") return bucketChoice[bucketKind] === index;
     return chosen[tool] === index;
   };
@@ -972,9 +1079,182 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
     </div>
   );
 
+  // One row of options, as many as fit, a page at a time; a phone's strip scrolls through them all.
+  const sizeValue = tool === "pencil" ? chosen.pencil : brushSize;
+  const hasSizes = tool === "pencil" || (tool === "wacky" && !spraying);
+  const modes = tool === "wacky" ? (spraying ? "spray" : "brush") : null;
+  const modeValue = spraying ? sprayMode : brushMode;
+  const optionsKey = [tool, modes, modeValue, bucketKind, toolCategory].join("/");
+  const room = optionsWidth - (hasSizes ? SIZES_ROOM : 0) - (modes ? MODES_ROOM : 0);
+  const perPage = compact || optionsWidth === 0 ? Math.max(1, options.length) : Math.max(1, Math.floor(room / OPTION_CELL));
+  const pages = Math.max(1, Math.ceil(options.length / perPage));
+  const chosenAt = Math.max(
+    0,
+    options.findIndex((option) => pressedOption(option.index)),
+  );
+  // A fresh set of options opens on the page with the one in hand.
+  const page = Math.min(pages - 1, paging.key === optionsKey ? paging.page : Math.floor(chosenAt / perPage));
+  const shownOptions = options.slice(page * perPage, (page + 1) * perPage);
+  const turnPage = (direction: 1 | -1) => {
+    setPaging({ key: optionsKey, page: Math.max(0, Math.min(pages - 1, page + direction)) });
+    play("easel1029");
+  };
+
+  const chooseSize = (index: number) => {
+    settle();
+    if (tool === "pencil") setChosen((previous) => ({ ...previous, pencil: index }));
+    else setBrushSize(index);
+    play("easel1029");
+  };
+  const chooseMode = (index: number) => {
+    settle();
+    if (spraying) {
+      setSprayMode(index);
+      spraySheet(sprayChoice[index]);
+    } else setBrushMode(index);
+    play("easel1029");
+  };
+  // Kid Pix's size control: three balls, small to large, the one in hand lit.
+  const sizesControl = hasSizes && (
+    <div role="group" aria-label={labels.size} className="kidpix-sizes">
+      {SIZE_BALLS.map(([x, y, ballWidth, ballHeight], index) => {
+        const at = (state: number) => `-${67 + (index * 3 + state) * 26 + (26 - ballWidth) / 2}px -${(26 - ballHeight) / 2}px`;
+        return (
+          <button
+            key={labels.sizes[index]}
+            type="button"
+            className="kidpix-sprite-button mu-focus"
+            aria-label={labels.sizes[index]}
+            aria-pressed={sizeValue === index}
+            title={labels.sizes[index]}
+            style={{ left: x, top: y, width: ballWidth, height: ballHeight, ...states(at(0), at(1), at(2)) }}
+            onClick={() => chooseSize(index)}
+          />
+        );
+      })}
+    </div>
+  );
+  // Its two mode buttons: Realistic and Wacky for the brush, 3D Shapes and Moving Paint for the can.
+  const modesControl = modes && (
+    <div role="group" aria-label={current.name} className="kidpix-modes">
+      {MODE_ROWS[modes].map((row, index) => (
+        <button
+          key={row}
+          type="button"
+          className="kidpix-sprite-button mu-focus"
+          aria-label={MODE_NAMES[modes][index]}
+          aria-pressed={modeValue === index}
+          title={MODE_NAMES[modes][index]}
+          style={states(`-108px -${row * 34}px`, `0 -${row * 34}px`, `-54px -${row * 34}px`)}
+          onClick={() => chooseMode(index)}
+        />
+      ))}
+    </div>
+  );
+
+  // The text tray: how the letters look, in the tray's first panel, and Read Aloud beside it.
+  const keepTyping = (event: { target: EventTarget; preventDefault: () => void }) => {
+    // A press on a button must not take the keys from the text box; a list needs them to open.
+    if (!(event.target instanceof HTMLSelectElement)) event.preventDefault();
+  };
+  const textButton = (label: string, pressed: boolean, row: number, cell: number, toggle: () => void) => {
+    const at = (state: number) => `-${(cell * 3 + state) * 28}px -${row * 34}px`;
+    return (
+      <button
+        key={label}
+        type="button"
+        className="kidpix-sprite-button mu-focus"
+        aria-label={label}
+        aria-pressed={pressed}
+        title={label}
+        style={states(at(0), at(1), at(2))}
+        onClick={toggle}
+      />
+    );
+  };
+  const textControls = tool === "text" && (
+    <div className="kidpix-text-tools" onMouseDown={keepTyping}>
+      <div>
+        <select
+          aria-label={labels.font}
+          title={labels.font}
+          className="mu-focus"
+          value={chosen.text}
+          style={{ fontFamily: FONTS[chosen.text].family }}
+          onChange={(event) => {
+            setChosen((previous) => ({ ...previous, text: Number(event.target.value) }));
+            inputRef.current?.focus();
+          }}
+        >
+          {FONTS.map((font, index) => (
+            <option key={font.family} value={index} style={{ fontFamily: font.family }}>
+              {font.name}
+            </option>
+          ))}
+        </select>
+        <select
+          aria-label={labels.fontSize}
+          title={labels.fontSize}
+          className="mu-focus"
+          value={textSize}
+          onChange={(event) => {
+            setTextSize(Number(event.target.value));
+            inputRef.current?.focus();
+          }}
+        >
+          {TEXT_SIZES.map((size) => (
+            <option key={size} value={size}>
+              {size}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div className="kidpix-text-buttons">
+        {textButton(labels.bold, bold, 0, 0, () => setBold(!bold))}
+        {textButton(labels.italic, italic, 0, 1, () => setItalic(!italic))}
+        {textButton(labels.underline, underline, 0, 2, () => setUnderline(!underline))}
+        {ALIGNS.map((value, index) => textButton(labels.aligns[index], align === value, 1, index, () => setAlign(value)))}
+      </div>
+    </div>
+  );
+  const canSpeak = typeof window !== "undefined" && "speechSynthesis" in window;
+  const readControls = tool === "text" && canSpeak && (
+    <div className="kidpix-read" onMouseDown={keepTyping}>
+      <button
+        type="button"
+        className="kidpix-sprite-button mu-focus"
+        aria-label={labels.readAloud}
+        title={labels.readAloud}
+        onClick={readAloud}
+      />
+      {voices.length > 0 && (
+        <select
+          aria-label={labels.voice}
+          title={labels.voice}
+          className="mu-focus"
+          value={voiceName}
+          onChange={(event) => {
+            setVoiceName(event.target.value);
+            inputRef.current?.focus();
+          }}
+        >
+          <option value="">{labels.voice}</option>
+          {voices.map((voice) => (
+            <option key={voice.name} value={voice.name}>
+              {voice.name}
+            </option>
+          ))}
+        </select>
+      )}
+    </div>
+  );
+
   const optionButtons = (
     <div ref={optionsRef} role="group" aria-label={current.name} className="kidpix-options">
-      {options.map((option) => (
+      {sizesControl}
+      {modesControl}
+      {readControls}
+      {shownOptions.map((option) => (
         <button
           key={option.index}
           type="button"
@@ -994,14 +1274,14 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
                 option.content.tint
                   ? {
                       backgroundColor: option.content.tint,
-                      maskPosition: `-${option.content.cell * 40}px 0`,
-                      maskSize: `${option.content.cells * 40}px 40px`,
-                      WebkitMaskPosition: `-${option.content.cell * 40}px 0`,
-                      WebkitMaskSize: `${option.content.cells * 40}px 40px`,
+                      maskPosition: `calc(var(--kp-cell) * -${option.content.cell}) 0`,
+                      maskSize: `calc(var(--kp-cell) * ${option.content.cells}) var(--kp-cell)`,
+                      WebkitMaskPosition: `calc(var(--kp-cell) * -${option.content.cell}) 0`,
+                      WebkitMaskSize: `calc(var(--kp-cell) * ${option.content.cells}) var(--kp-cell)`,
                     }
                   : {
-                      backgroundPosition: `-${option.content.cell * 40}px 0`,
-                      backgroundSize: `${option.content.cells * 40}px 40px`,
+                      backgroundPosition: `calc(var(--kp-cell) * -${option.content.cell}) 0`,
+                      backgroundSize: `calc(var(--kp-cell) * ${option.content.cells}) var(--kp-cell)`,
                     }
               }
             />
@@ -1012,8 +1292,8 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
               data-pixelated={option.content.pixelated || undefined}
               style={{
                 backgroundImage: option.content.url ? `url("${option.content.url}")` : undefined,
-                backgroundPosition: `-${option.content.cell * 40}px 0`,
-                backgroundSize: `${option.content.cells * 40}px 40px`,
+                backgroundPosition: `calc(var(--kp-cell) * -${option.content.cell}) 0`,
+                backgroundSize: `calc(var(--kp-cell) * ${option.content.cells}) var(--kp-cell)`,
               }}
             />
           ) : (
@@ -1075,7 +1355,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
         : tool === "paint"
           ? kindButtons("bucket", BUCKET_KINDS, bucketKind, chooseBucketKind)
           : null;
-  const toolPanel = pencilKinds || categorySelect;
+  const toolPanel = pencilKinds || textControls || categorySelect;
 
   const colorButton = (
     <button
@@ -1132,19 +1412,30 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
       {stickerFrame}
 
       {typing && (
-        <input
+        <textarea
           ref={inputRef}
           className="kidpix-typing"
           aria-label={current.name}
+          value={draft}
+          wrap="off"
+          spellCheck={false}
           style={{
-            left: typing.x * view.zoom,
-            top: (typing.y - TEXT_SIZE * 0.75) * view.zoom,
-            height: TEXT_SIZE * 1.5 * view.zoom,
-            font: `${TEXT_SIZE * view.zoom}px ${FONTS[chosen.text].family}`,
+            left: typing.x * view.zoom - TEXT_PAD,
+            top: typing.y * view.zoom - TEXT_PAD,
+            width: Math.max(draftWidth, textSize * 3) * view.zoom + TEXT_PAD * 2 + 2,
+            height: draft.split("\n").length * textSize * TEXT_LINE * view.zoom + TEXT_PAD * 2,
+            // The pieces one by one: the `font` shorthand would reset the line height set beside it.
+            fontFamily: textStyle.family,
+            fontSize: textSize * view.zoom,
+            fontWeight: bold ? "bold" : "normal",
+            fontStyle: italic ? "italic" : "normal",
+            lineHeight: `${textSize * TEXT_LINE * view.zoom}px`,
             color,
+            textAlign: align,
+            textDecoration: underline ? "underline" : undefined,
           }}
+          onChange={(event) => setDraft(event.target.value)}
           onKeyDown={handleTextKey}
-          onBlur={commitText}
         />
       )}
 
@@ -1185,7 +1476,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
             <div aria-hidden className="kidpix-tray-art" />
             <div aria-hidden className="kidpix-tray-art" />
             <div className="kidpix-tray-info">
-              {pencilKinds || (
+              {pencilKinds || textControls || (
                 <>
                   <strong>{current.name}</strong>
                   {categorySelect}
@@ -1193,17 +1484,25 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
               )}
             </div>
             {optionButtons}
-            {/* The arrows page the tray; the color between them is the one in hand. */}
+            {/* The arrows turn the tray's pages; the number between them is the page on show. */}
             <div className="kidpix-pager">
               <button
                 type="button"
                 className="mu-focus"
                 aria-label={labels.previous}
                 title={labels.previous}
-                onClick={() => scrollOptions(-1)}
+                disabled={page === 0}
+                onClick={() => turnPage(-1)}
               />
-              <span aria-hidden style={{ background: color }} />
-              <button type="button" className="mu-focus" aria-label={labels.next} title={labels.next} onClick={() => scrollOptions(1)} />
+              <output aria-live="polite">{pages > 1 ? String(page + 1).padStart(2, "0") : ""}</output>
+              <button
+                type="button"
+                className="mu-focus"
+                aria-label={labels.next}
+                title={labels.next}
+                disabled={page >= pages - 1}
+                onClick={() => turnPage(1)}
+              />
             </div>
           </div>
         </>

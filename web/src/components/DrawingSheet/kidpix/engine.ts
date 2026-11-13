@@ -2,7 +2,18 @@ import type { KidPixAudio } from "./audio";
 import { type BrushEnv, brushDown, brushSegment, newStroke, type Point, type StrokeState } from "./brushes";
 import { type Box, floodMask, type MixEffect, mixPixels, paintBounds, planTiles } from "./raster";
 import type { SwfPicture } from "./swf";
-import { ERASER_SIZES, MIXER_EFFECTS, PENCIL_SHAPES, PENCIL_SIZES, TEXT_SIZE, TOOL_NUMBER, WAND_EFFECTS } from "./tools";
+import {
+  BRUSH_SCALES,
+  ERASER_SIZES,
+  MIXER_EFFECTS,
+  PENCIL_SHAPES,
+  PENCIL_WIDTHS,
+  TEXT_LINE,
+  type TextStyle,
+  TOOL_NUMBER,
+  textFont,
+  WAND_EFFECTS,
+} from "./tools";
 
 /** The sprite sheets the paint tools read pixels from. Each may still be loading. */
 export interface KidPixImages {
@@ -76,6 +87,9 @@ const STAMP_CELL = 32;
 const STAMP_SIZE = 64;
 const WAND_RADIUS = 22;
 
+/** The width a kind of pencil draws at one of the three sizes. */
+const pencilWidth = (nib: number, sizeIndex: number) => (PENCIL_WIDTHS[nib] ?? PENCIL_WIDTHS[0])[sizeIndex] ?? PENCIL_WIDTHS[0][1];
+
 const scratch = (width: number, height: number) => {
   const canvas = document.createElement("canvas");
   canvas.width = width;
@@ -106,6 +120,7 @@ export class KidPixEngine {
   private stroke: Stroke | null = null;
   private pending: Pending | null = null;
   private hue = 0;
+  private brushScale = 1;
 
   constructor(
     private readonly canvas: HTMLCanvasElement,
@@ -223,7 +238,13 @@ export class KidPixEngine {
   }
 
   private brushEnv(): BrushEnv {
-    return { color: this.color, pattern: (brush) => this.pattern(brush), fontFamily: this.options.fontFamily, random: Math.random };
+    return {
+      color: this.color,
+      pattern: (brush) => this.pattern(brush),
+      fontFamily: this.options.fontFamily,
+      random: Math.random,
+      scale: this.brushScale,
+    };
   }
 
   /** A repeating fill cut from a brush's icon, without the icon's margin. */
@@ -244,13 +265,15 @@ export class KidPixEngine {
   /** `nib` is the kind of pencil: 0 pencil, 1 chalk, 2 crayon, 3 marker. */
   pencilDown(at: Point, sizeIndex: number, nib = 0) {
     this.remember();
-    this.stroke = { kind: "pencil", size: PENCIL_SIZES[sizeIndex] ?? PENCIL_SIZES[1], nib, last: at };
+    this.stroke = { kind: "pencil", size: pencilWidth(nib, sizeIndex), nib, last: at };
     this.audio.toolDown(TOOL_NUMBER.pencil + nib);
     this.move(at);
   }
 
-  brushDown(at: Point, brush: number) {
+  /** `sizeIndex` is the tray's size for the brushes that have one: Kid Pix's Realistic ones. */
+  brushDown(at: Point, brush: number, sizeIndex = 1) {
     this.remember();
+    this.brushScale = BRUSH_SCALES[sizeIndex] ?? 1;
     this.stroke = { kind: "brush", brush, last: at, state: newStroke(at, this.hue) };
     this.audio.toolDown(brush);
     brushDown(this.ctx, brush, at, this.brushEnv());
@@ -371,7 +394,7 @@ export class KidPixEngine {
    * for each corner and closes on a press at its first.
    */
   shapeDown(at: Point, shape: number, sizeIndex: number, nib = 0) {
-    const size = PENCIL_SIZES[sizeIndex] ?? PENCIL_SIZES[1];
+    const size = pencilWidth(nib, sizeIndex);
     const kind = PENCIL_SHAPES[shape]?.kind ?? "free";
     if (kind === "free") {
       this.pencilDown(at, sizeIndex, nib);
@@ -473,7 +496,7 @@ export class KidPixEngine {
     // One stroke for the whole path, so the marker's see-through line does not double at the corners.
     ctx.save();
     ctx.strokeStyle = this.color;
-    ctx.lineWidth = nib === 3 ? size * 2.5 : size;
+    ctx.lineWidth = size;
     ctx.lineCap = nib === 3 ? "butt" : "round";
     ctx.lineJoin = "round";
     if (nib === 3) ctx.globalAlpha = 0.6;
@@ -492,7 +515,7 @@ export class KidPixEngine {
     ctx.lineJoin = "round";
     if (nib === 1 || nib === 2) {
       // Chalk is dusty and crayon waxy: grains along the line, the crayon's packed closer.
-      const width = size * (nib === 1 ? 2.2 : 1.6);
+      const width = size;
       const steps = Math.max(1, Math.ceil(Math.hypot(to.x - from.x, to.y - from.y) / 2));
       const grains = Math.ceil(width * (nib === 1 ? 0.6 : 1.4));
       ctx.globalAlpha = nib === 1 ? 0.55 : 0.8;
@@ -507,7 +530,7 @@ export class KidPixEngine {
       if (nib === 3) {
         // A marker is broad, flat-tipped and a little see-through.
         ctx.globalAlpha = 0.6;
-        ctx.lineWidth = size * 2.5;
+        ctx.lineWidth = size;
         ctx.lineCap = "butt";
       }
       ctx.beginPath();
@@ -677,15 +700,32 @@ export class KidPixEngine {
   }
 
   /** Sets typed text on the paint, its middle line at `at`. */
-  text(at: Point, value: string, family: string) {
-    if (!value) return;
+  /**
+   * Presses a text box into the paint: its lines one under the other from `at`, the box's
+   * top-left corner, set left, centered or right within the widest of them.
+   */
+  text(at: Point, value: string, style: TextStyle) {
+    const lines = value.replace(/\s+$/, "").split("\n");
+    if (lines.every((line) => !line.trim())) return;
     this.remember();
-    this.ctx.save();
-    this.ctx.font = `${TEXT_SIZE}px ${family}`;
-    this.ctx.fillStyle = this.color;
-    this.ctx.textBaseline = "middle";
-    this.ctx.fillText(value, at.x, at.y);
-    this.ctx.restore();
+    const ctx = this.ctx;
+    ctx.save();
+    ctx.font = textFont(style);
+    ctx.fillStyle = this.color;
+    ctx.textBaseline = "middle";
+    const widths = lines.map((line) => ctx.measureText(line).width);
+    const box = Math.max(...widths);
+    const lineHeight = style.size * TEXT_LINE;
+    lines.forEach((line, index) => {
+      const x = at.x + (style.align === "left" ? 0 : (box - widths[index]) / (style.align === "center" ? 2 : 1));
+      const y = at.y + lineHeight * (index + 0.5);
+      ctx.fillText(line, x, y);
+      if (style.underline && widths[index] > 0) {
+        const thick = Math.max(1, style.size / 14);
+        ctx.fillRect(x, y + style.size * 0.42, widths[index], thick);
+      }
+    });
+    ctx.restore();
   }
 
   /** Dynamite: every bit of paint goes at once. */

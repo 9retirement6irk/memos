@@ -24,6 +24,8 @@ export interface BrushEnv {
   pattern: (brush: number) => CanvasPattern | null;
   fontFamily: string;
   random: () => number;
+  /** How much the tray's size grows or shrinks a brush that has sizes. */
+  scale: number;
 }
 
 export const newStroke = (start: Point, hue: number): StrokeState => ({ start, hue, side: 1, previous: null, travelled: 0, count: 0 });
@@ -256,7 +258,7 @@ export const brushSegment = (ctx: CanvasRenderingContext2D, brush: number, a: Po
       break;
     default: {
       // CustomBrush1 to 16: the same four nibs at different sizes.
-      const width = 4 + ((brush * 5) % 20);
+      const width = (4 + ((brush * 5) % 20)) * env.scale;
       const nib = brush % 4;
       if (nib === 0) {
         ctx.shadowColor = color;
