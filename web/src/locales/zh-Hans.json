@@ -284,7 +284,14 @@
       "kidpix-no-background": "无背景",
       "pages": "页面",
       "page": "第 {{number}} 页",
-      "add-page": "添加页面"
+      "add-page": "添加页面",
+      "paper": "纸张",
+      "paper-plain": "空白",
+      "paper-college-ruled": "窄横线",
+      "paper-wide-ruled": "宽横线",
+      "paper-gregg-ruled": "速记",
+      "paper-graph": "方格",
+      "paper-dot-grid": "点阵"
     },
     "audio-recorder": {
       "attachment-label": "录音",

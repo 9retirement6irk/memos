@@ -222,7 +222,14 @@
       "kidpix-no-background": "背景なし",
       "pages": "ページ",
       "page": "{{number}} ページ",
-      "add-page": "ページを追加"
+      "add-page": "ページを追加",
+      "paper": "用紙",
+      "paper-plain": "無地",
+      "paper-college-ruled": "罫線（狭め）",
+      "paper-wide-ruled": "罫線（広め）",
+      "paper-gregg-ruled": "速記用",
+      "paper-graph": "方眼",
+      "paper-dot-grid": "ドット"
     },
     "audio-recorder": {
       "attachment-label": "音声録音",

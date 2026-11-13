@@ -220,7 +220,14 @@
       "kidpix-no-background": "Bez pozadine",
       "pages": "Stranice",
       "page": "Stranica {{number}}",
-      "add-page": "Dodaj stranicu"
+      "add-page": "Dodaj stranicu",
+      "paper": "Papir",
+      "paper-plain": "Prazan",
+      "paper-college-ruled": "Uske crte",
+      "paper-wide-ruled": "Široke crte",
+      "paper-gregg-ruled": "Stenografija",
+      "paper-graph": "Kockice",
+      "paper-dot-grid": "Točkice"
     },
     "no-changes-detected": "Nema promjena",
     "save": "Sačuvaj",

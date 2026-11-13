@@ -222,7 +222,14 @@
       "kidpix-no-background": "Tanpa latar belakang",
       "pages": "Halaman",
       "page": "Halaman {{number}}",
-      "add-page": "Tambah halaman"
+      "add-page": "Tambah halaman",
+      "paper": "Kertas",
+      "paper-plain": "Polos",
+      "paper-college-ruled": "Bergaris rapat",
+      "paper-wide-ruled": "Bergaris lebar",
+      "paper-gregg-ruled": "Stenografi",
+      "paper-graph": "Kotak-kotak",
+      "paper-dot-grid": "Titik-titik"
     },
     "audio-recorder": {
       "attachment-label": "Rekaman audio",

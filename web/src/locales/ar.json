@@ -222,7 +222,14 @@
       "kidpix-no-background": "بدون خلفية",
       "pages": "الصفحات",
       "page": "الصفحة {{number}}",
-      "add-page": "إضافة صفحة"
+      "add-page": "إضافة صفحة",
+      "paper": "الورق",
+      "paper-plain": "سادة",
+      "paper-college-ruled": "مسطّر ضيق",
+      "paper-wide-ruled": "مسطّر واسع",
+      "paper-gregg-ruled": "اختزال",
+      "paper-graph": "مربعات",
+      "paper-dot-grid": "نقاط"
     },
     "audio-recorder": {
       "attachment-label": "تسجيل صوتي",

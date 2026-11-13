@@ -222,7 +222,14 @@
       "kidpix-no-background": "Không có nền",
       "pages": "Trang",
       "page": "Trang {{number}}",
-      "add-page": "Thêm trang"
+      "add-page": "Thêm trang",
+      "paper": "Giấy",
+      "paper-plain": "Trơn",
+      "paper-college-ruled": "Kẻ dòng hẹp",
+      "paper-wide-ruled": "Kẻ dòng rộng",
+      "paper-gregg-ruled": "Tốc ký",
+      "paper-graph": "Kẻ ô",
+      "paper-dot-grid": "Chấm"
     },
     "audio-recorder": {
       "attachment-label": "Ghi âm",

@@ -220,7 +220,14 @@
       "kidpix-no-background": "Sense fons",
       "pages": "Pàgines",
       "page": "Pàgina {{number}}",
-      "add-page": "Afegeix una pàgina"
+      "add-page": "Afegeix una pàgina",
+      "paper": "Paper",
+      "paper-plain": "Llis",
+      "paper-college-ruled": "Ratllat estret",
+      "paper-wide-ruled": "Ratllat ample",
+      "paper-gregg-ruled": "Taquigrafia",
+      "paper-graph": "Quadriculat",
+      "paper-dot-grid": "Puntejat"
     },
     "no-changes-detected": "No s'han detectat canvis",
     "save": "Guarda",

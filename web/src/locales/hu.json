@@ -220,7 +220,14 @@
       "kidpix-no-background": "Nincs háttér",
       "pages": "Oldalak",
       "page": "{{number}}. oldal",
-      "add-page": "Oldal hozzáadása"
+      "add-page": "Oldal hozzáadása",
+      "paper": "Papír",
+      "paper-plain": "Sima",
+      "paper-college-ruled": "Sűrű vonalas",
+      "paper-wide-ruled": "Ritka vonalas",
+      "paper-gregg-ruled": "Gyorsírás",
+      "paper-graph": "Kockás",
+      "paper-dot-grid": "Pöttyös"
     },
     "no-changes-detected": "Nincs változás",
     "save": "Mentés",

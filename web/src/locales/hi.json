@@ -222,7 +222,14 @@
       "kidpix-no-background": "कोई पृष्ठभूमि नहीं",
       "pages": "पृष्ठ",
       "page": "पृष्ठ {{number}}",
-      "add-page": "पृष्ठ जोड़ें"
+      "add-page": "पृष्ठ जोड़ें",
+      "paper": "कागज़",
+      "paper-plain": "सादा",
+      "paper-college-ruled": "पतली लाइनें",
+      "paper-wide-ruled": "चौड़ी लाइनें",
+      "paper-gregg-ruled": "शॉर्टहैंड",
+      "paper-graph": "ग्राफ़",
+      "paper-dot-grid": "बिंदु"
     },
     "audio-recorder": {
       "attachment-label": "ऑडियो रिकॉर्डिंग",

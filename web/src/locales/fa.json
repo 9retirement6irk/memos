@@ -222,7 +222,14 @@
       "kidpix-no-background": "بدون پس‌زمینه",
       "pages": "صفحه‌ها",
       "page": "صفحهٔ {{number}}",
-      "add-page": "افزودن صفحه"
+      "add-page": "افزودن صفحه",
+      "paper": "کاغذ",
+      "paper-plain": "ساده",
+      "paper-college-ruled": "خط‌دار باریک",
+      "paper-wide-ruled": "خط‌دار پهن",
+      "paper-gregg-ruled": "تندنویسی",
+      "paper-graph": "شطرنجی",
+      "paper-dot-grid": "نقطه‌ای"
     },
     "audio-recorder": {
       "attachment-label": "ضبط صدا",

@@ -220,7 +220,14 @@
       "kidpix-no-background": "Без тла",
       "pages": "Сторінки",
       "page": "Сторінка {{number}}",
-      "add-page": "Додати сторінку"
+      "add-page": "Додати сторінку",
+      "paper": "Папір",
+      "paper-plain": "Чистий",
+      "paper-college-ruled": "Вузька лінійка",
+      "paper-wide-ruled": "Широка лінійка",
+      "paper-gregg-ruled": "Стенографія",
+      "paper-graph": "Клітинка",
+      "paper-dot-grid": "Крапки"
     },
     "no-changes-detected": "Змін не виявлено",
     "save": "Зберегти",

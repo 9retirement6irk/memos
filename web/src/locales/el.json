@@ -258,7 +258,14 @@
       "kidpix-no-background": "Χωρίς φόντο",
       "pages": "Σελίδες",
       "page": "Σελίδα {{number}}",
-      "add-page": "Προσθήκη σελίδας"
+      "add-page": "Προσθήκη σελίδας",
+      "paper": "Χαρτί",
+      "paper-plain": "Λευκό",
+      "paper-college-ruled": "Στενές γραμμές",
+      "paper-wide-ruled": "Φαρδιές γραμμές",
+      "paper-gregg-ruled": "Στενογραφία",
+      "paper-graph": "Τετραγωνάκια",
+      "paper-dot-grid": "Κουκκίδες"
     },
     "no-changes-detected": "Δεν εντοπίστηκαν αλλαγές",
     "save": "Εκτός",

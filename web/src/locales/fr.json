@@ -220,7 +220,14 @@
       "kidpix-no-background": "Aucun arrière-plan",
       "pages": "Pages",
       "page": "Page {{number}}",
-      "add-page": "Ajouter une page"
+      "add-page": "Ajouter une page",
+      "paper": "Papier",
+      "paper-plain": "Uni",
+      "paper-college-ruled": "Lignes étroites",
+      "paper-wide-ruled": "Lignes larges",
+      "paper-gregg-ruled": "Bloc sténo",
+      "paper-graph": "Quadrillé",
+      "paper-dot-grid": "Pointillé"
     },
     "no-changes-detected": "Aucun changement détecté",
     "save": "Enregistrer",

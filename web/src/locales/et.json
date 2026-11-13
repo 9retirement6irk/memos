@@ -258,7 +258,14 @@
       "kidpix-no-background": "Taustata",
       "pages": "Leheküljed",
       "page": "Lehekülg {{number}}",
-      "add-page": "Lisa lehekülg"
+      "add-page": "Lisa lehekülg",
+      "paper": "Paber",
+      "paper-plain": "Puhas",
+      "paper-college-ruled": "Kitsad jooned",
+      "paper-wide-ruled": "Laiad jooned",
+      "paper-gregg-ruled": "Stenograafia",
+      "paper-graph": "Ruuduline",
+      "paper-dot-grid": "Täpiline"
     },
     "no-changes-detected": "Muudatusi ei tuvastatud",
     "save": "Salvesta",

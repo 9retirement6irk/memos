@@ -258,7 +258,14 @@
       "kidpix-no-background": "Ingen baggrund",
       "pages": "Sider",
       "page": "Side {{number}}",
-      "add-page": "Tilføj side"
+      "add-page": "Tilføj side",
+      "paper": "Papir",
+      "paper-plain": "Blankt",
+      "paper-college-ruled": "Smalt linjeret",
+      "paper-wide-ruled": "Bredt linjeret",
+      "paper-gregg-ruled": "Stenografi",
+      "paper-graph": "Ternet",
+      "paper-dot-grid": "Prikket"
     },
     "no-changes-detected": "Ingen ændringer registreret",
     "save": "Spare",

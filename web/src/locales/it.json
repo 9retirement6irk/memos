@@ -220,7 +220,14 @@
       "kidpix-no-background": "Nessuno sfondo",
       "pages": "Pagine",
       "page": "Pagina {{number}}",
-      "add-page": "Aggiungi pagina"
+      "add-page": "Aggiungi pagina",
+      "paper": "Carta",
+      "paper-plain": "Bianca",
+      "paper-college-ruled": "Righe strette",
+      "paper-wide-ruled": "Righe larghe",
+      "paper-gregg-ruled": "Stenografia",
+      "paper-graph": "Quadretti",
+      "paper-dot-grid": "A puntini"
     },
     "no-changes-detected": "Nessuna modifica rilevata",
     "save": "Salva",

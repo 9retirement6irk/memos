@@ -306,7 +306,14 @@
       "kidpix-no-background": "ללא רקע",
       "pages": "עמודים",
       "page": "עמוד {{number}}",
-      "add-page": "הוספת עמוד"
+      "add-page": "הוספת עמוד",
+      "paper": "נייר",
+      "paper-plain": "חלק",
+      "paper-college-ruled": "שורות צפופות",
+      "paper-wide-ruled": "שורות רחבות",
+      "paper-gregg-ruled": "קצרנות",
+      "paper-graph": "משבצות",
+      "paper-dot-grid": "נקודות"
     },
     "no-changes-detected": "לא זוהו שינויים",
     "save": "שמור",

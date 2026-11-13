@@ -222,7 +222,14 @@
       "kidpix-no-background": "पार्श्वभूमी नाही",
       "pages": "पृष्ठे",
       "page": "पृष्ठ {{number}}",
-      "add-page": "पृष्ठ जोडा"
+      "add-page": "पृष्ठ जोडा",
+      "paper": "कागद",
+      "paper-plain": "कोरा",
+      "paper-college-ruled": "अरुंद रेषा",
+      "paper-wide-ruled": "रुंद रेषा",
+      "paper-gregg-ruled": "लघुलेखन",
+      "paper-graph": "आलेख",
+      "paper-dot-grid": "ठिपके"
     },
     "audio-recorder": {
       "attachment-label": "ऑडिओ रेकॉर्डिंग",

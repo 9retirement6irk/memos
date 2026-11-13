@@ -220,7 +220,14 @@
       "kidpix-no-background": "Без фона",
       "pages": "Страницы",
       "page": "Страница {{number}}",
-      "add-page": "Добавить страницу"
+      "add-page": "Добавить страницу",
+      "paper": "Бумага",
+      "paper-plain": "Чистая",
+      "paper-college-ruled": "Узкая линейка",
+      "paper-wide-ruled": "Широкая линейка",
+      "paper-gregg-ruled": "Стенография",
+      "paper-graph": "Клетка",
+      "paper-dot-grid": "Точки"
     },
     "no-changes-detected": "Изменений не обнаружено",
     "save": "Сохранить",
