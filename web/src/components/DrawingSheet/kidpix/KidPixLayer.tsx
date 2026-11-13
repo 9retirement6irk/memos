@@ -100,7 +100,7 @@ interface Option {
   index: number;
   label: string;
   content:
-    | { sheet: string; cell: number; cells: number }
+    | { sheet: string; cell: number; cells: number; tint?: string }
     | { url: string; cell: number; cells: number; pixelated?: boolean }
     | { style: CSSProperties; className: string; text?: string };
 }
@@ -132,7 +132,11 @@ const optionsFor = (
         content: { className: "kidpix-dot", style: { width: size, height: size, background: color } },
       }));
     case "wacky":
-      return Array.from({ length: BRUSH_COUNT }, (_, index) => sprite("brushes", index, 57, index, toolLabel(index)));
+      // The first twenty brush icons are shapes without a color of their own: Kid Pix shows them in the color in hand.
+      return Array.from({ length: BRUSH_COUNT }, (_, index) => {
+        const option = sprite("brushes", index, 57, index, toolLabel(index));
+        return index < 20 ? { ...option, content: { sheet: "brushes", cell: index, cells: 57, tint: color } } : option;
+      });
     case "paint":
       return [
         { index: 0, label: "Color", content: { className: "kidpix-swatch", style: { background: color } } },
@@ -511,7 +515,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
     timersRef.current.boom = window.setInterval(() => {
       frame++;
       if (frame < 13) {
-        setBoom(frame % 7);
+        setBoom(1 + (frame % 4));
         return;
       }
       window.clearInterval(timersRef.current.boom);
@@ -581,10 +585,21 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
               aria-hidden
               className="kidpix-icon"
               data-sheet={option.content.sheet}
-              style={{
-                backgroundPosition: `-${option.content.cell * 40}px 0`,
-                backgroundSize: `${option.content.cells * 40}px 40px`,
-              }}
+              data-tint={option.content.tint ? "" : undefined}
+              style={
+                option.content.tint
+                  ? {
+                      backgroundColor: option.content.tint,
+                      maskPosition: `-${option.content.cell * 40}px 0`,
+                      maskSize: `${option.content.cells * 40}px 40px`,
+                      WebkitMaskPosition: `-${option.content.cell * 40}px 0`,
+                      WebkitMaskSize: `${option.content.cells * 40}px 40px`,
+                    }
+                  : {
+                      backgroundPosition: `-${option.content.cell * 40}px 0`,
+                      backgroundSize: `${option.content.cells * 40}px 40px`,
+                    }
+              }
             />
           ) : "url" in option.content ? (
             <span
@@ -638,8 +653,8 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
             play("easel1029");
           }}
         >
-          <span aria-hidden style={{ background: color, maskPosition: `-${index * 56}px 0`, WebkitMaskPosition: `-${index * 56}px 0` }} />
-          <span aria-hidden style={{ backgroundPosition: `-${index * 56}px 0` }} />
+          <span aria-hidden style={{ background: color }} />
+          <span aria-hidden />
         </button>
       ))}
     </div>

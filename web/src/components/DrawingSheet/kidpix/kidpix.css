@@ -151,6 +151,13 @@
 .kidpix-icon[data-sheet="brushes"] {
   background-image: url("./assets/wacky.png");
 }
+.kidpix-icon[data-sheet="brushes"][data-tint] {
+  background-image: none;
+  -webkit-mask-image: url("./assets/wacky.png");
+  mask-image: url("./assets/wacky.png");
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
 .kidpix-icon[data-sheet="mixers"] {
   background-image: url("./assets/mixers.png");
 }
@@ -221,7 +228,7 @@
 .kidpix-undo-guy > span {
   position: absolute;
   width: 40px;
-  height: 36px;
+  height: 38px;
   background-image: url("./assets/undoguy.png");
   background-repeat: no-repeat;
   transform-origin: 0 0;
@@ -310,9 +317,10 @@
   height: 56px;
 }
 .kidpix-tube > .kidpix-undo-guy > span {
-  left: 4px;
-  top: 6px;
-  transform: scale(1.3);
+  left: 8px;
+  top: 9px;
+  transform: scale(1.25);
+  transform-origin: center;
 }
 
 .kidpix-wheel {
@@ -349,7 +357,26 @@
   content: "";
   position: absolute;
   inset: 12px 56px 12px 12px;
-  background: linear-gradient(180deg, #f4fbff, #d5e9f8);
+  background: linear-gradient(180deg, #c6cbfb, #a9b1f3);
+}
+/* The blue panel the options sit on (TP.MHK frame 440), stretched by its middle. */
+.kidpix-tray::after {
+  content: "";
+  position: absolute;
+  left: 218px;
+  right: 60px;
+  top: 19px;
+  height: 72px;
+  box-sizing: border-box;
+  border-style: solid;
+  border-width: 0 36px 0 14px;
+  border-image: url("./assets/options-panel.png") 0 36 0 14 fill stretch;
+  pointer-events: none;
+}
+.kidpix-tray > .kidpix-tray-info,
+.kidpix-tray > .kidpix-options,
+.kidpix-tray > .kidpix-pager {
+  z-index: 1;
 }
 .kidpix-tray > .kidpix-tray-art {
   position: relative;
@@ -391,39 +418,60 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+/* The Pencil's kinds lie in the molded panel Kid Pix keeps them in (TP.MHK frame 429). */
 .kidpix-kinds {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
+  position: absolute;
+  left: -5px;
+  top: -3px;
+  width: 203px;
+  height: 88px;
+  background-image: url("./assets/kinds-panel.png");
 }
 .kidpix-kind {
-  position: relative;
-  flex-shrink: 0;
-  width: 42px;
+  position: absolute;
+  top: 4px;
+  width: 44px;
   height: 80px;
-  border-radius: 8px;
+  border-radius: 16px;
+  transition: transform 0.12s;
+}
+.kidpix-kind:nth-child(1) {
+  --kind-x: 6px;
+}
+.kidpix-kind:nth-child(2) {
+  --kind-x: 52px;
+}
+.kidpix-kind:nth-child(3) {
+  --kind-x: 98px;
+}
+.kidpix-kind:nth-child(4) {
+  --kind-x: 150px;
+}
+.kidpix-kind {
+  left: var(--kind-x);
 }
 .kidpix-kind[aria-pressed="true"] {
-  background-color: #ffffff;
-  box-shadow: 0 0 0 2px #ff2e88;
+  box-shadow: 0 0 0 2px #ffe95c;
+  transform: translateY(-2px);
 }
 .kidpix-kind > span {
   position: absolute;
-  left: -7px;
-  top: 0;
-  width: 56px;
-  height: 80px;
+  inset: 0;
+  image-rendering: pixelated;
 }
+/* The body takes the color in hand; the art over it carries the shading. */
 .kidpix-kind > span:first-child {
   -webkit-mask-image: url("./assets/pencils-mask.png");
   mask-image: url("./assets/pencils-mask.png");
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
+  -webkit-mask-position: calc(0px - var(--kind-x)) -4px;
+  mask-position: calc(0px - var(--kind-x)) -4px;
 }
 .kidpix-kind > span:last-child {
   background-image: url("./assets/pencils.png");
   background-repeat: no-repeat;
+  background-position: calc(0px - var(--kind-x)) -4px;
 }
 .kidpix-options {
   position: absolute;
@@ -500,14 +548,13 @@
   gap: 8px;
 }
 .kidpix-panel .kidpix-kinds {
-  justify-content: space-around;
-  height: 56px;
+  position: relative;
+  left: 0;
+  top: 0;
+  flex-shrink: 0;
   overflow: hidden;
-  border-radius: 10px;
-  background: linear-gradient(180deg, #f4fbff, #d5e9f8);
-}
-.kidpix-panel .kidpix-kind {
-  transform: scale(0.7);
+  border-radius: 12px;
+  zoom: 0.64;
 }
 .kidpix-panel .kidpix-category {
   height: 32px;
@@ -528,9 +575,10 @@
   height: 60px;
 }
 .kidpix-panel .kidpix-undo-guy > span {
-  left: 4px;
-  top: 6px;
-  transform: scale(1.4);
+  left: 10px;
+  top: 11px;
+  transform: scale(1.3);
+  transform-origin: center;
 }
 .kidpix-panel .kidpix-options {
   position: static;

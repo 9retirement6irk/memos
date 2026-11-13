@@ -50,7 +50,6 @@ Stand-ins, written for this mode:
 
 - What each Wacky Brush and mixer draws. The disc holds their icons, names and sounds, not their code.
 - The tray's option click, and the startup jingle on entering the mode.
-- Undo Guy's mouth moves at random while a line plays; the disc's scripts time each line exactly.
 
 ## The libraries
 
@@ -68,6 +67,11 @@ when it is first shown.
 
 Not built: animations and recorded sounds (a saved drawing is a still PNG and cannot hold
 either) and the voice brushes.
+
+The 16-bit sprites are run-length coded with gaps: each row starts with a count of pixels to skip,
+and each run is followed by another. Skipped pixels are transparent. Magenta in a tray tool
+(the pencils) marks where the color in hand shows through, shaded by a matching 8-bit frame; the
+first twenty Wacky Brush icons are 8-bit shapes drawn in that color too.
 
 Tool, brush and font names are Kid Pix's own product names and are not translated.
 
