@@ -1622,7 +1622,11 @@
       "feeling-prefix": "Tag de sentimento",
       "impact-prefix": "Tag de causa",
       "impacts-title": "Causas",
-      "impacts-description": "As causas oferecidas em “O que mais está influenciando você?”."
+      "impacts-description": "As causas oferecidas em “O que mais está influenciando você?”.",
+      "view-title": "Visualização do espaço do diário",
+      "view-description": "Como o espaço do diário lista as entradas. Mudar a visualização dentro do espaço do diário também muda aqui.",
+      "own-view": "Manter visualização própria",
+      "own-view-description": "O início e os outros espaços mantêm a visualização que você definiu neles."
     },
     "valence": {
       "very-unpleasant": "Muito desagradável",

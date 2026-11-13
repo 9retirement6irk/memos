@@ -1623,7 +1623,11 @@
       "feeling-prefix": "Jausmo žyma",
       "impact-prefix": "Priežasties žyma",
       "impacts-title": "Priežastys",
-      "impacts-description": "Priežastys, siūlomos skiltyje „Kas tave labiausiai veikia?“."
+      "impacts-description": "Priežastys, siūlomos skiltyje „Kas tave labiausiai veikia?“.",
+      "view-title": "Dienoraščio erdvės rodinys",
+      "view-description": "Kaip dienoraščio erdvė rodo įrašus. Pakeitus rodinį dienoraščio erdvėje, jis pasikeičia ir čia.",
+      "own-view": "Išlaikyti savo rodinį",
+      "own-view-description": "Pradžia ir kitos erdvės išlaiko jose nustatytą rodinį."
     },
     "valence": {
       "very-unpleasant": "Labai nemalonu",

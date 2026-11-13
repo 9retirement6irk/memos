@@ -1621,7 +1621,11 @@
       "feeling-prefix": "Tag perasaan",
       "impact-prefix": "Tag penyebab",
       "impacts-title": "Penyebab",
-      "impacts-description": "Penyebab yang ditawarkan di bawah “Apa yang paling memengaruhimu?”."
+      "impacts-description": "Penyebab yang ditawarkan di bawah “Apa yang paling memengaruhimu?”.",
+      "view-title": "Tampilan Space jurnal",
+      "view-description": "Cara Space jurnal menampilkan entrinya. Mengubah tampilan di dalam Space jurnal juga mengubahnya di sini.",
+      "own-view": "Pertahankan tampilan sendiri",
+      "own-view-description": "Beranda dan Space lain tetap memakai tampilan yang kamu atur di sana."
     },
     "valence": {
       "very-unpleasant": "Sangat tidak menyenangkan",

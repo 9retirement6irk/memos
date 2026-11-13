@@ -1621,7 +1621,11 @@
       "feeling-prefix": "Tunde silt",
       "impact-prefix": "Põhjuse silt",
       "impacts-title": "Põhjused",
-      "impacts-description": "Põhjused, mida pakutakse küsimuse „Mis mõjutab sind kõige rohkem?“ all."
+      "impacts-description": "Põhjused, mida pakutakse küsimuse „Mis mõjutab sind kõige rohkem?“ all.",
+      "view-title": "Päeviku ruumi vaade",
+      "view-description": "Kuidas päeviku ruum sissekandeid näitab. Kui muudad vaadet päeviku ruumis, muutub see ka siin.",
+      "own-view": "Hoia oma vaadet",
+      "own-view-description": "Avaleht ja teised ruumid hoiavad seal valitud vaadet."
     },
     "valence": {
       "very-unpleasant": "Väga ebameeldiv",

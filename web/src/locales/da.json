@@ -1621,7 +1621,11 @@
       "feeling-prefix": "Følelsestag",
       "impact-prefix": "Årsagstag",
       "impacts-title": "Årsager",
-      "impacts-description": "Årsagerne, der tilbydes under “Hvad påvirker dig mest?”."
+      "impacts-description": "Årsagerne, der tilbydes under “Hvad påvirker dig mest?”.",
+      "view-title": "Visning af dagbogsområdet",
+      "view-description": "Hvordan dagbogsområdet viser sine indlæg. Ændrer du visningen i dagbogsområdet, ændres den også her.",
+      "own-view": "Behold sin egen visning",
+      "own-view-description": "Forsiden og andre områder beholder den visning, du har valgt der."
     },
     "valence": {
       "very-unpleasant": "Meget ubehageligt",

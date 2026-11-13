@@ -4,6 +4,7 @@ import { Outlet, ScrollRestoration } from "react-router-dom";
 import { useInstance } from "./contexts/InstanceContext";
 import { TimelineViewProvider } from "./contexts/ViewContext";
 import { useAeroAppIcons } from "./hooks/useAeroAppIcons";
+import { useJournalSpaceView } from "./hooks/useJournalQueries";
 import useNavigateTo from "./hooks/useNavigateTo";
 import { useUserLocale } from "./hooks/useUserLocale";
 import { useUserTheme } from "./hooks/useUserTheme";
@@ -70,12 +71,15 @@ const App = () => {
     link.type = "image/svg+xml";
   }, [instanceGeneralSetting.customProfile]);
 
+  // The journal Space keeps its own list view, apart from Home's.
+  const journalView = useJournalSpaceView();
+
   // After the effect above, so the Aero themes' app icons win while one is on.
   useAeroAppIcons(instanceGeneralSetting.customProfile?.title || "Memos", instanceGeneralSetting.customProfile?.logoUrl);
 
   return (
     <DirectionProvider direction={direction}>
-      <TimelineViewProvider>
+      <TimelineViewProvider spaceView={journalView}>
         <Outlet />
       </TimelineViewProvider>
       <ScrollRestoration />

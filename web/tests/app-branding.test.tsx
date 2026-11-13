@@ -11,6 +11,7 @@ const instance = vi.hoisted(() => ({
 vi.mock("@/contexts/InstanceContext", () => ({ useInstance: () => instance }));
 vi.mock("@/contexts/ViewContext", () => ({ TimelineViewProvider: ({ children }: { children: ReactNode }) => children }));
 vi.mock("@/hooks/useNavigateTo", () => ({ default: () => vi.fn() }));
+vi.mock("@/hooks/useJournalQueries", () => ({ useJournalSpaceView: () => undefined }));
 vi.mock("@/hooks/useUserLocale", () => ({ useUserLocale: () => "ltr" }));
 vi.mock("@/hooks/useUserTheme", () => ({ useUserTheme: vi.fn() }));
 vi.mock("@/utils/oauth", () => ({ cleanupExpiredOAuthState: vi.fn() }));

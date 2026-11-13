@@ -1621,7 +1621,11 @@
       "feeling-prefix": "감정 태그",
       "impact-prefix": "원인 태그",
       "impacts-title": "원인",
-      "impacts-description": "“무엇이 가장 큰 영향을 주고 있나요?”에 표시할 원인."
+      "impacts-description": "“무엇이 가장 큰 영향을 주고 있나요?”에 표시할 원인.",
+      "view-title": "일기 스페이스 보기",
+      "view-description": "일기 스페이스에서 항목을 보여 주는 방식. 일기 스페이스에서 보기를 바꾸면 여기도 바뀝니다.",
+      "own-view": "별도 보기 유지",
+      "own-view-description": "홈과 다른 스페이스는 각각 설정한 보기를 그대로 유지합니다."
     },
     "valence": {
       "very-unpleasant": "매우 불쾌함",

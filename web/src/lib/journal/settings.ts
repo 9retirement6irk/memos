@@ -26,6 +26,28 @@ export interface JournalActivity {
 }
 
 /**
+ * How the journal Space lists its entries, kept apart from the view Home and other Spaces use.
+ * The same values as the timeline's view menu.
+ */
+export interface JournalView {
+  /** The journal Space keeps this view; off, it shares the view used everywhere else. */
+  own: boolean;
+  /** 1 = list, 2 or 3 = at most that many columns, 0 = as many as fit. */
+  maxColumns: 0 | 1 | 2 | 3;
+  orderByTimeAsc: boolean;
+  compactMode: boolean;
+  timeBasis: "create_time" | "update_time";
+}
+
+export const DEFAULT_JOURNAL_VIEW: JournalView = {
+  own: true,
+  maxColumns: 1,
+  orderByTimeAsc: false,
+  compactMode: false,
+  timeBasis: "create_time",
+};
+
+/**
  * How the user's journal works. The server keeps it as one document per user and
  * reads only `space`; everything else is the web app's. Entries never depend on it:
  * they are ordinary memos with their state of mind and activities written as tags.
@@ -54,6 +76,7 @@ export interface JournalSettings {
   showPrompt: boolean;
   showSuggestions: boolean;
   dateHeading: boolean;
+  view: JournalView;
 }
 
 /** Fahrenheit where people use it, Celsius elsewhere. */
@@ -94,13 +117,18 @@ export const defaultJournalSettings = (label: (id: string) => string): JournalSe
   showPrompt: true,
   showSuggestions: true,
   dateHeading: false,
+  view: DEFAULT_JOURNAL_VIEW,
 });
 
 /** Fills what a stored document lacks (an older one, or none) from the defaults. */
-export const withDefaults = (stored: Partial<JournalSettings>, defaults: JournalSettings): JournalSettings => ({
-  ...defaults,
-  ...Object.fromEntries(Object.entries(stored).filter(([, value]) => value !== undefined && value !== null)),
-});
+export const withDefaults = (stored: Partial<JournalSettings>, defaults: JournalSettings): JournalSettings => {
+  const merged: JournalSettings = {
+    ...defaults,
+    ...Object.fromEntries(Object.entries(stored).filter(([, value]) => value !== undefined && value !== null)),
+  };
+  // A view saved by an older version may lack fields added since.
+  return { ...merged, view: { ...defaults.view, ...(typeof stored.view === "object" ? stored.view : {}) } };
+};
 
 export const getJournalSettings = () => apiJSON<Partial<JournalSettings>>("/api/journal/settings");
 

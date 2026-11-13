@@ -1621,7 +1621,11 @@
       "feeling-prefix": "Duygu etiketi",
       "impact-prefix": "Neden etiketi",
       "impacts-title": "Nedenler",
-      "impacts-description": "“Seni en çok ne etkiliyor?” altında sunulan nedenler."
+      "impacts-description": "“Seni en çok ne etkiliyor?” altında sunulan nedenler.",
+      "view-title": "Günlük alanı görünümü",
+      "view-description": "Günlük alanının kayıtlarını nasıl listelediği. Görünümü günlük alanındayken değiştirirsen burada da değişir.",
+      "own-view": "Kendi görünümünü koru",
+      "own-view-description": "Ana sayfa ve diğer alanlar orada seçtiğin görünümü korur."
     },
     "valence": {
       "very-unpleasant": "Çok nahoş",

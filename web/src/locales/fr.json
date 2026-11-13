@@ -1622,7 +1622,11 @@
       "feeling-prefix": "Étiquette de sentiment",
       "impact-prefix": "Étiquette de cause",
       "impacts-title": "Causes",
-      "impacts-description": "Les causes proposées sous « Qu’est-ce qui vous influence le plus ? »."
+      "impacts-description": "Les causes proposées sous « Qu’est-ce qui vous influence le plus ? ».",
+      "view-title": "Affichage de l’espace journal",
+      "view-description": "Comment l’espace journal liste ses entrées. Changer l’affichage dans l’espace journal le change aussi ici.",
+      "own-view": "Garder son propre affichage",
+      "own-view-description": "L’accueil et les autres espaces gardent l’affichage que vous y avez choisi."
     },
     "valence": {
       "very-unpleasant": "Très désagréable",

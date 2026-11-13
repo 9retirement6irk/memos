@@ -1621,7 +1621,11 @@
       "feeling-prefix": "Hiss teqi",
       "impact-prefix": "Səbəb teqi",
       "impacts-title": "Səbəblər",
-      "impacts-description": "“Sənə ən çox nə təsir edir?” altında təklif olunan səbəblər."
+      "impacts-description": "“Sənə ən çox nə təsir edir?” altında təklif olunan səbəblər.",
+      "view-title": "Gündəlik məkanının görünüşü",
+      "view-description": "Gündəlik məkanının qeydləri necə göstərdiyi. Görünüşü gündəlik məkanında dəyişsən, burada da dəyişir.",
+      "own-view": "Öz görünüşünü saxla",
+      "own-view-description": "Əsas səhifə və digər məkanlar orada seçdiyin görünüşü saxlayır."
     },
     "valence": {
       "very-unpleasant": "Çox xoşagəlməz",

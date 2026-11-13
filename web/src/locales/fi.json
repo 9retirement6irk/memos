@@ -1621,7 +1621,11 @@
       "feeling-prefix": "Tunnetunniste",
       "impact-prefix": "Syytunniste",
       "impacts-title": "Syyt",
-      "impacts-description": "Syyt, joita tarjotaan kohdassa ”Mikä vaikuttaa sinuun eniten?”."
+      "impacts-description": "Syyt, joita tarjotaan kohdassa ”Mikä vaikuttaa sinuun eniten?”.",
+      "view-title": "Päiväkirjan tilan näkymä",
+      "view-description": "Miten päiväkirjan tila näyttää merkinnät. Kun muutat näkymää päiväkirjan tilassa, se muuttuu myös täällä.",
+      "own-view": "Pidä oma näkymä",
+      "own-view-description": "Etusivu ja muut tilat pitävät niissä valitsemasi näkymän."
     },
     "valence": {
       "very-unpleasant": "Hyvin epämiellyttävä",

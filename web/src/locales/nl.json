@@ -1621,7 +1621,11 @@
       "feeling-prefix": "Gevoelstag",
       "impact-prefix": "Oorzaaktag",
       "impacts-title": "Oorzaken",
-      "impacts-description": "De oorzaken die worden aangeboden onder ‘Wat heeft de meeste invloed?’."
+      "impacts-description": "De oorzaken die worden aangeboden onder ‘Wat heeft de meeste invloed?’.",
+      "view-title": "Weergave van de dagboek-Space",
+      "view-description": "Hoe de dagboek-Space zijn items toont. Pas je de weergave aan in de dagboek-Space, dan verandert die hier ook.",
+      "own-view": "Eigen weergave behouden",
+      "own-view-description": "Start en andere Spaces houden de weergave die je daar hebt ingesteld."
     },
     "valence": {
       "very-unpleasant": "Heel onaangenaam",

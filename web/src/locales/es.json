@@ -1622,7 +1622,11 @@
       "feeling-prefix": "Etiqueta de sentimiento",
       "impact-prefix": "Etiqueta de causa",
       "impacts-title": "Causas",
-      "impacts-description": "Las causas que se ofrecen en «¿Qué es lo que más te está afectando?»."
+      "impacts-description": "Las causas que se ofrecen en «¿Qué es lo que más te está afectando?».",
+      "view-title": "Vista del espacio del diario",
+      "view-description": "Cómo muestra sus entradas el espacio del diario. Si cambias la vista dentro del espacio del diario, también cambia aquí.",
+      "own-view": "Mantener su propia vista",
+      "own-view-description": "El inicio y los demás espacios mantienen la vista que elegiste allí."
     },
     "valence": {
       "very-unpleasant": "Muy desagradable",

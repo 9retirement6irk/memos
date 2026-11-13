@@ -1621,7 +1621,11 @@
       "feeling-prefix": "Feeling tag",
       "impact-prefix": "Cause tag",
       "impacts-title": "Causes",
-      "impacts-description": "The causes offered under “What's having the biggest impact?”."
+      "impacts-description": "The causes offered under “What's having the biggest impact?”.",
+      "view-title": "Journal Space view",
+      "view-description": "How the journal Space lists its entries. Changing the view while in the journal Space changes it here too.",
+      "own-view": "Keep its own view",
+      "own-view-description": "Home and other Spaces keep the view you set there."
     },
     "valence": {
       "very-unpleasant": "Very unpleasant",

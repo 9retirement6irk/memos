@@ -1621,7 +1621,11 @@
       "feeling-prefix": "Kjenslestagg",
       "impact-prefix": "Årsakstagg",
       "impacts-title": "Årsaker",
-      "impacts-description": "Årsakene som blir tilbodne under «Kva påverkar deg mest?»."
+      "impacts-description": "Årsakene som blir tilbodne under «Kva påverkar deg mest?».",
+      "view-title": "Vising av dagbokområdet",
+      "view-description": "Korleis dagbokområdet viser innlegga sine. Endrar du visinga i dagbokområdet, blir ho endra her òg.",
+      "own-view": "Behald eiga vising",
+      "own-view-description": "Heim og andre område beheld visinga du valde der."
     },
     "valence": {
       "very-unpleasant": "Svært ubehageleg",

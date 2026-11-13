@@ -1621,7 +1621,11 @@
       "feeling-prefix": "Gefühls-Tag",
       "impact-prefix": "Ursachen-Tag",
       "impacts-title": "Ursachen",
-      "impacts-description": "Die Ursachen, die unter „Was beeinflusst dich am meisten?“ angeboten werden."
+      "impacts-description": "Die Ursachen, die unter „Was beeinflusst dich am meisten?“ angeboten werden.",
+      "view-title": "Ansicht des Tagebuch-Space",
+      "view-description": "Wie der Tagebuch-Space seine Einträge auflistet. Änderst du die Ansicht im Tagebuch-Space, ändert sie sich auch hier.",
+      "own-view": "Eigene Ansicht behalten",
+      "own-view-description": "Startseite und andere Spaces behalten die Ansicht, die du dort eingestellt hast."
     },
     "valence": {
       "very-unpleasant": "Sehr unangenehm",

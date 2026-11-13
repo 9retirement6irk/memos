@@ -1623,7 +1623,11 @@
       "feeling-prefix": "Tag uczucia",
       "impact-prefix": "Tag przyczyny",
       "impacts-title": "Przyczyny",
-      "impacts-description": "Przyczyny proponowane w „Co najbardziej na ciebie wpływa?”."
+      "impacts-description": "Przyczyny proponowane w „Co najbardziej na ciebie wpływa?”.",
+      "view-title": "Widok przestrzeni dziennika",
+      "view-description": "Jak przestrzeń dziennika wyświetla wpisy. Zmiana widoku w przestrzeni dziennika zmienia go także tutaj.",
+      "own-view": "Zachowaj własny widok",
+      "own-view-description": "Strona główna i inne przestrzenie zachowują widok ustawiony w nich."
     },
     "valence": {
       "very-unpleasant": "Bardzo nieprzyjemnie",

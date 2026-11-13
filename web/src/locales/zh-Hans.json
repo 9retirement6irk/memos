@@ -1621,7 +1621,11 @@
       "feeling-prefix": "感受标签",
       "impact-prefix": "原因标签",
       "impacts-title": "原因",
-      "impacts-description": "在“什么对你影响最大？”下提供的原因。"
+      "impacts-description": "在“什么对你影响最大？”下提供的原因。",
+      "view-title": "日记空间视图",
+      "view-description": "日记空间列出条目的方式。在日记空间中更改视图，这里也会随之更改。",
+      "own-view": "保留独立视图",
+      "own-view-description": "首页和其他空间保留你在那里设置的视图。"
     },
     "valence": {
       "very-unpleasant": "非常不愉快",

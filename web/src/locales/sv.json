@@ -1621,7 +1621,11 @@
       "feeling-prefix": "Känslotagg",
       "impact-prefix": "Orsakstagg",
       "impacts-title": "Orsaker",
-      "impacts-description": "Orsakerna som erbjuds under ”Vad påverkar dig mest?”."
+      "impacts-description": "Orsakerna som erbjuds under ”Vad påverkar dig mest?”.",
+      "view-title": "Vy för dagboksutrymmet",
+      "view-description": "Hur dagboksutrymmet listar sina inlägg. Ändrar du vyn i dagboksutrymmet ändras den här också.",
+      "own-view": "Behåll en egen vy",
+      "own-view-description": "Startsidan och andra utrymmen behåller vyn du valt där."
     },
     "valence": {
       "very-unpleasant": "Mycket obehagligt",

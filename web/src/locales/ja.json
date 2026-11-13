@@ -1621,7 +1621,11 @@
       "feeling-prefix": "気持ちのタグ",
       "impact-prefix": "要因のタグ",
       "impacts-title": "要因",
-      "impacts-description": "「何がいちばん影響していますか？」に表示する要因。"
+      "impacts-description": "「何がいちばん影響していますか？」に表示する要因。",
+      "view-title": "ジャーナルのスペースの表示",
+      "view-description": "ジャーナルのスペースでのエントリーの並べ方。ジャーナルのスペースで表示を変えると、ここも変わります。",
+      "own-view": "独自の表示を使う",
+      "own-view-description": "ホームとほかのスペースは、それぞれで設定した表示のままです。"
     },
     "valence": {
       "very-unpleasant": "とても不快",

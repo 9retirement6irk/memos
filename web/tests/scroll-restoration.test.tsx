@@ -14,6 +14,7 @@ vi.mock("@/contexts/InstanceContext", () => ({
 }));
 
 vi.mock("@/hooks/useNavigateTo", () => ({ default: () => vi.fn() }));
+vi.mock("@/hooks/useJournalQueries", () => ({ useJournalSpaceView: () => undefined }));
 vi.mock("@/hooks/useUserLocale", () => ({ useUserLocale: vi.fn() }));
 vi.mock("@/hooks/useUserTheme", () => ({ useUserTheme: vi.fn() }));
 vi.mock("@/utils/oauth", () => ({ cleanupExpiredOAuthState: vi.fn() }));

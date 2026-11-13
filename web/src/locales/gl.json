@@ -1621,7 +1621,11 @@
       "feeling-prefix": "Etiqueta de sentimento",
       "impact-prefix": "Etiqueta de causa",
       "impacts-title": "Causas",
-      "impacts-description": "As causas que se ofrecen en «Que é o que máis che afecta?»."
+      "impacts-description": "As causas que se ofrecen en «Que é o que máis che afecta?».",
+      "view-title": "Vista do espazo do diario",
+      "view-description": "Como amosa as entradas o espazo do diario. Se cambias a vista dentro do espazo do diario, tamén cambia aquí.",
+      "own-view": "Manter unha vista propia",
+      "own-view-description": "O inicio e os outros espazos manteñen a vista que escolliches neles."
     },
     "valence": {
       "very-unpleasant": "Moi desagradable",

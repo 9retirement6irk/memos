@@ -1622,7 +1622,11 @@
       "feeling-prefix": "Sajūtas birka",
       "impact-prefix": "Iemesla birka",
       "impacts-title": "Iemesli",
-      "impacts-description": "Iemesli, kas piedāvāti sadaļā “Kas tevi visvairāk ietekmē?”."
+      "impacts-description": "Iemesli, kas piedāvāti sadaļā “Kas tevi visvairāk ietekmē?”.",
+      "view-title": "Dienasgrāmatas telpas skats",
+      "view-description": "Kā dienasgrāmatas telpa rāda ierakstus. Ja maini skatu dienasgrāmatas telpā, tas mainās arī šeit.",
+      "own-view": "Saglabāt savu skatu",
+      "own-view-description": "Sākums un citas telpas saglabā tur iestatīto skatu."
     },
     "valence": {
       "very-unpleasant": "Ļoti nepatīkami",

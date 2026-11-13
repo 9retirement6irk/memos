@@ -1622,7 +1622,11 @@
       "feeling-prefix": "Etiqueta de sentimento",
       "impact-prefix": "Etiqueta de causa",
       "impacts-title": "Causas",
-      "impacts-description": "As causas propostas em “O que o está a influenciar mais?”."
+      "impacts-description": "As causas propostas em “O que o está a influenciar mais?”.",
+      "view-title": "Vista do espaço do diário",
+      "view-description": "Como o espaço do diário lista as entradas. Alterar a vista dentro do espaço do diário também a altera aqui.",
+      "own-view": "Manter vista própria",
+      "own-view-description": "O início e os outros espaços mantêm a vista que definiu neles."
     },
     "valence": {
       "very-unpleasant": "Muito desagradável",

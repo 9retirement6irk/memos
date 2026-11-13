@@ -1623,7 +1623,11 @@
       "feeling-prefix": "Štítok pocitu",
       "impact-prefix": "Štítok príčiny",
       "impacts-title": "Príčiny",
-      "impacts-description": "Príčiny ponúkané v „Čo ťa najviac ovplyvňuje?“."
+      "impacts-description": "Príčiny ponúkané v „Čo ťa najviac ovplyvňuje?“.",
+      "view-title": "Zobrazenie priestoru denníka",
+      "view-description": "Ako priestor denníka zobrazuje záznamy. Keď zmeníš zobrazenie v priestore denníka, zmení sa aj tu.",
+      "own-view": "Ponechať vlastné zobrazenie",
+      "own-view-description": "Domov a ostatné priestory si ponechajú zobrazenie, ktoré si tam nastavil."
     },
     "valence": {
       "very-unpleasant": "Veľmi nepríjemne",

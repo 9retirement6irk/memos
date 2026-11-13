@@ -1621,7 +1621,11 @@
       "feeling-prefix": "感受標籤",
       "impact-prefix": "原因標籤",
       "impacts-title": "原因",
-      "impacts-description": "在「什麼對你影響最大？」下提供的原因。"
+      "impacts-description": "在「什麼對你影響最大？」下提供的原因。",
+      "view-title": "日記空間檢視",
+      "view-description": "日記空間列出項目的方式。在日記空間中變更檢視，這裡也會隨之變更。",
+      "own-view": "保留獨立檢視",
+      "own-view-description": "首頁和其他空間保留你在那裡設定的檢視。"
     },
     "valence": {
       "very-unpleasant": "非常不愉快",

@@ -1621,7 +1621,11 @@
       "feeling-prefix": "Følelsestagg",
       "impact-prefix": "Årsakstagg",
       "impacts-title": "Årsaker",
-      "impacts-description": "Årsakene som tilbys under «Hva påvirker deg mest?»."
+      "impacts-description": "Årsakene som tilbys under «Hva påvirker deg mest?».",
+      "view-title": "Visning av dagbokområdet",
+      "view-description": "Hvordan dagbokområdet viser innleggene sine. Endrer du visningen i dagbokområdet, endres den her også.",
+      "own-view": "Behold egen visning",
+      "own-view-description": "Hjem og andre områder beholder visningen du valgte der."
     },
     "valence": {
       "very-unpleasant": "Svært ubehagelig",

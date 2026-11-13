@@ -1624,7 +1624,11 @@
       "feeling-prefix": "Štítek pocitu",
       "impact-prefix": "Štítek příčiny",
       "impacts-title": "Příčiny",
-      "impacts-description": "Příčiny nabízené v „Co tě nejvíc ovlivňuje?“."
+      "impacts-description": "Příčiny nabízené v „Co tě nejvíc ovlivňuje?“.",
+      "view-title": "Zobrazení prostoru deníku",
+      "view-description": "Jak prostor deníku zobrazuje záznamy. Když změníš zobrazení v prostoru deníku, změní se i zde.",
+      "own-view": "Ponechat vlastní zobrazení",
+      "own-view-description": "Domů a ostatní prostory si ponechají zobrazení, které jsi tam nastavil."
     },
     "valence": {
       "very-unpleasant": "Velmi nepříjemně",

@@ -1623,7 +1623,11 @@
       "feeling-prefix": "Oznaka občutka",
       "impact-prefix": "Oznaka vzroka",
       "impacts-title": "Vzroki",
-      "impacts-description": "Vzroki, ponujeni pod »Kaj najbolj vpliva nate?«."
+      "impacts-description": "Vzroki, ponujeni pod »Kaj najbolj vpliva nate?«.",
+      "view-title": "Pogled prostora dnevnika",
+      "view-description": "Kako prostor dnevnika prikazuje vnose. Če spremeniš pogled v prostoru dnevnika, se spremeni tudi tukaj.",
+      "own-view": "Obdrži lasten pogled",
+      "own-view-description": "Domov in drugi prostori obdržijo pogled, ki si ga nastavil tam."
     },
     "valence": {
       "very-unpleasant": "Zelo neprijetno",

@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo } from "react";
+import type { SpaceViewOverride } from "@/contexts/ViewContext";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import {
   deleteJournalReminder,
@@ -51,6 +52,31 @@ export const useSaveJournalSettings = () => {
     mutationFn: (settings: JournalSettings) => saveJournalSettings(settings),
     onSuccess: (saved) => queryClient.setQueryData(journalKeys.settings(user?.name ?? ""), saved),
   });
+};
+
+/**
+ * The journal Space's own view, for the timeline's view context: shown while the journal Space is
+ * open, and changed by the view menu there. Undefined when the journal Space shares the usual view.
+ */
+export const useJournalSpaceView = (): SpaceViewOverride | undefined => {
+  const user = useCurrentUser();
+  const queryClient = useQueryClient();
+  const { settings, isLoaded } = useJournalSettings();
+  const save = useSaveJournalSettings();
+  const { mutate } = save;
+  return useMemo(() => {
+    if (!isLoaded || !settings.space || !settings.view.own) return undefined;
+    return {
+      space: settings.space,
+      state: settings.view,
+      update: (patch) => {
+        const next = { ...settings, view: { ...settings.view, ...patch } };
+        // Shown at once; the server copy follows.
+        queryClient.setQueryData(journalKeys.settings(user?.name ?? ""), next);
+        mutate(next);
+      },
+    };
+  }, [isLoaded, settings, queryClient, user?.name, mutate]);
 };
 
 /** The signed-in user's streak reminder, without the Home Assistant token. */

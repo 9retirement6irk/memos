@@ -1622,7 +1622,11 @@
       "feeling-prefix": "Etichetă de sentiment",
       "impact-prefix": "Etichetă de cauză",
       "impacts-title": "Cauze",
-      "impacts-description": "Cauzele oferite la „Ce te influențează cel mai mult?”."
+      "impacts-description": "Cauzele oferite la „Ce te influențează cel mai mult?”.",
+      "view-title": "Afișarea spațiului jurnalului",
+      "view-description": "Cum își listează intrările spațiul jurnalului. Dacă schimbi afișarea în spațiul jurnalului, se schimbă și aici.",
+      "own-view": "Păstrează o afișare proprie",
+      "own-view-description": "Pagina principală și celelalte spații păstrează afișarea aleasă acolo."
     },
     "valence": {
       "very-unpleasant": "Foarte neplăcut",
