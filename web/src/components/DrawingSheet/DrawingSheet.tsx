@@ -837,6 +837,20 @@ const DrawingSheet = ({ mode, pages: initialPages, initialPage, onDone, onClose 
                   resize: t("editor.drawing.kidpix-resize"),
                   flipHorizontal: t("editor.drawing.kidpix-flip-horizontal"),
                   flipVertical: t("editor.drawing.kidpix-flip-vertical"),
+                  size: t("editor.drawing.width"),
+                  sizes: [t("editor.drawing.width-thin"), t("editor.drawing.width-medium"), t("editor.drawing.width-thick")],
+                  font: t("editor.drawing.kidpix-font"),
+                  fontSize: t("editor.drawing.kidpix-font-size"),
+                  bold: t("editor.format.bold"),
+                  italic: t("editor.format.italic"),
+                  underline: t("editor.drawing.kidpix-underline"),
+                  aligns: [
+                    t("editor.blocks.image-align-left"),
+                    t("editor.blocks.image-align-center"),
+                    t("editor.blocks.image-align-right"),
+                  ],
+                  readAloud: t("editor.drawing.kidpix-read-aloud"),
+                  voice: t("editor.drawing.kidpix-voice"),
                 }}
               />
             </Suspense>

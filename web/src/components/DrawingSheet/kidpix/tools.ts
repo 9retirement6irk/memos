@@ -110,7 +110,18 @@ export const SOLID_COUNT = 42;
 export const BRUSH_KINDS = ["Paint Brush", "Spray Can"] as const;
 
 /** Pencil and eraser sizes, in drawing px. */
-export const PENCIL_SIZES = [2, 5, 9, 15, 24] as const;
+/**
+ * How wide each of the Pencil's kinds draws at Kid Pix's three sizes, in drawing px, measured
+ * from the original: pencil, chalk, crayon, marker.
+ */
+export const PENCIL_WIDTHS: readonly (readonly [number, number, number])[] = [
+  [1, 10, 20],
+  [8, 12, 18],
+  [8, 14, 22],
+  [10, 17, 23],
+];
+/** How much a paint brush grows or shrinks at the three sizes. */
+export const BRUSH_SCALES = [0.6, 1, 1.6] as const;
 export const ERASER_SIZES = [8, 16, 28, 44] as const;
 
 /** Brush icons 0 to 44 draw; 45 and up are Kid Pix's voice brushes, which need a microphone. */
@@ -220,6 +231,38 @@ export const FONTS: readonly { family: string; name: string }[] = [
   { family: "KidPixJester", name: "Jester" },
   { family: "KidPixCuckoo", name: "Cuckoo" },
   { family: "KidPixFlatBrush", name: "Flat Brush" },
+  { family: "KidPixDiploma", name: "Diploma" },
+  { family: "KidPixEurasia", name: "Eurasia" },
+  { family: "KidPixExpose", name: "Expose" },
+  { family: "KidPixFifthAve", name: "Fifth Ave" },
+  { family: "KidPixFranciscan", name: "Franciscan" },
+  { family: "KidPixJolt", name: "Jolt" },
+  { family: "KidPixKeiraCondensed", name: "Keira Condensed" },
+  { family: "KidPixPatrick", name: "Patrick" },
+  { family: "KidPixPegasus", name: "Pegasus" },
+  { family: "KidPixSocket", name: "Socket" },
+  { family: "KidPixTechno", name: "Techno" },
+  { family: "KidPixTeletype", name: "Teletype" },
+  { family: "KidPixTabloid", name: "Tabloid" },
+  { family: "KidPixVogel", name: "Vogel" },
 ];
 
-export const TEXT_SIZE = 44;
+/** The sizes the text tray offers, in drawing px, and the one it starts on. */
+export const TEXT_SIZES = [12, 18, 24, 36, 48, 72, 96] as const;
+/** A line of text is this many times its size apart from the next. */
+export const TEXT_LINE = 1.2;
+
+export interface TextStyle {
+  family: string;
+  size: number;
+  bold: boolean;
+  italic: boolean;
+  underline: boolean;
+  align: "left" | "center" | "right";
+}
+
+/** The CSS and canvas font for a text style, at a scale. */
+export const textFont = (style: TextStyle, scale = 1) =>
+  `${style.italic ? "italic " : ""}${style.bold ? "bold " : ""}${style.size * scale}px ${style.family}`;
+
+export const TEXT_SIZE = 48;

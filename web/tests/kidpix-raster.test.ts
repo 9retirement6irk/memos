@@ -1,13 +1,18 @@
+import { existsSync, readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import { KIDPIX_SOUND_SPRITE, KIDPIX_TOOL_NAMES, KIDPIX_TOOL_SOUNDS } from "@/components/DrawingSheet/kidpix/data";
 import { KIDPIX_KINDS } from "@/components/DrawingSheet/kidpix/kinds";
 import { floodMask, mixPixels, paintBounds, planTiles } from "@/components/DrawingSheet/kidpix/raster";
 import {
   BUCKET_KINDS,
+  FONTS,
   MIXER_COUNT,
   MIXER_EFFECTS,
   PENCIL_SHAPES,
+  PENCIL_WIDTHS,
   TUBE_TOOLS,
+  textFont,
   UNDO_GUY_LINES,
   WAND_COUNT,
   WAND_EFFECTS,
@@ -106,6 +111,21 @@ describe("Kid Pix tables", () => {
     expect(KIDPIX_KINDS.pencil.kinds).toHaveLength(4);
     expect(KIDPIX_KINDS.brush.kinds).toHaveLength(2);
     expect(KIDPIX_KINDS.bucket.kinds).toHaveLength(3);
+  });
+
+  it("draws each kind of pencil at three sizes, and ships a file for every font in the text tray", () => {
+    expect(PENCIL_WIDTHS).toHaveLength(4);
+    for (const widths of PENCIL_WIDTHS) expect([...widths].sort((x, y) => x - y)).toEqual([...widths]);
+    expect(FONTS).toHaveLength(22);
+    const css = readFileSync(resolve(__dirname, "../src/components/DrawingSheet/kidpix/kidpix.css"), "utf8");
+    for (const font of FONTS) {
+      const file = new RegExp(`font-family: ${font.family};\\s+src: url\\("\\./assets/([a-z]+\\.woff)"\\)`).exec(css)?.[1];
+      expect(file, font.name).toBeDefined();
+      expect(existsSync(resolve(__dirname, "../src/components/DrawingSheet/kidpix/assets", file ?? "")), font.name).toBe(true);
+    }
+    expect(textFont({ family: "KidPixJester", size: 48, bold: true, italic: true, underline: false, align: "left" }, 2)).toBe(
+      "italic bold 96px KidPixJester",
+    );
   });
 
   it("names every tool Kid Pix has and finds each of their clips in the sprite", () => {

@@ -5,6 +5,76 @@
  */
 
 @font-face {
+  font-family: KidPixDiploma;
+  src: url("./assets/diploma.woff") format("woff");
+  font-display: swap;
+}
+@font-face {
+  font-family: KidPixEurasia;
+  src: url("./assets/euran.woff") format("woff");
+  font-display: swap;
+}
+@font-face {
+  font-family: KidPixExpose;
+  src: url("./assets/expon.woff") format("woff");
+  font-display: swap;
+}
+@font-face {
+  font-family: KidPixFifthAve;
+  src: url("./assets/fifthave.woff") format("woff");
+  font-display: swap;
+}
+@font-face {
+  font-family: KidPixFranciscan;
+  src: url("./assets/francisc.woff") format("woff");
+  font-display: swap;
+}
+@font-face {
+  font-family: KidPixJolt;
+  src: url("./assets/joltn.woff") format("woff");
+  font-display: swap;
+}
+@font-face {
+  font-family: KidPixKeiraCondensed;
+  src: url("./assets/keiracor.woff") format("woff");
+  font-display: swap;
+}
+@font-face {
+  font-family: KidPixPatrick;
+  src: url("./assets/patrick.woff") format("woff");
+  font-display: swap;
+}
+@font-face {
+  font-family: KidPixPegasus;
+  src: url("./assets/pegasus.woff") format("woff");
+  font-display: swap;
+}
+@font-face {
+  font-family: KidPixSocket;
+  src: url("./assets/socket.woff") format("woff");
+  font-display: swap;
+}
+@font-face {
+  font-family: KidPixTechno;
+  src: url("./assets/technn.woff") format("woff");
+  font-display: swap;
+}
+@font-face {
+  font-family: KidPixTeletype;
+  src: url("./assets/teletype.woff") format("woff");
+  font-display: swap;
+}
+@font-face {
+  font-family: KidPixTabloid;
+  src: url("./assets/tabloid.woff") format("woff");
+  font-display: swap;
+}
+@font-face {
+  font-family: KidPixVogel;
+  src: url("./assets/vogen.woff") format("woff");
+  font-display: swap;
+}
+@font-face {
   font-family: KidPixCatchup;
   src: url("./assets/catcn.woff") format("woff");
   font-display: swap;
@@ -89,11 +159,16 @@
 
 .kidpix-typing {
   position: absolute;
-  min-width: 220px;
-  padding: 0 4px;
+  z-index: 2;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 4px;
+  overflow: hidden;
   border: 1px dashed #7da2ce;
   background: rgb(255 255 255 / 60%);
   outline: none;
+  resize: none;
+  white-space: pre;
   -webkit-user-select: text;
   user-select: text;
 }
@@ -126,13 +201,17 @@
     0 0 12px 3px rgb(255 255 255 / 85%);
 }
 
+.kidpix {
+  /* The side of an option's picture: 40 px on a phone's strip, Kid Pix's own 48 px in the tray. */
+  --kp-cell: 40px;
+}
 .kidpix-option {
   display: flex;
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: var(--kp-cell);
+  height: var(--kp-cell);
   border-radius: 6px;
 }
 .kidpix-option:hover {
@@ -144,8 +223,8 @@
 }
 .kidpix-icon {
   display: block;
-  width: 40px;
-  height: 40px;
+  width: var(--kp-cell);
+  height: var(--kp-cell);
   background-repeat: no-repeat;
 }
 .kidpix-icon[data-sheet="brushes"] {
@@ -467,18 +546,13 @@
   left: 226px;
   right: 94px;
   top: 13px;
-  display: grid;
-  grid-auto-columns: 40px;
-  grid-auto-flow: column;
-  grid-template-rows: repeat(2, 40px);
-  gap: 2px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
   height: 84px;
   padding: 1px;
-  overflow: auto hidden;
-  scrollbar-width: none;
-}
-.kidpix-options::-webkit-scrollbar {
-  display: none;
+  overflow: hidden;
+  --kp-cell: 48px;
 }
 .kidpix-pager {
   position: absolute;
@@ -496,7 +570,6 @@
   height: 26px;
   background-image: url("./assets/arrows.png");
   background-repeat: no-repeat;
-  background-position: center;
   background-size: 52px 32px;
   background-position: 0 -3px;
   image-rendering: pixelated;
@@ -504,12 +577,110 @@
 .kidpix-pager > button:last-child {
   background-position: -26px -3px;
 }
-.kidpix-pager > span {
-  width: 22px;
-  height: 22px;
-  box-shadow:
-    0 0 0 1px #ffffff,
-    0 0 0 2px #1b3f86;
+.kidpix-pager > button:disabled {
+  opacity: 0.45;
+}
+/* The page on show, in the green figures of Kid Pix's counter. */
+.kidpix-pager > output {
+  display: grid;
+  width: 26px;
+  height: 24px;
+  place-items: center;
+  border: 2px solid #5b63d6;
+  border-radius: 3px;
+  background: #100a6a;
+  color: #35f08a;
+  font:
+    700 13px / 1 ui-monospace,
+    "Courier New",
+    monospace;
+  letter-spacing: 1px;
+}
+
+/* ---- the tray's own controls, cut from Kid Pix's sheets: at rest, chosen, pointed at ---- */
+.kidpix-sprite-button {
+  flex-shrink: 0;
+  background-repeat: no-repeat;
+  background-position: var(--kp-rest);
+}
+.kidpix-sprite-button:hover {
+  background-position: var(--kp-hover);
+}
+.kidpix-sprite-button[aria-pressed="true"] {
+  background-position: var(--kp-chosen);
+}
+.kidpix-sizes {
+  position: relative;
+  flex-shrink: 0;
+  width: 67px;
+  height: 72px;
+  background: url("./assets/sizes.png") no-repeat;
+}
+.kidpix-sizes > button {
+  position: absolute;
+  border-radius: 50%;
+  background-image: url("./assets/sizes.png");
+}
+.kidpix-modes {
+  display: flex;
+  flex-shrink: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+.kidpix-modes > button {
+  width: 54px;
+  height: 34px;
+  background-image: url("./assets/modes.png");
+}
+.kidpix-text-tools {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+}
+.kidpix-text-tools > div {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+.kidpix-text-tools select,
+.kidpix-read select {
+  height: 26px;
+  min-width: 0;
+  padding: 0 4px;
+  border: 1px solid #5b63d6;
+  border-radius: 3px;
+  background: #f4f4ff;
+  color: #1b1b5a;
+  font-size: 14px;
+}
+.kidpix-text-tools select:first-child {
+  flex: 1;
+}
+.kidpix-text-buttons > button {
+  width: 28px;
+  height: 34px;
+  background-image: url("./assets/textui.png");
+}
+.kidpix-read {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 8px;
+}
+.kidpix-read > button {
+  width: 46px;
+  height: 66px;
+  background-image: url("./assets/read.png");
+  --kp-rest: -46px 0;
+  --kp-chosen: 0 0;
+  --kp-hover: -92px 0;
+}
+.kidpix-read > button:active {
+  background-position: var(--kp-chosen);
+}
+.kidpix-read select {
+  max-width: 180px;
 }
 .kidpix:not([data-compact]) > .kidpix-palette {
   left: 14px;
@@ -583,6 +754,14 @@
   box-shadow:
     inset 0 0 0 2px #c8d3dc,
     inset 0 0 0 4px #7b8a96;
+}
+/* The size and mode controls shrink to the strip's height. */
+.kidpix-panel .kidpix-sizes,
+.kidpix-panel .kidpix-modes {
+  zoom: 0.7;
+}
+.kidpix-panel .kidpix-text-tools {
+  padding: 0 4px;
 }
 .kidpix-panel .kidpix-option {
   width: 44px;

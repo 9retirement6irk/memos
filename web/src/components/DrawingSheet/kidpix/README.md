@@ -36,7 +36,7 @@ erasers and the dynamite remove Kid Pix paint only.
 ## What is Kid Pix's and what is not
 
 From the disc, unchanged: the tube, tray, wheel and button art, the option icons, the patterns
-and gradients, the stamps, stickers, backgrounds, eight fonts, and every sound.
+and gradients, the stamps, stickers, backgrounds, 22 fonts, and every sound.
 
 The sounds are wired as Kid Pix wires them:
 
@@ -75,6 +75,23 @@ when it is first shown.
     Here only that last frame is drawn, where the animation would have carried it, with the
     animation's own clip (`<set>.m4a`). The animations themselves are not played.
   - The set names are ours; the disc has none.
+
+## The tray, laid out as Kid Pix lays it out
+
+Checked against the original running under Wine.
+
+- One row of options at Kid Pix's 48 px, as many as the sheet's width fits, a page at a time; the
+  arrows turn the page and the counter between them shows which. A phone keeps its scrolling strip.
+- The size control (`assets/sizes.png`): three balls for the Pencil's kinds and the paint brush.
+  `PENCIL_WIDTHS` are the widths the original draws, measured per kind. The brush's size scales
+  the Realistic brushes; the Wacky ones have none, as in Kid Pix.
+- Two mode buttons (`assets/modes.png`): Realistic and Wacky for the brush (brushes 0 to 19, and
+  the rest), 3D Shapes and Moving Paint for the can. Each mode keeps its own choice.
+- The text tray: font (all 22 of the disc's), size, bold, italic, underline and alignment
+  (`assets/textui.png`), and Read Aloud (`assets/read.png`) with the browser's voices, where it
+  has speech. Text is typed in a box that grows with it; Enter starts a new line, and a press on
+  the paper or a change of tool presses it into the paint. Kid Pix keeps text boxes editable until
+  Flatten; here a box is flattened when it is left.
 
 ## The tray's tool kinds
 
