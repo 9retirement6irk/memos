@@ -48,7 +48,7 @@ The sounds are wired as Kid Pix wires them:
 
 Stand-ins, written for this mode:
 
-- What each Wacky Brush and mixer draws, and how the Spray Can scatters its pictures. The disc holds their icons, names and sounds, not their code.
+- What each Wacky Brush and mixer draws. The disc holds their icons, names and sounds, not their code.
 - The tray's option click, and the startup jingle on entering the mode.
 
 ## The libraries
@@ -65,11 +65,27 @@ when it is first shown.
   behind the paint with the drawing copied over it, and becomes part of the picture the mode
   adds to the drawing.
 
-- Spray Can: the brush zone's second kind. Its 35 picture sets are the disc's `Cyclic.MHK` (15 sets
-  of "shapes") and `Anims.MHK` (20 sets of "moving paint", kept as still frames), up to 40 and 24
-  pictures a set, 2 MB in all, in `web/public/kidpix/spray/`. `spray.ts` lists them and is
-  generated. The set names are ours; the disc has none. How Kid Pix scatters the pictures is in
-  its program, so the scatter here is a stand-in, and `KP.cfg` gives the can no sounds.
+- Spray Can: the brush zone's second kind, with the disc's 35 picture sets, in
+  `web/public/kidpix/spray/` (4.5 MB, a set fetched when it is first chosen). `spray.ts` lists them
+  and is generated. It behaves as the original does, measured by running Kid Pix itself:
+  - A picture drops on the pointer the moment the can goes down and every 108 ms after, moving or not.
+  - 3D shapes (`Cyclic.MHK`, 15 sets, up to 40 pictures each) land centered and hiss with clip 7200
+    for as long as the can is held; a single tap is silent.
+  - Moving paint (`Anims.MHK`, 20 sets) plays an animation for each drop and leaves its last frame.
+    Here only that last frame is drawn, where the animation would have carried it, with the
+    animation's own clip (`<set>.m4a`). The animations themselves are not played.
+  - The set names are ours; the disc has none.
+
+## The tray's tool kinds
+
+The Pencil's four kinds, the brush zone's paint brush and Spray Can, and the three Fill Buckets
+lie in the tray's molded panel and move as Kid Pix moves them (`KindPanel.tsx`): a kind wiggles
+when pointed at, is picked up when chosen, and the one before it is then laid back in its mold.
+Each is a button script on the disc (`TP.MHK` 18060 to 18089) with its own clip. `kinds.ts`
+(generated) holds the scripts; `assets/kinds-*.png` hold every frame they show and the mask of
+where the color in hand shows through. A frame's place comes from the script's position, less
+the frame's registration point (`REGS`, indexed one past the frame). The brush panel's middle
+mold is Sound Art's microphone, which is not built.
 
 ## Shapes, buckets and stickers
 

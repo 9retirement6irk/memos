@@ -41,7 +41,7 @@ type Stroke =
   | { kind: "move"; start: Point; paint: ImageData }
   | { kind: "shape"; shape: number; size: number; nib: number; start: Point; last: Point; base: ImageData }
   | { kind: "bend"; size: number; nib: number; from: Point; to: Point; base: ImageData }
-  | { kind: "spray"; sheet: HTMLImageElement; frames: SprayFrames; last: Point; owed: number; timer: number };
+  | { kind: "spray"; sheet: HTMLImageElement; frames: SprayFrames; last: Point; timer: number; dropped?: (frame: SprayFrame) => void };
 
 /** A shape that takes more than one press: a curve waiting to be bent, or a polygon gathering corners. */
 type Pending =
@@ -51,14 +51,15 @@ type Pending =
 /** A press this close (px) to a polygon's first corner closes it. */
 const POLYGON_CLOSE = 12;
 
-/** Where each picture of a spray set is in its sheet: x, y, width, height. */
-export type SprayFrames = readonly (readonly [number, number, number, number])[];
+/**
+ * A picture of a spray set: where it is in its sheet (x, y, width, height) and, for moving
+ * paint, where its corner lands from the pointer (x, y) and the clip it plays. See `spray.ts`.
+ */
+export type SprayFrame = readonly number[];
+export type SprayFrames = readonly SprayFrame[];
 
-/** The Spray Can drops a picture for every this many px the pointer travels, and this often (ms) while it is held still. */
-const SPRAY_STEP = 26;
-const SPRAY_HOLD = 110;
-/** How far from the pointer a sprayed picture may land. */
-const SPRAY_SCATTER = 34;
+/** Kid Pix's can drops a picture this often (ms) for as long as it is held, whether or not the pointer moves. */
+const SPRAY_TICK = 108;
 
 /** One undo step: the paint, and the background behind it. */
 interface Snapshot {
@@ -267,34 +268,25 @@ export class KidPixEngine {
   }
 
   /**
-   * The Spray Can: pictures from one set, picked at random, scattered around the pointer for as
-   * long as it is down. Kid Pix's own scatter is in its program, not on the disc; this one is a stand-in.
+   * The Spray Can, timed as Kid Pix's is: one picture from the set, picked at random, the moment
+   * it goes down and every `SPRAY_TICK` after. A 3D shape lands centered on the pointer; moving
+   * paint lands where its animation would have carried it. `dropped` hears of each picture.
    */
-  sprayDown(at: Point, sheet: HTMLImageElement, frames: SprayFrames) {
+  sprayDown(at: Point, sheet: HTMLImageElement, frames: SprayFrames, dropped?: (frame: SprayFrame) => void) {
     if (!sheet.complete || !sheet.naturalWidth || frames.length === 0) return;
     this.remember();
-    const timer = window.setInterval(() => {
-      if (this.stroke?.kind === "spray") this.sprayOne(this.stroke.sheet, this.stroke.frames, this.stroke.last);
-    }, SPRAY_HOLD);
-    this.stroke = { kind: "spray", sheet, frames, last: at, owed: 0, timer };
-    this.sprayOne(sheet, frames, at, 0);
+    const timer = window.setInterval(() => this.sprayOne(), SPRAY_TICK);
+    this.stroke = { kind: "spray", sheet, frames, last: at, timer, dropped };
+    this.sprayOne();
   }
 
-  private sprayOne(sheet: HTMLImageElement, frames: SprayFrames, at: Point, scatter = SPRAY_SCATTER) {
-    const [x, y, width, height] = frames[Math.floor(Math.random() * frames.length)];
-    const angle = Math.random() * Math.PI * 2;
-    const reach = Math.sqrt(Math.random()) * scatter;
-    this.ctx.drawImage(
-      sheet,
-      x,
-      y,
-      width,
-      height,
-      Math.round(at.x + Math.cos(angle) * reach - width / 2),
-      Math.round(at.y + Math.sin(angle) * reach - height / 2),
-      width,
-      height,
-    );
+  private sprayOne() {
+    const stroke = this.stroke;
+    if (stroke?.kind !== "spray") return;
+    const frame = stroke.frames[Math.floor(Math.random() * stroke.frames.length)];
+    const [x, y, width, height, dx = -width / 2, dy = -height / 2] = frame;
+    this.ctx.drawImage(stroke.sheet, x, y, width, height, Math.round(stroke.last.x + dx), Math.round(stroke.last.y + dy), width, height);
+    stroke.dropped?.(frame);
   }
 
   /** The Moving Van picks up all the paint; the drawing under it stays put. */
@@ -341,17 +333,7 @@ export class KidPixEngine {
       return;
     }
     if (stroke.kind === "spray") {
-      const distance = Math.hypot(to.x - stroke.last.x, to.y - stroke.last.y);
-      stroke.owed += distance;
-      while (stroke.owed >= SPRAY_STEP) {
-        stroke.owed -= SPRAY_STEP;
-        const along = distance === 0 ? 1 : 1 - stroke.owed / distance;
-        const clamped = Math.max(0, Math.min(1, along));
-        this.sprayOne(stroke.sheet, stroke.frames, {
-          x: stroke.last.x + (to.x - stroke.last.x) * clamped,
-          y: stroke.last.y + (to.y - stroke.last.y) * clamped,
-        });
-      }
+      // The can follows the pointer; its timer does the dropping.
       stroke.last = to;
       return;
     }

@@ -80,7 +80,7 @@ describe("Kid Pix library", () => {
     vi.restoreAllMocks();
   });
 
-  it("ships a sheet of pictures for every Spray Can set", () => {
+  it("ships a sheet of pictures for every Spray Can set, and its clips for moving paint", () => {
     expect(KIDPIX_SPRAY_SETS.filter((set) => set.kind === "shapes")).toHaveLength(15);
     expect(KIDPIX_SPRAY_SETS.filter((set) => set.kind === "moving")).toHaveLength(20);
     for (const set of KIDPIX_SPRAY_SETS) {
@@ -90,9 +90,14 @@ describe("Kid Pix library", () => {
       const png = readFileSync(file(`spray/${set.file}.png`));
       const width = png.readUInt32BE(16);
       const height = png.readUInt32BE(20);
-      for (const [x, y, w, h] of set.frames) {
+      // Moving paint says where each picture lands and which clip it plays; 3D shapes say neither.
+      expect(Boolean(set.clips), set.name).toBe(set.kind === "moving");
+      if (set.clips) expect(existsSync(file(`spray/${set.file}.m4a`)), set.file).toBe(true);
+      for (const [x, y, w, h, , , clip] of set.frames) {
         expect(x + w, set.name).toBeLessThanOrEqual(width);
         expect(y + h, set.name).toBeLessThanOrEqual(height);
+        if (set.clips) expect(clip, set.name).toBeLessThan(set.clips.length);
+        else expect(clip, set.name).toBeUndefined();
       }
     }
   });

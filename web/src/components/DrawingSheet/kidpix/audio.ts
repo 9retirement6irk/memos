@@ -16,6 +16,8 @@ export class KidPixAudio {
   private context: AudioContext | null = null;
   private buffer: AudioBuffer | null = null;
   private master: GainNode | null = null;
+  /** Sounds outside the sprite, fetched when first wanted: the moving paint's, a file per set. */
+  private readonly extras = new Map<string, AudioBuffer | null>();
   private loop: AudioBufferSourceNode | null = null;
   private stopClip: string | null = null;
   private effectClip: string | null = null;
@@ -78,6 +80,32 @@ export class KidPixAudio {
     return source;
   }
 
+  /** Fetches a sound file of its own, to play parts of with `playFrom`. Asking again is free. */
+  load(url: string) {
+    const context = this.context;
+    if (!context || this.extras.has(url)) return;
+    this.extras.set(url, null);
+    fetch(url)
+      .then((response) => (response.ok ? response.arrayBuffer() : Promise.reject(new Error(response.statusText))))
+      .then((bytes) => context.decodeAudioData(bytes))
+      .then((buffer) => this.extras.set(url, buffer))
+      // As with the sprite: silence, not a message.
+      .catch(() => undefined);
+  }
+
+  /** Plays `length` seconds from `offset` of a file fetched with `load`, once it has arrived. */
+  playFrom(url: string, offset: number, length: number, volume = 1) {
+    const buffer = this.extras.get(url);
+    if (this.muted || !this.context || !this.master || !buffer) return;
+    const source = this.context.createBufferSource();
+    source.buffer = buffer;
+    const gain = this.context.createGain();
+    gain.gain.value = volume;
+    source.connect(gain);
+    gain.connect(this.master);
+    source.start(0, offset, length);
+  }
+
   /**
    * A tool goes down on the paper: its start clip plays, its loop runs until `toolUp`, and its
    * effect clip repeats while the pointer moves, as KP.cfg lays them out per tool.
@@ -136,5 +164,6 @@ export class KidPixAudio {
     this.context?.close().catch(() => undefined);
     this.context = null;
     this.buffer = null;
+    this.extras.clear();
   }
 }

@@ -18,6 +18,7 @@ import { KidPixAudio } from "./audio";
 import type { Point } from "./brushes";
 import { KidPixEngine, type KidPixImages, type KidPixTile } from "./engine";
 import "./kidpix.css";
+import KindPanel, { type KindArt } from "./KindPanel";
 import { KIDPIX_BACKGROUNDS, KIDPIX_STAMPS, KIDPIX_STICKERS } from "./library";
 import { KIDPIX_SPRAY_SETS } from "./spray";
 import { readStickers, type SwfPicture } from "./swf";
@@ -236,6 +237,13 @@ const optionsFor = (
   }
 };
 
+/** Where a moving paint set keeps its clips. */
+const spraySounds = (set: number) => `${LIBRARY_URL}spray/${KIDPIX_SPRAY_SETS[set].file}.m4a`;
+/** A tap of the can is silent in Kid Pix; the hiss starts once it is held this long (ms). */
+const SPRAY_HISS_DELAY = 150;
+/** Moving paint's clips start no closer together than this (ms). */
+const SPRAY_CLIP_GAP = 350;
+
 const loadImage = (url: string) => {
   const image = new Image();
   image.src = url;
@@ -263,6 +271,8 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
   const engineRef = useRef<KidPixEngine | null>(null);
   const audioRef = useRef<KidPixAudio | null>(null);
   const timersRef = useRef<{ tool?: number; guy?: number; boom?: number }>({});
+  // The Spray Can's sound while it is held: the hiss waiting to start or looping, and when the next clip may play.
+  const sprayRef = useRef<{ hiss?: number; loop: AudioBufferSourceNode | null; quietUntil: number }>({ loop: null, quietUntil: 0 });
   const frameRef = useRef<HTMLDivElement>(null);
   const floatingCanvasRef = useRef<HTMLCanvasElement>(null);
   // The sticker in its frame, mirrored in a ref for the handlers that flatten it.
@@ -351,6 +361,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
       window.clearInterval(timers.guy);
       window.clearInterval(timers.boom);
       // Lifts the pointer, so a Spray Can still spraying stops.
+      window.clearTimeout(sprayRef.current.hiss);
       engineRef.current?.up();
       audio.dispose();
       engineRef.current = null;
@@ -500,7 +511,50 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
       sheet = loadImage(`${LIBRARY_URL}spray/${KIDPIX_SPRAY_SETS[set].file}.png`);
       sheets.set(set, sheet);
     }
+    // Moving paint brings its own clips, a file per set.
+    if (KIDPIX_SPRAY_SETS[set].clips) audioRef.current?.load(spraySounds(set));
     return sheet;
+  };
+
+  /**
+   * The can's sound, as Kid Pix plays it. 3D shapes hiss (clip 7200) for as long as the can is
+   * held, though not for a single tap. Moving paint has each animation's own clip; at nine
+   * pictures a second they would pile up, so a new one waits for the last to get going.
+   */
+  const startSpraySound = (set: number) => {
+    const { clips } = KIDPIX_SPRAY_SETS[set];
+    const spray = sprayRef.current;
+    window.clearTimeout(spray.hiss);
+    if (clips) {
+      spray.hiss = undefined;
+      return (frame: readonly number[]) => {
+        const clip = clips[frame[6]];
+        const now = performance.now();
+        if (!clip || now < spray.quietUntil) return;
+        spray.quietUntil = now + Math.min(clip[1] * 1000, SPRAY_CLIP_GAP);
+        audioRef.current?.playFrom(spraySounds(set), clip[0], clip[1]);
+      };
+    }
+    spray.hiss = window.setTimeout(() => {
+      spray.loop = audioRef.current?.play("w7200", { loop: true }) ?? null;
+    }, SPRAY_HISS_DELAY);
+    return undefined;
+  };
+
+  const stopSpraySound = () => {
+    const spray = sprayRef.current;
+    window.clearTimeout(spray.hiss);
+    try {
+      spray.loop?.stop();
+    } catch {
+      // Already stopped.
+    }
+    spray.loop = null;
+  };
+
+  const liftPointer = () => {
+    stopSpraySound();
+    engineRef.current?.up();
   };
 
   /** A background takes effect when picked: 0 is none, the rest are the category's pictures. */
@@ -609,7 +663,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
     }
     event.currentTarget.setPointerCapture(event.pointerId);
     if (tool === "pencil") engine.shapeDown(at, pencilShape, option, pencilKind);
-    else if (spraying) engine.sprayDown(at, spraySheet(spraySet), KIDPIX_SPRAY_SETS[spraySet].frames);
+    else if (spraying) engine.sprayDown(at, spraySheet(spraySet), KIDPIX_SPRAY_SETS[spraySet].frames, startSpraySound(spraySet));
     else if (tool === "wacky") engine.brushDown(at, option);
     else if (tool === "paint") engine.fill(at, bucketKind, bucketChoice[bucketKind]);
     else if (tool === "mixer") {
@@ -914,29 +968,22 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
     </select>
   );
 
-  // A tool's kinds sit in the tray's first panel, in the current color, as Kid Pix shows them:
-  // the Pencil's four, and the brush zone's paint brush and Spray Can.
-  const kindButtons = (art: "pencil" | "brush" | "bucket", names: readonly string[], selected: number, select: (index: number) => void) => (
-    <div role="group" aria-label={current.name} className="kidpix-kinds" data-art={art}>
-      {names.map((name, index) => (
-        <button
-          key={name}
-          type="button"
-          className="kidpix-kind mu-focus"
-          aria-label={name}
-          aria-pressed={selected === index}
-          title={name}
-          onClick={() => {
-            settle();
-            select(index);
-            play("easel1029");
-          }}
-        >
-          <span aria-hidden style={{ background: color }} />
-          <span aria-hidden />
-        </button>
-      ))}
-    </div>
+  // A tool's kinds sit in the tray's first panel, in the current color, and move as Kid Pix moves them:
+  // the Pencil's four, the brush zone's paint brush and Spray Can, and the three Fill Buckets.
+  const kindButtons = (art: KindArt, names: readonly string[], selected: number, select: (index: number) => void) => (
+    <KindPanel
+      key={art}
+      art={art}
+      label={current.name}
+      names={names}
+      selected={selected}
+      color={color}
+      play={play}
+      onSelect={(index) => {
+        settle();
+        select(index);
+      }}
+    />
   );
   const chooseBrushKind = (index: number) => {
     setBrushKind(index);
@@ -1005,8 +1052,8 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
         onMouseDown={(event) => event.preventDefault()}
         onPointerDown={handlePointerDown}
         onPointerMove={(event) => engineRef.current?.move(pointOf(event))}
-        onPointerUp={() => engineRef.current?.up()}
-        onPointerCancel={() => engineRef.current?.up()}
+        onPointerUp={liftPointer}
+        onPointerCancel={liftPointer}
       />
 
       {stickerFrame}
