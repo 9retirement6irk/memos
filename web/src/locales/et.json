@@ -1614,7 +1614,11 @@
       "streak-warning": "Teata, kui seeria täna öösel lõpeb",
       "reminder-saved": "Meeldetuletus salvestatud",
       "test": "Saada test",
-      "test-sent": "Test saadetud"
+      "test-sent": "Test saadetud",
+      "view-title": "Päeviku ruumi vaade",
+      "view-description": "Kuidas päeviku ruum sissekandeid näitab. Kui muudad vaadet päeviku ruumis, muutub see ka siin.",
+      "own-view": "Hoia oma vaadet",
+      "own-view-description": "Avaleht ja teised ruumid hoiavad seal valitud vaadet."
     }
   },
   "dawarich": {

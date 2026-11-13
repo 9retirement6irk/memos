@@ -1614,7 +1614,11 @@
       "streak-warning": "Säg till när en svit tar slut i kväll",
       "reminder-saved": "Påminnelsen sparades",
       "test": "Skicka ett test",
-      "test-sent": "Testet skickades"
+      "test-sent": "Testet skickades",
+      "view-title": "Vy för dagboksutrymmet",
+      "view-description": "Hur dagboksutrymmet listar sina inlägg. Ändrar du vyn i dagboksutrymmet ändras den här också.",
+      "own-view": "Behåll en egen vy",
+      "own-view-description": "Startsidan och andra utrymmen behåller vyn du valt där."
     }
   },
   "dawarich": {

@@ -27,13 +27,30 @@ interface ViewContextValue {
   setMaxColumns: (value: MemoMaxColumns) => void;
 }
 
+/** The view state one Space keeps for itself, and how to change it. */
+export interface SpaceViewOverride {
+  /** Like "spaces/abc". */
+  space: string;
+  state: Required<Pick<ViewState, "orderByTimeAsc" | "compactMode" | "maxColumns">> & { timeBasis: MemoTimeBasis };
+  update: (patch: Partial<SpaceViewOverride["state"]>) => void;
+}
+
 const ViewContext = createContext<ViewContextValue | null>(null);
 
 const LOCAL_STORAGE_KEY = "memos-view-setting";
 
 const DEFAULT_VIEW_STATE: ViewState = { orderByTimeAsc: false, compactMode: false, maxColumns: 1 };
 
-export function ViewProvider({ children, enabled = true }: { children: ReactNode; enabled?: boolean }) {
+export function ViewProvider({
+  children,
+  enabled = true,
+  override,
+}: {
+  children: ReactNode;
+  enabled?: boolean;
+  /** When given, its state is shown and changed instead of the one saved in this browser. */
+  override?: Omit<SpaceViewOverride, "space">;
+}) {
   const getInitialState = (): ViewState => {
     try {
       const cached = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -59,7 +76,7 @@ export function ViewProvider({ children, enabled = true }: { children: ReactNode
 
   const [viewState, setViewState] = useState(getInitialState);
   // Keep the saved Timeline preferences while other views use their default presentation.
-  const activeState = enabled ? viewState : DEFAULT_VIEW_STATE;
+  const activeState = !enabled ? DEFAULT_VIEW_STATE : (override?.state ?? viewState);
   const timeBasis = activeState.timeBasis ?? "create_time";
 
   const persistToStorage = (newState: ViewState) => {
@@ -78,10 +95,11 @@ export function ViewProvider({ children, enabled = true }: { children: ReactNode
     });
   };
 
-  const setOrderByTimeAsc = (value: boolean) => updateState({ orderByTimeAsc: value });
-  const setTimeBasis = (field: MemoTimeBasis) => updateState({ timeBasis: field });
-  const setCompactMode = (value: boolean) => updateState({ compactMode: value });
-  const setMaxColumns = (value: MemoMaxColumns) => updateState({ maxColumns: value });
+  const change = (patch: Partial<SpaceViewOverride["state"]>) => (override ? override.update(patch) : updateState(patch));
+  const setOrderByTimeAsc = (value: boolean) => change({ orderByTimeAsc: value });
+  const setTimeBasis = (field: MemoTimeBasis) => change({ timeBasis: field });
+  const setCompactMode = (value: boolean) => change({ compactMode: value });
+  const setMaxColumns = (value: MemoMaxColumns) => change({ maxColumns: value });
 
   return (
     <ViewContext.Provider
@@ -101,13 +119,21 @@ export function ViewProvider({ children, enabled = true }: { children: ReactNode
   );
 }
 
-/** Timeline preferences also apply to its sidebar statistics and date filters. */
-export function TimelineViewProvider({ children }: { children: ReactNode }) {
+/**
+ * Timeline preferences also apply to its sidebar statistics and date filters. A Space that keeps
+ * its own view (the journal Space) shows and changes that view instead, so Home keeps its own.
+ */
+export function TimelineViewProvider({ children, spaceView }: { children: ReactNode; spaceView?: SpaceViewOverride }) {
   const { pathname } = useLocation();
   const route = resolveCollectionRoute(pathname);
   const collectionPath = route.pathname.toLowerCase();
   const enabled = route.isCollection && (collectionPath === ROUTES.HOME || collectionPath === ROUTES.EXPLORE);
-  return <ViewProvider enabled={enabled}>{children}</ViewProvider>;
+  const override = spaceView && route.spaceName === spaceView.space ? spaceView : undefined;
+  return (
+    <ViewProvider enabled={enabled} override={override}>
+      {children}
+    </ViewProvider>
+  );
 }
 
 export function useView() {

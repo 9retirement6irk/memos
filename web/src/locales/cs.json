@@ -1617,7 +1617,11 @@
       "streak-warning": "Upozornit, když série dnes v noci končí",
       "reminder-saved": "Připomenutí uloženo",
       "test": "Poslat test",
-      "test-sent": "Test odeslán"
+      "test-sent": "Test odeslán",
+      "view-title": "Zobrazení prostoru deníku",
+      "view-description": "Jak prostor deníku zobrazuje záznamy. Když změníš zobrazení v prostoru deníku, změní se i zde.",
+      "own-view": "Ponechat vlastní zobrazení",
+      "own-view-description": "Domů a ostatní prostory si ponechají zobrazení, které jsi tam nastavil."
     }
   },
   "dawarich": {

@@ -1614,7 +1614,11 @@
       "streak-warning": "連續紀錄今晚中斷時提醒我",
       "reminder-saved": "提醒已儲存",
       "test": "傳送測試",
-      "test-sent": "測試已傳送"
+      "test-sent": "測試已傳送",
+      "view-title": "日記空間檢視",
+      "view-description": "日記空間列出項目的方式。在日記空間中變更檢視，這裡也會隨之變更。",
+      "own-view": "保留獨立檢視",
+      "own-view-description": "首頁和其他空間保留你在那裡設定的檢視。"
     }
   },
   "dawarich": {

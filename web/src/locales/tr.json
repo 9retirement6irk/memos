@@ -1614,7 +1614,11 @@
       "streak-warning": "Bir seri bu gece bitiyorsa söyle",
       "reminder-saved": "Hatırlatıcı kaydedildi",
       "test": "Test gönder",
-      "test-sent": "Test gönderildi"
+      "test-sent": "Test gönderildi",
+      "view-title": "Günlük alanı görünümü",
+      "view-description": "Günlük alanının kayıtlarını nasıl listelediği. Görünümü günlük alanındayken değiştirirsen burada da değişir.",
+      "own-view": "Kendi görünümünü koru",
+      "own-view-description": "Ana sayfa ve diğer alanlar orada seçtiğin görünümü korur."
     }
   },
   "dawarich": {

@@ -1616,7 +1616,11 @@
       "streak-warning": "Opozori, ko se niz konča nocoj",
       "reminder-saved": "Opomnik shranjen",
       "test": "Pošlji preizkus",
-      "test-sent": "Preizkus poslan"
+      "test-sent": "Preizkus poslan",
+      "view-title": "Pogled prostora dnevnika",
+      "view-description": "Kako prostor dnevnika prikazuje vnose. Če spremeniš pogled v prostoru dnevnika, se spremeni tudi tukaj.",
+      "own-view": "Obdrži lasten pogled",
+      "own-view-description": "Domov in drugi prostori obdržijo pogled, ki si ga nastavil tam."
     }
   },
   "dawarich": {

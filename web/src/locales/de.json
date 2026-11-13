@@ -1614,7 +1614,11 @@
       "streak-warning": "Hinweisen, wenn eine Serie heute Nacht endet",
       "reminder-saved": "Erinnerung gespeichert",
       "test": "Test senden",
-      "test-sent": "Test gesendet"
+      "test-sent": "Test gesendet",
+      "view-title": "Ansicht des Tagebuch-Space",
+      "view-description": "Wie der Tagebuch-Space seine Einträge auflistet. Änderst du die Ansicht im Tagebuch-Space, ändert sie sich auch hier.",
+      "own-view": "Eigene Ansicht behalten",
+      "own-view-description": "Startseite und andere Spaces behalten die Ansicht, die du dort eingestellt hast."
     }
   },
   "dawarich": {

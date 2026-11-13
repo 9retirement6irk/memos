@@ -1614,7 +1614,11 @@
       "streak-warning": "Szóljon, ha egy sorozat ma éjjel véget ér",
       "reminder-saved": "Emlékeztető mentve",
       "test": "Teszt küldése",
-      "test-sent": "Teszt elküldve"
+      "test-sent": "Teszt elküldve",
+      "view-title": "A napló terének nézete",
+      "view-description": "Hogyan sorolja fel a napló tere a bejegyzéseket. Ha a napló terében módosítod a nézetet, itt is módosul.",
+      "own-view": "Saját nézet megtartása",
+      "own-view-description": "A kezdőlap és a többi tér megtartja az ott beállított nézetet."
     }
   },
   "dawarich": {

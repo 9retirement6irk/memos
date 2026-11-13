@@ -1615,7 +1615,11 @@
       "streak-warning": "Avisa quan una ratxa s’acaba aquesta nit",
       "reminder-saved": "Recordatori desat",
       "test": "Envia una prova",
-      "test-sent": "Prova enviada"
+      "test-sent": "Prova enviada",
+      "view-title": "Vista de l’espai del diari",
+      "view-description": "Com mostra les entrades l’espai del diari. Si canvies la vista dins l’espai del diari, també canvia aquí.",
+      "own-view": "Mantén una vista pròpia",
+      "own-view-description": "L’inici i els altres espais mantenen la vista que hi has triat."
     }
   },
   "dawarich": {

@@ -1614,7 +1614,11 @@
       "streak-warning": "Si fra når en rekke slutter i kveld",
       "reminder-saved": "Påminnelse lagret",
       "test": "Send en test",
-      "test-sent": "Test sendt"
+      "test-sent": "Test sendt",
+      "view-title": "Visning av dagbokområdet",
+      "view-description": "Hvordan dagbokområdet viser innleggene sine. Endrer du visningen i dagbokområdet, endres den her også.",
+      "own-view": "Behold egen visning",
+      "own-view-description": "Hjem og andre områder beholder visningen du valgte der."
     }
   },
   "dawarich": {

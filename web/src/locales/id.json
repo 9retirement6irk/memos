@@ -1614,7 +1614,11 @@
       "streak-warning": "Beri tahu saat rentetan berakhir malam ini",
       "reminder-saved": "Pengingat disimpan",
       "test": "Kirim uji coba",
-      "test-sent": "Uji coba terkirim"
+      "test-sent": "Uji coba terkirim",
+      "view-title": "Tampilan Space jurnal",
+      "view-description": "Cara Space jurnal menampilkan entrinya. Mengubah tampilan di dalam Space jurnal juga mengubahnya di sini.",
+      "own-view": "Pertahankan tampilan sendiri",
+      "own-view-description": "Beranda dan Space lain tetap memakai tampilan yang kamu atur di sana."
     }
   },
   "dawarich": {

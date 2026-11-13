@@ -1616,7 +1616,11 @@
       "streak-warning": "Powiedz, gdy seria kończy się dziś w nocy",
       "reminder-saved": "Przypomnienie zapisane",
       "test": "Wyślij test",
-      "test-sent": "Test wysłany"
+      "test-sent": "Test wysłany",
+      "view-title": "Widok przestrzeni dziennika",
+      "view-description": "Jak przestrzeń dziennika wyświetla wpisy. Zmiana widoku w przestrzeni dziennika zmienia go także tutaj.",
+      "own-view": "Zachowaj własny widok",
+      "own-view-description": "Strona główna i inne przestrzenie zachowują widok ustawiony w nich."
     }
   },
   "dawarich": {

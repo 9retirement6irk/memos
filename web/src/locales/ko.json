@@ -1614,7 +1614,11 @@
       "streak-warning": "오늘 밤 연속 기록이 끊기면 알려 주기",
       "reminder-saved": "알림이 저장되었습니다",
       "test": "테스트 보내기",
-      "test-sent": "테스트를 보냈습니다"
+      "test-sent": "테스트를 보냈습니다",
+      "view-title": "일기 스페이스 보기",
+      "view-description": "일기 스페이스에서 항목을 보여 주는 방식. 일기 스페이스에서 보기를 바꾸면 여기도 바뀝니다.",
+      "own-view": "별도 보기 유지",
+      "own-view-description": "홈과 다른 스페이스는 각각 설정한 보기를 그대로 유지합니다."
     }
   },
   "dawarich": {

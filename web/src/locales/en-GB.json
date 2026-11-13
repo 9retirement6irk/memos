@@ -1614,7 +1614,11 @@
       "streak-warning": "Say so when a streak ends tonight",
       "reminder-saved": "Reminder saved",
       "test": "Send a test",
-      "test-sent": "Test sent"
+      "test-sent": "Test sent",
+      "view-title": "Journal Space view",
+      "view-description": "How the journal Space lists its entries. Changing the view while in the journal Space changes it here too.",
+      "own-view": "Keep its own view",
+      "own-view-description": "Home and other Spaces keep the view you set there."
     }
   },
   "dawarich": {

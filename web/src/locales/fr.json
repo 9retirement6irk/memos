@@ -1615,7 +1615,11 @@
       "streak-warning": "Le signaler quand une série se termine ce soir",
       "reminder-saved": "Rappel enregistré",
       "test": "Envoyer un test",
-      "test-sent": "Test envoyé"
+      "test-sent": "Test envoyé",
+      "view-title": "Affichage de l’espace journal",
+      "view-description": "Comment l’espace journal liste ses entrées. Changer l’affichage dans l’espace journal le change aussi ici.",
+      "own-view": "Garder son propre affichage",
+      "own-view-description": "L’accueil et les autres espaces gardent l’affichage que vous y avez choisi."
     }
   },
   "dawarich": {

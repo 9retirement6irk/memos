@@ -2,7 +2,9 @@ import { Button, Field, Form, Input, Select, Switch } from "@usememos/ui";
 import { PlusIcon, RefreshCwIcon, XIcon } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { ActivityIconView } from "@/components/Journal/ActivityIconView";
+import { MemoDisplaySettingsContent } from "@/components/MemoDisplaySettingMenu";
 import { useAuth } from "@/contexts/AuthContext";
+import { ViewProvider } from "@/contexts/ViewContext";
 import { useJournalReminder, useJournalSettings, useSaveJournalSettings, useUpdateJournalReminder } from "@/hooks/useJournalQueries";
 import { useSpaces } from "@/hooks/useSpaceQueries";
 import { normalizePrefix, tagSegment } from "@/lib/journal/entry";
@@ -394,6 +396,26 @@ const JournalSection = () => {
             />
           </SettingListItem>
         </SettingList>
+      </SettingGroup>
+
+      <SettingGroup title={t("journal.settings.view-title")} description={t("journal.settings.view-description")} showSeparator>
+        <SettingList>
+          <SettingListItem label={t("journal.settings.own-view")} description={t("journal.settings.own-view-description")}>
+            <Switch
+              aria-label={t("journal.settings.own-view")}
+              checked={settings.view.own}
+              disabled={!isLoaded || !settings.space}
+              onCheckedChange={(own) => save({ view: { ...settings.view, own } })}
+            />
+          </SettingListItem>
+        </SettingList>
+        {settings.view.own && settings.space && (
+          <div className="max-w-sm" data-journal-view="">
+            <ViewProvider override={{ state: settings.view, update: (patch) => save({ view: { ...settings.view, ...patch } }) }}>
+              <MemoDisplaySettingsContent />
+            </ViewProvider>
+          </div>
+        )}
       </SettingGroup>
 
       <SettingGroup title={t("journal.settings.entries-title")} description={t("journal.settings.entries-description")} showSeparator>

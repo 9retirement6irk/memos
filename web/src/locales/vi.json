@@ -1614,7 +1614,11 @@
       "streak-warning": "Báo khi một chuỗi kết thúc tối nay",
       "reminder-saved": "Đã lưu lời nhắc",
       "test": "Gửi thử",
-      "test-sent": "Đã gửi thử"
+      "test-sent": "Đã gửi thử",
+      "view-title": "Chế độ xem không gian nhật ký",
+      "view-description": "Cách không gian nhật ký liệt kê các mục. Đổi chế độ xem trong không gian nhật ký cũng đổi ở đây.",
+      "own-view": "Giữ chế độ xem riêng",
+      "own-view-description": "Trang chủ và các không gian khác giữ chế độ xem bạn đã chọn ở đó."
     }
   },
   "dawarich": {

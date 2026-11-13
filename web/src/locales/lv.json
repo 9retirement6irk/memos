@@ -1615,7 +1615,11 @@
       "streak-warning": "Paziņot, kad sērija beidzas šonakt",
       "reminder-saved": "Atgādinājums saglabāts",
       "test": "Sūtīt testu",
-      "test-sent": "Tests nosūtīts"
+      "test-sent": "Tests nosūtīts",
+      "view-title": "Dienasgrāmatas telpas skats",
+      "view-description": "Kā dienasgrāmatas telpa rāda ierakstus. Ja maini skatu dienasgrāmatas telpā, tas mainās arī šeit.",
+      "own-view": "Saglabāt savu skatu",
+      "own-view-description": "Sākums un citas telpas saglabā tur iestatīto skatu."
     }
   },
   "dawarich": {

@@ -19,7 +19,8 @@ const LAYOUT_OPTIONS: Record<MemoMaxColumns, { icon: LucideIcon; key: "layout-li
   0: { icon: InfinityIcon, key: "layout-auto" },
 };
 
-function MemoDisplaySettingsContent() {
+/** The view options themselves, for the menu and for the journal settings. */
+export function MemoDisplaySettingsContent() {
   const t = useTranslate();
   const { orderByTimeAsc, timeBasis, compactMode, maxColumns, setTimeBasis, setOrderByTimeAsc, setCompactMode, setMaxColumns } = useView();
   // Multi-column grids always render compact tiles, so the toggle is shown as on and locked

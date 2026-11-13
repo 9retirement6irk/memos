@@ -1614,7 +1614,11 @@
       "streak-warning": "Ardıcıllıq bu gecə bitirsə xəbər ver",
       "reminder-saved": "Xatırlatma saxlanıldı",
       "test": "Sınaq göndər",
-      "test-sent": "Sınaq göndərildi"
+      "test-sent": "Sınaq göndərildi",
+      "view-title": "Gündəlik məkanının görünüşü",
+      "view-description": "Gündəlik məkanının qeydləri necə göstərdiyi. Görünüşü gündəlik məkanında dəyişsən, burada da dəyişir.",
+      "own-view": "Öz görünüşünü saxla",
+      "own-view-description": "Əsas səhifə və digər məkanlar orada seçdiyin görünüşü saxlayır."
     }
   },
   "dawarich": {

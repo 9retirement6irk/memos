@@ -1615,7 +1615,11 @@
       "streak-warning": "Avvisa quando una serie finisce stanotte",
       "reminder-saved": "Promemoria salvato",
       "test": "Invia una prova",
-      "test-sent": "Prova inviata"
+      "test-sent": "Prova inviata",
+      "view-title": "Vista dello spazio del diario",
+      "view-description": "Come lo spazio del diario elenca le voci. Se cambi la vista nello spazio del diario, cambia anche qui.",
+      "own-view": "Mantieni una vista propria",
+      "own-view-description": "La home e gli altri spazi mantengono la vista che hai scelto lì."
     }
   },
   "dawarich": {

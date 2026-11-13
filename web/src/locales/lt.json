@@ -1616,7 +1616,11 @@
       "streak-warning": "Pranešti, kai serija baigiasi šiąnakt",
       "reminder-saved": "Priminimas išsaugotas",
       "test": "Siųsti bandymą",
-      "test-sent": "Bandymas išsiųstas"
+      "test-sent": "Bandymas išsiųstas",
+      "view-title": "Dienoraščio erdvės rodinys",
+      "view-description": "Kaip dienoraščio erdvė rodo įrašus. Pakeitus rodinį dienoraščio erdvėje, jis pasikeičia ir čia.",
+      "own-view": "Išlaikyti savo rodinį",
+      "own-view-description": "Pradžia ir kitos erdvės išlaiko jose nustatytą rodinį."
     }
   },
   "dawarich": {

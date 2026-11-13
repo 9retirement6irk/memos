@@ -1614,7 +1614,11 @@
       "streak-warning": "Kerro, kun putki päättyy tänä yönä",
       "reminder-saved": "Muistutus tallennettu",
       "test": "Lähetä testi",
-      "test-sent": "Testi lähetetty"
+      "test-sent": "Testi lähetetty",
+      "view-title": "Päiväkirjan tilan näkymä",
+      "view-description": "Miten päiväkirjan tila näyttää merkinnät. Kun muutat näkymää päiväkirjan tilassa, se muuttuu myös täällä.",
+      "own-view": "Pidä oma näkymä",
+      "own-view-description": "Etusivu ja muut tilat pitävät niissä valitsemasi näkymän."
     }
   },
   "dawarich": {

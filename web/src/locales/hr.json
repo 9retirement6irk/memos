@@ -1615,7 +1615,11 @@
       "streak-warning": "Javi kad niz završava večeras",
       "reminder-saved": "Podsjetnik spremljen",
       "test": "Pošalji test",
-      "test-sent": "Test poslan"
+      "test-sent": "Test poslan",
+      "view-title": "Prikaz prostora dnevnika",
+      "view-description": "Kako prostor dnevnika prikazuje unose. Promijeniš li prikaz u prostoru dnevnika, mijenja se i ovdje.",
+      "own-view": "Zadrži vlastiti prikaz",
+      "own-view-description": "Početna i ostali prostori zadržavaju prikaz koji si tamo postavio."
     }
   },
   "dawarich": {

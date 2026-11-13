@@ -1615,7 +1615,11 @@
       "streak-warning": "Avisar quando uma sequência termina esta noite",
       "reminder-saved": "Lembrete guardado",
       "test": "Enviar um teste",
-      "test-sent": "Teste enviado"
+      "test-sent": "Teste enviado",
+      "view-title": "Vista do espaço do diário",
+      "view-description": "Como o espaço do diário lista as entradas. Alterar a vista dentro do espaço do diário também a altera aqui.",
+      "own-view": "Manter vista própria",
+      "own-view-description": "O início e os outros espaços mantêm a vista que definiu neles."
     }
   },
   "dawarich": {
