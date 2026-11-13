@@ -71,6 +71,20 @@ when it is first shown.
   generated. The set names are ours; the disc has none. How Kid Pix scatters the pictures is in
   its program, so the scatter here is a stand-in, and `KP.cfg` gives the can no sounds.
 
+## Shapes, buckets and stickers
+
+- The Pencil's tray holds its sizes, then nine shapes (`PENCIL_SHAPES`, Kid Pix's modifier tools
+  103 to 110, with their sounds). A line, rectangle or oval is dragged out. A curve is dragged as
+  a line, then bent with a second drag. A polygon takes a press for each corner and closes on a
+  press at its first, which wears a ring. Changing tool, or Undo Guy, drops a shape left half-made.
+- The Fill Buckets are three kinds, as in Kid Pix. Solid lays the color in hand through one of 42
+  one-color patterns (`assets/solid-tiles.png`; the first is plain). The pattern is how much color
+  lands on each pixel, so a second color can go over a first. Blend and Pattern bring their own colors.
+- A sticker goes down in a frame: drag inside to move it, a round corner to resize it, the square
+  corners to flip it left to right or top to bottom; the arrow keys nudge it, Delete removes it.
+  It becomes paint on the next press on the paper, a change of tool, or when the mode ends. Kid Pix
+  keeps every sticker loose until Flatten; here only the last one is.
+
 Not built: animations and recorded sounds (a saved drawing is a still PNG and cannot hold
 either) and the voice brushes.
 

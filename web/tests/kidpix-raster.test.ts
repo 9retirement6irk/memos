@@ -1,7 +1,16 @@
 import { describe, expect, it } from "vitest";
 import { KIDPIX_SOUND_SPRITE, KIDPIX_TOOL_NAMES, KIDPIX_TOOL_SOUNDS } from "@/components/DrawingSheet/kidpix/data";
 import { floodMask, mixPixels, paintBounds, planTiles } from "@/components/DrawingSheet/kidpix/raster";
-import { MIXER_COUNT, MIXER_EFFECTS, TUBE_TOOLS, UNDO_GUY_LINES, WAND_COUNT, WAND_EFFECTS } from "@/components/DrawingSheet/kidpix/tools";
+import {
+  BUCKET_KINDS,
+  MIXER_COUNT,
+  MIXER_EFFECTS,
+  PENCIL_SHAPES,
+  TUBE_TOOLS,
+  UNDO_GUY_LINES,
+  WAND_COUNT,
+  WAND_EFFECTS,
+} from "@/components/DrawingSheet/kidpix/tools";
 
 /** A white picture with opaque pixels where `ink` says so. */
 const picture = (width: number, height: number, ink: (x: number, y: number) => boolean) => {
@@ -61,6 +70,22 @@ describe("Kid Pix tables", () => {
   it("has an effect for every mixer and wand in the tray", () => {
     expect(MIXER_EFFECTS).toHaveLength(MIXER_COUNT);
     expect(WAND_EFFECTS).toHaveLength(WAND_COUNT);
+  });
+
+  it("gives each Pencil shape Kid Pix's own tool, and has three Fill Buckets", () => {
+    expect(PENCIL_SHAPES.map((shape) => KIDPIX_TOOL_NAMES[shape.tool])).toEqual([
+      "Circle",
+      "ModifierLine",
+      "ModifierCurve",
+      "ModifierOSquare",
+      "ModifierFSquare",
+      "ModifierOCircle",
+      "ModifierFCircle",
+      "ModifierOPoly",
+      "ModifierFPoly",
+    ]);
+    for (const shape of PENCIL_SHAPES) expect(KIDPIX_TOOL_SOUNDS[shape.tool], shape.name).toBeDefined();
+    expect(BUCKET_KINDS).toHaveLength(3);
   });
 
   it("names every tool Kid Pix has and finds each of their clips in the sprite", () => {

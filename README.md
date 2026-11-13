@@ -86,7 +86,11 @@ Connect [Dawarich](https://dawarich.app) in **Settings → Dawarich**, again per
 - **Notebook paper:** draw on college-ruled, wide-ruled, Gregg-ruled, graph or dot-grid paper.
 - **Kid Pix mode:** a second set of tools in the style of Kid Pix Deluxe 4, with its art, fonts and
   sounds:
-  - tools: the Wacky Brush, Spray Can, Paint Can, Electric Mixer and dynamite
+  - tools: the Wacky Brush, Spray Can, Electric Mixer and dynamite
+  - the Pencil's shapes: straight line, curve, rectangle, oval and polygon, empty or filled
+  - three Fill Buckets: Solid (the color in hand, plain or through a one-color pattern), Blend and
+    Pattern
+  - stickers you can move, resize and flip before they become part of the picture
   - over 2,000 rubber stamps, over 900 stickers and 180 backgrounds
   - Undo Guy
 

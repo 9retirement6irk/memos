@@ -81,6 +81,32 @@ export const PENCIL_KINDS = ["Pencil", "Chalk", "Crayon", "Marker"] as const;
  * The brush zone's kinds: the paint brush with its Wacky Brushes, and the Spray Can. Kid Pix has a
  * third between them, Sound Art, which paints with the microphone. Art: assets/brushkinds.png.
  */
+/**
+ * The shapes the Pencil's four kinds draw, in the tray's order: Kid Pix's modifier tools 103 to
+ * 110, each with its own sounds. Icons: assets/shapes.png.
+ */
+export const PENCIL_SHAPES: readonly {
+  name: string;
+  kind: "free" | "line" | "curve" | "rect" | "oval" | "polygon";
+  filled: boolean;
+  tool: number;
+}[] = [
+  { name: "Freehand", kind: "free", filled: false, tool: 99 },
+  { name: "Straight Line", kind: "line", filled: false, tool: 103 },
+  { name: "Curve", kind: "curve", filled: false, tool: 104 },
+  { name: "Rectangle", kind: "rect", filled: false, tool: 105 },
+  { name: "Filled Rectangle", kind: "rect", filled: true, tool: 106 },
+  { name: "Oval", kind: "oval", filled: false, tool: 107 },
+  { name: "Filled Oval", kind: "oval", filled: true, tool: 108 },
+  { name: "Polygon", kind: "polygon", filled: false, tool: 109 },
+  { name: "Filled Polygon", kind: "polygon", filled: true, tool: 110 },
+];
+
+/** The three Fill Buckets, as the tray's first panel shows them. Art: assets/bucketkinds.png. */
+export const BUCKET_KINDS = ["Solid Fill Bucket", "Blend Fill Bucket", "Pattern Fill Bucket"] as const;
+/** The Solid bucket's one-color patterns; the first is plain color. Icons: assets/solids.png. */
+export const SOLID_COUNT = 42;
+
 export const BRUSH_KINDS = ["Paint Brush", "Spray Can"] as const;
 
 /** Pencil and eraser sizes, in drawing px. */

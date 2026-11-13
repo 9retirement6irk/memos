@@ -792,6 +792,9 @@ const DrawingSheet = ({ mode, pages: initialPages, initialPage, onDone, onClose 
                   previous: t("common.previous"),
                   next: t("common.next"),
                   noBackground: t("editor.drawing.kidpix-no-background"),
+                  resize: t("editor.drawing.kidpix-resize"),
+                  flipHorizontal: t("editor.drawing.kidpix-flip-horizontal"),
+                  flipVertical: t("editor.drawing.kidpix-flip-vertical"),
                 }}
               />
             </Suspense>
