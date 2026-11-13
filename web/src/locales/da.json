@@ -249,6 +249,7 @@
       "discard": "Kassér",
       "open-failed": "Tegningen kunne ikke åbnes. Prøv igen.",
       "export-failed": "Tegningen kunne ikke gemmes. Prøv igen.",
+      "image-from-device": "Billede fra denne enhed",
       "image-failed": "Billedet kunne ikke føjes til tegningen.",
       "saved-without-drawing": "Notatet er gemt, men det er tegningen ikke. Gem igen for at prøve en gang til.",
       "kidpix": "Kid Pix-tilstand",

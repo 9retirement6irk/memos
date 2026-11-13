@@ -249,6 +249,7 @@
       "discard": "Zahodiť",
       "open-failed": "Kresbu sa nepodarilo otvoriť. Skúste to znova.",
       "export-failed": "Kresbu sa nepodarilo uložiť. Skúste to znova.",
+      "image-from-device": "Obrázok z tohto zariadenia",
       "image-failed": "Obrázok sa nepodarilo pridať do kresby.",
       "saved-without-drawing": "Poznámka je uložená, ale kresba nie. Pre nový pokus uložte znova.",
       "kidpix": "Režim Kid Pix",

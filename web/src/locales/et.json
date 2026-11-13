@@ -249,6 +249,7 @@
       "discard": "Loobu",
       "open-failed": "Joonistust ei õnnestunud avada. Proovige uuesti.",
       "export-failed": "Joonistust ei õnnestunud salvestada. Proovige uuesti.",
+      "image-from-device": "Pilt sellest seadmest",
       "image-failed": "Pilti ei õnnestunud joonistusele lisada.",
       "saved-without-drawing": "Memo on salvestatud, kuid joonistus mitte. Salvestage veel kord, et uuesti proovida.",
       "kidpix": "Kid Pixi režiim",

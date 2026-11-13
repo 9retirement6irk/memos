@@ -70,6 +70,8 @@ vi.mock("@usememos/canvas/react", () => ({
   }),
 }));
 
+vi.mock("@/hooks/useImmichQueries", () => ({ useImmichConnection: () => ({ data: undefined }) }));
+
 vi.mock("@/utils/i18n", async (importOriginal) => ({
   ...(await importOriginal<typeof import("@/utils/i18n")>()),
   useTranslate: () => (key: string, options?: { number?: number }) => (options?.number ? `${key} ${options.number}` : key),

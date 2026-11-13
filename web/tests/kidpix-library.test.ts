@@ -2,6 +2,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it, vi } from "vitest";
 import { KIDPIX_BACKGROUNDS, KIDPIX_STAMPS, KIDPIX_STICKERS } from "@/components/DrawingSheet/kidpix/library";
+import { KIDPIX_SPRAY_SETS } from "@/components/DrawingSheet/kidpix/spray";
 import { readStickers } from "@/components/DrawingSheet/kidpix/swf";
 
 const file = (path: string) => resolve(__dirname, "../public/kidpix", path);
@@ -77,5 +78,22 @@ describe("Kid Pix library", () => {
   it("refuses a file that is not a Flash movie", () => {
     expect(() => readStickers(new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9]), [9])).toThrow();
     vi.restoreAllMocks();
+  });
+
+  it("ships a sheet of pictures for every Spray Can set", () => {
+    expect(KIDPIX_SPRAY_SETS.filter((set) => set.kind === "shapes")).toHaveLength(15);
+    expect(KIDPIX_SPRAY_SETS.filter((set) => set.kind === "moving")).toHaveLength(20);
+    for (const set of KIDPIX_SPRAY_SETS) {
+      expect(existsSync(file(`spray/${set.file}.png`)), set.file).toBe(true);
+      expect(set.frames.length, set.name).toBeGreaterThan(0);
+      // The PNG header holds the sheet's size; every picture must lie inside it.
+      const png = readFileSync(file(`spray/${set.file}.png`));
+      const width = png.readUInt32BE(16);
+      const height = png.readUInt32BE(20);
+      for (const [x, y, w, h] of set.frames) {
+        expect(x + w, set.name).toBeLessThanOrEqual(width);
+        expect(y + h, set.name).toBeLessThanOrEqual(height);
+      }
+    }
   });
 });
