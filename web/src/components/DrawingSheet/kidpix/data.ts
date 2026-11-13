@@ -144,6 +144,65 @@ export const KIDPIX_TOOL_NAMES: readonly string[] = [
 ];
 
 /**
+ * How a tool's sound follows the pointer, by tool number: [moving, north, south, east, west], from
+ * the same KP.cfg sections. `moving` is 1 where the section says `continuous = off`: the loop clip
+ * then sounds only while the pointer moves. The rest are clips played as the stroke turns that way;
+ * 0 means none. Kid Pix's north is down the screen: the original plays `directionNorth` on a
+ * downward stroke.
+ */
+export const KIDPIX_TOOL_MOTION: Readonly<Record<number, readonly [number, number, number, number, number]>> = {
+  0: [1, 7295, 7296, 7292, 7293],
+  1: [0, 0, 7322, 0, 7322],
+  2: [0, 7299, 7300, 7299, 7300],
+  4: [1, 7322, 0, 0, 7322],
+  5: [1, 0, 0, 0, 0],
+  6: [1, 0, 0, 0, 0],
+  7: [1, 7322, 0, 7322, 0],
+  8: [1, 0, 0, 0, 0],
+  9: [1, 0, 0, 0, 0],
+  10: [1, 7322, 7322, 0, 0],
+  11: [1, 7322, 0, 7322, 0],
+  12: [1, 7322, 0, 7322, 0],
+  13: [0, 0, 7322, 0, 7322],
+  14: [1, 0, 7322, 0, 0],
+  15: [1, 7322, 0, 0, 0],
+  16: [1, 7322, 7322, 7322, 7322],
+  17: [1, 0, 0, 0, 0],
+  18: [1, 0, 0, 0, 0],
+  21: [1, 0, 0, 0, 0],
+  24: [1, 0, 0, 0, 0],
+  25: [1, 0, 0, 0, 0],
+  30: [1, 0, 0, 0, 0],
+  31: [1, 0, 0, 0, 0],
+  32: [1, 0, 0, 0, 0],
+  33: [1, 0, 0, 0, 0],
+  34: [1, 0, 0, 0, 0],
+  35: [1, 0, 0, 0, 0],
+  36: [1, 0, 0, 0, 0],
+  37: [1, 0, 0, 0, 0],
+  38: [1, 0, 0, 0, 0],
+  41: [1, 0, 0, 0, 0],
+  42: [1, 0, 0, 0, 0],
+  44: [1, 0, 0, 0, 0],
+  87: [1, 7295, 7297, 7296, 7298],
+  88: [1, 7251, 7252, 7253, 7254],
+  89: [1, 7251, 0, 0, 7252],
+  90: [1, 7251, 0, 0, 7252],
+  91: [1, 7251, 0, 0, 7252],
+  92: [1, 7251, 0, 0, 7252],
+  93: [1, 7251, 0, 0, 7252],
+  94: [1, 7251, 0, 0, 7252],
+  95: [1, 7251, 0, 0, 7252],
+  96: [1, 7251, 0, 0, 7252],
+  97: [1, 7251, 0, 0, 7252],
+  98: [1, 7251, 0, 0, 7252],
+  99: [1, 7283, 7284, 7285, 0],
+  100: [1, 7257, 7258, 0, 7258],
+  101: [1, 7267, 7268, 7267, 0],
+  102: [1, 7275, 7276, 7277, 7278],
+};
+
+/**
  * The clips each tool plays, by tool number: [start, stop, loop, effect], as resource ids in
  * WackyBrushSounds.MHK. Read from the `[<ToolName>Snd]` sections of KP.cfg; 0 means none.
  */
@@ -238,7 +297,8 @@ export const KIDPIX_TOOL_SOUNDS: Readonly<Record<number, readonly [number, numbe
   107: [0, 0, 7314, 0],
   108: [0, 7317, 7316, 0],
   109: [0, 7315, 7314, 0],
-  110: [0, 7317, 7316, 0],
+  // ModifierFPolySnd's section is malformed in KP.cfg; these are the clips the program plays.
+  110: [0, 7315, 7314, 0],
   111: [0, 0, 7313, 0],
   112: [0, 0, 7314, 0],
   113: [0, 0, 7314, 0],
