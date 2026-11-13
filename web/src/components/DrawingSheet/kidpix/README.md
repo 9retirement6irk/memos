@@ -101,6 +101,11 @@ mold is Sound Art's microphone, which is not built.
   It becomes paint on the next press on the paper, a change of tool, or when the mode ends. Kid Pix
   keeps every sticker loose until Flatten; here only the last one is.
 
+- Pictures: the sheet's Insert image button stays in the mode's top bar (from this device, or from
+  Immich when it is connected), and a pasted picture counts too. A picture lands in the sticker's
+  frame, at most 70% of the paper, and becomes paint the same way; this is Kid Pix's Add Graphic.
+  The sheet hands the files to the layer's `addPictures`.
+
 Not built: animations and recorded sounds (a saved drawing is a still PNG and cannot hold
 either) and the voice brushes.
 
