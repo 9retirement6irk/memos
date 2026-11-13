@@ -212,7 +212,12 @@
       "open-failed": "Kunne ikke åpne tegningen. Prøv på nytt.",
       "export-failed": "Kunne ikke lagre tegningen. Prøv på nytt.",
       "image-failed": "Kunne ikke legge bildet til i tegningen.",
-      "saved-without-drawing": "Memoen er lagret, men tegningen er ikke det. Lagre på nytt for å prøve igjen."
+      "saved-without-drawing": "Memoen er lagret, men tegningen er ikke det. Lagre på nytt for å prøve igjen.",
+      "kidpix": "Kid Pix-modus",
+      "kidpix-exit": "Tilbake til tegneverktøy",
+      "kidpix-sounds": "Kid Pix-lyder",
+      "kidpix-clear": "Slett Kid Pix-malingen",
+      "kidpix-no-background": "Ingen bakgrunn"
     },
     "no-changes-detected": "Ingen endringer oppdaget",
     "save": "Lagre",

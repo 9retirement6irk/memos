@@ -212,7 +212,12 @@
       "open-failed": "No se pudo abrir el dibujo. Inténtalo de nuevo.",
       "export-failed": "No se pudo guardar el dibujo. Inténtalo de nuevo.",
       "image-failed": "No se pudo añadir la imagen al dibujo.",
-      "saved-without-drawing": "El memo se ha guardado, pero el dibujo no. Guarda de nuevo para reintentarlo."
+      "saved-without-drawing": "El memo se ha guardado, pero el dibujo no. Guarda de nuevo para reintentarlo.",
+      "kidpix": "Modo Kid Pix",
+      "kidpix-exit": "Volver a las herramientas de dibujo",
+      "kidpix-sounds": "Sonidos de Kid Pix",
+      "kidpix-clear": "Borrar la pintura de Kid Pix",
+      "kidpix-no-background": "Sin fondo"
     },
     "no-changes-detected": "No se detectaron cambios",
     "save": "Guardar",

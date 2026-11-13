@@ -298,7 +298,12 @@
       "open-failed": "לא ניתן היה לפתוח את הציור. נסו שוב.",
       "export-failed": "לא ניתן היה לשמור את הציור. נסו שוב.",
       "image-failed": "לא ניתן היה להוסיף את התמונה לציור.",
-      "saved-without-drawing": "הפתק נשמר, אבל הציור לא. שמרו שוב כדי לנסות מחדש."
+      "saved-without-drawing": "הפתק נשמר, אבל הציור לא. שמרו שוב כדי לנסות מחדש.",
+      "kidpix": "מצב Kid Pix",
+      "kidpix-exit": "חזרה לכלי הציור",
+      "kidpix-sounds": "צלילי Kid Pix",
+      "kidpix-clear": "מחיקת הצבע של Kid Pix",
+      "kidpix-no-background": "ללא רקע"
     },
     "no-changes-detected": "לא זוהו שינויים",
     "save": "שמור",

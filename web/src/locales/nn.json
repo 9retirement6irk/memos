@@ -321,7 +321,12 @@
       "open-failed": "Kunne ikkje opne teikninga. Prøv på nytt.",
       "export-failed": "Kunne ikkje lagre teikninga. Prøv på nytt.",
       "image-failed": "Kunne ikkje leggje biletet til i teikninga.",
-      "saved-without-drawing": "Notatet er lagra, men teikninga er ikkje det. Lagre på nytt for å prøve igjen."
+      "saved-without-drawing": "Notatet er lagra, men teikninga er ikkje det. Lagre på nytt for å prøve igjen.",
+      "kidpix": "Kid Pix-modus",
+      "kidpix-exit": "Tilbake til teikneverktøy",
+      "kidpix-sounds": "Kid Pix-lydar",
+      "kidpix-clear": "Slett Kid Pix-målinga",
+      "kidpix-no-background": "Ingen bakgrunn"
     },
     "new-memo": "Nytt notat",
     "no-changes-detected": "Ingen endringar funne",

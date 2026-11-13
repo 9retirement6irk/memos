@@ -212,7 +212,12 @@
       "open-failed": "Det gick inte att öppna teckningen. Försök igen.",
       "export-failed": "Det gick inte att spara teckningen. Försök igen.",
       "image-failed": "Det gick inte att lägga till bilden i teckningen.",
-      "saved-without-drawing": "Anteckningen har sparats, men inte teckningen. Spara igen för att försöka på nytt."
+      "saved-without-drawing": "Anteckningen har sparats, men inte teckningen. Spara igen för att försöka på nytt.",
+      "kidpix": "Kid Pix-läge",
+      "kidpix-exit": "Tillbaka till ritverktygen",
+      "kidpix-sounds": "Kid Pix-ljud",
+      "kidpix-clear": "Radera Kid Pix-färgen",
+      "kidpix-no-background": "Ingen bakgrund"
     },
     "no-changes-detected": "Inga ändringar upptäckta",
     "save": "Spara",

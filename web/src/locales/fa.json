@@ -214,7 +214,12 @@
       "open-failed": "باز کردن نقاشی ممکن نشد. دوباره تلاش کنید.",
       "export-failed": "ذخیرهٔ نقاشی ممکن نشد. دوباره تلاش کنید.",
       "image-failed": "افزودن تصویر به نقاشی ممکن نشد.",
-      "saved-without-drawing": "یادداشت ذخیره شد، اما نقاشی ذخیره نشد. برای تلاش مجدد، دوباره ذخیره کنید."
+      "saved-without-drawing": "یادداشت ذخیره شد، اما نقاشی ذخیره نشد. برای تلاش مجدد، دوباره ذخیره کنید.",
+      "kidpix": "حالت Kid Pix",
+      "kidpix-exit": "بازگشت به ابزارهای نقاشی",
+      "kidpix-sounds": "صداهای Kid Pix",
+      "kidpix-clear": "پاک کردن رنگ Kid Pix",
+      "kidpix-no-background": "بدون پس‌زمینه"
     },
     "audio-recorder": {
       "attachment-label": "ضبط صدا",

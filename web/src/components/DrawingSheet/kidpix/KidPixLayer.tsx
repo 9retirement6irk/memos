@@ -1,0 +1,773 @@
+import {
+  type CSSProperties,
+  type KeyboardEvent,
+  type PointerEvent,
+  type Ref,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
+import fillsUrl from "./assets/fills.jpg";
+import gradientsUrl from "./assets/grad.png";
+import lettersUrl from "./assets/letters.png";
+import soundsUrl from "./assets/sounds.m4a";
+import brushesUrl from "./assets/wacky.png";
+import { KidPixAudio } from "./audio";
+import type { Point } from "./brushes";
+import { KidPixEngine, type KidPixImages, type KidPixTile } from "./engine";
+import "./kidpix.css";
+import { KIDPIX_BACKGROUNDS, KIDPIX_STAMPS, KIDPIX_STICKERS } from "./library";
+import { readStickers, type SwfPicture } from "./swf";
+import {
+  BRUSH_COUNT,
+  ERASER_SIZES,
+  FONTS,
+  GRADIENT_COUNT,
+  type KidPixTool,
+  MIXER_COUNT,
+  PALETTE,
+  PATTERN_COUNT,
+  PENCIL_SIZES,
+  SCREEN_ERASER_COUNT,
+  TEXT_SIZE,
+  TOOL_NUMBER,
+  TUBE_TOOLS,
+  toolLabel,
+  UNDO_GUY_LINES,
+  UNDO_GUY_REST,
+  UNDO_GUY_TALKING,
+  WAND_COUNT,
+} from "./tools";
+
+/** Where the drawing sat when Kid Pix mode began: the canvas viewport and the surface's size in CSS px. */
+export interface KidPixView {
+  zoom: number;
+  scrollX: number;
+  scrollY: number;
+  width: number;
+  height: number;
+}
+
+export interface KidPixHandle {
+  hasPaint: () => boolean;
+  /** The paint as picture tiles in layer px, which are drawing px from the view's top-left corner. */
+  takeTiles: (maxSide: number) => Promise<KidPixTile[]>;
+}
+
+export interface KidPixLayerProps {
+  ref?: Ref<KidPixHandle>;
+  view: KidPixView;
+  paper: string;
+  muted: boolean;
+  /** The one-panel chrome for a phone; otherwise the tube and the tray. */
+  compact: boolean;
+  /** The drawing's canvases, so the Paint Can and the mixers see what is under the paint. */
+  backdropSources: () => HTMLCanvasElement[];
+  labels: { tools: string; color: string; undo: string; clear: string; previous: string; next: string; noBackground: string };
+}
+
+/** The library tools pick a category first; the tray then shows what is in it. */
+type LibraryTool = "stamp" | "sticker" | "background";
+const isLibraryTool = (tool: KidPixTool): tool is LibraryTool => tool === "stamp" || tool === "sticker" || tool === "background";
+
+/** The library's files, copied to the site root from public/kidpix. */
+const LIBRARY_URL = `${import.meta.env.BASE_URL}kidpix/`;
+
+/** Stamps open on the alphabet, which is art from the main archives; the stamp libraries follow. */
+const STAMP_CATEGORIES = [{ slug: "", name: "ABC" }, ...KIDPIX_STAMPS];
+const CATEGORIES: Record<LibraryTool, readonly { slug: string; name: string }[]> = {
+  stamp: STAMP_CATEGORIES,
+  sticker: KIDPIX_STICKERS,
+  background: KIDPIX_BACKGROUNDS,
+};
+
+/** A sticker's picture for the tray, fitted into a square. */
+const STICKER_THUMB = 80;
+const stickerThumb = (picture: SwfPicture) => {
+  const canvas = document.createElement("canvas");
+  canvas.width = canvas.height = STICKER_THUMB;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return "";
+  const scale = Math.min(STICKER_THUMB / picture.width, STICKER_THUMB / picture.height);
+  ctx.translate((STICKER_THUMB - picture.width * scale) / 2, (STICKER_THUMB - picture.height * scale) / 2);
+  ctx.scale(scale, scale);
+  picture.draw(ctx);
+  return canvas.toDataURL();
+};
+
+interface Option {
+  index: number;
+  label: string;
+  content:
+    | { sheet: string; cell: number; cells: number }
+    | { url: string; cell: number; cells: number; pixelated?: boolean }
+    | { style: CSSProperties; className: string; text?: string };
+}
+
+const sprite = (sheet: string, cell: number, cells: number, index: number, label: string): Option => ({
+  index,
+  label,
+  content: { sheet, cell, cells },
+});
+
+const strip = (url: string, cells: number, index: number, label: string, cell = index, pixelated = false): Option => ({
+  index,
+  label,
+  content: { url, cell, cells, pixelated },
+});
+
+const optionsFor = (
+  tool: KidPixTool,
+  color: string,
+  category: number,
+  stickerThumbs: readonly string[],
+  noBackground: string,
+): Option[] => {
+  switch (tool) {
+    case "pencil":
+      return PENCIL_SIZES.map((size, index) => ({
+        index,
+        label: `${size} px`,
+        content: { className: "kidpix-dot", style: { width: size, height: size, background: color } },
+      }));
+    case "wacky":
+      return Array.from({ length: BRUSH_COUNT }, (_, index) => sprite("brushes", index, 57, index, toolLabel(index)));
+    case "paint":
+      return [
+        { index: 0, label: "Color", content: { className: "kidpix-swatch", style: { background: color } } },
+        ...Array.from({ length: PATTERN_COUNT }, (_, index) => sprite("patterns", index, PATTERN_COUNT, index + 1, `Pattern ${index + 1}`)),
+        ...Array.from({ length: GRADIENT_COUNT }, (_, index) =>
+          sprite("gradients", index, GRADIENT_COUNT, index + 1 + PATTERN_COUNT, `Blend ${index + 1}`),
+        ),
+      ];
+    case "mixer":
+      return Array.from({ length: MIXER_COUNT + WAND_COUNT }, (_, index) =>
+        sprite(
+          "mixers",
+          index,
+          MIXER_COUNT + WAND_COUNT,
+          index,
+          toolLabel(index < MIXER_COUNT ? TOOL_NUMBER.firstMixer + index : TOOL_NUMBER.firstWand + index - MIXER_COUNT),
+        ),
+      );
+    case "eraser":
+      return [
+        ...ERASER_SIZES.map((size, index) => {
+          const side = Math.min(30, size * 0.7);
+          return { index, label: `${size} px`, content: { className: "kidpix-block", style: { width: side, height: side } } };
+        }),
+        ...Array.from({ length: SCREEN_ERASER_COUNT }, (_, index) =>
+          sprite("erasers", index, SCREEN_ERASER_COUNT, index + ERASER_SIZES.length, toolLabel(TOOL_NUMBER.firstScreenEraser + index)),
+        ),
+      ];
+    case "stamp": {
+      if (category === 0)
+        return Array.from({ length: 26 }, (_, index) => sprite("letters", index, 26, index, String.fromCharCode(65 + index)));
+      const { slug, name, count } = KIDPIX_STAMPS[category - 1];
+      return Array.from({ length: count }, (_, index) =>
+        strip(`${LIBRARY_URL}stamps/${slug}.png`, count, index, `${name} ${index + 1}`, index, true),
+      );
+    }
+    case "sticker":
+      return KIDPIX_STICKERS[category].items.map(([name], index) => strip(stickerThumbs[index] ?? "", 1, index, name, 0));
+    case "background": {
+      const { slug, items } = KIDPIX_BACKGROUNDS[category];
+      return [
+        { index: 0, label: noBackground, content: { className: "kidpix-block", style: { width: 30, height: 30 } } },
+        ...items.map((name, index) => strip(`${LIBRARY_URL}backgrounds/${slug}.jpg`, items.length, index + 1, name, index)),
+      ];
+    }
+    case "text":
+      return FONTS.map((font, index) => ({
+        index,
+        label: font.name,
+        content: { className: "kidpix-font", style: { fontFamily: font.family }, text: "Aa" },
+      }));
+    case "move":
+      return [];
+  }
+};
+
+const loadImage = (url: string) => {
+  const image = new Image();
+  image.src = url;
+  return image;
+};
+
+/**
+ * Kid Pix mode: a paint layer over the drawing, in the chrome of Kid Pix Deluxe 4 (the tool
+ * tube, the options tray, the color wheel and Undo Guy), with its sounds. The sheet around
+ * it keeps Cancel and Done, and adds the paint to the drawing when the mode ends.
+ */
+const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels }: KidPixLayerProps) => {
+  const rootRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const backgroundRef = useRef<HTMLCanvasElement>(null);
+  // What the library tools have fetched, by category: stamp strips, sticker pictures, backgrounds.
+  const libraryRef = useRef({
+    stamps: new Map<number, HTMLImageElement>(),
+    stickers: new Map<number, SwfPicture[]>(),
+    backgrounds: new Map<string, HTMLImageElement>(),
+  });
+  const optionsRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const engineRef = useRef<KidPixEngine | null>(null);
+  const audioRef = useRef<KidPixAudio | null>(null);
+  const timersRef = useRef<{ tool?: number; guy?: number; boom?: number }>({});
+  const backdropRef = useRef(backdropSources);
+  const [tool, setTool] = useState<KidPixTool>("wacky");
+  const [chosen, setChosen] = useState<Record<KidPixTool, number>>({
+    pencil: 1,
+    wacky: 40,
+    paint: 0,
+    mixer: 0,
+    eraser: 1,
+    stamp: 0,
+    text: 0,
+    move: 0,
+    sticker: 0,
+    background: 0,
+  });
+  const [category, setCategory] = useState<Record<LibraryTool, number>>({ stamp: 0, sticker: 0, background: 0 });
+  // The tray pictures of the sticker category on show, drawn once its file has arrived.
+  const [stickerThumbs, setStickerThumbs] = useState<{ category: number; urls: string[] }>({ category: -1, urls: [] });
+  const [color, setColor] = useState("#ff0080");
+  const [paletteOpen, setPaletteOpen] = useState(false);
+  const [typing, setTyping] = useState<Point | null>(null);
+  // The selected tool's button plays its animation once, then rests on its last frame.
+  const [toolFrame, setToolFrame] = useState(TUBE_TOOLS[1].frames - 1);
+  const [guyFrame, setGuyFrame] = useState(UNDO_GUY_REST);
+  const [boom, setBoom] = useState<number | null>(null);
+  const [flash, setFlash] = useState(false);
+  const [splash, setSplash] = useState(true);
+
+  // The layer is as large as the view in drawing px, so its paint lands on the drawing 1:1.
+  const width = Math.max(1, Math.round(view.width / view.zoom));
+  const height = Math.max(1, Math.round(view.height / view.zoom));
+
+  useEffect(() => {
+    backdropRef.current = backdropSources;
+  }, [backdropSources]);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const backgroundCanvas = backgroundRef.current;
+    if (!canvas || !backgroundCanvas) return;
+    const timers = timersRef.current;
+    const audio = new KidPixAudio(soundsUrl);
+    const images: KidPixImages = {
+      fills: loadImage(fillsUrl),
+      gradients: loadImage(gradientsUrl),
+      letters: loadImage(lettersUrl),
+      brushes: loadImage(brushesUrl),
+    };
+    audioRef.current = audio;
+    engineRef.current = new KidPixEngine(canvas, {
+      paper,
+      backgroundCanvas,
+      backdropSources: () => backdropRef.current(),
+      images,
+      audio,
+      fontFamily: FONTS[0].family,
+    });
+    // The canvas has no pixels until its fonts load; ask for them before the first text.
+    for (const font of FONTS) document.fonts?.load(`${TEXT_SIZE}px ${font.family}`).catch(() => undefined);
+    // Keys belong to this mode now, not to the drawing's shortcuts.
+    rootRef.current?.focus();
+    const opened = performance.now();
+    audio.ready.then(() => {
+      // The startup jingle greets the mode, unless the sprite took too long to arrive.
+      if (performance.now() - opened < 1500) audio.play("splash1000");
+    });
+    const splashTimer = window.setTimeout(() => setSplash(false), 1300);
+    return () => {
+      window.clearTimeout(splashTimer);
+      window.clearInterval(timers.tool);
+      window.clearInterval(timers.guy);
+      window.clearInterval(timers.boom);
+      audio.dispose();
+      engineRef.current = null;
+      audioRef.current = null;
+    };
+    // The paper and the layer's size are fixed for a session: the mode remounts to change them.
+  }, [paper]);
+
+  useEffect(() => {
+    if (audioRef.current) audioRef.current.muted = muted;
+    if (muted) audioRef.current?.silenceLoop();
+  }, [muted]);
+
+  useEffect(() => {
+    if (typing) inputRef.current?.focus();
+  }, [typing]);
+
+  // A sticker category is one file of Flash pictures; fetch and read it when it first shows.
+  const stickerCategory = tool === "sticker" ? category.sticker : -1;
+  useEffect(() => {
+    if (stickerCategory < 0) return;
+    const library = libraryRef.current;
+    let current = true;
+    const show = (pictures: SwfPicture[]) => {
+      if (current) setStickerThumbs({ category: stickerCategory, urls: pictures.map(stickerThumb) });
+    };
+    const known = library.stickers.get(stickerCategory);
+    if (known) {
+      show(known);
+      return;
+    }
+    const { slug, items } = KIDPIX_STICKERS[stickerCategory];
+    fetch(`${LIBRARY_URL}stickers/${slug}.bin`)
+      .then((response) => (response.ok ? response.arrayBuffer() : Promise.reject(new Error(response.statusText))))
+      .then((bytes) => {
+        const pictures = readStickers(
+          new Uint8Array(bytes),
+          items.map(([, length]) => length),
+        );
+        library.stickers.set(stickerCategory, pictures);
+        show(pictures);
+      })
+      // The tray stays empty; the other tools are unaffected.
+      .catch((error) => console.error(error));
+    return () => {
+      current = false;
+    };
+  }, [stickerCategory]);
+
+  useImperativeHandle(ref, () => ({
+    hasPaint: () => Boolean(engineRef.current?.hasPaint()),
+    takeTiles: (maxSide) => engineRef.current?.takeTiles(maxSide) ?? Promise.resolve([]),
+  }));
+
+  const play = (clip: string, volume?: number) => {
+    audioRef.current?.wake();
+    audioRef.current?.play(clip, { volume });
+  };
+
+  const commitText = () => {
+    const at = typing;
+    const input = inputRef.current;
+    if (!at || !input) return;
+    // Enter and the blur that follows both land here; emptying the field makes the second a no-op.
+    const value = input.value;
+    input.value = "";
+    // The text starts inside the field's padding and border.
+    engineRef.current?.text({ x: at.x + 5 / view.zoom, y: at.y }, value, FONTS[chosen.text].family);
+    setTyping(null);
+  };
+
+  const chooseTool = (next: (typeof TUBE_TOOLS)[number]) => {
+    commitText();
+    setPaletteOpen(false);
+    setTool(next.key);
+    play(next.selectSound);
+    let frame = 0;
+    window.clearInterval(timersRef.current.tool);
+    setToolFrame(0);
+    timersRef.current.tool = window.setInterval(() => {
+      frame++;
+      if (frame >= 8) {
+        window.clearInterval(timersRef.current.tool);
+        setToolFrame(next.frames - 1);
+      } else {
+        setToolFrame(frame % (next.frames - 1));
+      }
+    }, 120);
+  };
+
+  /** The strip of rubber stamps for a stamp category, fetched on first use. */
+  const stampSheet = (stampCategory: number) => {
+    const sheets = libraryRef.current.stamps;
+    let sheet = sheets.get(stampCategory);
+    if (!sheet && stampCategory > 0) {
+      sheet = loadImage(`${LIBRARY_URL}stamps/${KIDPIX_STAMPS[stampCategory - 1].slug}.png`);
+      sheets.set(stampCategory, sheet);
+    }
+    return sheet;
+  };
+
+  /** A background takes effect when picked: 0 is none, the rest are the category's pictures. */
+  const chooseBackground = (index: number) => {
+    const engine = engineRef.current;
+    if (!engine) return;
+    if (index === 0) {
+      engine.setBackground(null);
+      return;
+    }
+    const url = `${LIBRARY_URL}backgrounds/${KIDPIX_BACKGROUNDS[category.background].slug}/${index - 1}.jpg`;
+    const backgrounds = libraryRef.current.backgrounds;
+    const known = backgrounds.get(url);
+    if (known?.complete) {
+      engine.setBackground(known);
+      return;
+    }
+    const image = known ?? loadImage(url);
+    backgrounds.set(url, image);
+    image.addEventListener("load", () => engineRef.current?.setBackground(image), { once: true });
+  };
+
+  const chooseOption = (index: number) => {
+    setChosen((previous) => ({ ...previous, [tool]: index }));
+    audioRef.current?.wake();
+    if (tool === "background") {
+      chooseBackground(index);
+      return;
+    }
+    // A letter says its name, as Kid Pix's alphabet panel does; other trays click.
+    play(tool === "stamp" && category.stamp === 0 ? `letter${String.fromCharCode(65 + index)}` : "easel1029");
+  };
+
+  const chooseCategory = (next: number) => {
+    if (!isLibraryTool(tool)) return;
+    setCategory((previous) => ({ ...previous, [tool]: next }));
+    setChosen((previous) => ({ ...previous, [tool]: 0 }));
+    if (tool === "stamp") stampSheet(next);
+    optionsRef.current?.scrollTo({ left: 0 });
+    play("easel1029");
+  };
+
+  const chooseColor = (next: string) => {
+    setColor(next);
+    setPaletteOpen(false);
+    if (engineRef.current) engineRef.current.color = next;
+    play("misc31504");
+  };
+
+  const pointOf = (event: PointerEvent<HTMLCanvasElement>): Point => {
+    const box = event.currentTarget.getBoundingClientRect();
+    return { x: ((event.clientX - box.left) * width) / box.width, y: ((event.clientY - box.top) * height) / box.height };
+  };
+
+  const handlePointerDown = (event: PointerEvent<HTMLCanvasElement>) => {
+    const engine = engineRef.current;
+    if (!engine || event.button !== 0) return;
+    audioRef.current?.wake();
+    setPaletteOpen(false);
+    if (typing) {
+      commitText();
+      return;
+    }
+    event.currentTarget.setPointerCapture(event.pointerId);
+    const at = pointOf(event);
+    const option = chosen[tool];
+    if (tool === "pencil") engine.pencilDown(at, option);
+    else if (tool === "wacky") engine.brushDown(at, option);
+    else if (tool === "paint") engine.fill(at, option, PATTERN_COUNT);
+    else if (tool === "mixer") {
+      if (option < MIXER_COUNT) engine.mix(option);
+      else engine.wandDown(at, option - MIXER_COUNT);
+    } else if (tool === "eraser") {
+      if (option < ERASER_SIZES.length) engine.eraserDown(at, option);
+      else engine.wipe(option - ERASER_SIZES.length);
+    } else if (tool === "stamp") {
+      const sheet = stampSheet(category.stamp);
+      if (sheet) engine.stampFrom(at, sheet, option);
+      else engine.stamp(at, option);
+    } else if (tool === "sticker") {
+      const picture = libraryRef.current.stickers.get(category.sticker)?.[option];
+      if (picture) engine.sticker(at, picture);
+    } else if (tool === "text") setTyping(at);
+    else if (tool === "move") engine.moveDown(at);
+  };
+
+  const handleTextKey = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") commitText();
+    if (event.key === "Escape") {
+      // Escape leaves the text, not the sheet.
+      event.stopPropagation();
+      event.nativeEvent.stopPropagation();
+      setTyping(null);
+    }
+  };
+
+  // Undo Guy takes back the last thing painted and says so. His mouth moves for as long as the line lasts.
+  const undo = () => {
+    commitText();
+    engineRef.current?.undo();
+    const line = UNDO_GUY_LINES[Math.floor(Math.random() * UNDO_GUY_LINES.length)];
+    play(line);
+    const until = performance.now() + (muted ? 0.6 : (audioRef.current?.duration(line) ?? 0.6)) * 1000;
+    window.clearInterval(timersRef.current.guy);
+    timersRef.current.guy = window.setInterval(() => {
+      if (performance.now() > until) {
+        window.clearInterval(timersRef.current.guy);
+        setGuyFrame(UNDO_GUY_REST);
+      } else {
+        setGuyFrame(UNDO_GUY_TALKING[Math.floor(Math.random() * UNDO_GUY_TALKING.length)]);
+      }
+    }, 85);
+  };
+
+  // The dynamite: a fuse, then every bit of Kid Pix paint is gone (Undo Guy can bring it back).
+  const dynamite = () => {
+    commitText();
+    play("easel1027");
+    let frame = 0;
+    window.clearInterval(timersRef.current.boom);
+    setBoom(0);
+    timersRef.current.boom = window.setInterval(() => {
+      frame++;
+      if (frame < 13) {
+        setBoom(frame % 7);
+        return;
+      }
+      window.clearInterval(timersRef.current.boom);
+      engineRef.current?.clear();
+      play("easel1028");
+      setBoom(null);
+      setFlash(true);
+      window.setTimeout(() => setFlash(false), 460);
+    }, 110);
+  };
+
+  const scrollOptions = (direction: 1 | -1) => {
+    const strip = optionsRef.current;
+    if (!strip) return;
+    strip.scrollBy({ left: direction * Math.max(84, strip.clientWidth - 42), behavior: "smooth" });
+    play("easel1029");
+  };
+
+  const current = TUBE_TOOLS.find((item) => item.key === tool) ?? TUBE_TOOLS[0];
+  const toolCategory = isLibraryTool(tool) ? category[tool] : 0;
+  const options = optionsFor(
+    tool,
+    color,
+    toolCategory,
+    stickerThumbs.category === category.sticker ? stickerThumbs.urls : [],
+    labels.noBackground,
+  );
+
+  const toolButtons = TUBE_TOOLS.map((item) => {
+    const selected = item.key === tool;
+    return (
+      <button
+        key={item.key}
+        type="button"
+        className="kidpix-tool mu-focus"
+        aria-label={item.name}
+        aria-pressed={selected}
+        title={item.name}
+        onClick={() => chooseTool(item)}
+        onPointerEnter={(event) => {
+          if (!selected && event.pointerType === "mouse") play(item.hoverSound, 0.5);
+        }}
+      >
+        <span
+          aria-hidden
+          className="kidpix-tool-art"
+          style={{ backgroundPosition: `-${(selected ? toolFrame : 0) * 58}px -${item.row * 60}px` }}
+        />
+      </button>
+    );
+  });
+
+  const optionButtons = (
+    <div ref={optionsRef} role="group" aria-label={current.name} className="kidpix-options">
+      {options.map((option) => (
+        <button
+          key={option.index}
+          type="button"
+          className="kidpix-option mu-focus"
+          aria-label={option.label}
+          aria-pressed={tool !== "background" && chosen[tool] === option.index}
+          title={option.label}
+          onClick={() => chooseOption(option.index)}
+        >
+          {"sheet" in option.content ? (
+            <span
+              aria-hidden
+              className="kidpix-icon"
+              data-sheet={option.content.sheet}
+              style={{
+                backgroundPosition: `-${option.content.cell * 40}px 0`,
+                backgroundSize: `${option.content.cells * 40}px 40px`,
+              }}
+            />
+          ) : "url" in option.content ? (
+            <span
+              aria-hidden
+              className="kidpix-icon"
+              data-pixelated={option.content.pixelated || undefined}
+              style={{
+                backgroundImage: option.content.url ? `url("${option.content.url}")` : undefined,
+                backgroundPosition: `-${option.content.cell * 40}px 0`,
+                backgroundSize: `${option.content.cells * 40}px 40px`,
+              }}
+            />
+          ) : (
+            <span aria-hidden className={option.content.className} style={option.content.style}>
+              {option.content.text}
+            </span>
+          )}
+        </button>
+      ))}
+    </div>
+  );
+
+  const categorySelect = isLibraryTool(tool) && (
+    <select
+      className="kidpix-category mu-focus"
+      aria-label={current.name}
+      value={toolCategory}
+      onChange={(event) => chooseCategory(Number(event.target.value))}
+    >
+      {CATEGORIES[tool].map((item, index) => (
+        <option key={item.slug} value={index}>
+          {item.name}
+        </option>
+      ))}
+    </select>
+  );
+
+  const colorButton = (
+    <button
+      type="button"
+      className="kidpix-color mu-focus"
+      aria-label={labels.color}
+      aria-expanded={paletteOpen}
+      title={labels.color}
+      onClick={() => {
+        setPaletteOpen((open) => !open);
+        play("easel1029");
+      }}
+    >
+      <span aria-hidden style={{ background: color }} />
+      <span aria-hidden />
+    </button>
+  );
+
+  const undoGuy = (
+    <button type="button" className="kidpix-undo-guy mu-focus" aria-label={labels.undo} title={labels.undo} onClick={undo}>
+      <span aria-hidden style={{ backgroundPosition: `-${guyFrame * 49}px 0` }} />
+    </button>
+  );
+
+  const dynamiteButton = (
+    <button type="button" className="kidpix-dynamite mu-focus" aria-label={labels.clear} title={labels.clear} onClick={dynamite} />
+  );
+
+  return (
+    <div ref={rootRef} tabIndex={-1} className="kidpix" data-compact={compact || undefined}>
+      <canvas
+        ref={backgroundRef}
+        aria-hidden
+        className="kidpix-backdrop"
+        width={width}
+        height={height}
+        style={{ width: view.width, height: view.height }}
+      />
+      <canvas
+        ref={canvasRef}
+        className="kidpix-paint"
+        data-tool={tool}
+        width={width}
+        height={height}
+        style={{ width: view.width, height: view.height }}
+        // A press must not take the focus from the text field it has just opened.
+        onMouseDown={(event) => event.preventDefault()}
+        onPointerDown={handlePointerDown}
+        onPointerMove={(event) => engineRef.current?.move(pointOf(event))}
+        onPointerUp={() => engineRef.current?.up()}
+        onPointerCancel={() => engineRef.current?.up()}
+      />
+
+      {typing && (
+        <input
+          ref={inputRef}
+          className="kidpix-typing"
+          aria-label={current.name}
+          style={{
+            left: typing.x * view.zoom,
+            top: (typing.y - TEXT_SIZE * 0.75) * view.zoom,
+            height: TEXT_SIZE * 1.5 * view.zoom,
+            font: `${TEXT_SIZE * view.zoom}px ${FONTS[chosen.text].family}`,
+            color,
+          }}
+          onKeyDown={handleTextKey}
+          onBlur={commitText}
+        />
+      )}
+
+      {boom !== null && (
+        <span
+          aria-hidden
+          className="kidpix-boom"
+          style={{ left: view.width / 2 - 52, top: view.height / 2 - 46, backgroundPosition: `-${boom * 65}px 0` }}
+        />
+      )}
+      {flash && <span aria-hidden className="kidpix-flash" />}
+
+      {compact ? (
+        <div className="kidpix-panel">
+          {categorySelect && <div>{categorySelect}</div>}
+          <div>
+            {colorButton}
+            {optionButtons}
+            {undoGuy}
+          </div>
+          <div role="toolbar" aria-label={labels.tools} className="kidpix-strip">
+            {toolButtons}
+            {dynamiteButton}
+          </div>
+        </div>
+      ) : (
+        <>
+          <div className="kidpix-tube">
+            <div role="toolbar" aria-label={labels.tools}>
+              {toolButtons}
+            </div>
+            {dynamiteButton}
+          </div>
+          <div className="kidpix-wheel">{colorButton}</div>
+          <div className="kidpix-tray">
+            <div aria-hidden className="kidpix-tray-art" />
+            <div aria-hidden className="kidpix-tray-art" />
+            <div aria-hidden className="kidpix-tray-art" />
+            <div className="kidpix-tray-info">
+              {undoGuy}
+              <div>
+                <strong>{current.name}</strong>
+                {categorySelect}
+              </div>
+            </div>
+            {optionButtons}
+            <button
+              type="button"
+              className="kidpix-page mu-focus"
+              aria-label={labels.previous}
+              title={labels.previous}
+              onClick={() => scrollOptions(-1)}
+            />
+            <button
+              type="button"
+              className="kidpix-page mu-focus"
+              aria-label={labels.next}
+              title={labels.next}
+              onClick={() => scrollOptions(1)}
+            />
+          </div>
+        </>
+      )}
+
+      {paletteOpen && (
+        <div role="group" aria-label={labels.color} className="kidpix-palette">
+          {PALETTE.map((swatch) => (
+            <button
+              key={swatch}
+              type="button"
+              className="mu-focus"
+              aria-label={swatch}
+              aria-pressed={swatch === color}
+              style={{ background: swatch }}
+              onClick={() => chooseColor(swatch)}
+            />
+          ))}
+        </div>
+      )}
+
+      {splash && <span aria-hidden className="kidpix-splash" />}
+    </div>
+  );
+};
+
+export default KidPixLayer;

@@ -250,7 +250,12 @@
       "open-failed": "Neizdevās atvērt zīmējumu. Mēģiniet vēlreiz.",
       "export-failed": "Neizdevās saglabāt zīmējumu. Mēģiniet vēlreiz.",
       "image-failed": "Neizdevās pievienot attēlu zīmējumam.",
-      "saved-without-drawing": "Piezīme ir saglabāta, bet zīmējums nav. Saglabājiet vēlreiz, lai mēģinātu atkārtoti."
+      "saved-without-drawing": "Piezīme ir saglabāta, bet zīmējums nav. Saglabājiet vēlreiz, lai mēģinātu atkārtoti.",
+      "kidpix": "Kid Pix režīms",
+      "kidpix-exit": "Atpakaļ pie zīmēšanas rīkiem",
+      "kidpix-sounds": "Kid Pix skaņas",
+      "kidpix-clear": "Dzēst Kid Pix krāsu",
+      "kidpix-no-background": "Bez fona"
     },
     "no-changes-detected": "Izmaiņas nav konstatētas",
     "save": "Saglabāt",

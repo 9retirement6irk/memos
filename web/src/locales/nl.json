@@ -212,7 +212,12 @@
       "open-failed": "Kan de tekening niet openen. Probeer het opnieuw.",
       "export-failed": "Kan de tekening niet opslaan. Probeer het opnieuw.",
       "image-failed": "Kan de afbeelding niet aan de tekening toevoegen.",
-      "saved-without-drawing": "De memo is opgeslagen, maar de tekening niet. Sla opnieuw op om het nog eens te proberen."
+      "saved-without-drawing": "De memo is opgeslagen, maar de tekening niet. Sla opnieuw op om het nog eens te proberen.",
+      "kidpix": "Kid Pix-modus",
+      "kidpix-exit": "Terug naar tekengereedschappen",
+      "kidpix-sounds": "Kid Pix-geluiden",
+      "kidpix-clear": "Kid Pix-verf wissen",
+      "kidpix-no-background": "Geen achtergrond"
     },
     "no-changes-detected": "Geen wijzigingen gedetecteerd",
     "save": "Opslaan",

@@ -1,0 +1,586 @@
+/*
+ * Kid Pix mode: the chrome of Kid Pix Deluxe 4 over the drawing sheet. Everything here is
+ * scoped under .kidpix and loads with the mode, not with the editor. Sizes are the art's own
+ * pixel sizes; the sprites are not scaled except where a rule says so.
+ */
+
+@font-face {
+  font-family: KidPixCatchup;
+  src: url("./assets/catcn.woff") format("woff");
+  font-display: swap;
+}
+@font-face {
+  font-family: KidPixMarket;
+  src: url("./assets/market.woff") format("woff");
+  font-display: swap;
+}
+@font-face {
+  font-family: KidPixStorybook;
+  src: url("./assets/storyboo.woff") format("woff");
+  font-display: swap;
+}
+@font-face {
+  font-family: KidPixGremlin;
+  src: url("./assets/gremn.woff") format("woff");
+  font-display: swap;
+}
+@font-face {
+  font-family: KidPixTubular;
+  src: url("./assets/tubular.woff") format("woff");
+  font-display: swap;
+}
+@font-face {
+  font-family: KidPixJester;
+  src: url("./assets/jester.woff") format("woff");
+  font-display: swap;
+}
+@font-face {
+  font-family: KidPixCuckoo;
+  src: url("./assets/cuckoo.woff") format("woff");
+  font-display: swap;
+}
+@font-face {
+  font-family: KidPixFlatBrush;
+  src: url("./assets/flatbn.woff") format("woff");
+  font-display: swap;
+}
+
+.kidpix {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  outline: none;
+  font-family: KidPixCatchup, var(--mu-font-sans), sans-serif;
+  color: #1b3f86;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.kidpix button {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background-color: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.kidpix-backdrop {
+  position: absolute;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+}
+
+.kidpix-paint {
+  position: absolute;
+  left: 0;
+  top: 0;
+  touch-action: none;
+  cursor: crosshair;
+}
+.kidpix-paint[data-tool="text"] {
+  cursor: text;
+}
+.kidpix-paint[data-tool="move"] {
+  cursor: grab;
+}
+
+.kidpix-typing {
+  position: absolute;
+  min-width: 220px;
+  padding: 0 4px;
+  border: 1px dashed #7da2ce;
+  background: rgb(255 255 255 / 60%);
+  outline: none;
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+/* ---- sprites ---- */
+
+.kidpix-tool-art {
+  display: block;
+  width: 58px;
+  height: 60px;
+  background-image: url("./assets/tools.png");
+  background-repeat: no-repeat;
+  transform: scale(0.9);
+  transform-origin: 0 0;
+}
+.kidpix-tool {
+  position: relative;
+  flex-shrink: 0;
+  width: 52px;
+  height: 54px;
+  overflow: hidden;
+  border-radius: 10px;
+}
+.kidpix-tool:hover {
+  filter: brightness(1.12);
+}
+.kidpix-tool[aria-pressed="true"] {
+  box-shadow:
+    0 0 0 3px #ffe94a,
+    0 0 12px 3px rgb(255 255 255 / 85%);
+}
+
+.kidpix-option {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+}
+.kidpix-option:hover {
+  background-color: rgb(255 255 255 / 70%);
+}
+.kidpix-option[aria-pressed="true"] {
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px #ff2e88;
+}
+.kidpix-icon {
+  display: block;
+  width: 40px;
+  height: 40px;
+  background-repeat: no-repeat;
+}
+.kidpix-icon[data-sheet="brushes"] {
+  background-image: url("./assets/wacky.png");
+}
+.kidpix-icon[data-sheet="mixers"] {
+  background-image: url("./assets/mixers.png");
+}
+.kidpix-icon[data-sheet="erasers"] {
+  background-image: url("./assets/erasers.png");
+}
+.kidpix-icon[data-sheet="patterns"] {
+  background-image: url("./assets/paint.png");
+}
+.kidpix-icon[data-sheet="gradients"] {
+  background-image: url("./assets/grad.png");
+}
+.kidpix-icon[data-sheet="letters"] {
+  background-image: url("./assets/letters.png");
+}
+.kidpix-icon[data-pixelated] {
+  image-rendering: pixelated;
+}
+.kidpix-category {
+  width: 100%;
+  min-width: 0;
+  height: 26px;
+  padding: 0 4px;
+  border: 0;
+  border-radius: 6px;
+  background: #ffffff;
+  box-shadow:
+    inset 0 0 0 2px #c8d3dc,
+    inset 0 0 0 3px #7b8a96;
+  color: inherit;
+  font: inherit;
+  font-size: 14px;
+}
+.kidpix-dot {
+  display: block;
+  border-radius: 50%;
+}
+.kidpix-block {
+  display: block;
+  background: #ffffff;
+  box-shadow: 0 0 0 2px #e98aa4;
+}
+.kidpix-swatch {
+  display: block;
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  box-shadow:
+    0 0 0 2px #ffffff,
+    0 0 0 3px #7b8a96;
+}
+.kidpix-font {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.kidpix-undo-guy {
+  position: relative;
+  flex-shrink: 0;
+  overflow: hidden;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #8fd0ff, #1d5fb8 70%);
+  box-shadow:
+    inset 0 0 0 3px #c8d3dc,
+    inset 0 0 0 5px #7b8a96,
+    0 2px 4px rgb(0 0 0 / 30%);
+}
+.kidpix-undo-guy > span {
+  position: absolute;
+  width: 49px;
+  height: 48px;
+  background-image: url("./assets/undoguy.png");
+  background-repeat: no-repeat;
+  transform-origin: 0 0;
+}
+
+.kidpix-color {
+  position: relative;
+  flex-shrink: 0;
+}
+.kidpix-color > span:first-child {
+  position: absolute;
+  border-radius: 50%;
+}
+.kidpix-color > span:last-child {
+  position: absolute;
+  inset: 0;
+  background-image: url("./assets/wheel.png");
+  background-size: 100% 100%;
+}
+
+.kidpix-palette {
+  position: absolute;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(10, 26px);
+  gap: 4px;
+  padding: 10px;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow:
+    0 0 0 4px #57c600,
+    0 0 0 7px #2c8a00,
+    0 8px 20px rgb(0 0 0 / 35%);
+}
+.kidpix-palette > button {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 20%);
+}
+.kidpix-palette > button[aria-pressed="true"] {
+  box-shadow:
+    0 0 0 3px #ffffff,
+    0 0 0 5px #1b3f86;
+}
+
+/* ---- the full chrome: the tube down the left, the tray along the bottom ---- */
+
+.kidpix-tube {
+  position: absolute;
+  left: 0;
+  top: 0;
+  box-sizing: border-box;
+  width: 136px;
+  height: calc(100% - 114px);
+  border-style: solid;
+  border-width: 72px 0 84px;
+  border-image: url("./assets/tube.png") 72 0 84 0 fill stretch;
+}
+.kidpix-tube > [role="toolbar"] {
+  position: absolute;
+  left: 12px;
+  top: -6px;
+  display: grid;
+  grid-template-columns: repeat(2, 52px);
+  gap: 6px 4px;
+  width: 108px;
+}
+/* The dynamite is painted on the tube's lower cap; this is the button over it. */
+.kidpix-tube > .kidpix-dynamite {
+  position: absolute;
+  left: 4px;
+  bottom: -70px;
+  width: 58px;
+  height: 56px;
+  border-radius: 12px;
+}
+
+.kidpix-wheel {
+  position: absolute;
+  left: 0;
+  bottom: -16px;
+  width: 108px;
+  height: 148px;
+  background-image: url("./assets/wheelcluster.png");
+}
+.kidpix-wheel > .kidpix-color {
+  position: absolute;
+  left: 1px;
+  top: 20px;
+  width: 107px;
+  height: 108px;
+}
+.kidpix-wheel > .kidpix-color > span:first-child {
+  left: 25px;
+  top: 26px;
+  width: 56px;
+  height: 52px;
+}
+
+.kidpix-tray {
+  position: absolute;
+  left: 100px;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  height: 110px;
+}
+.kidpix-tray::before {
+  content: "";
+  position: absolute;
+  inset: 12px 56px 12px 12px;
+  background: linear-gradient(180deg, #f4fbff, #d5e9f8);
+}
+.kidpix-tray > .kidpix-tray-art {
+  position: relative;
+  height: 110px;
+}
+.kidpix-tray > .kidpix-tray-art:nth-child(1) {
+  flex-shrink: 0;
+  width: 300px;
+  background-image: url("./assets/tray_l.png");
+}
+.kidpix-tray > .kidpix-tray-art:nth-child(2) {
+  flex: 1;
+  background-image: url("./assets/tray_m.png");
+  background-repeat: repeat-x;
+}
+.kidpix-tray > .kidpix-tray-art:nth-child(3) {
+  flex-shrink: 0;
+  width: 140px;
+  background-image: url("./assets/tray_r.png");
+}
+.kidpix-tray-info {
+  position: absolute;
+  left: 16px;
+  top: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 196px;
+  height: 82px;
+}
+.kidpix-tray-info > .kidpix-undo-guy {
+  width: 76px;
+  height: 76px;
+}
+.kidpix-tray-info > .kidpix-undo-guy > span {
+  left: 1px;
+  top: 2px;
+  transform: scale(1.5);
+}
+.kidpix-tray-info > div {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.kidpix-tray-info strong {
+  overflow: hidden;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.05;
+  text-overflow: ellipsis;
+}
+.kidpix-options {
+  position: absolute;
+  left: 226px;
+  right: 70px;
+  top: 13px;
+  display: grid;
+  grid-auto-columns: 40px;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(2, 40px);
+  gap: 2px;
+  height: 84px;
+  padding: 1px;
+  overflow: auto hidden;
+  scrollbar-width: none;
+}
+.kidpix-options::-webkit-scrollbar {
+  display: none;
+}
+.kidpix-tray > .kidpix-page {
+  position: absolute;
+  right: 4px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+}
+.kidpix-tray > .kidpix-page:nth-of-type(1) {
+  top: 12px;
+}
+.kidpix-tray > .kidpix-page:nth-of-type(2) {
+  top: 57px;
+}
+.kidpix:not([data-compact]) > .kidpix-palette {
+  left: 14px;
+  bottom: 140px;
+}
+
+/* ---- the compact chrome, for a phone: one panel along the bottom ---- */
+
+.kidpix-panel {
+  position: absolute;
+  inset: auto 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px 8px calc(10px + env(safe-area-inset-bottom));
+  border-radius: 26px 26px 0 0;
+  background: linear-gradient(180deg, #7ee000, #3fa600);
+  box-shadow:
+    0 -2px 10px rgb(0 0 0 / 25%),
+    inset 0 2px 0 rgb(255 255 255 / 55%);
+}
+.kidpix-panel > div {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.kidpix-panel .kidpix-category {
+  height: 32px;
+  font-size: 16px;
+}
+.kidpix-panel .kidpix-color {
+  width: 60px;
+  height: 60px;
+}
+.kidpix-panel .kidpix-color > span:first-child {
+  left: 14px;
+  top: 14px;
+  width: 32px;
+  height: 30px;
+}
+.kidpix-panel .kidpix-undo-guy {
+  width: 60px;
+  height: 60px;
+}
+.kidpix-panel .kidpix-undo-guy > span {
+  left: 3px;
+  top: 4px;
+  transform: scale(1.12);
+}
+.kidpix-panel .kidpix-options {
+  position: static;
+  flex: 1;
+  grid-template-rows: 44px;
+  grid-auto-columns: 44px;
+  align-items: center;
+  min-width: 0;
+  height: 60px;
+  padding: 0 8px;
+  border-radius: 10px;
+  background: linear-gradient(180deg, #f4fbff, #d5e9f8);
+  box-shadow:
+    inset 0 0 0 2px #c8d3dc,
+    inset 0 0 0 4px #7b8a96;
+}
+.kidpix-panel .kidpix-option {
+  width: 44px;
+  height: 44px;
+}
+.kidpix-strip {
+  height: 72px;
+  padding: 0 12px;
+  overflow: auto hidden;
+  border-radius: 36px;
+  background: linear-gradient(180deg, #1f76d6 0%, #7fd0ff 40%, #3aa0f5 70%, #1659b8 100%);
+  box-shadow:
+    inset 0 0 0 3px #1a4fa0,
+    inset 0 0 0 5px #9ce0ff;
+  scrollbar-width: none;
+}
+.kidpix-strip::-webkit-scrollbar {
+  display: none;
+}
+.kidpix-strip > .kidpix-dynamite {
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  background-image: url("./assets/dynamite.png");
+  background-repeat: no-repeat;
+  background-position: 0 -3px;
+  background-size: auto 52px;
+}
+.kidpix[data-compact] > .kidpix-palette {
+  left: 8px;
+  bottom: calc(220px + env(safe-area-inset-bottom));
+  grid-template-columns: repeat(8, 32px);
+}
+.kidpix[data-compact] > .kidpix-palette > button {
+  width: 32px;
+  height: 32px;
+}
+
+/* ---- moments ---- */
+
+.kidpix-boom {
+  position: absolute;
+  width: 65px;
+  height: 58px;
+  background-image: url("./assets/dynamite.png");
+  background-repeat: no-repeat;
+  transform: scale(1.6);
+  transform-origin: 0 0;
+  pointer-events: none;
+}
+.kidpix-flash {
+  position: absolute;
+  inset: 0;
+  background: #fff8c0;
+  animation: kidpix-flash 0.45s ease-out forwards;
+  pointer-events: none;
+}
+.kidpix-splash {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(520px, 80%);
+  aspect-ratio: 520 / 379;
+  border-radius: 14px;
+  background: url("./assets/splash.jpg") center / cover;
+  box-shadow: 0 10px 40px rgb(0 0 0 / 45%);
+  animation: kidpix-splash 1.25s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes kidpix-flash {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes kidpix-splash {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.2) rotate(-10deg);
+  }
+  22% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.04) rotate(1deg);
+  }
+  75% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kidpix-splash,
+  .kidpix-flash {
+    display: none;
+  }
+}

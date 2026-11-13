@@ -214,7 +214,12 @@
       "open-failed": "Không thể mở bản vẽ. Hãy thử lại.",
       "export-failed": "Không thể lưu bản vẽ. Hãy thử lại.",
       "image-failed": "Không thể thêm ảnh vào bản vẽ.",
-      "saved-without-drawing": "Đã lưu ghi chú, nhưng chưa lưu bản vẽ. Hãy lưu lần nữa để thử lại."
+      "saved-without-drawing": "Đã lưu ghi chú, nhưng chưa lưu bản vẽ. Hãy lưu lần nữa để thử lại.",
+      "kidpix": "Chế độ Kid Pix",
+      "kidpix-exit": "Quay lại công cụ vẽ",
+      "kidpix-sounds": "Âm thanh Kid Pix",
+      "kidpix-clear": "Xóa màu vẽ Kid Pix",
+      "kidpix-no-background": "Không có nền"
     },
     "audio-recorder": {
       "attachment-label": "Ghi âm",

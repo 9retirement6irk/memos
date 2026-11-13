@@ -250,7 +250,12 @@
       "open-failed": "Joonistust ei õnnestunud avada. Proovige uuesti.",
       "export-failed": "Joonistust ei õnnestunud salvestada. Proovige uuesti.",
       "image-failed": "Pilti ei õnnestunud joonistusele lisada.",
-      "saved-without-drawing": "Memo on salvestatud, kuid joonistus mitte. Salvestage veel kord, et uuesti proovida."
+      "saved-without-drawing": "Memo on salvestatud, kuid joonistus mitte. Salvestage veel kord, et uuesti proovida.",
+      "kidpix": "Kid Pixi režiim",
+      "kidpix-exit": "Tagasi joonistustööriistade juurde",
+      "kidpix-sounds": "Kid Pixi helid",
+      "kidpix-clear": "Kustuta Kid Pixi värv",
+      "kidpix-no-background": "Taustata"
     },
     "no-changes-detected": "Muudatusi ei tuvastatud",
     "save": "Salvesta",

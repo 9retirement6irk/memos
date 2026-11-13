@@ -212,7 +212,12 @@
       "open-failed": "Impossibile aprire il disegno. Riprova.",
       "export-failed": "Impossibile salvare il disegno. Riprova.",
       "image-failed": "Impossibile aggiungere l'immagine al disegno.",
-      "saved-without-drawing": "Il memo è stato salvato, ma il disegno no. Salva di nuovo per riprovare."
+      "saved-without-drawing": "Il memo è stato salvato, ma il disegno no. Salva di nuovo per riprovare.",
+      "kidpix": "Modalità Kid Pix",
+      "kidpix-exit": "Torna agli strumenti di disegno",
+      "kidpix-sounds": "Suoni di Kid Pix",
+      "kidpix-clear": "Cancella la pittura di Kid Pix",
+      "kidpix-no-background": "Nessuno sfondo"
     },
     "no-changes-detected": "Nessuna modifica rilevata",
     "save": "Salva",
