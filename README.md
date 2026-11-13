@@ -91,6 +91,7 @@ Connect [Dawarich](https://dawarich.app) in **Settings → Dawarich**, again per
   - three Fill Buckets: Solid (the color in hand, plain or through a one-color pattern), Blend and
     Pattern
   - stickers you can move, resize and flip before they become part of the picture
+  - your own pictures, from the device or from Immich, placed the same way and painted over
   - over 2,000 rubber stamps, over 900 stickers and 180 backgrounds
   - Undo Guy
 

@@ -16,7 +16,7 @@ import soundsUrl from "./assets/sounds.m4a";
 import brushesUrl from "./assets/wacky.png";
 import { KidPixAudio } from "./audio";
 import type { Point } from "./brushes";
-import { KidPixEngine, type KidPixImages, type KidPixTile } from "./engine";
+import { KidPixEngine, type KidPixImages, type KidPixPicture, type KidPixTile } from "./engine";
 import "./kidpix.css";
 import { KIDPIX_BACKGROUNDS, KIDPIX_STAMPS, KIDPIX_STICKERS } from "./library";
 import { KIDPIX_SPRAY_SETS } from "./spray";
@@ -59,6 +59,12 @@ export interface KidPixHandle {
   hasPaint: () => boolean;
   /** The paint as picture tiles in layer px, which are drawing px from the view's top-left corner. */
   takeTiles: (maxSide: number) => Promise<KidPixTile[]>;
+  /**
+   * Brings pictures onto the paper, as Kid Pix's Add Graphic does. Each lands in the sticker's
+   * frame, to move, resize and flip; the one before it is pressed into the paint. Resolves to
+   * how many could not be read.
+   */
+  addPictures: (files: readonly File[]) => Promise<number>;
 }
 
 export interface KidPixLayerProps {
@@ -84,10 +90,13 @@ export interface KidPixLayerProps {
   };
 }
 
-/** A sticker just put down: it can still be moved, sized and flipped, and becomes paint when it is let go. Layer px. */
+/**
+ * A sticker just put down, or a picture just brought in: it can still be moved, sized and
+ * flipped, and becomes paint when it is let go. Layer px.
+ */
 interface FloatingSticker {
   name: string;
-  picture: SwfPicture;
+  picture: KidPixPicture;
   x: number;
   y: number;
   width: number;
@@ -235,6 +244,27 @@ const optionsFor = (
       return [];
   }
 };
+
+/** A picture file as something the layer can draw; the browser turns a photo upright by its EXIF. */
+const readPicture = async (file: Blob): Promise<KidPixPicture> => {
+  if (typeof createImageBitmap === "function") {
+    const bitmap = await createImageBitmap(file);
+    return { width: bitmap.width, height: bitmap.height, draw: (ctx) => ctx.drawImage(bitmap, 0, 0) };
+  }
+  const url = URL.createObjectURL(file);
+  try {
+    const image = new Image();
+    image.src = url;
+    await image.decode();
+    return { width: image.naturalWidth, height: image.naturalHeight, draw: (ctx) => ctx.drawImage(image, 0, 0) };
+  } finally {
+    URL.revokeObjectURL(url);
+  }
+};
+
+/** A picture brought in fills at most this much of the paper, and several step apart by this many px. */
+const PICTURE_FIT = 0.7;
+const PICTURE_CASCADE = 28;
 
 const loadImage = (url: string) => {
   const image = new Image();
@@ -413,7 +443,50 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
     engineRef.current?.sticker(sticker.picture, sticker, sticker.flipX, sticker.flipY);
   };
 
+  const addPictures = async (files: readonly File[]) => {
+    commitText();
+    engineRef.current?.settle();
+    let failed = 0;
+    let placed = 0;
+    for (const file of files) {
+      let picture: KidPixPicture;
+      try {
+        picture = await readPicture(file);
+      } catch {
+        failed++;
+        continue;
+      }
+      if (!picture.width || !picture.height) {
+        failed++;
+        continue;
+      }
+      // Only one thing is loose at a time: the picture before this one becomes paint where it lies.
+      flattenSticker();
+      const fit = Math.min(1, (width * PICTURE_FIT) / picture.width, (height * PICTURE_FIT) / picture.height);
+      const pictureWidth = Math.max(1, Math.round(picture.width * fit));
+      const pictureHeight = Math.max(1, Math.round(picture.height * fit));
+      const offset = (placed - (files.length - 1) / 2) * PICTURE_CASCADE;
+      float({
+        name: file.name,
+        picture,
+        x: Math.round((width - pictureWidth) / 2 + offset),
+        y: Math.round((height - pictureHeight) / 2 + offset),
+        width: pictureWidth,
+        height: pictureHeight,
+        flipX: false,
+        flipY: false,
+      });
+      placed++;
+    }
+    if (placed > 0) {
+      play("misc31501");
+      requestAnimationFrame(() => frameRef.current?.focus());
+    }
+    return failed;
+  };
+
   useImperativeHandle(ref, () => ({
+    addPictures,
     hasPaint: () => Boolean(floatingRef.current) || Boolean(engineRef.current?.hasPaint()),
     takeTiles: (maxSide) => {
       flattenSticker();

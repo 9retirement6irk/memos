@@ -45,10 +45,11 @@ vi.mock("@usememos/canvas/react", () => ({
 let layerProps: KidPixLayerProps | null = null;
 let tiles: Awaited<ReturnType<KidPixHandle["takeTiles"]>> = [];
 const takeTiles = vi.fn(async (_maxSide: number) => tiles);
+const addPictures = vi.fn(async (_files: readonly File[]) => 0);
 vi.mock("@/components/DrawingSheet/kidpix/KidPixLayer", () => ({
   default: (props: KidPixLayerProps & { ref?: Ref<KidPixHandle> }) => {
     layerProps = props;
-    useImperativeHandle(props.ref, () => ({ hasPaint: () => tiles.length > 0, takeTiles }), []);
+    useImperativeHandle(props.ref, () => ({ hasPaint: () => tiles.length > 0, takeTiles, addPictures }), []);
     return <div data-testid="kidpix-layer" />;
   },
 }));
@@ -104,6 +105,21 @@ describe("DrawingSheet in Kid Pix mode", () => {
     // Cancel and Done stay, clear of the tube; Cancel on a bar of its own.
     expect(screen.getByRole("button", { name: "common.cancel" }).closest(".left-\\[148px\\]")).not.toBeNull();
     expect(screen.getByRole("button", { name: "editor.drawing.done" })).toBeInTheDocument();
+  });
+
+  it("puts a picture chosen in the mode on the paint layer, not on the drawing under it", async () => {
+    const { container } = render(<DrawingSheet mode="new" pages={[{ key: "p1" }]} initialPage="p1" onDone={vi.fn()} onClose={vi.fn()} />);
+    await enterKidPix();
+    expect(screen.getByRole("button", { name: "editor.insert-menu.insert-image" })).toBeInTheDocument();
+
+    const photo = new File(["photo"], "photo.png", { type: "image/png" });
+    const notes = new File(["notes"], "notes.txt", { type: "text/plain" });
+    fireEvent.change(container.ownerDocument.querySelector('input[type="file"]') as HTMLInputElement, {
+      target: { files: [photo, notes] },
+    });
+
+    await waitFor(() => expect(addPictures).toHaveBeenCalledWith([photo]));
+    expect(handle.insertImage).not.toHaveBeenCalled();
   });
 
   it("zooms in to 1 first when the view is zoomed out, so a layer pixel is a drawing px", async () => {
