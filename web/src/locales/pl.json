@@ -226,6 +226,7 @@
       "discard": "Odrzuć",
       "open-failed": "Nie udało się otworzyć rysunku. Spróbuj ponownie.",
       "export-failed": "Nie udało się zapisać rysunku. Spróbuj ponownie.",
+      "image-from-device": "Obraz z tego urządzenia",
       "image-failed": "Nie udało się dodać obrazu do rysunku.",
       "saved-without-drawing": "Notatka została zapisana, ale rysunek nie. Zapisz ponownie, aby spróbować jeszcze raz.",
       "kidpix": "Tryb Kid Pix",

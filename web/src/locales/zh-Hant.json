@@ -305,6 +305,7 @@
       "discard": "捨棄",
       "open-failed": "無法開啟繪圖，請再試一次。",
       "export-failed": "無法儲存繪圖，請再試一次。",
+      "image-from-device": "來自此裝置的圖片",
       "image-failed": "無法將圖片加入繪圖。",
       "saved-without-drawing": "備忘錄已儲存，但繪圖尚未儲存。請再次儲存以重試。",
       "kidpix": "Kid Pix 模式",

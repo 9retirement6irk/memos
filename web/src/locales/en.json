@@ -331,6 +331,7 @@
       "discard": "Discard",
       "open-failed": "Couldn't open the drawing. Try again.",
       "export-failed": "Couldn't save the drawing. Try again.",
+      "image-from-device": "Image from this device",
       "image-failed": "Couldn't add the image to the drawing.",
       "saved-without-drawing": "The memo is saved, but the drawing isn't. Save again to retry.",
       "kidpix": "Kid Pix mode",

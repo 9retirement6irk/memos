@@ -249,6 +249,7 @@
       "discard": "Atmesti",
       "open-failed": "Nepavyko atidaryti piešinio. Bandykite dar kartą.",
       "export-failed": "Nepavyko išsaugoti piešinio. Bandykite dar kartą.",
+      "image-from-device": "Vaizdas iš šio įrenginio",
       "image-failed": "Nepavyko pridėti vaizdo prie piešinio.",
       "saved-without-drawing": "Atmintinė išsaugota, bet piešinys – ne. Išsaugokite dar kartą, kad bandytumėte iš naujo.",
       "kidpix": "Kid Pix režimas",
