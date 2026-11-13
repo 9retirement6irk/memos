@@ -211,6 +211,7 @@
       "discard": "Descartar",
       "open-failed": "No se pudo abrir el dibujo. Inténtalo de nuevo.",
       "export-failed": "No se pudo guardar el dibujo. Inténtalo de nuevo.",
+      "image-from-device": "Imagen de este dispositivo",
       "image-failed": "No se pudo añadir la imagen al dibujo.",
       "saved-without-drawing": "El memo se ha guardado, pero el dibujo no. Guarda de nuevo para reintentarlo.",
       "kidpix": "Modo Kid Pix",

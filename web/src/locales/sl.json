@@ -211,6 +211,7 @@
       "discard": "Zavrzi",
       "open-failed": "Risbe ni bilo mogoče odpreti. Poskusite znova.",
       "export-failed": "Risbe ni bilo mogoče shraniti. Poskusite znova.",
+      "image-from-device": "Slika s te naprave",
       "image-failed": "Slike ni bilo mogoče dodati risbi.",
       "saved-without-drawing": "Beležka je shranjena, risba pa ne. Za ponoven poskus znova shranite.",
       "kidpix": "Način Kid Pix",

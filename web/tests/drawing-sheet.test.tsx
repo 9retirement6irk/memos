@@ -12,7 +12,9 @@ const handle = {
   canUndo: vi.fn(() => false),
   canRedo: vi.fn(() => false),
   zoomToFit: vi.fn(),
-  insertImage: vi.fn(async () => "image1"),
+  insertImage: vi.fn(async (_blob: Blob, _opts?: unknown) => "image1"),
+  getViewport: vi.fn(() => ({ zoom: 1, scrollX: 0, scrollY: 0 })),
+  setSelection: vi.fn(),
   markSaved: vi.fn(),
   isDirty: vi.fn(() => false),
   commitText: vi.fn(() => calls.push("commitText")),
@@ -50,6 +52,26 @@ vi.mock("@usememos/canvas/react", () => ({
   }),
 }));
 
+const immich = vi.hoisted(() => ({
+  connection: undefined as { configured: boolean; url: string } | undefined,
+  pickerSize: undefined as string | undefined,
+}));
+vi.mock("@/hooks/useImmichQueries", () => ({ useImmichConnection: () => ({ data: immich.connection }) }));
+// The picker itself is tested on its own; here it hands back two photos.
+vi.mock("@/components/ImmichPicker/ImmichPickerDialog", () => ({
+  default: ({ open, onPick, size }: { open: boolean; onPick: (files: File[]) => void; size?: string }) => {
+    immich.pickerSize = size;
+    return open ? (
+      <button
+        type="button"
+        onClick={() => onPick([new File(["a"], "IMG_1.jpg", { type: "image/jpeg" }), new File(["b"], "IMG_2.jpg", { type: "image/jpeg" })])}
+      >
+        pick two photos
+      </button>
+    ) : null;
+  },
+}));
+
 vi.mock("@/utils/i18n", async (importOriginal) => ({
   ...(await importOriginal<typeof import("@/utils/i18n")>()),
   useTranslate: () => (key: string) => key,
@@ -67,6 +89,9 @@ beforeAll(() => {
 
 beforeEach(() => {
   calls.length = 0;
+  immich.connection = undefined;
+  handle.insertImage.mockClear();
+  handle.setSelection.mockClear();
   handle.isDirty.mockReturnValue(false);
   handle.canUndo.mockReturnValue(false);
   handle.canRedo.mockReturnValue(false);
@@ -233,5 +258,32 @@ describe("DrawingSheet", () => {
 
     await waitFor(() => expect(handle.insertImage).toHaveBeenCalledWith(picture, { background: true }));
     await waitFor(() => expect(handle.markSaved).toHaveBeenCalled());
+  });
+
+  it("inserts a picture from this device with one button when Immich isn't connected", () => {
+    render(<DrawingSheet mode="new" pages={blank} initialPage="p1" onDone={vi.fn()} onClose={vi.fn()} />);
+
+    const insert = screen.getByRole("button", { name: "editor.insert-menu.insert-image" });
+    expect(insert).not.toHaveAttribute("aria-haspopup");
+    expect(screen.queryByText("pick two photos")).toBeNull();
+  });
+
+  it("adds photos picked from Immich at preview size, fanned out and selected together", async () => {
+    immich.connection = { configured: true, url: "http://immich.example.com" };
+    render(<DrawingSheet mode="new" pages={blank} initialPage="p1" onDone={vi.fn()} onClose={vi.fn()} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "editor.insert-menu.insert-image" }));
+    expect(await screen.findByRole("menuitem", { name: "editor.drawing.image-from-device" })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("menuitem", { name: "immich.insert" }));
+    expect(immich.pickerSize).toBe("preview");
+
+    fireEvent.click(await screen.findByRole("button", { name: "pick two photos" }));
+    await waitFor(() => expect(handle.setSelection).toHaveBeenCalledWith(["image1", "image1"]));
+    const inserted = handle.insertImage.mock.calls.map(([file, opts]) => [(file as File).name, opts]);
+    // jsdom lays nothing out, so the view's middle is 0, 0; the two photos sit a step either side of it.
+    expect(inserted).toEqual([
+      ["IMG_1.jpg", { at: [-16, -16] }],
+      ["IMG_2.jpg", { at: [16, 16] }],
+    ]);
   });
 });

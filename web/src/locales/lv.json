@@ -249,6 +249,7 @@
       "discard": "Atmest",
       "open-failed": "Neizdevās atvērt zīmējumu. Mēģiniet vēlreiz.",
       "export-failed": "Neizdevās saglabāt zīmējumu. Mēģiniet vēlreiz.",
+      "image-from-device": "Attēls no šīs ierīces",
       "image-failed": "Neizdevās pievienot attēlu zīmējumam.",
       "saved-without-drawing": "Piezīme ir saglabāta, bet zīmējums nav. Saglabājiet vēlreiz, lai mēģinātu atkārtoti.",
       "kidpix": "Kid Pix režīms",

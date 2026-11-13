@@ -77,6 +77,12 @@ export const TOOL_NUMBER = {
  */
 export const PENCIL_KINDS = ["Pencil", "Chalk", "Crayon", "Marker"] as const;
 
+/**
+ * The brush zone's kinds: the paint brush with its Wacky Brushes, and the Spray Can. Kid Pix has a
+ * third between them, Sound Art, which paints with the microphone. Art: assets/brushkinds.png.
+ */
+export const BRUSH_KINDS = ["Paint Brush", "Spray Can"] as const;
+
 /** Pencil and eraser sizes, in drawing px. */
 export const PENCIL_SIZES = [2, 5, 9, 15, 24] as const;
 export const ERASER_SIZES = [8, 16, 28, 44] as const;

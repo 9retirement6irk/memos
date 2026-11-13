@@ -260,6 +260,7 @@
       "discard": "Sil",
       "open-failed": "Çizim açılamadı. Yeniden deneyin.",
       "export-failed": "Çizim kaydedilemedi. Yeniden deneyin.",
+      "image-from-device": "Bu cihazdan görsel",
       "image-failed": "Görsel çizime eklenemedi.",
       "saved-without-drawing": "Not kaydedildi ancak çizim kaydedilmedi. Yeniden denemek için tekrar kaydedin.",
       "kidpix": "Kid Pix modu",

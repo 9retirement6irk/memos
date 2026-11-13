@@ -211,6 +211,7 @@
       "discard": "Abandonner",
       "open-failed": "Impossible d'ouvrir le dessin. Veuillez réessayer.",
       "export-failed": "Impossible d'enregistrer le dessin. Veuillez réessayer.",
+      "image-from-device": "Image depuis cet appareil",
       "image-failed": "Impossible d'ajouter l'image au dessin.",
       "saved-without-drawing": "Le mémo est enregistré, mais pas le dessin. Enregistrez à nouveau pour réessayer.",
       "kidpix": "Mode Kid Pix",

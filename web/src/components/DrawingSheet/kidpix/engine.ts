@@ -36,7 +36,17 @@ type Stroke =
   | { kind: "brush"; brush: number; last: Point; state: StrokeState }
   | { kind: "eraser"; size: number; last: Point }
   | { kind: "wand"; effect: MixEffect; last: Point }
-  | { kind: "move"; start: Point; paint: ImageData };
+  | { kind: "move"; start: Point; paint: ImageData }
+  | { kind: "spray"; sheet: HTMLImageElement; frames: SprayFrames; last: Point; owed: number; timer: number };
+
+/** Where each picture of a spray set is in its sheet: x, y, width, height. */
+export type SprayFrames = readonly (readonly [number, number, number, number])[];
+
+/** The Spray Can drops a picture for every this many px the pointer travels, and this often (ms) while it is held still. */
+const SPRAY_STEP = 26;
+const SPRAY_HOLD = 110;
+/** How far from the pointer a sprayed picture may land. */
+const SPRAY_SCATTER = 34;
 
 /** One undo step: the paint, and the background behind it. */
 interface Snapshot {
@@ -227,6 +237,37 @@ export class KidPixEngine {
     this.move(at);
   }
 
+  /**
+   * The Spray Can: pictures from one set, picked at random, scattered around the pointer for as
+   * long as it is down. Kid Pix's own scatter is in its program, not on the disc; this one is a stand-in.
+   */
+  sprayDown(at: Point, sheet: HTMLImageElement, frames: SprayFrames) {
+    if (!sheet.complete || !sheet.naturalWidth || frames.length === 0) return;
+    this.remember();
+    const timer = window.setInterval(() => {
+      if (this.stroke?.kind === "spray") this.sprayOne(this.stroke.sheet, this.stroke.frames, this.stroke.last);
+    }, SPRAY_HOLD);
+    this.stroke = { kind: "spray", sheet, frames, last: at, owed: 0, timer };
+    this.sprayOne(sheet, frames, at, 0);
+  }
+
+  private sprayOne(sheet: HTMLImageElement, frames: SprayFrames, at: Point, scatter = SPRAY_SCATTER) {
+    const [x, y, width, height] = frames[Math.floor(Math.random() * frames.length)];
+    const angle = Math.random() * Math.PI * 2;
+    const reach = Math.sqrt(Math.random()) * scatter;
+    this.ctx.drawImage(
+      sheet,
+      x,
+      y,
+      width,
+      height,
+      Math.round(at.x + Math.cos(angle) * reach - width / 2),
+      Math.round(at.y + Math.sin(angle) * reach - height / 2),
+      width,
+      height,
+    );
+  }
+
   /** The Moving Van picks up all the paint; the drawing under it stays put. */
   moveDown(at: Point) {
     this.remember();
@@ -241,6 +282,21 @@ export class KidPixEngine {
     if (stroke.kind === "move") {
       ctx.clearRect(0, 0, this.width, this.height);
       ctx.putImageData(stroke.paint, Math.round(to.x - stroke.start.x), Math.round(to.y - stroke.start.y));
+      return;
+    }
+    if (stroke.kind === "spray") {
+      const distance = Math.hypot(to.x - stroke.last.x, to.y - stroke.last.y);
+      stroke.owed += distance;
+      while (stroke.owed >= SPRAY_STEP) {
+        stroke.owed -= SPRAY_STEP;
+        const along = distance === 0 ? 1 : 1 - stroke.owed / distance;
+        const clamped = Math.max(0, Math.min(1, along));
+        this.sprayOne(stroke.sheet, stroke.frames, {
+          x: stroke.last.x + (to.x - stroke.last.x) * clamped,
+          y: stroke.last.y + (to.y - stroke.last.y) * clamped,
+        });
+      }
+      stroke.last = to;
       return;
     }
     if (stroke.kind === "pencil") {
@@ -308,7 +364,8 @@ export class KidPixEngine {
     const stroke = this.stroke;
     this.stroke = null;
     if (!stroke) return;
-    if (stroke.kind === "move") this.audio.play("w7430");
+    if (stroke.kind === "spray") window.clearInterval(stroke.timer);
+    else if (stroke.kind === "move") this.audio.play("w7430");
     else this.audio.toolUp();
   }
 

@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { fetchImmichOriginal, ImmichError, listImmichPhotos, saveImmichConnection } from "@/lib/immich";
+import { fetchImmichOriginal, fetchImmichPreview, ImmichError, listImmichPhotos, saveImmichConnection } from "@/lib/immich";
 
 vi.mock("@/connect", () => ({ getRequestToken: vi.fn(async () => "access-token") }));
 
@@ -48,5 +48,20 @@ describe("Immich API client", () => {
     expect(file.name).toBe("IMG_1.jpg");
     expect(file.type).toBe("image/jpeg");
     expect(file.lastModified).toBe(Date.parse("2026-11-01T10:00:00Z"));
+  });
+
+  it("fetches the preview of a HEIC photo as a JPEG named after it", async () => {
+    fetchMock.mockResolvedValue(new Response("jpeg", { status: 200, headers: { "Content-Type": "image/jpeg" } }));
+    const file = await fetchImmichPreview({
+      id: "p1",
+      fileName: "IMG_0042.HEIC",
+      mimeType: "image/heic",
+      takenAt: "2026-11-01T10:00:00Z",
+      width: 0,
+      height: 0,
+    });
+    expect(String(fetchMock.mock.calls[0][0])).toBe("/api/immich/photos/p1/preview");
+    expect(file.name).toBe("IMG_0042.jpg");
+    expect(file.type).toBe("image/jpeg");
   });
 });

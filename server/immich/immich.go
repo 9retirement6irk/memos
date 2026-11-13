@@ -46,6 +46,7 @@ func (s *Service) RegisterRoutes(mux *http.ServeMux) {
 	mux.Handle("GET /api/immich/photos", httphandler.Func(s.listPhotos))
 	mux.Handle("GET /api/immich/photos/taken", httphandler.Func(s.listPhotosTaken))
 	mux.Handle("GET /api/immich/photos/{id}/thumbnail", httphandler.Func(s.servePhotoThumbnail))
+	mux.Handle("GET /api/immich/photos/{id}/preview", httphandler.Func(s.servePhotoPreview))
 	mux.Handle("GET /api/immich/photos/{id}/original", httphandler.Func(s.servePhotoOriginal))
 }
 
@@ -318,17 +319,32 @@ func (s *Service) listPhotos(w http.ResponseWriter, r *http.Request) error {
 	return httphandler.JSON(w, http.StatusOK, response)
 }
 
+// photoSize is which rendition of a photo to stream from Immich.
+type photoSize int
+
+const (
+	photoThumbnail photoSize = iota
+	photoPreview
+	photoOriginal
+)
+
 func (s *Service) servePhotoThumbnail(w http.ResponseWriter, r *http.Request) error {
-	return s.servePhoto(w, r, false)
+	return s.servePhoto(w, r, photoThumbnail)
+}
+
+// servePhotoPreview streams the photo at preview size, for pictures placed in
+// a drawing: the canvas shrinks them to 1440 px anyway.
+func (s *Service) servePhotoPreview(w http.ResponseWriter, r *http.Request) error {
+	return s.servePhoto(w, r, photoPreview)
 }
 
 func (s *Service) servePhotoOriginal(w http.ResponseWriter, r *http.Request) error {
-	return s.servePhoto(w, r, true)
+	return s.servePhoto(w, r, photoOriginal)
 }
 
 // servePhoto streams a photo from Immich. Only images pass through, so the
 // proxy can't be used to fetch anything else from the user's network.
-func (s *Service) servePhoto(w http.ResponseWriter, r *http.Request, original bool) error {
+func (s *Service) servePhoto(w http.ResponseWriter, r *http.Request, size photoSize) error {
 	user, err := s.currentUser(r)
 	if err != nil {
 		return err
@@ -342,9 +358,12 @@ func (s *Service) servePhoto(w http.ResponseWriter, r *http.Request, original bo
 		return err
 	}
 	var response *http.Response
-	if original {
+	switch size {
+	case photoOriginal:
 		response, err = client.Original(r.Context(), photoID)
-	} else {
+	case photoPreview:
+		response, err = client.Preview(r.Context(), photoID)
+	default:
 		response, err = client.Thumbnail(r.Context(), photoID)
 	}
 	if err != nil {
