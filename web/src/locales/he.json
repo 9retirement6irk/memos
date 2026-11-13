@@ -1727,7 +1727,11 @@
     "mood-trend": "איך הרגשתם",
     "mood-trend-description": "מצב הרוח היומי שלכם בשמונת השבועות האחרונים",
     "best-with": "הכי טוב עם",
-    "worst-with": "הכי קשה עם"
+    "worst-with": "הכי קשה עם",
+    "sidebar": {
+      "journal": "יומן",
+      "notes": "פתקים"
+    }
   },
   "dawarich": {
     "route": {

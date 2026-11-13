@@ -1728,7 +1728,11 @@
     "mood-trend": "Kako si se osjećao",
     "mood-trend-description": "Tvoje dnevno raspoloženje u posljednjih osam tjedana",
     "best-with": "Najbolje se osjećaš uz",
-    "worst-with": "Najteže se osjećaš uz"
+    "worst-with": "Najteže se osjećaš uz",
+    "sidebar": {
+      "journal": "Dnevnik",
+      "notes": "Bilješke"
+    }
   },
   "dawarich": {
     "route": {

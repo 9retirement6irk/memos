@@ -1728,7 +1728,11 @@
     "mood-trend": "Cum te-ai simțit",
     "mood-trend-description": "Dispoziția ta zilnică din ultimele opt săptămâni",
     "best-with": "Te simți cel mai bine cu",
-    "worst-with": "Te simți cel mai greu cu"
+    "worst-with": "Te simți cel mai greu cu",
+    "sidebar": {
+      "journal": "Jurnal",
+      "notes": "Notițe"
+    }
   },
   "dawarich": {
     "route": {

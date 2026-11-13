@@ -1727,7 +1727,11 @@
     "mood-trend": "How you've felt",
     "mood-trend-description": "Your daily mood over the last eight weeks",
     "best-with": "Feels best with",
-    "worst-with": "Feels hardest with"
+    "worst-with": "Feels hardest with",
+    "sidebar": {
+      "journal": "Journal",
+      "notes": "Notes"
+    }
   },
   "dawarich": {
     "route": {

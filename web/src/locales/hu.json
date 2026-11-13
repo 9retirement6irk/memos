@@ -1727,7 +1727,11 @@
     "mood-trend": "Hogyan érezted magad",
     "mood-trend-description": "Napi hangulatod az elmúlt nyolc hétben",
     "best-with": "Legjobban ezzel érzed magad",
-    "worst-with": "Legnehezebben ezzel érzed magad"
+    "worst-with": "Legnehezebben ezzel érzed magad",
+    "sidebar": {
+      "journal": "Napló",
+      "notes": "Jegyzetek"
+    }
   },
   "dawarich": {
     "route": {

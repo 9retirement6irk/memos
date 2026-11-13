@@ -1727,7 +1727,11 @@
     "mood-trend": "Miltä sinusta on tuntunut",
     "mood-trend-description": "Päivittäinen mielialasi viimeisten kahdeksan viikon ajalta",
     "best-with": "Tuntuu parhaalta, kun mukana on",
-    "worst-with": "Tuntuu raskaimmalta, kun mukana on"
+    "worst-with": "Tuntuu raskaimmalta, kun mukana on",
+    "sidebar": {
+      "journal": "Päiväkirja",
+      "notes": "Muistiinpanot"
+    }
   },
   "dawarich": {
     "route": {

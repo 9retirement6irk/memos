@@ -1727,7 +1727,11 @@
     "mood-trend": "Nasıl hissettin",
     "mood-trend-description": "Son sekiz haftadaki günlük ruh hâlin",
     "best-with": "En iyi hissettiren",
-    "worst-with": "En zor hissettiren"
+    "worst-with": "En zor hissettiren",
+    "sidebar": {
+      "journal": "Günlük",
+      "notes": "Notlar"
+    }
   },
   "dawarich": {
     "route": {

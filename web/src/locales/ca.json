@@ -1728,7 +1728,11 @@
     "mood-trend": "Com t’has sentit",
     "mood-trend-description": "El teu estat d’ànim diari de les darreres vuit setmanes",
     "best-with": "Se sent millor amb",
-    "worst-with": "Se sent pitjor amb"
+    "worst-with": "Se sent pitjor amb",
+    "sidebar": {
+      "journal": "Diari",
+      "notes": "Notes"
+    }
   },
   "dawarich": {
     "route": {

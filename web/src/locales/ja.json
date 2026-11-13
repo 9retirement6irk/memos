@@ -1727,7 +1727,11 @@
     "mood-trend": "これまでの気分",
     "mood-trend-description": "直近8週間の毎日の気分",
     "best-with": "いちばん気分が良いとき",
-    "worst-with": "いちばんつらいとき"
+    "worst-with": "いちばんつらいとき",
+    "sidebar": {
+      "journal": "ジャーナル",
+      "notes": "メモ"
+    }
   },
   "dawarich": {
     "route": {

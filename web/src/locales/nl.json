@@ -1727,7 +1727,11 @@
     "mood-trend": "Hoe je je voelde",
     "mood-trend-description": "Je dagelijkse stemming van de laatste acht weken",
     "best-with": "Voelt het best met",
-    "worst-with": "Voelt het zwaarst met"
+    "worst-with": "Voelt het zwaarst met",
+    "sidebar": {
+      "journal": "Dagboek",
+      "notes": "Notities"
+    }
   },
   "dawarich": {
     "route": {

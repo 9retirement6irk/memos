@@ -1727,7 +1727,11 @@
     "mood-trend": "你的感受",
     "mood-trend-description": "最近八週每天的心情",
     "best-with": "感覺最好時有",
-    "worst-with": "感覺最難時有"
+    "worst-with": "感覺最難時有",
+    "sidebar": {
+      "journal": "日記",
+      "notes": "筆記"
+    }
   },
   "dawarich": {
     "route": {
