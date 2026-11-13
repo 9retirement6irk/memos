@@ -28,6 +28,7 @@ import {
   MIXER_COUNT,
   PALETTE,
   PATTERN_COUNT,
+  PENCIL_KINDS,
   PENCIL_SIZES,
   SCREEN_ERASER_COUNT,
   TEXT_SIZE,
@@ -36,7 +37,6 @@ import {
   toolLabel,
   UNDO_GUY_LINES,
   UNDO_GUY_REST,
-  UNDO_GUY_TALKING,
   WAND_COUNT,
 } from "./tools";
 
@@ -100,7 +100,7 @@ interface Option {
   index: number;
   label: string;
   content:
-    | { sheet: string; cell: number; cells: number }
+    | { sheet: string; cell: number; cells: number; tint?: string }
     | { url: string; cell: number; cells: number; pixelated?: boolean }
     | { style: CSSProperties; className: string; text?: string };
 }
@@ -132,7 +132,11 @@ const optionsFor = (
         content: { className: "kidpix-dot", style: { width: size, height: size, background: color } },
       }));
     case "wacky":
-      return Array.from({ length: BRUSH_COUNT }, (_, index) => sprite("brushes", index, 57, index, toolLabel(index)));
+      // The first twenty brush icons are shapes without a color of their own: Kid Pix shows them in the color in hand.
+      return Array.from({ length: BRUSH_COUNT }, (_, index) => {
+        const option = sprite("brushes", index, 57, index, toolLabel(index));
+        return index < 20 ? { ...option, content: { sheet: "brushes", cell: index, cells: 57, tint: color } } : option;
+      });
     case "paint":
       return [
         { index: 0, label: "Color", content: { className: "kidpix-swatch", style: { background: color } } },
@@ -232,11 +236,12 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
   const [category, setCategory] = useState<Record<LibraryTool, number>>({ stamp: 0, sticker: 0, background: 0 });
   // The tray pictures of the sticker category on show, drawn once its file has arrived.
   const [stickerThumbs, setStickerThumbs] = useState<{ category: number; urls: string[] }>({ category: -1, urls: [] });
+  const [pencilKind, setPencilKind] = useState(0);
   const [color, setColor] = useState("#ff0080");
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [typing, setTyping] = useState<Point | null>(null);
   // The selected tool's button plays its animation once, then rests on its last frame.
-  const [toolFrame, setToolFrame] = useState(TUBE_TOOLS[1].frames - 1);
+  const [toolFrame, setToolFrame] = useState((TUBE_TOOLS.find((item) => item.key === "wacky") ?? TUBE_TOOLS[0]).frames - 1);
   const [guyFrame, setGuyFrame] = useState(UNDO_GUY_REST);
   const [boom, setBoom] = useState<number | null>(null);
   const [flash, setFlash] = useState(false);
@@ -450,7 +455,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
     event.currentTarget.setPointerCapture(event.pointerId);
     const at = pointOf(event);
     const option = chosen[tool];
-    if (tool === "pencil") engine.pencilDown(at, option);
+    if (tool === "pencil") engine.pencilDown(at, option, pencilKind);
     else if (tool === "wacky") engine.brushDown(at, option);
     else if (tool === "paint") engine.fill(at, option, PATTERN_COUNT);
     else if (tool === "mixer") {
@@ -485,17 +490,19 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
     commitText();
     engineRef.current?.undo();
     const line = UNDO_GUY_LINES[Math.floor(Math.random() * UNDO_GUY_LINES.length)];
-    play(line);
-    const until = performance.now() + (muted ? 0.6 : (audioRef.current?.duration(line) ?? 0.6)) * 1000;
+    play(line.clip);
+    const length = (muted ? 0.6 : (audioRef.current?.duration(line.clip) ?? 0.6)) * 1000;
+    const started = performance.now();
     window.clearInterval(timersRef.current.guy);
     timersRef.current.guy = window.setInterval(() => {
-      if (performance.now() > until) {
+      const step = Math.floor(((performance.now() - started) / length) * line.frames.length);
+      if (step >= line.frames.length) {
         window.clearInterval(timersRef.current.guy);
         setGuyFrame(UNDO_GUY_REST);
       } else {
-        setGuyFrame(UNDO_GUY_TALKING[Math.floor(Math.random() * UNDO_GUY_TALKING.length)]);
+        setGuyFrame(line.frames[step]);
       }
-    }, 85);
+    }, 40);
   };
 
   // The dynamite: a fuse, then every bit of Kid Pix paint is gone (Undo Guy can bring it back).
@@ -508,7 +515,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
     timersRef.current.boom = window.setInterval(() => {
       frame++;
       if (frame < 13) {
-        setBoom(frame % 7);
+        setBoom(1 + (frame % 4));
         return;
       }
       window.clearInterval(timersRef.current.boom);
@@ -578,10 +585,21 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
               aria-hidden
               className="kidpix-icon"
               data-sheet={option.content.sheet}
-              style={{
-                backgroundPosition: `-${option.content.cell * 40}px 0`,
-                backgroundSize: `${option.content.cells * 40}px 40px`,
-              }}
+              data-tint={option.content.tint ? "" : undefined}
+              style={
+                option.content.tint
+                  ? {
+                      backgroundColor: option.content.tint,
+                      maskPosition: `-${option.content.cell * 40}px 0`,
+                      maskSize: `${option.content.cells * 40}px 40px`,
+                      WebkitMaskPosition: `-${option.content.cell * 40}px 0`,
+                      WebkitMaskSize: `${option.content.cells * 40}px 40px`,
+                    }
+                  : {
+                      backgroundPosition: `-${option.content.cell * 40}px 0`,
+                      backgroundSize: `${option.content.cells * 40}px 40px`,
+                    }
+              }
             />
           ) : "url" in option.content ? (
             <span
@@ -619,6 +637,30 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
     </select>
   );
 
+  // The Pencil's kinds sit in the tray's first panel, in the current color, as Kid Pix shows them.
+  const pencilKinds = tool === "pencil" && (
+    <div role="group" aria-label={current.name} className="kidpix-kinds">
+      {PENCIL_KINDS.map((name, index) => (
+        <button
+          key={name}
+          type="button"
+          className="kidpix-kind mu-focus"
+          aria-label={name}
+          aria-pressed={pencilKind === index}
+          title={name}
+          onClick={() => {
+            setPencilKind(index);
+            play("easel1029");
+          }}
+        >
+          <span aria-hidden style={{ background: color }} />
+          <span aria-hidden />
+        </button>
+      ))}
+    </div>
+  );
+  const toolPanel = pencilKinds || categorySelect;
+
   const colorButton = (
     <button
       type="button"
@@ -638,7 +680,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
 
   const undoGuy = (
     <button type="button" className="kidpix-undo-guy mu-focus" aria-label={labels.undo} title={labels.undo} onClick={undo}>
-      <span aria-hidden style={{ backgroundPosition: `-${guyFrame * 49}px 0` }} />
+      <span aria-hidden style={{ backgroundPosition: `-${guyFrame * 40}px 0` }} />
     </button>
   );
 
@@ -699,7 +741,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
 
       {compact ? (
         <div className="kidpix-panel">
-          {categorySelect && <div>{categorySelect}</div>}
+          {toolPanel && <div>{toolPanel}</div>}
           <div>
             {colorButton}
             {optionButtons}
@@ -717,6 +759,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
               {toolButtons}
             </div>
             {dynamiteButton}
+            {undoGuy}
           </div>
           <div className="kidpix-wheel">{colorButton}</div>
           <div className="kidpix-tray">
@@ -724,27 +767,26 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
             <div aria-hidden className="kidpix-tray-art" />
             <div aria-hidden className="kidpix-tray-art" />
             <div className="kidpix-tray-info">
-              {undoGuy}
-              <div>
-                <strong>{current.name}</strong>
-                {categorySelect}
-              </div>
+              {pencilKinds || (
+                <>
+                  <strong>{current.name}</strong>
+                  {categorySelect}
+                </>
+              )}
             </div>
             {optionButtons}
-            <button
-              type="button"
-              className="kidpix-page mu-focus"
-              aria-label={labels.previous}
-              title={labels.previous}
-              onClick={() => scrollOptions(-1)}
-            />
-            <button
-              type="button"
-              className="kidpix-page mu-focus"
-              aria-label={labels.next}
-              title={labels.next}
-              onClick={() => scrollOptions(1)}
-            />
+            {/* The arrows page the tray; the color between them is the one in hand. */}
+            <div className="kidpix-pager">
+              <button
+                type="button"
+                className="mu-focus"
+                aria-label={labels.previous}
+                title={labels.previous}
+                onClick={() => scrollOptions(-1)}
+              />
+              <span aria-hidden style={{ background: color }} />
+              <button type="button" className="mu-focus" aria-label={labels.next} title={labels.next} onClick={() => scrollOptions(1)} />
+            </div>
           </div>
         </>
       )}

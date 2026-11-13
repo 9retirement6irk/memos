@@ -4,6 +4,13 @@ A second set of tools for the drawing sheet, in the chrome of Kid Pix Deluxe 4: 
 the options tray, the color wheel, Undo Guy and the sounds. The sheet's Kid Pix button turns it
 on; "Back to drawing tools" turns it off.
 
+The layout follows Kid Pix's own screen: tools two to a row in the tube in its order, the
+dynamite and Undo Guy on the tube's lower cap, the color wheel in the corner, and a tray whose
+first panel holds the tool's kinds (the Pencil's pencil, chalk, crayon and marker) or its
+library category, with the options and their paging arrows beside it. The two round buttons at
+the tray's end (play and slide show) and the two on the tube's top cap (ideas and help) are
+part of the art and do nothing here.
+
 ## How it fits the drawing sheet
 
 `@usememos/canvas` keeps a drawing as shapes. Kid Pix tools paint pixels, so the mode paints on
@@ -43,7 +50,6 @@ Stand-ins, written for this mode:
 
 - What each Wacky Brush and mixer draws. The disc holds their icons, names and sounds, not their code.
 - The tray's option click, and the startup jingle on entering the mode.
-- Undo Guy's mouth moves at random while a line plays; the disc's scripts time each line exactly.
 
 ## The libraries
 
@@ -61,6 +67,11 @@ when it is first shown.
 
 Not built: animations and recorded sounds (a saved drawing is a still PNG and cannot hold
 either) and the voice brushes.
+
+The 16-bit sprites are run-length coded with gaps: each row starts with a count of pixels to skip,
+and each run is followed by another. Skipped pixels are transparent. Magenta in a tray tool
+(the pencils) marks where the color in hand shows through, shaded by a matching 8-bit frame; the
+first twenty Wacky Brush icons are 8-bit shapes drawn in that color too.
 
 Tool, brush and font names are Kid Pix's own product names and are not translated.
 

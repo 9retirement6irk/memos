@@ -151,6 +151,13 @@
 .kidpix-icon[data-sheet="brushes"] {
   background-image: url("./assets/wacky.png");
 }
+.kidpix-icon[data-sheet="brushes"][data-tint] {
+  background-image: none;
+  -webkit-mask-image: url("./assets/wacky.png");
+  mask-image: url("./assets/wacky.png");
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
 .kidpix-icon[data-sheet="mixers"] {
   background-image: url("./assets/mixers.png");
 }
@@ -220,8 +227,8 @@
 }
 .kidpix-undo-guy > span {
   position: absolute;
-  width: 49px;
-  height: 48px;
+  width: 40px;
+  height: 38px;
   background-image: url("./assets/undoguy.png");
   background-repeat: no-repeat;
   transform-origin: 0 0;
@@ -300,6 +307,22 @@
   border-radius: 12px;
 }
 
+/* Undo Guy lives in the round button on the tube's lower cap, in front of the color wheel's frame. */
+.kidpix-tube > .kidpix-undo-guy {
+  position: absolute;
+  z-index: 1;
+  left: 61px;
+  bottom: -93px;
+  width: 56px;
+  height: 56px;
+}
+.kidpix-tube > .kidpix-undo-guy > span {
+  left: 8px;
+  top: 9px;
+  transform: scale(1.25);
+  transform-origin: center;
+}
+
 .kidpix-wheel {
   position: absolute;
   left: 0;
@@ -334,7 +357,26 @@
   content: "";
   position: absolute;
   inset: 12px 56px 12px 12px;
-  background: linear-gradient(180deg, #f4fbff, #d5e9f8);
+  background: linear-gradient(180deg, #c6cbfb, #a9b1f3);
+}
+/* The blue panel the options sit on (TP.MHK frame 440), stretched by its middle. */
+.kidpix-tray::after {
+  content: "";
+  position: absolute;
+  left: 218px;
+  right: 60px;
+  top: 19px;
+  height: 72px;
+  box-sizing: border-box;
+  border-style: solid;
+  border-width: 0 36px 0 14px;
+  border-image: url("./assets/options-panel.png") 0 36 0 14 fill stretch;
+  pointer-events: none;
+}
+.kidpix-tray > .kidpix-tray-info,
+.kidpix-tray > .kidpix-options,
+.kidpix-tray > .kidpix-pager {
+  z-index: 1;
 }
 .kidpix-tray > .kidpix-tray-art {
   position: relative;
@@ -360,38 +402,81 @@
   left: 16px;
   top: 14px;
   display: flex;
-  align-items: center;
-  gap: 8px;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
   width: 196px;
   height: 82px;
-}
-.kidpix-tray-info > .kidpix-undo-guy {
-  width: 76px;
-  height: 76px;
-}
-.kidpix-tray-info > .kidpix-undo-guy > span {
-  left: 1px;
-  top: 2px;
-  transform: scale(1.5);
-}
-.kidpix-tray-info > div {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  gap: 4px;
-  min-width: 0;
+  padding: 0 8px;
+  box-sizing: border-box;
 }
 .kidpix-tray-info strong {
   overflow: hidden;
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 400;
   line-height: 1.05;
   text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* The Pencil's kinds lie in the molded panel Kid Pix keeps them in (TP.MHK frame 429). */
+.kidpix-kinds {
+  position: absolute;
+  left: -5px;
+  top: -3px;
+  width: 203px;
+  height: 88px;
+  background-image: url("./assets/kinds-panel.png");
+}
+.kidpix-kind {
+  position: absolute;
+  top: 4px;
+  width: 44px;
+  height: 80px;
+  border-radius: 16px;
+  transition: transform 0.12s;
+}
+.kidpix-kind:nth-child(1) {
+  --kind-x: 6px;
+}
+.kidpix-kind:nth-child(2) {
+  --kind-x: 52px;
+}
+.kidpix-kind:nth-child(3) {
+  --kind-x: 98px;
+}
+.kidpix-kind:nth-child(4) {
+  --kind-x: 150px;
+}
+.kidpix-kind {
+  left: var(--kind-x);
+}
+.kidpix-kind[aria-pressed="true"] {
+  box-shadow: 0 0 0 2px #ffe95c;
+  transform: translateY(-2px);
+}
+.kidpix-kind > span {
+  position: absolute;
+  inset: 0;
+  image-rendering: pixelated;
+}
+/* The body takes the color in hand; the art over it carries the shading. */
+.kidpix-kind > span:first-child {
+  -webkit-mask-image: url("./assets/pencils-mask.png");
+  mask-image: url("./assets/pencils-mask.png");
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: calc(0px - var(--kind-x)) -4px;
+  mask-position: calc(0px - var(--kind-x)) -4px;
+}
+.kidpix-kind > span:last-child {
+  background-image: url("./assets/pencils.png");
+  background-repeat: no-repeat;
+  background-position: calc(0px - var(--kind-x)) -4px;
 }
 .kidpix-options {
   position: absolute;
   left: 226px;
-  right: 70px;
+  right: 94px;
   top: 13px;
   display: grid;
   grid-auto-columns: 40px;
@@ -406,18 +491,36 @@
 .kidpix-options::-webkit-scrollbar {
   display: none;
 }
-.kidpix-tray > .kidpix-page {
+.kidpix-pager {
   position: absolute;
-  right: 4px;
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
+  right: 66px;
+  top: 13px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  width: 26px;
+  height: 84px;
 }
-.kidpix-tray > .kidpix-page:nth-of-type(1) {
-  top: 12px;
+.kidpix-pager > button {
+  width: 26px;
+  height: 26px;
+  background-image: url("./assets/arrows.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 52px 32px;
+  background-position: 0 -3px;
+  image-rendering: pixelated;
 }
-.kidpix-tray > .kidpix-page:nth-of-type(2) {
-  top: 57px;
+.kidpix-pager > button:last-child {
+  background-position: -26px -3px;
+}
+.kidpix-pager > span {
+  width: 22px;
+  height: 22px;
+  box-shadow:
+    0 0 0 1px #ffffff,
+    0 0 0 2px #1b3f86;
 }
 .kidpix:not([data-compact]) > .kidpix-palette {
   left: 14px;
@@ -444,6 +547,15 @@
   align-items: center;
   gap: 8px;
 }
+.kidpix-panel .kidpix-kinds {
+  position: relative;
+  left: 0;
+  top: 0;
+  flex-shrink: 0;
+  overflow: hidden;
+  border-radius: 12px;
+  zoom: 0.64;
+}
 .kidpix-panel .kidpix-category {
   height: 32px;
   font-size: 16px;
@@ -463,9 +575,10 @@
   height: 60px;
 }
 .kidpix-panel .kidpix-undo-guy > span {
-  left: 3px;
-  top: 4px;
-  transform: scale(1.12);
+  left: 10px;
+  top: 11px;
+  transform: scale(1.3);
+  transform-origin: center;
 }
 .kidpix-panel .kidpix-options {
   position: static;

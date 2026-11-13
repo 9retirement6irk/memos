@@ -74,7 +74,7 @@ describe("Kid Pix tables", () => {
     }
     for (const clip of [
       ...TUBE_TOOLS.map((tool) => tool.selectSound),
-      ...UNDO_GUY_LINES,
+      ...UNDO_GUY_LINES.map((line) => line.clip),
       "easel1002",
       "easel1027",
       "easel1028",
