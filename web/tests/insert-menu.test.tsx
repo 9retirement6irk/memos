@@ -62,26 +62,30 @@ describe("InsertMenu", () => {
     expect(screen.queryByRole("menuitem", { name: "immich.insert" })).not.toBeInTheDocument();
   });
 
-  test("lists Immich photos after inline images when connected", () => {
+  test("puts Immich photos beside device images under Insert image when connected", async () => {
     immich.connection = { configured: true, url: "http://immich.example.com" };
     try {
-      renderMenu(vi.fn(), false, false, richMode, vi.fn());
+      const onInsertImages = vi.fn();
+      renderMenu(onInsertImages, false, false, richMode, vi.fn());
       fireEvent.click(screen.getByRole("button", { name: "common.add" }));
-      const labels = screen.getAllByRole("menuitem").map((item) => item.textContent);
-      expect(labels.indexOf("immich.insert")).toBe(labels.indexOf("editor.insert-menu.insert-image") + 1);
+      expect(screen.queryByRole("menuitem", { name: "immich.insert" })).not.toBeInTheDocument();
+
+      fireEvent.click(screen.getByRole("menuitem", { name: "editor.insert-menu.insert-image" }));
+      expect(await screen.findByRole("menuitem", { name: "editor.drawing.image-from-device" })).toBeInTheDocument();
+      expect(screen.getByRole("menuitem", { name: "immich.insert" })).toBeInTheDocument();
     } finally {
       immich.connection = { configured: false, url: "" };
     }
   });
 
-  test("offers a route from Dawarich after Immich photos once Dawarich is connected", () => {
+  test("offers a route from Dawarich right after Insert image once Dawarich is connected", () => {
     immich.connection = { configured: true, url: "http://immich.example.com" };
     dawarich.connection = { configured: true, url: "http://dawarich.example.com" };
     try {
       renderMenu(vi.fn(), false, false, richMode, vi.fn());
       fireEvent.click(screen.getByRole("button", { name: "common.add" }));
       const labels = screen.getAllByRole("menuitem").map((item) => item.textContent);
-      expect(labels.indexOf("dawarich.route.insert")).toBe(labels.indexOf("immich.insert") + 1);
+      expect(labels.indexOf("dawarich.route.insert")).toBe(labels.indexOf("editor.insert-menu.insert-image") + 1);
     } finally {
       immich.connection = { configured: false, url: "" };
       dawarich.connection = { configured: false, url: "" };

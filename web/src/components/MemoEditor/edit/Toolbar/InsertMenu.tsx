@@ -156,7 +156,6 @@ const InsertMenu = (props: InsertMenuProps) => {
     ...(props.onDrawingClick
       ? [{ key: "drawing", label: t("editor.insert-menu.drawing"), icon: PencilLineIcon, onClick: props.onDrawingClick }]
       : []),
-    ...(immichAvailable ? [{ key: "immich", label: t("immich.insert"), icon: ImagesIcon, onClick: () => setImmichDialogOpen(true) }] : []),
     ...(routeAvailable
       ? [{ key: "route", label: t("dawarich.route.insert"), icon: RouteIcon, onClick: () => setRouteDialogOpen(true) }]
       : []),
@@ -190,11 +189,32 @@ const InsertMenu = (props: InsertMenuProps) => {
           <Tooltip.Popup>{t("common.add")}</Tooltip.Popup>
         </Tooltip.Root>
         <Menu.Popup align="start">
-          {insertItems.map((item) => (
-            <Menu.Item key={item.key} onClick={item.onClick} disabled={props.isSaving} icon={<item.icon data-insert-item={item.key} />}>
-              {item.label}
-            </Menu.Item>
-          ))}
+          {insertItems.map((item) =>
+            // With Immich connected, Insert image offers both sources, as the drawing sheet's image button does.
+            item.key === "inline-image" && immichAvailable ? (
+              <Menu.SubmenuRoot key={item.key}>
+                <Menu.SubmenuTrigger disabled={props.isSaving} icon={<item.icon data-insert-item={item.key} />}>
+                  {item.label}
+                </Menu.SubmenuTrigger>
+                <Menu.Popup>
+                  <Menu.Item onClick={item.onClick} disabled={props.isSaving} icon={<ImageIcon data-insert-item="image-from-device" />}>
+                    {t("editor.drawing.image-from-device")}
+                  </Menu.Item>
+                  <Menu.Item
+                    onClick={() => setImmichDialogOpen(true)}
+                    disabled={props.isSaving}
+                    icon={<ImagesIcon data-insert-item="immich" />}
+                  >
+                    {t("immich.insert")}
+                  </Menu.Item>
+                </Menu.Popup>
+              </Menu.SubmenuRoot>
+            ) : (
+              <Menu.Item key={item.key} onClick={item.onClick} disabled={props.isSaving} icon={<item.icon data-insert-item={item.key} />}>
+                {item.label}
+              </Menu.Item>
+            ),
+          )}
           {/* How the composer presents itself. Focus mode is absent when a host owns the
               editor's presentation; Markdown mode (the editor's source mode) only changes how
               the text is edited, so every composer has it. Checked while on, with a corner
