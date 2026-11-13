@@ -87,5 +87,5 @@ Everything in `assets/`, `web/public/kidpix/`, `data.ts` and `library.ts` was ex
 sounds from its Mohawk (`.MHK` and `.klb`) archives, the tables from `KP.cfg` and `KP.exe`. `data.ts`
 and `library.ts` are generated; regenerate them rather than editing them.
 
-Kid Pix and its art, fonts and sounds belong to their owners. They are in this repository for a
-private instance; clear the rights before publishing a build that includes this folder.
+Kid Pix and its art, fonts and sounds belong to their owners and are not MIT; the credits are
+under "Third-party assets" in the repository's README. Credit any new file there too.

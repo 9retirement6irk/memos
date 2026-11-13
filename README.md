@@ -80,4 +80,36 @@ Questions go to the [docs](https://usememos.com/docs), [Discord](https://discord
 
 ## License
 
-Memos is open source under the [MIT License](LICENSE).
+Memos is open source under the [MIT License](LICENSE). This fork's own code is under the same
+license, and so are the files made for it: the notebook paper backgrounds in
+`web/src/components/DrawingSheet/paper/` and the hand-drawn SVGs in `web/src/themes/aero/`
+(the check marks and the window caption buttons).
+
+### Third-party assets
+
+The MIT License does not cover the files below. They belong to their owners, who keep all
+rights in them, and they are not licensed for reuse. They are here for a personal,
+non-commercial project. This fork is not affiliated with, sponsored or endorsed by Microsoft
+or The Software MacKiev Company.
+
+**Windows Vista icons and pictures:** © Microsoft Corporation.
+
+- Files: the PNGs in `web/src/themes/aero/icons/`, `aero/toolbar/`, `aero/ui/` and `aero/app/`.
+  The Aero themes use them.
+- The files in `icons/` are named after the Windows resource each was taken from: `imageres_3.png`
+  is icon 3 in `imageres.dll`.
+- Windows and Windows Vista are trademarks of the Microsoft group of companies.
+
+**Kid Pix:** art, fonts and sounds from *Kid Pix Deluxe 4* (Riverdeep / The Learning Company, 2004).
+
+- Kid Pix was created by Craig Hickman and first published by Brøderbund. The Software
+  MacKiev Company now owns it and publishes current versions at [mackiev.com](https://www.mackiev.com/kidpix/).
+- Files: `web/public/kidpix/` (stamps, stickers, backgrounds and spray art) and
+  `web/src/components/DrawingSheet/kidpix/assets/` (the interface art, the eight fonts and the
+  sounds).
+- The tables generated into `kidpix/data.ts` and `kidpix/library.ts` were read from the same
+  disc. The Kid Pix mode code around them is this fork's own.
+- Kid Pix is a trademark of its owner.
+
+If you hold rights in any of these files and want them removed, please
+[open an issue](../../issues/new) and they will be taken out.

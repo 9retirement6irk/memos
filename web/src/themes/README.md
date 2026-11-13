@@ -35,5 +35,6 @@ with system)**, saved as `aero`, `aero-dark`, `aero-paper` and `aero-system` and
   caption shows the instance title, the red close button signs out, and with the multi-column memo
   grid the window narrows to the packed columns. `hooks/useAeroAppIcons.ts` swaps in the Aero app
   icons and an install manifest named after the instance.
-- The Vista icons in `aero/` are Microsoft's; keep this repository and its images private.
+- The PNG icons and pictures in `aero/` are Microsoft's, not MIT; the SVGs are this fork's own. The
+  credits are under "Third-party assets" in the repository's README. Credit any new one there too.
 
