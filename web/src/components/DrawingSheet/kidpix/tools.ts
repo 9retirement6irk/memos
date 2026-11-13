@@ -17,16 +17,17 @@ export interface TubeTool {
 }
 
 export const TUBE_TOOLS: readonly TubeTool[] = [
+  // In the tube's own order, two to a row.
   { key: "pencil", name: "Pencil", row: 0, frames: 5, selectSound: "easel1036", hoverSound: "easel1002" },
+  { key: "text", name: "Text", row: 6, frames: 5, selectSound: "easel1038", hoverSound: "easel1002" },
   { key: "wacky", name: "Wacky Brush", row: 1, frames: 6, selectSound: "easel1045", hoverSound: "easel1002" },
   { key: "paint", name: "Paint Can", row: 2, frames: 6, selectSound: "easel1035", hoverSound: "easel1002" },
-  { key: "mixer", name: "Electric Mixer", row: 3, frames: 6, selectSound: "easel1039", hoverSound: "easel1002" },
-  { key: "eraser", name: "Eraser", row: 4, frames: 6, selectSound: "easel1043", hoverSound: "easel1002" },
-  { key: "stamp", name: "Stamps", row: 5, frames: 5, selectSound: "easel1034", hoverSound: "easel1002" },
-  { key: "text", name: "Text", row: 6, frames: 5, selectSound: "easel1038", hoverSound: "easel1002" },
-  { key: "move", name: "Moving Van", row: 7, frames: 6, selectSound: "easel1040", hoverSound: "easel1002" },
   { key: "sticker", name: "Stickers", row: 9, frames: 5, selectSound: "easel1044", hoverSound: "easel1000" },
+  { key: "stamp", name: "Stamps", row: 5, frames: 5, selectSound: "easel1034", hoverSound: "easel1002" },
+  { key: "mixer", name: "Electric Mixer", row: 3, frames: 6, selectSound: "easel1039", hoverSound: "easel1002" },
   { key: "background", name: "Backgrounds", row: 8, frames: 5, selectSound: "easel1031", hoverSound: "easel1000" },
+  { key: "move", name: "Moving Van", row: 7, frames: 6, selectSound: "easel1040", hoverSound: "easel1002" },
+  { key: "eraser", name: "Eraser", row: 4, frames: 6, selectSound: "easel1043", hoverSound: "easel1002" },
 ];
 
 /** Undo Guy's lines; Easel.MHK scripts 1083 to 1102 each pair one with his lip movements. */
@@ -52,6 +53,12 @@ export const TOOL_NUMBER = {
   firstWand: 87,
   firstScreenEraser: 123,
 } as const;
+
+/**
+ * The Pencil tool's four kinds, as in Kid Pix's tray: tools 99 to 102, each with its own sounds.
+ * Their button art is assets/pencils.png, colored through assets/pencils-mask.png.
+ */
+export const PENCIL_KINDS = ["Pencil", "Chalk", "Crayon", "Marker"] as const;
 
 /** Pencil and eraser sizes, in drawing px. */
 export const PENCIL_SIZES = [2, 5, 9, 15, 24] as const;

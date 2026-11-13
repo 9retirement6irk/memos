@@ -4,6 +4,13 @@ A second set of tools for the drawing sheet, in the chrome of Kid Pix Deluxe 4: 
 the options tray, the color wheel, Undo Guy and the sounds. The sheet's Kid Pix button turns it
 on; "Back to drawing tools" turns it off.
 
+The layout follows Kid Pix's own screen: tools two to a row in the tube in its order, the
+dynamite and Undo Guy on the tube's lower cap, the color wheel in the corner, and a tray whose
+first panel holds the tool's kinds (the Pencil's pencil, chalk, crayon and marker) or its
+library category, with the options and their paging arrows beside it. The two round buttons at
+the tray's end (play and slide show) and the two on the tube's top cap (ideas and help) are
+part of the art and do nothing here.
+
 ## How it fits the drawing sheet
 
 `@usememos/canvas` keeps a drawing as shapes. Kid Pix tools paint pixels, so the mode paints on

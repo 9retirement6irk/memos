@@ -28,6 +28,7 @@ import {
   MIXER_COUNT,
   PALETTE,
   PATTERN_COUNT,
+  PENCIL_KINDS,
   PENCIL_SIZES,
   SCREEN_ERASER_COUNT,
   TEXT_SIZE,
@@ -232,11 +233,12 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
   const [category, setCategory] = useState<Record<LibraryTool, number>>({ stamp: 0, sticker: 0, background: 0 });
   // The tray pictures of the sticker category on show, drawn once its file has arrived.
   const [stickerThumbs, setStickerThumbs] = useState<{ category: number; urls: string[] }>({ category: -1, urls: [] });
+  const [pencilKind, setPencilKind] = useState(0);
   const [color, setColor] = useState("#ff0080");
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [typing, setTyping] = useState<Point | null>(null);
   // The selected tool's button plays its animation once, then rests on its last frame.
-  const [toolFrame, setToolFrame] = useState(TUBE_TOOLS[1].frames - 1);
+  const [toolFrame, setToolFrame] = useState((TUBE_TOOLS.find((item) => item.key === "wacky") ?? TUBE_TOOLS[0]).frames - 1);
   const [guyFrame, setGuyFrame] = useState(UNDO_GUY_REST);
   const [boom, setBoom] = useState<number | null>(null);
   const [flash, setFlash] = useState(false);
@@ -450,7 +452,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
     event.currentTarget.setPointerCapture(event.pointerId);
     const at = pointOf(event);
     const option = chosen[tool];
-    if (tool === "pencil") engine.pencilDown(at, option);
+    if (tool === "pencil") engine.pencilDown(at, option, pencilKind);
     else if (tool === "wacky") engine.brushDown(at, option);
     else if (tool === "paint") engine.fill(at, option, PATTERN_COUNT);
     else if (tool === "mixer") {
@@ -619,6 +621,30 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
     </select>
   );
 
+  // The Pencil's kinds sit in the tray's first panel, in the current color, as Kid Pix shows them.
+  const pencilKinds = tool === "pencil" && (
+    <div role="group" aria-label={current.name} className="kidpix-kinds">
+      {PENCIL_KINDS.map((name, index) => (
+        <button
+          key={name}
+          type="button"
+          className="kidpix-kind mu-focus"
+          aria-label={name}
+          aria-pressed={pencilKind === index}
+          title={name}
+          onClick={() => {
+            setPencilKind(index);
+            play("easel1029");
+          }}
+        >
+          <span aria-hidden style={{ background: color, maskPosition: `-${index * 56}px 0`, WebkitMaskPosition: `-${index * 56}px 0` }} />
+          <span aria-hidden style={{ backgroundPosition: `-${index * 56}px 0` }} />
+        </button>
+      ))}
+    </div>
+  );
+  const toolPanel = pencilKinds || categorySelect;
+
   const colorButton = (
     <button
       type="button"
@@ -699,7 +725,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
 
       {compact ? (
         <div className="kidpix-panel">
-          {categorySelect && <div>{categorySelect}</div>}
+          {toolPanel && <div>{toolPanel}</div>}
           <div>
             {colorButton}
             {optionButtons}
@@ -717,6 +743,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
               {toolButtons}
             </div>
             {dynamiteButton}
+            {undoGuy}
           </div>
           <div className="kidpix-wheel">{colorButton}</div>
           <div className="kidpix-tray">
@@ -724,27 +751,26 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
             <div aria-hidden className="kidpix-tray-art" />
             <div aria-hidden className="kidpix-tray-art" />
             <div className="kidpix-tray-info">
-              {undoGuy}
-              <div>
-                <strong>{current.name}</strong>
-                {categorySelect}
-              </div>
+              {pencilKinds || (
+                <>
+                  <strong>{current.name}</strong>
+                  {categorySelect}
+                </>
+              )}
             </div>
             {optionButtons}
-            <button
-              type="button"
-              className="kidpix-page mu-focus"
-              aria-label={labels.previous}
-              title={labels.previous}
-              onClick={() => scrollOptions(-1)}
-            />
-            <button
-              type="button"
-              className="kidpix-page mu-focus"
-              aria-label={labels.next}
-              title={labels.next}
-              onClick={() => scrollOptions(1)}
-            />
+            {/* The arrows page the tray; the color between them is the one in hand. */}
+            <div className="kidpix-pager">
+              <button
+                type="button"
+                className="mu-focus"
+                aria-label={labels.previous}
+                title={labels.previous}
+                onClick={() => scrollOptions(-1)}
+              />
+              <span aria-hidden style={{ background: color }} />
+              <button type="button" className="mu-focus" aria-label={labels.next} title={labels.next} onClick={() => scrollOptions(1)} />
+            </div>
           </div>
         </>
       )}

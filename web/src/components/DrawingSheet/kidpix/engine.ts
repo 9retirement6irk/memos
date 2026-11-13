@@ -32,7 +32,7 @@ interface EngineOptions {
 }
 
 type Stroke =
-  | { kind: "pencil"; size: number; last: Point }
+  | { kind: "pencil"; size: number; nib: number; last: Point }
   | { kind: "brush"; brush: number; last: Point; state: StrokeState }
   | { kind: "eraser"; size: number; last: Point }
   | { kind: "wand"; effect: MixEffect; last: Point }
@@ -198,10 +198,11 @@ export class KidPixEngine {
 
   // ---- strokes -------------------------------------------------------------------------
 
-  pencilDown(at: Point, sizeIndex: number) {
+  /** `nib` is the kind of pencil: 0 pencil, 1 chalk, 2 crayon, 3 marker. */
+  pencilDown(at: Point, sizeIndex: number, nib = 0) {
     this.remember();
-    this.stroke = { kind: "pencil", size: PENCIL_SIZES[sizeIndex] ?? PENCIL_SIZES[1], last: at };
-    this.audio.toolDown(TOOL_NUMBER.pencil);
+    this.stroke = { kind: "pencil", size: PENCIL_SIZES[sizeIndex] ?? PENCIL_SIZES[1], nib, last: at };
+    this.audio.toolDown(TOOL_NUMBER.pencil + nib);
     this.move(at);
   }
 
@@ -243,16 +244,7 @@ export class KidPixEngine {
       return;
     }
     if (stroke.kind === "pencil") {
-      ctx.save();
-      ctx.strokeStyle = this.color;
-      ctx.lineWidth = stroke.size;
-      ctx.lineCap = "round";
-      ctx.lineJoin = "round";
-      ctx.beginPath();
-      ctx.moveTo(stroke.last.x, stroke.last.y);
-      ctx.lineTo(to.x, to.y);
-      ctx.stroke();
-      ctx.restore();
+      this.pencilSegment(stroke.last, to, stroke.size, stroke.nib);
     } else if (stroke.kind === "brush") {
       brushSegment(ctx, stroke.brush, stroke.last, to, stroke.state, this.brushEnv());
       this.hue = stroke.state.hue;
@@ -274,6 +266,42 @@ export class KidPixEngine {
     }
     stroke.last = to;
     this.audio.toolMove();
+  }
+
+  private pencilSegment(from: Point, to: Point, size: number, nib: number) {
+    const ctx = this.ctx;
+    ctx.save();
+    ctx.strokeStyle = this.color;
+    ctx.fillStyle = this.color;
+    ctx.lineWidth = size;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    if (nib === 1 || nib === 2) {
+      // Chalk is dusty and crayon waxy: grains along the line, the crayon's packed closer.
+      const width = size * (nib === 1 ? 2.2 : 1.6);
+      const steps = Math.max(1, Math.ceil(Math.hypot(to.x - from.x, to.y - from.y) / 2));
+      const grains = Math.ceil(width * (nib === 1 ? 0.6 : 1.4));
+      ctx.globalAlpha = nib === 1 ? 0.55 : 0.8;
+      for (let step = 0; step <= steps; step++) {
+        const x = from.x + ((to.x - from.x) * step) / steps;
+        const y = from.y + ((to.y - from.y) * step) / steps;
+        for (let grain = 0; grain < grains; grain++) {
+          ctx.fillRect(x + (Math.random() - 0.5) * width, y + (Math.random() - 0.5) * width, 1.5, 1.5);
+        }
+      }
+    } else {
+      if (nib === 3) {
+        // A marker is broad, flat-tipped and a little see-through.
+        ctx.globalAlpha = 0.6;
+        ctx.lineWidth = size * 2.5;
+        ctx.lineCap = "butt";
+      }
+      ctx.beginPath();
+      ctx.moveTo(from.x, from.y);
+      ctx.lineTo(to.x, to.y);
+      ctx.stroke();
+    }
+    ctx.restore();
   }
 
   up() {
