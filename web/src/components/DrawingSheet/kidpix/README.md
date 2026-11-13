@@ -48,7 +48,7 @@ The sounds are wired as Kid Pix wires them:
 
 Stand-ins, written for this mode:
 
-- What each Wacky Brush and mixer draws. The disc holds their icons, names and sounds, not their code.
+- What each Wacky Brush and mixer draws, and how the Spray Can scatters its pictures. The disc holds their icons, names and sounds, not their code.
 - The tray's option click, and the startup jingle on entering the mode.
 
 ## The libraries
@@ -64,6 +64,12 @@ when it is first shown.
 - Backgrounds: 180 pictures at 600 x 452, re-encoded from 70 MB to 7 MB. A background sits
   behind the paint with the drawing copied over it, and becomes part of the picture the mode
   adds to the drawing.
+
+- Spray Can: the brush zone's second kind. Its 35 picture sets are the disc's `Cyclic.MHK` (15 sets
+  of "shapes") and `Anims.MHK` (20 sets of "moving paint", kept as still frames), up to 40 and 24
+  pictures a set, 2 MB in all, in `web/public/kidpix/spray/`. `spray.ts` lists them and is
+  generated. The set names are ours; the disc has none. How Kid Pix scatters the pictures is in
+  its program, so the scatter here is a stand-in, and `KP.cfg` gives the can no sounds.
 
 Not built: animations and recorded sounds (a saved drawing is a still PNG and cannot hold
 either) and the voice brushes.

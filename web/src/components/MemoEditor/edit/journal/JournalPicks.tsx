@@ -1,42 +1,23 @@
 import { Button, Checkbox } from "@usememos/ui";
 import { ShuffleIcon } from "lucide-react";
 import { ActivityIconView } from "@/components/Journal/ActivityIconView";
-import { MoodFace } from "@/components/Journal/MoodFace";
-import { MOODS } from "@/lib/journal/entry";
+import { StateOfMindPicker } from "@/components/Journal/StateOfMindPicker";
 import { cn } from "@/lib/utils";
 import { useTranslate } from "@/utils/i18n";
 import { type JournalSession, PROMPT_COUNT } from "./useJournalSession";
 
-/** The mood, the activities and the day's prompt, above the text. */
+/** How the user feels, the activities and the day's prompt, above the text. */
 export const JournalPicks = ({ journal }: { journal: JournalSession }) => {
   const t = useTranslate();
   const { settings, draft, update } = journal;
   return (
     <div className="flex w-full flex-col gap-3" data-journal-picks="">
-      <fieldset className="flex flex-col gap-1.5">
-        <legend className="mu-label mb-1.5">{t("journal.mood-question")}</legend>
-        <div className="flex flex-wrap gap-1">
-          {MOODS.map((mood) => {
-            const on = draft.mood === mood;
-            return (
-              <button
-                key={mood}
-                type="button"
-                aria-pressed={on}
-                data-mood={mood}
-                onClick={() => update({ mood: on ? undefined : mood })}
-                className={cn(
-                  "mu-focus flex min-w-16 flex-col items-center gap-1 rounded-mu-md border px-2 pt-1.5 pb-1 transition-colors",
-                  on ? "border-mu-edge bg-mu-hover font-medium" : "border-transparent hover:bg-mu-hover",
-                )}
-              >
-                <MoodFace mood={mood} size={34} />
-                <span className="mu-caption">{t(`journal.mood.${mood}` as never)}</span>
-              </button>
-            );
-          })}
-        </div>
-      </fieldset>
+      <StateOfMindPicker
+        value={draft.mind}
+        onChange={(mind) => update({ mind })}
+        defaultKind="today"
+        hiddenImpacts={settings.hiddenImpacts}
+      />
 
       {settings.activities.length > 0 && (
         <fieldset className="flex flex-col gap-1.5">

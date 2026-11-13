@@ -158,6 +158,9 @@
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
 }
+.kidpix-icon[data-sheet="spray"] {
+  background-image: url("./assets/spray.png");
+}
 .kidpix-icon[data-sheet="mixers"] {
   background-image: url("./assets/mixers.png");
 }
@@ -472,6 +475,27 @@
   background-image: url("./assets/pencils.png");
   background-repeat: no-repeat;
   background-position: calc(0px - var(--kind-x)) -4px;
+}
+/* The brush zone's two kinds lie in their own panel (TP.MHK frame 430). */
+.kidpix-kinds[data-art="brush"] {
+  background-image: url("./assets/brushkinds-panel.png");
+}
+.kidpix-kinds[data-art="brush"] > .kidpix-kind {
+  width: 56px;
+}
+.kidpix-kinds[data-art="brush"] > .kidpix-kind:nth-child(1) {
+  --kind-x: 28px;
+}
+.kidpix-kinds[data-art="brush"] > .kidpix-kind:nth-child(2) {
+  --kind-x: 108px;
+  width: 62px;
+}
+.kidpix-kinds[data-art="brush"] > .kidpix-kind > span:first-child {
+  -webkit-mask-image: url("./assets/brushkinds-mask.png");
+  mask-image: url("./assets/brushkinds-mask.png");
+}
+.kidpix-kinds[data-art="brush"] > .kidpix-kind > span:last-child {
+  background-image: url("./assets/brushkinds.png");
 }
 .kidpix-options {
   position: absolute;

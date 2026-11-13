@@ -3,7 +3,7 @@ import { CheckIcon } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useImmichAlbums, useImmichConnection, useImmichPhotos } from "@/hooks/useImmichQueries";
-import { fetchImmichOriginal, type ImmichPhoto, immichThumbnailUrl } from "@/lib/immich";
+import { fetchImmichOriginal, fetchImmichPreview, type ImmichPhoto, immichThumbnailUrl } from "@/lib/immich";
 import { showErrorToast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 import { useTranslate } from "@/utils/i18n";
@@ -13,16 +13,21 @@ const ALL_PHOTOS = "";
 interface Props {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  /** Receives the chosen photos' original files, in the order they were picked. */
+  /** Receives the chosen photos' files, in the order they were picked. */
   onPick: (files: File[]) => void;
+  /**
+   * `original` (the default) copies each photo as it is in Immich, for a memo to keep;
+   * `preview` takes Immich's 1440 px JPEG, for a picture placed in a drawing.
+   */
+  size?: "original" | "preview";
 }
 
 /**
- * Browse the user's own Immich library (everything, or one album) and pick photos for the memo.
- * The originals are copied into Memos as attachments, so the memo keeps them even if Immich
- * goes away; nothing is changed in Immich.
+ * Browse the user's own Immich library (everything, or one album) and pick photos for the memo
+ * or a drawing. The files are copied into Memos, so the memo keeps them even if Immich goes
+ * away; nothing is changed in Immich.
  */
-const ImmichPickerDialog = ({ open, onOpenChange, onPick }: Props) => {
+const ImmichPickerDialog = ({ open, onOpenChange, onPick, size = "original" }: Props) => {
   const t = useTranslate();
   const { data: connection, isLoading: connectionLoading } = useImmichConnection();
   const connected = Boolean(connection?.configured);
@@ -60,7 +65,8 @@ const ImmichPickerDialog = ({ open, onOpenChange, onPick }: Props) => {
     const controller = new AbortController();
     abortRef.current = controller;
     setAdding(true);
-    const results = await Promise.allSettled(selected.map((photo) => fetchImmichOriginal(photo, controller.signal)));
+    const fetchPhoto = size === "preview" ? fetchImmichPreview : fetchImmichOriginal;
+    const results = await Promise.allSettled(selected.map((photo) => fetchPhoto(photo, controller.signal)));
     if (controller.signal.aborted) return;
     const files = results.flatMap((result) => (result.status === "fulfilled" ? [result.value] : []));
     if (files.length < results.length) showErrorToast(t("immich.add-failed"));

@@ -5,7 +5,16 @@ import { groupPhotos, type SuggestionPhoto, spreadPick } from "@/lib/journal/sug
 import { weatherAt, weatherKind } from "@/lib/journal/weather";
 import { formatDistance, projectRoute } from "@/lib/routeImage";
 
-const base = { body: "", goals: [], activities: [], moodTagPrefix: "mood/", activityTagPrefix: "did/" };
+const base = {
+  body: "",
+  goals: [],
+  activities: [],
+  mindKind: "today" as const,
+  moodTagPrefix: "mood/",
+  feelingTagPrefix: "felt/",
+  impactTagPrefix: "impact/",
+  activityTagPrefix: "did/",
+};
 
 describe("journal entries", () => {
   it("writes an entry stock Memos can read: heading, prompt, body, goals, weather, then tags", () => {
@@ -19,7 +28,7 @@ describe("journal entries", () => {
         { label: "Read", done: false },
       ],
       weather: weatherLine(51, "fahrenheit", "partly cloudy"),
-      mood: "good",
+      mind: { valence: "pleasant", feelings: ["grateful", "made-up"], impacts: ["family"] },
       activities: ["family", "exercise"],
     });
 
@@ -30,14 +39,18 @@ describe("journal entries", () => {
         "The dog found a stick twice his size.",
         "- [x] Walk 30 minutes\n- [ ] Read",
         "51°F, partly cloudy",
-        "#mood/good #did/family #did/exercise",
+        "#mood/pleasant #mood/today #felt/grateful #impact/family #did/family #did/exercise",
       ].join("\n\n") + "\n",
     );
   });
 
   it("leaves out an unanswered prompt and anything not picked", () => {
     expect(composeEntry({ ...base, prompt: "What did you learn?", body: "   " })).toBe("\n");
-    expect(composeEntry({ ...base, body: "Quiet day.", mood: "okay" })).toBe("Quiet day.\n\n#mood/okay\n");
+    expect(composeEntry({ ...base, body: "Quiet day.", mind: { valence: "neutral", feelings: [], impacts: [] } })).toBe(
+      "Quiet day.\n\n#mood/neutral #mood/today\n",
+    );
+    // Words and causes without a step on the slider aren't written.
+    expect(composeEntry({ ...base, body: "x", mind: { feelings: ["calm"], impacts: ["work"] } })).toBe("x\n");
   });
 
   it("turns labels and prefixes into tags Memos accepts", () => {
@@ -46,13 +59,16 @@ describe("journal entries", () => {
     expect(normalizePrefix("Mood")).toBe("mood/");
     expect(normalizePrefix("/journal//Mood/")).toBe("journal/mood/");
     expect(normalizePrefix("")).toBe("");
-    expect(composeEntry({ ...base, body: "x", mood: "great", moodTagPrefix: "" })).toBe("x\n\n#great\n");
+    expect(
+      composeEntry({ ...base, body: "x", mind: { valence: "very-pleasant", kind: "now", feelings: [], impacts: [] }, moodTagPrefix: "" }),
+    ).toBe("x\n\n#very-pleasant #now\n");
   });
 
-  it("reads the mood back from a memo's tags", () => {
-    expect(moodFromTags(["did/work", "mood/Bad"], "mood/")).toBe("bad");
-    expect(moodFromTags(["feelings/great"], "feelings")).toBe("great");
-    expect(moodFromTags(["mood/sleepy", "work"], "mood/")).toBeUndefined();
+  it("reads the mood back from a memo's tags, the five old faces too", () => {
+    expect(moodFromTags(["did/work", "mood/Slightly-Pleasant"], "mood/")).toBe("slightly-pleasant");
+    expect(moodFromTags(["mood/bad"], "mood/")).toBe("unpleasant");
+    expect(moodFromTags(["feelings/great"], "feelings")).toBe("very-pleasant");
+    expect(moodFromTags(["mood/sleepy", "mood/today", "work"], "mood/")).toBeUndefined();
   });
 
   it("fills settings saved by an older version from the defaults", () => {

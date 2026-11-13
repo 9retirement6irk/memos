@@ -1194,7 +1194,7 @@
     --vi-hide: 0;
     opacity: 1;
   }
-  & svg.lucide:is(.lucide-book-heart, .lucide-notebook-pen) {
+  & svg.lucide:is(.lucide-book-heart, .lucide-notebook-pen, .lucide-notebook-text, .lucide-smile-plus) {
     --vi: url("./icons/Journal_104.png");
     --vi-hide: 0;
     opacity: 1;

@@ -13,6 +13,7 @@ import {
   PencilLineIcon,
   PlusIcon,
   RouteIcon,
+  SmilePlusIcon,
 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import RoutePickerDialog from "@/components/DawarichRoute/RoutePickerDialog";
@@ -158,6 +159,9 @@ const InsertMenu = (props: InsertMenuProps) => {
     ...(immichAvailable ? [{ key: "immich", label: t("immich.insert"), icon: ImagesIcon, onClick: () => setImmichDialogOpen(true) }] : []),
     ...(routeAvailable
       ? [{ key: "route", label: t("dawarich.route.insert"), icon: RouteIcon, onClick: () => setRouteDialogOpen(true) }]
+      : []),
+    ...(props.journalMode?.onLogMood && !props.journalMode.active
+      ? [{ key: "mood", label: t("journal.checkin.insert"), icon: SmilePlusIcon, onClick: props.journalMode.onLogMood }]
       : []),
     { key: "audio", label: t("editor.audio-recorder.trigger"), icon: MicIcon, onClick: props.onAudioRecorderClick },
     { key: "link", label: t("editor.insert-menu.link-memo"), icon: LinkIcon, onClick: handleOpenLinkDialog },
