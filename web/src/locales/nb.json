@@ -211,6 +211,7 @@
       "discard": "Forkast",
       "open-failed": "Kunne ikke åpne tegningen. Prøv på nytt.",
       "export-failed": "Kunne ikke lagre tegningen. Prøv på nytt.",
+      "image-from-device": "Bilde fra denne enheten",
       "image-failed": "Kunne ikke legge bildet til i tegningen.",
       "saved-without-drawing": "Memoen er lagret, men tegningen er ikke det. Lagre på nytt for å prøve igjen.",
       "kidpix": "Kid Pix-modus",

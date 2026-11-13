@@ -211,6 +211,7 @@
       "discard": "Släng",
       "open-failed": "Det gick inte att öppna teckningen. Försök igen.",
       "export-failed": "Det gick inte att spara teckningen. Försök igen.",
+      "image-from-device": "Bild från den här enheten",
       "image-failed": "Det gick inte att lägga till bilden i teckningen.",
       "saved-without-drawing": "Anteckningen har sparats, men inte teckningen. Spara igen för att försöka på nytt.",
       "kidpix": "Kid Pix-läge",

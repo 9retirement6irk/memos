@@ -213,6 +213,7 @@
       "discard": "Buang",
       "open-failed": "Tidak dapat membuka sketsa. Coba lagi.",
       "export-failed": "Tidak dapat menyimpan sketsa. Coba lagi.",
+      "image-from-device": "Gambar dari perangkat ini",
       "image-failed": "Tidak dapat menambahkan gambar ke sketsa.",
       "saved-without-drawing": "Memo tersimpan, tetapi sketsa belum. Simpan lagi untuk mencoba ulang.",
       "kidpix": "Mode Kid Pix",

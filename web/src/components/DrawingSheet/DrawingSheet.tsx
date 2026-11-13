@@ -1,10 +1,12 @@
 import { type CanvasError, type CanvasHandle, drawingFileName, type Scene, type ToolName } from "@usememos/canvas";
 import { Canvas } from "@usememos/canvas/react";
-import { AlertDialog, Button, Dialog, Popover, Toggle, ToggleGroup, Tooltip } from "@usememos/ui";
+import { AlertDialog, Button, Dialog, Menu, Popover, Toggle, ToggleGroup, Tooltip } from "@usememos/ui";
 import {
   CircleIcon,
   EraserIcon,
+  ImageIcon,
   ImagePlusIcon,
+  ImagesIcon,
   MousePointer2Icon,
   MoveUpRightIcon,
   PencilIcon,
@@ -17,6 +19,8 @@ import {
   VolumeXIcon,
 } from "lucide-react";
 import { type ClipboardEvent, lazy, type ReactElement, Suspense, useEffect, useRef, useState } from "react";
+import ImmichPickerDialog from "@/components/ImmichPicker/ImmichPickerDialog";
+import { useImmichConnection } from "@/hooks/useImmichQueries";
 import useMediaQuery from "@/hooks/useMediaQuery";
 import { showErrorToast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
@@ -47,6 +51,9 @@ const KIDPIX_FULL_CHROME_HEIGHT = 620;
 
 /** The canvas shrinks any picture over 1440 px a side, and one over 80% of the view. */
 const KIDPIX_TILE_LIMIT = 1440;
+
+/** Screen px between photos added together, so none hides the one before it. */
+const PHOTO_CASCADE = 32;
 
 const WIDTHS: { value: number; label: Translations }[] = [
   { value: 1, label: "editor.drawing.width-thin" },
@@ -98,6 +105,10 @@ const DrawingSheet = ({ mode, initialScene, background, onDone, onClose }: Drawi
   const [kidPix, setKidPix] = useState<KidPixView | null>(null);
   const [kidPixSounds, setKidPixSounds] = useState(true);
   const [isLeavingKidPix, setIsLeavingKidPix] = useState(false);
+  // Photos from Immich, offered only to a user who has connected it in Settings.
+  const { data: immichConnection } = useImmichConnection();
+  const immichAvailable = Boolean(immichConnection?.configured);
+  const [immichOpen, setImmichOpen] = useState(false);
   const kidPixCompact = !isWide || (kidPix !== null && kidPix.height < KIDPIX_FULL_CHROME_HEIGHT);
   const title = t(mode === "edit" ? "editor.drawing.edit" : "editor.drawing.new-title");
   const currentColor = color ?? ink;
@@ -146,6 +157,35 @@ const DrawingSheet = ({ mode, initialScene, background, onDone, onClose }: Drawi
     for (const file of files.filter((candidate) => candidate.type.startsWith("image/"))) {
       canvasRef.current?.insertImage(file).catch(() => showErrorToast(t("editor.drawing.image-failed")));
     }
+  };
+
+  /**
+   * Adds the photos picked from Immich in the order they were picked. Several fan out from the
+   * middle of the view, each a step down and to the right, and end up selected together, so
+   * they can be moved as one or spread apart.
+   */
+  const insertPhotos = async (files: File[]) => {
+    const canvas = canvasRef.current;
+    const surface = surfaceRef.current;
+    if (!canvas || !surface) return;
+    const { zoom, scrollX, scrollY } = canvas.getViewport();
+    const centerX = surface.clientWidth / 2 / zoom - scrollX;
+    const centerY = surface.clientHeight / 2 / zoom - scrollY;
+    const step = PHOTO_CASCADE / zoom;
+    const ids: string[] = [];
+    let failed = false;
+    for (const [index, file] of files.entries()) {
+      const offset = (index - (files.length - 1) / 2) * step;
+      try {
+        const id = await canvas.insertImage(file, files.length > 1 ? { at: [centerX + offset, centerY + offset] } : undefined);
+        if (id) ids.push(id);
+      } catch {
+        failed = true;
+      }
+    }
+    if (failed) showErrorToast(t("editor.drawing.image-failed"));
+    if (ids.length > 1) canvas.setSelection(ids);
+    syncHistory();
   };
 
   const enterKidPix = () => {
@@ -357,12 +397,36 @@ const DrawingSheet = ({ mode, initialScene, background, onDone, onClose }: Drawi
   const viewControls = (
     <>
       <IconAction size={size} label={t("editor.drawing.zoom-to-fit")} icon={<ScanIcon />} onClick={() => canvasRef.current?.zoomToFit()} />
-      <IconAction
-        size={size}
-        label={t("editor.insert-menu.insert-image")}
-        icon={<ImagePlusIcon />}
-        onClick={() => fileInputRef.current?.click()}
-      />
+      {immichAvailable ? (
+        // With Immich connected, the picture comes from this device or from there.
+        <Menu.Root modal={false} size={size ?? "md"}>
+          <Tooltip.Root>
+            <Tooltip.Trigger
+              render={
+                <Menu.Trigger
+                  render={<Button variant="ghost" size={size} aria-label={t("editor.insert-menu.insert-image")} icon={<ImagePlusIcon />} />}
+                />
+              }
+            />
+            <Tooltip.Popup>{t("editor.insert-menu.insert-image")}</Tooltip.Popup>
+          </Tooltip.Root>
+          <Menu.Popup>
+            <Menu.Item icon={<ImageIcon />} onClick={() => fileInputRef.current?.click()}>
+              {t("editor.drawing.image-from-device")}
+            </Menu.Item>
+            <Menu.Item icon={<ImagesIcon />} onClick={() => setImmichOpen(true)}>
+              {t("immich.insert")}
+            </Menu.Item>
+          </Menu.Popup>
+        </Menu.Root>
+      ) : (
+        <IconAction
+          size={size}
+          label={t("editor.insert-menu.insert-image")}
+          icon={<ImagePlusIcon />}
+          onClick={() => fileInputRef.current?.click()}
+        />
+      )}
     </>
   );
   // The Wacky Brush button from the Kid Pix tube, so the way in looks like where it leads.
@@ -539,6 +603,10 @@ const DrawingSheet = ({ mode, initialScene, background, onDone, onClose }: Drawi
             }}
           />
         </div>
+
+        {immichAvailable && (
+          <ImmichPickerDialog open={immichOpen} onOpenChange={setImmichOpen} size="preview" onPick={(files) => void insertPhotos(files)} />
+        )}
 
         <AlertDialog.Root open={discardOpen} onOpenChange={setDiscardOpen}>
           <AlertDialog.Popup>

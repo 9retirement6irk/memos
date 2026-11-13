@@ -211,6 +211,7 @@
       "discard": "Weggooien",
       "open-failed": "Kan de tekening niet openen. Probeer het opnieuw.",
       "export-failed": "Kan de tekening niet opslaan. Probeer het opnieuw.",
+      "image-from-device": "Afbeelding van dit apparaat",
       "image-failed": "Kan de afbeelding niet aan de tekening toevoegen.",
       "saved-without-drawing": "De memo is opgeslagen, maar de tekening niet. Sla opnieuw op om het nog eens te proberen.",
       "kidpix": "Kid Pix-modus",
