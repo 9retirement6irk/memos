@@ -1,4 +1,4 @@
-# Frutiger Memos
+# Memos
 
 A personal fork of [Memos](https://github.com/usememos/memos), the self-hosted note-taking app. It
 adds Windows Vista's Aero look, a journaling mode, connections to Immich, Dawarich and Home
