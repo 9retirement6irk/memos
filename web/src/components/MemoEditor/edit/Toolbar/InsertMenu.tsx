@@ -191,7 +191,7 @@ const InsertMenu = (props: InsertMenuProps) => {
         </Tooltip.Root>
         <Menu.Popup align="start">
           {insertItems.map((item) => (
-            <Menu.Item key={item.key} onClick={item.onClick} disabled={props.isSaving} icon={<item.icon />}>
+            <Menu.Item key={item.key} onClick={item.onClick} disabled={props.isSaving} icon={<item.icon data-insert-item={item.key} />}>
               {item.label}
             </Menu.Item>
           ))}

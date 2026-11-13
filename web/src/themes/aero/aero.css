@@ -1104,7 +1104,7 @@
 
 /* The icon table: each mapped Lucide icon shows its Vista picture and hides its strokes. */
 :where([data-theme^="aero-"]) {
-  & svg.lucide:is(.lucide-library, .lucide-house, .lucide-home) {
+  & svg.lucide:is(.lucide-library, .lucide-house) {
     --vi: url("./icons/netprof_3006.png");
     --vi-hide: 0;
     opacity: 1;
@@ -1114,7 +1114,7 @@
     --vi-hide: 0;
     opacity: 1;
   }
-  & svg.lucide:is(.lucide-calendar-days, .lucide-calendar) {
+  & svg.lucide:is(.lucide-calendar-days, .lucide-calendar, .lucide-calendar-clock, .lucide-calendar-arrow-up) {
     --vi: url("./icons/WinCal_100.png");
     --vi-hide: 0;
     opacity: 1;
@@ -1124,7 +1124,7 @@
     --vi-hide: 0;
     opacity: 1;
   }
-  & svg.lucide:is(.lucide-paperclip, .lucide-file-text, .lucide-file) {
+  & svg.lucide:is(.lucide-paperclip, .lucide-file-text, .lucide-file, .lucide-file-type-corner, .lucide-file-plus) {
     --vi: url("./icons/shell32_2.png");
     --vi-hide: 0;
     opacity: 1;
@@ -1139,22 +1139,22 @@
     --vi-hide: 0;
     opacity: 1;
   }
-  & svg.lucide:is(.lucide-square-check, .lucide-square-check-big, .lucide-circle-check, .lucide-check-check) {
+  & svg.lucide:is(.lucide-square-check, .lucide-square-check-big, .lucide-circle-check, .lucide-check-check, .lucide-circle-check-big) {
     --vi: url("./icons/SyncCenter_1213.png");
     --vi-hide: 0;
     opacity: 1;
   }
-  & svg.lucide:is(.lucide-list-restart, .lucide-rotate-ccw) {
+  & svg.lucide:is(.lucide-list-restart) {
     --vi: url("./icons/SyncCenter_1221.png");
     --vi-hide: 0;
     opacity: 1;
   }
-  & svg.lucide:is(.lucide-file-code) {
+  & svg.lucide:is(.lucide-file-code, .lucide-scroll-text) {
     --vi: url("./icons/notepad_2.png");
     --vi-hide: 0;
     opacity: 1;
   }
-  & svg.lucide:is(.lucide-link, .lucide-arrow-up-right, .lucide-external-link) {
+  & svg.lucide:is(.lucide-link, .lucide-arrow-up-right, .lucide-external-link, .lucide-milestone) {
     --vi: url("./icons/shell32_16769.png");
     --vi-hide: 0;
     opacity: 1;
@@ -1164,7 +1164,7 @@
     --vi-hide: 0;
     opacity: 1;
   }
-  & svg.lucide:is(.lucide-users) {
+  & svg.lucide:is(.lucide-users, .lucide-user-plus) {
     --vi: url("./icons/imageres_79.png");
     --vi-hide: 0;
     opacity: 1;
@@ -1189,12 +1189,12 @@
     --vi-hide: 0;
     opacity: 1;
   }
-  & svg.lucide:is(.lucide-image) {
+  & svg.lucide:is(.lucide-image, .lucide-image-plus) {
     --vi: url("./icons/imageres_72.png");
     --vi-hide: 0;
     opacity: 1;
   }
-  & svg.lucide:is(.lucide-book-heart, .lucide-notebook-pen, .lucide-notebook-text, .lucide-smile-plus) {
+  & svg.lucide:is(.lucide-book-heart, .lucide-notebook-pen, .lucide-notebook-text, [data-insert-item="mood"]) {
     --vi: url("./icons/Journal_104.png");
     --vi-hide: 0;
     opacity: 1;
@@ -1204,17 +1204,17 @@
     --vi-hide: 0;
     opacity: 1;
   }
-  & svg.lucide:is(.lucide-bookmark-plus, .lucide-bookmark-minus) {
+  & svg.lucide:is(.lucide-bookmark-plus, .lucide-bookmark-minus, .lucide-bookmark) {
     --vi: url("./icons/ieframe_191.png");
     --vi-hide: 0;
     opacity: 1;
   }
-  & svg.lucide:is(.lucide-pen-line, .lucide-pencil, .lucide-pen, .lucide-square-pen) {
+  & svg.lucide:is(.lucide-pen-line, .lucide-pencil, .lucide-pen, .lucide-square-pen, .lucide-pencil-line) {
     --vi: url("./icons/TabletPC_10204.png");
     --vi-hide: 0;
     opacity: 1;
   }
-  & svg.lucide:is(.lucide-copy, .lucide-files) {
+  & svg.lucide:is(.lucide-copy, .lucide-files, .lucide-file-stack) {
     --vi: url("./icons/shell32_243.png");
     --vi-hide: 0;
     opacity: 1;
@@ -1264,7 +1264,7 @@
     --vi-hide: 0;
     opacity: 1;
   }
-  & svg.lucide:is(.lucide-map-pin, .lucide-map-pinned, .lucide-locate) {
+  & svg.lucide:is(.lucide-map-pin, .lucide-map-pinned, .lucide-locate, .lucide-locate-fixed, .lucide-crosshair) {
     --vi: url("./icons/imageres_179.png");
     --vi-hide: 0;
     opacity: 1;
@@ -1274,7 +1274,7 @@
     --vi-hide: 0;
     opacity: 1;
   }
-  & svg.lucide:is(.lucide-type, .lucide-text, .lucide-baseline, .lucide-pilcrow) {
+  & svg.lucide:is(.lucide-type, .lucide-baseline, .lucide-pilcrow) {
     --vi: url("./icons/shell32_155.png");
     --vi-hide: 0;
     opacity: 1;
@@ -1284,7 +1284,7 @@
     --vi-hide: 0;
     opacity: 1;
   }
-  & svg.lucide:is(.lucide-file-audio, .lucide-file-headphone, .lucide-file-music, .lucide-headphones, .lucide-audio-waveform) {
+  & svg.lucide:is(.lucide-file-headphone, .lucide-file-music, .lucide-headphones, .lucide-audio-waveform) {
     --vi: url("./icons/mmsys_3015.png");
     --vi-hide: 0;
     opacity: 1;
@@ -1424,7 +1424,7 @@
     --vi-hide: 0;
     opacity: 1;
   }
-  & svg.lucide:is(.lucide-camera) {
+  & svg.lucide:is(.lucide-camera, .lucide-aperture, .lucide-focus) {
     --vi: url("./icons/imageres_57.png");
     --vi-hide: 0;
     opacity: 1;
@@ -1490,12 +1490,12 @@
     opacity: 1;
   }
   /* Views and filters. */
-  & svg.lucide:is(.lucide-funnel, .lucide-filter, .lucide-list-filter) {
+  & svg.lucide:is(.lucide-funnel, .lucide-list-filter) {
     --vi: url("./toolbar/funnel.png");
     --vi-hide: 0;
     opacity: 1;
   }
-  & svg.lucide:is(.lucide-clock-3, .lucide-clock, .lucide-history) {
+  & svg.lucide:is(.lucide-clock-3, .lucide-clock, .lucide-timer) {
     --vi: url("./toolbar/clock.png");
     --vi-hide: 0;
     opacity: 1;
@@ -1522,6 +1522,41 @@
   }
   & svg.lucide:is(.lucide-shield, .lucide-shield-check) {
     --vi: url("./ui/shield.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-images) {
+    --vi: url("./icons/imageres_113.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-monitor) {
+    --vi: url("./icons/imageres_109.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-moon, .lucide-moon-star) {
+    --vi: url("./icons/imageres_101.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-app-window, .lucide-app-window-mac) {
+    --vi: url("./icons/shell32_3.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-refresh-cw) {
+    --vi: url("./icons/shell32_16739.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-scissors) {
+    --vi: url("./icons/shell32_16762.png");
+    --vi-hide: 0;
+    opacity: 1;
+  }
+  & svg.lucide:is(.lucide-file-cog) {
+    --vi: url("./icons/imageres_114.png");
     --vi-hide: 0;
     opacity: 1;
   }

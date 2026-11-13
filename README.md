@@ -181,6 +181,8 @@ or The Software MacKiev Company.
   The Aero themes use them.
 - The files in `icons/` are named after the Windows resource each was taken from: `imageres_3.png`
   is icon 3 in `imageres.dll`.
+  Some were taken from the [windows-ui-assets](https://github.com/bartekl1/windows-ui-assets)
+  collection, whose MIT license covers its own text, not the pictures.
 - Windows and Windows Vista are trademarks of the Microsoft group of companies.
 
 **Kid Pix:** art, fonts and sounds from *Kid Pix Deluxe 4* (Riverdeep / The Learning Company, 2004).
