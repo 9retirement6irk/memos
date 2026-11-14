@@ -66,13 +66,120 @@ const PARTS = {
 } as const;
 const COURSE = { width: 32, height: 16 };
 
-/** Brushes that draw one thing in the box dragged out, as the Draw tool's rectangle does. */
-export const BOX_BRUSHES: ReadonlySet<number> = new Set([34, 35, 36, 37, 40, 41]);
+/** TriSpin's and WhispyCircle's tile, in drawing px. */
+const TILE = 30;
+
+/**
+ * Brushes that draw one thing between the press and the pointer, redrawn as the pointer moves,
+ * as the Draw tool's rectangle is: the box brushes, and Madona, Spiral and Poly.
+ */
+export const BOX_BRUSHES: ReadonlySet<number> = new Set([20, 22, 23, 34, 35, 36, 37, 40, 41]);
+
+/** What such a brush keeps for one stroke. */
+export interface BoxMemo {
+  /** Colors picked for the stroke: Madona's four faces, Spiral's bands. */
+  colors: readonly string[];
+  /** Poly's corners so far, and when the last was set (ms). */
+  corners: Point[];
+  since: number;
+}
+export const newBoxMemo = (start: Point, now: number, random: () => number): BoxMemo => ({
+  colors: Array.from(
+    { length: 12 },
+    () => `hsl(${Math.floor(random() * 360)} ${55 + Math.floor(random() * 45)}% ${35 + Math.floor(random() * 30)}%)`,
+  ),
+  corners: [start],
+  since: now,
+});
+/** Poly sets a new corner where the pointer is this often (ms). */
+const POLY_CORNER_MS = 900;
+/** Madona's base, a square this wide around the press. */
+const PYRAMID_BASE = 20;
+/** Spiral: this many bands around, each ring this deep, turning this far per px out. */
+const SPIRAL = { bands: 36, ring: 4, twist: 0.042 };
+
+const madona = (ctx: CanvasRenderingContext2D, from: Point, to: Point, memo: BoxMemo) => {
+  // A pyramid seen from above: a square base where the brush went down, its tip at the pointer.
+  const half = PYRAMID_BASE / 2;
+  const base = [
+    { x: from.x - half, y: from.y - half },
+    { x: from.x + half, y: from.y - half },
+    { x: from.x + half, y: from.y + half },
+    { x: from.x - half, y: from.y + half },
+  ];
+  const faces = base.map((corner, at) => ({ a: corner, b: base[(at + 1) % 4], color: memo.colors[at] }));
+  // The sides nearest the tip go down first, so the far ones lie over them.
+  const far = (face: (typeof faces)[number]) => Math.hypot((face.a.x + face.b.x) / 2 - to.x, (face.a.y + face.b.y) / 2 - to.y);
+  for (const face of faces.sort((one, other) => far(one) - far(other))) {
+    ctx.fillStyle = face.color;
+    ctx.beginPath();
+    ctx.moveTo(face.a.x, face.a.y);
+    ctx.lineTo(face.b.x, face.b.y);
+    ctx.lineTo(to.x, to.y);
+    ctx.closePath();
+    ctx.fill();
+  }
+};
+
+const spiral = (ctx: CanvasRenderingContext2D, from: Point, to: Point, memo: BoxMemo) => {
+  // A disc out to the pointer, banded in colors that wind round as they go out.
+  const reach = Math.hypot(to.x - from.x, to.y - from.y);
+  const slice = (Math.PI * 2) / SPIRAL.bands;
+  const at = (radius: number, angle: number) => [from.x + Math.cos(angle) * radius, from.y + Math.sin(angle) * radius] as const;
+  for (let radius = 0; radius < reach; radius += SPIRAL.ring) {
+    const outer = Math.min(reach, radius + SPIRAL.ring);
+    for (let band = 0; band < SPIRAL.bands; band++) {
+      const inward = band * slice + radius * SPIRAL.twist;
+      const outward = band * slice + outer * SPIRAL.twist;
+      ctx.fillStyle = memo.colors[band % memo.colors.length];
+      ctx.beginPath();
+      ctx.moveTo(...at(radius, inward));
+      ctx.lineTo(...at(radius, inward + slice));
+      ctx.lineTo(...at(outer, outward + slice));
+      ctx.lineTo(...at(outer, outward));
+      ctx.closePath();
+      ctx.fill();
+    }
+  }
+};
+
+const poly = (ctx: CanvasRenderingContext2D, to: Point, env: BrushEnv, memo: BoxMemo, now: number) => {
+  // A filled shape from the press, through a corner set every so often, to the pointer.
+  if (now - memo.since >= POLY_CORNER_MS) {
+    memo.corners.push(to);
+    memo.since = now;
+  }
+  ctx.fillStyle = env.color;
+  ctx.strokeStyle = env.color;
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  for (const corner of memo.corners) ctx.lineTo(corner.x, corner.y);
+  ctx.lineTo(to.x, to.y);
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+};
 
 const RAINBOW = ["#ff0000", "#ff8000", "#ffee00", "#00c000", "#0060ff", "#4000c0", "#9000d0"];
 
 /** Draws a box brush's picture between the corner pressed and the corner the pointer is at. */
-export const brushBox = (ctx: CanvasRenderingContext2D, brush: number, from: Point, to: Point, env: BrushEnv) => {
+export const brushBox = (
+  ctx: CanvasRenderingContext2D,
+  brush: number,
+  from: Point,
+  to: Point,
+  env: BrushEnv,
+  memo: BoxMemo,
+  now: number,
+) => {
+  if (brush === 20 || brush === 22 || brush === 23) {
+    ctx.save();
+    if (brush === 20) madona(ctx, from, to, memo);
+    else if (brush === 22) spiral(ctx, from, to, memo);
+    else poly(ctx, to, env, memo, now);
+    ctx.restore();
+    return;
+  }
   const x = Math.round(Math.min(from.x, to.x));
   const y = Math.round(Math.min(from.y, to.y));
   const width = Math.round(Math.abs(to.x - from.x));
@@ -193,8 +300,6 @@ const line = (ctx: CanvasRenderingContext2D, a: Point, b: Point, width: number, 
   ctx.stroke();
 };
 
-const bright = (env: BrushEnv, lightness = 52) => `hsl(${Math.floor(env.random() * 360)} 95% ${lightness}%)`;
-
 /** A tree grows where the Tree brush lands; it draws once, not along the stroke. */
 const tree = (ctx: CanvasRenderingContext2D, env: BrushEnv, x: number, y: number, length: number, angle: number, depth: number) => {
   const end = { x: x + Math.cos(angle) * length, y: y + Math.sin(angle) * length };
@@ -221,12 +326,6 @@ export const brushSegment = (ctx: CanvasRenderingContext2D, brush: number, a: Po
   ctx.fillStyle = color;
   ctx.strokeStyle = color;
   switch (brush) {
-    case 20: // Madona
-      state.hue = (state.hue + 11) % 360;
-      ctx.strokeStyle = `hsl(${state.hue} 100% 50%)`;
-      ctx.lineWidth = 2;
-      for (let size = 8; size <= 32; size += 12) ctx.strokeRect(b.x - size / 2, b.y - size / 2, size, size);
-      break;
     case 21: // Drippy
       line(ctx, a, b, 7, color);
       if (random() < 0.3) {
@@ -237,43 +336,46 @@ export const brushSegment = (ctx: CanvasRenderingContext2D, brush: number, a: Po
         ctx.fill();
       }
       break;
-    case 22: // Spiral
-      if (state.count % 4 === 0) {
-        ctx.lineWidth = 2;
-        ctx.strokeStyle = bright(env);
+    case 24: // TriSpin: a black tile with a shaded triangle that turns a little at every stamp.
+    case 25: {
+      // WhispyCircle: the same tile with two rings.
+      if (state.count !== 1 && state.travelled < 14) break;
+      state.travelled = 0;
+      state.index++;
+      const x = Math.round(b.x);
+      const y = Math.round(b.y);
+      ctx.fillStyle = "#000000";
+      ctx.fillRect(x - TILE / 2, y - TILE / 2, TILE, TILE);
+      if (brush === 25) {
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = "#00a000";
         ctx.beginPath();
-        for (let t = 0; t < 14; t += 0.3) ctx.lineTo(b.x + Math.cos(t) * t * 1.6, b.y + Math.sin(t) * t * 1.6);
+        ctx.arc(x, y, 14, 0, Math.PI * 2);
         ctx.stroke();
-      }
-      break;
-    case 23: // Poly
-      if (state.count % 3 === 0) {
-        ctx.fillStyle = bright(env, 65);
+        ctx.strokeStyle = "#a05050";
         ctx.beginPath();
-        for (let i = 0; i < 3 + Math.floor(random() * 3); i++) ctx.lineTo(b.x + (random() - 0.5) * 60, b.y + (random() - 0.5) * 60);
-        ctx.closePath();
-        ctx.fill();
+        ctx.arc(x, y, 12, 0, Math.PI * 2);
+        ctx.stroke();
+        break;
       }
-      break;
-    case 24: {
-      // TriSpin
-      const spin = state.count * 0.35;
-      ctx.lineWidth = 1.5;
-      ctx.strokeStyle = bright(env);
+      const corner = (at: number) => {
+        const angle = state.index * 0.09 + (at * Math.PI * 2) / 3 - 2.4;
+        return { x: x + Math.cos(angle) * 13, y: y + Math.sin(angle) * 13 };
+      };
+      const [dark, bright, warm] = [corner(0), corner(1), corner(2)];
+      const shade = ctx.createLinearGradient(dark.x, dark.y, (bright.x + warm.x) / 2, (bright.y + warm.y) / 2);
+      shade.addColorStop(0, "#14104a");
+      shade.addColorStop(0.6, "#8a6a10");
+      shade.addColorStop(1, "#c03000");
+      ctx.fillStyle = shade;
       ctx.beginPath();
-      for (let i = 0; i < 3; i++)
-        ctx.lineTo(b.x + Math.cos(spin + (i * Math.PI * 2) / 3) * 22, b.y + Math.sin(spin + (i * Math.PI * 2) / 3) * 22);
+      ctx.moveTo(dark.x, dark.y);
+      ctx.lineTo(bright.x, bright.y);
+      ctx.lineTo(warm.x, warm.y);
       ctx.closePath();
-      ctx.stroke();
+      ctx.fill();
       break;
     }
-    case 25: // WhispyCircle
-      ctx.globalAlpha = 0.25;
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.arc(b.x + (random() - 0.5) * 10, b.y + (random() - 0.5) * 10, 10 + random() * 22, 0, Math.PI * 2);
-      ctx.stroke();
-      break;
     case 26: // Particle: a cloud of single specks around the stroke.
       for (let i = 0; i < 40; i++) {
         const angle = random() * Math.PI * 2;

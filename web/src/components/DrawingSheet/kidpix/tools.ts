@@ -240,7 +240,9 @@ export const MARKER_TIPS: readonly (readonly [number, number])[] = [
 export const MARKER_LEAN = 0.23;
 /** Tools 0 to 19 are Kid Pix's Realistic brushes; the Wacky ones follow. */
 export const REALISTIC_COUNT = 20;
-export const ERASER_SIZES = [8, 16, 28, 44] as const;
+/** The Little Eraser's three sizes in drawing px, measured in the original; its tip is round or square. */
+export const ERASER_SIZES = [2, 10, 20] as const;
+export const ERASER_TIPS = 2;
 
 /** Brush icons 0 to 44 draw; 45 and up are Kid Pix's voice brushes, which need a microphone. */
 export const BRUSH_COUNT = 45;
@@ -279,9 +281,12 @@ export const MIXER_EFFECTS: readonly MixEffect[] = [
   "kaleidoscope",
 ];
 
+/** The mixer wand's three sizes, in drawing px across, measured in the original. */
+export const WAND_SIZES = [10, 15, 23] as const;
+
 /** The effect each mixer wand brushes on (tools 87 to 98). */
 export const WAND_EFFECTS: readonly MixEffect[] = [
-  "speckle", // SmearBrush
+  "smear",
   "blur",
   "grayscale",
   "colorize",

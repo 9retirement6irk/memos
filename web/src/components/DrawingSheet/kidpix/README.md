@@ -64,9 +64,9 @@ The sounds are wired as Kid Pix wires them:
 
 Stand-ins, written for this mode:
 
-- Five Wacky Brushes (Madona, Spiral, Poly, Tri Spin, Whispy Circle), the twelve mixer wands and
-  fifteen of the sixteen Big Eraser effects. The disc holds their icons, names and sounds, not
-  their code, and they have not yet been matched to the original running.
+- Fourteen of the sixteen Big Eraser effects. The disc holds their icons, names and sounds, not
+  their code, and under Wine the original clears the page at once without showing them, so they
+  could not be recorded. Firecracker and Explode did show, and are the rings.
 - The tray's option click, and the startup jingle on entering the mode.
 
 ## Brushes and mixers, matched to the original
@@ -85,7 +85,10 @@ one stroke on a clean page) and rebuilt here from the result.
   - `spatter`: pixels are dropped at random instead (one kept in spatter x density).
   - The tray's three sizes choose among a brush's three tips.
   - Not modeled: `glintOffset`, `dryOutRate` and `smearBias`, which did not show in a short stroke.
-- **Wacky brushes (tools 20 to 44):** twenty follow the original.
+- **Wacky brushes (tools 20 to 44):** all twenty-five follow the original.
+  - Madona (a pyramid from the press to the pointer), Spiral (a banded disc out to the pointer) and
+    Poly (a filled shape that gains a corner every 0.9 s) are redrawn as the pointer moves, like
+    the box brushes. Tri Spin and Whispy Circle stamp a 30 px black tile.
   - Window, Door, Door Plain, Roof, Rainbow and Color Tile are dragged out as a box, like the Draw
     tool's rectangle. The Window is `Icons.MHK`'s own frame (`assets/brush-window.png`) stretched
     to the box; doors and the roof are built from its panes, panels, knob and shingle tile
@@ -97,6 +100,13 @@ one stroke on a clean page) and rebuilt here from the result.
   Kid Pix measures brightness by a pixel's strongest channel, so pure green is as bright as
   white. The bending effects (Pinch to Shear) match by eye; Kaleidoscope and Pointilize are close
   but not the original's.
+
+- **Mixer wands (tools 87 to 98):** a wand's effect lands once on whatever it passes over in a
+  stroke, however often it passes, in a round tip 10, 15 or 23 px across (the size control). So
+  the engine mixes the whole picture when the wand goes down and the stroke uncovers it. Smear
+  drags what is under it along instead. The Blur wand plays the plain brush's clips.
+- **Little Eraser:** a round or square tip at 2, 10 or 20 px, with the pencil's sounds. In Kid
+  Pix it leaves white; here it takes the paint away, so the drawing under it shows.
 
 ## The libraries
 

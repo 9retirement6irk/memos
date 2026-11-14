@@ -185,7 +185,8 @@ export const KIDPIX_TOOL_MOTION: Readonly<Record<number, readonly [number, numbe
   42: [1, 0, 0, 0, 0],
   44: [1, 0, 0, 0, 0],
   87: [1, 7295, 7297, 7296, 7298],
-  88: [1, 7251, 7252, 7253, 7254],
+  // The Blur wand plays the plain brush's clips in the program, not its own section's.
+  88: [1, 7295, 7296, 7292, 7293],
   89: [1, 7251, 0, 0, 7252],
   90: [1, 7251, 0, 0, 7252],
   91: [1, 7251, 0, 0, 7252],
@@ -275,7 +276,7 @@ export const KIDPIX_TOOL_SOUNDS: Readonly<Record<number, readonly [number, numbe
   85: [7425, 0, 0, 0],
   86: [7237, 0, 0, 0],
   87: [7295, 0, 0, 0],
-  88: [7255, 0, 7256, 0],
+  88: [7289, 0, 0, 0],
   89: [7255, 0, 7256, 0],
   90: [7255, 0, 7256, 0],
   91: [7255, 0, 7256, 0],

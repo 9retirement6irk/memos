@@ -839,6 +839,7 @@ const DrawingSheet = ({ mode, pages: initialPages, initialPage, onDone, onClose 
                   flipVertical: t("editor.drawing.kidpix-flip-vertical"),
                   size: t("editor.drawing.width"),
                   sizes: [t("editor.drawing.width-thin"), t("editor.drawing.width-medium"), t("editor.drawing.width-thick")],
+                  eraserTips: [t("editor.drawing.tool-ellipse"), t("editor.drawing.tool-rectangle")],
                   font: t("editor.drawing.kidpix-font"),
                   fontSize: t("editor.drawing.kidpix-font-size"),
                   bold: t("editor.format.bold"),

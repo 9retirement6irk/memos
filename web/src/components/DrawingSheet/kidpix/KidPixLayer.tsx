@@ -18,6 +18,7 @@ import solidTilesUrl from "./assets/solid-tiles.png";
 import soundsUrl from "./assets/sounds.m4a";
 import { KidPixAudio } from "./audio";
 import type { Point } from "./brushes";
+import { KIDPIX_TOOL_SOUNDS } from "./data";
 import { KidPixEngine, type KidPixImages, type KidPixPicture, type KidPixTile } from "./engine";
 import "./kidpix.css";
 import KindPanel, { type KindArt } from "./KindPanel";
@@ -28,7 +29,7 @@ import {
   BRUSH_COUNT,
   BRUSH_KINDS,
   BUCKET_KINDS,
-  ERASER_SIZES,
+  ERASER_TIPS,
   FONTS,
   GRADIENT_COUNT,
   type KidPixTool,
@@ -97,6 +98,8 @@ export interface KidPixLayerProps {
     /** The size control and its three sizes, small to large. */
     size: string;
     sizes: readonly [string, string, string];
+    /** The Little Eraser's round and square tips. */
+    eraserTips: readonly [string, string];
     font: string;
     fontSize: string;
     bold: string;
@@ -207,6 +210,7 @@ const optionsFor = (
   category: number,
   stickerThumbs: readonly string[],
   noBackground: string,
+  tipLabels: readonly string[],
 ): Option[] => {
   switch (tool) {
     case "pencil":
@@ -248,12 +252,14 @@ const optionsFor = (
       );
     case "eraser":
       return [
-        ...ERASER_SIZES.map((size, index) => {
-          const side = Math.min(30, size * 0.7);
-          return { index, label: `${size} px`, content: { className: "kidpix-block", style: { width: side, height: side } } };
-        }),
+        // The Little Eraser's two tips, then the Big Eraser's effects.
+        ...tipLabels.map((label, index) => ({
+          index,
+          label,
+          content: { className: "kidpix-block", style: { width: 24, height: 24, borderRadius: index === 0 ? "50%" : 0 } },
+        })),
         ...Array.from({ length: SCREEN_ERASER_COUNT }, (_, index) =>
-          sprite("erasers", index, SCREEN_ERASER_COUNT, index + ERASER_SIZES.length, toolLabel(TOOL_NUMBER.firstScreenEraser + index)),
+          sprite("erasers", index, SCREEN_ERASER_COUNT, index + ERASER_TIPS, toolLabel(TOOL_NUMBER.firstScreenEraser + index)),
         ),
       ];
     case "stamp": {
@@ -293,6 +299,8 @@ const FUSE_BURN_MS = 1500;
 const FIRECRACKER_CLIP = 7219;
 const RING_BAND = 20;
 const RING_CENTER = 0.895;
+/** The Big Eraser's effects that are those rings: Firecracker and Explode, by their place among its sixteen. */
+const RING_ERASERS: ReadonlySet<number> = new Set([0, 10]);
 
 /** Where a moving paint set keeps its clips. */
 const spraySounds = (set: number) => `${LIBRARY_URL}spray/${KIDPIX_SPRAY_SETS[set].file}.m4a`;
@@ -389,6 +397,9 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
   // The brush's mode (0 Realistic, 1 Wacky), its size, and the brush each mode last used.
   const [brushMode, setBrushMode] = useState(1);
   const [brushSize, setBrushSize] = useState(1);
+  // The mixer wand starts at its smallest, as Kid Pix's does.
+  const [wandSize, setWandSize] = useState(0);
+  const [eraserSize, setEraserSize] = useState(2);
   const [brushChoice, setBrushChoice] = useState<readonly number[]>([0, 40]);
   // The can's mode (0 3D shapes, 1 moving paint) and the set each last used, counted through all the sets.
   const [sprayMode, setSprayMode] = useState(0);
@@ -417,7 +428,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
   const [guyFrame, setGuyFrame] = useState(UNDO_GUY_REST);
   // The Firecracker's frame (assets/dynamite.png) while it sparks or is lit, and how far its rings have spread.
   const [fuse, setFuse] = useState<number | null>(null);
-  const [rings, setRings] = useState<{ spread: number; y: number } | null>(null);
+  const [rings, setRings] = useState<{ spread: number; x: number; y: number } | null>(null);
   const [splash, setSplash] = useState(true);
 
   // The layer is as large as the view in drawing px, so its paint lands on the drawing 1:1.
@@ -894,10 +905,18 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
     else if (tool === "paint") engine.fill(at, bucketKind, bucketChoice[bucketKind]);
     else if (tool === "mixer") {
       if (option < MIXER_COUNT) engine.mix(option);
-      else engine.wandDown(at, option - MIXER_COUNT);
+      else engine.wandDown(at, option - MIXER_COUNT, wandSize);
     } else if (tool === "eraser") {
-      if (option < ERASER_SIZES.length) engine.eraserDown(at, option);
-      else engine.wipe(option - ERASER_SIZES.length);
+      const effect = option - ERASER_TIPS;
+      if (option < ERASER_TIPS) engine.eraserDown(at, eraserSize, option === 0);
+      else if (RING_ERASERS.has(effect)) {
+        // Firecracker and Explode: the rings spread from where the paper was clicked.
+        const box = rootRef.current?.getBoundingClientRect();
+        if (box && timersRef.current.boom === undefined) {
+          play(`w${KIDPIX_TOOL_SOUNDS[TOOL_NUMBER.firstScreenEraser + effect]?.[0] ?? FIRECRACKER_CLIP}`);
+          spreadRings(event.clientX - box.left, event.clientY - box.top);
+        }
+      } else engine.wipe(effect);
     } else if (tool === "stamp") {
       const sheet = stampSheet(category.stamp);
       if (sheet) engine.stampFrom(at, sheet, option);
@@ -959,8 +978,34 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
     window.clearInterval(timersRef.current.fuse);
     if (timersRef.current.boom === undefined) setFuse(null);
   };
-  // Clicked, it lights; a moment later rings spread from the foot of the paper until they have
-  // covered it, and every bit of Kid Pix paint is gone (Undo Guy can bring it back).
+  // The Firecracker eraser's rings: they spread from a point until they have passed the paper's
+  // far corners, and then every bit of Kid Pix paint is gone (Undo Guy can bring it back).
+  const spreadRings = (x: number, y: number) => {
+    const finish = () => {
+      window.clearInterval(timersRef.current.boom);
+      timersRef.current.boom = undefined;
+      engineRef.current?.clear();
+      setRings(null);
+    };
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      finish();
+      return;
+    }
+    const reach = Math.max(
+      Math.hypot(x, y),
+      Math.hypot(view.width - x, y),
+      Math.hypot(x, view.height - y),
+      Math.hypot(view.width - x, view.height - y),
+    );
+    let spread = RING_BAND;
+    setRings({ spread, x, y });
+    timersRef.current.boom = window.setInterval(() => {
+      spread += RING_BAND;
+      if (spread > reach + RING_BAND) finish();
+      else setRings({ spread, x, y });
+    }, TOOL_STEP_MS);
+  };
+  // Clicked, the tube's Firecracker lights; a moment later its rings spread from the foot of the paper.
   const dynamite = () => {
     if (timersRef.current.boom !== undefined) return;
     commitText();
@@ -969,32 +1014,15 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
     window.clearInterval(timersRef.current.fuse);
     play("easel1027");
     setFuse(FUSE_LIT);
-    const finish = () => {
-      window.clearInterval(timersRef.current.boom);
-      timersRef.current.boom = undefined;
-      engineRef.current?.clear();
-      setRings(null);
-    };
     timersRef.current.boom = window.setTimeout(() => {
       setFuse(null);
       play(`w${FIRECRACKER_CLIP}`);
-      // The rings start near the foot of the paper that shows above the tray, and go on past its far corners.
+      // The rings start near the foot of the paper that shows above the tray.
       const root = rootRef.current;
       const chrome = root?.querySelector(".kidpix-tray, .kidpix-panel");
       const foot = root && chrome ? chrome.getBoundingClientRect().top - root.getBoundingClientRect().top : view.height;
-      const y = foot * RING_CENTER;
-      const reach = Math.hypot(view.width / 2, y);
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-        finish();
-        return;
-      }
-      let spread = RING_BAND;
-      setRings({ spread, y });
-      timersRef.current.boom = window.setInterval(() => {
-        spread += RING_BAND;
-        if (spread > reach + RING_BAND) finish();
-        else setRings({ spread, y });
-      }, TOOL_STEP_MS);
+      timersRef.current.boom = undefined;
+      spreadRings(view.width / 2, foot * RING_CENTER);
     }, FUSE_BURN_MS);
   };
 
@@ -1010,6 +1038,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
     toolCategory,
     stickerThumbs.category === category.sticker ? stickerThumbs.urls : [],
     labels.noBackground,
+    labels.eraserTips,
   );
 
   const toolButtons = TUBE_TOOLS.map((item) => {
@@ -1159,8 +1188,10 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
   );
 
   // One row of options, as many as fit, a page at a time; a phone's strip scrolls through them all.
-  const sizeValue = tool === "pencil" ? chosen.pencil : brushSize;
-  const hasSizes = tool === "pencil" || (tool === "wacky" && !spraying);
+  const wanding = tool === "mixer" && chosen.mixer >= MIXER_COUNT;
+  const rubbing = tool === "eraser" && chosen.eraser < ERASER_TIPS;
+  const sizeValue = tool === "pencil" ? chosen.pencil : wanding ? wandSize : rubbing ? eraserSize : brushSize;
+  const hasSizes = tool === "pencil" || (tool === "wacky" && !spraying) || wanding || rubbing;
   const modes = tool === "wacky" ? (spraying ? "spray" : "brush") : null;
   const modeValue = spraying ? sprayMode : brushMode;
   const optionsKey = [tool, modes, modeValue, bucketKind, toolCategory].join("/");
@@ -1183,6 +1214,8 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
   const chooseSize = (index: number) => {
     settle();
     if (tool === "pencil") setChosen((previous) => ({ ...previous, pencil: index }));
+    else if (wanding) setWandSize(index);
+    else if (rubbing) setEraserSize(index);
     else setBrushSize(index);
     play("easel1029");
   };
@@ -1535,7 +1568,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
         <span
           aria-hidden
           className="kidpix-rings"
-          style={{ "--kp-rings": `${rings.spread}px`, "--kp-ring-y": `${rings.y}px` } as CSSProperties}
+          style={{ "--kp-rings": `${rings.spread}px`, "--kp-ring-x": `${rings.x}px`, "--kp-ring-y": `${rings.y}px` } as CSSProperties}
         />
       )}
 
