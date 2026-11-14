@@ -820,9 +820,9 @@
 .kidpix-rings {
   position: absolute;
   inset: 0;
-  background: repeating-radial-gradient(circle at 50% var(--kp-ring-y), #fff 0 20px, transparent 20px 40px);
-  -webkit-mask-image: radial-gradient(circle at 50% var(--kp-ring-y), #000 var(--kp-rings), transparent var(--kp-rings));
-  mask-image: radial-gradient(circle at 50% var(--kp-ring-y), #000 var(--kp-rings), transparent var(--kp-rings));
+  background: repeating-radial-gradient(circle at var(--kp-ring-x) var(--kp-ring-y), #fff 0 20px, transparent 20px 40px);
+  -webkit-mask-image: radial-gradient(circle at var(--kp-ring-x) var(--kp-ring-y), #000 var(--kp-rings), transparent var(--kp-rings));
+  mask-image: radial-gradient(circle at var(--kp-ring-x) var(--kp-ring-y), #000 var(--kp-rings), transparent var(--kp-rings));
   mix-blend-mode: difference;
   pointer-events: none;
 }

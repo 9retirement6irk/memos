@@ -1,5 +1,16 @@
 import type { KidPixAudio } from "./audio";
-import { BOX_BRUSHES, type BrushEnv, brushBox, brushDown, brushSegment, newStroke, type Point, type StrokeState } from "./brushes";
+import {
+  BOX_BRUSHES,
+  type BoxMemo,
+  type BrushEnv,
+  brushBox,
+  brushDown,
+  brushSegment,
+  newBoxMemo,
+  newStroke,
+  type Point,
+  type StrokeState,
+} from "./brushes";
 import { type Box, floodMask, type MixEffect, mixPixels, paintBounds, planTiles } from "./raster";
 import { RealisticBrushes } from "./realistic";
 import type { SwfPicture } from "./swf";
@@ -17,6 +28,7 @@ import {
   TOOL_NUMBER,
   textFont,
   WAND_EFFECTS,
+  WAND_SIZES,
 } from "./tools";
 
 /** The sprite sheets the paint tools read pixels from. Each may still be loading. */
@@ -57,9 +69,9 @@ interface EngineOptions {
 type Stroke =
   | { kind: "pencil"; size: number; nib: number; last: Point; carry: { run: number } }
   | { kind: "brush"; brush: number; size: number; last: Point; state: StrokeState; carry: { run: number } }
-  | { kind: "box"; brush: number; start: Point; last: Point; base: ImageData }
-  | { kind: "eraser"; size: number; last: Point }
-  | { kind: "wand"; effect: MixEffect; last: Point }
+  | { kind: "box"; brush: number; start: Point; last: Point; base: ImageData; memo: BoxMemo }
+  | { kind: "eraser"; size: number; round: boolean; last: Point }
+  | { kind: "wand"; size: number; last: Point; mixed: CanvasPattern | null }
   | { kind: "move"; start: Point; paint: ImageData }
   | { kind: "shape"; shape: number; size: number; nib: number; start: Point; last: Point; base: ImageData }
   | { kind: "bend"; size: number; nib: number; from: Point; to: Point; base: ImageData }
@@ -93,7 +105,6 @@ const HISTORY_STEPS = 12;
 /** Rubber stamps are 32 px bitmaps, stamped at twice their size, as Kid Pix's middle size does. */
 const STAMP_CELL = 32;
 const STAMP_SIZE = 64;
-const WAND_RADIUS = 22;
 
 /** The width a kind of pencil draws at one of the three sizes. */
 const pencilWidth = (nib: number, sizeIndex: number) => (PENCIL_WIDTHS[nib] ?? PENCIL_WIDTHS[0])[sizeIndex] ?? PENCIL_WIDTHS[0][1];
@@ -316,8 +327,11 @@ export class KidPixEngine {
     this.remember();
     if (BOX_BRUSHES.has(brush)) {
       // Dragged out like a rectangle: the picture is redrawn in the box until it is let go.
-      this.stroke = { kind: "box", brush, start: at, last: at, base: this.ctx.getImageData(0, 0, this.width, this.height) };
+      const base = this.ctx.getImageData(0, 0, this.width, this.height);
+      this.stroke = { kind: "box", brush, start: at, last: at, base, memo: newBoxMemo(at, performance.now(), Math.random) };
       this.audio.toolDown(brush);
+      // A press alone already shows: Madona's pyramid from above, say.
+      this.move(at);
       return;
     }
     this.stroke = { kind: "brush", brush, size: sizeIndex, last: at, state: newStroke(at, this.hue), carry: { run: 0 } };
@@ -326,15 +340,31 @@ export class KidPixEngine {
     this.move(at);
   }
 
-  eraserDown(at: Point, sizeIndex: number) {
+  /** The Little Eraser. It takes the paint away with a round or a square tip, and sounds like the pencil. */
+  eraserDown(at: Point, sizeIndex: number, round = false) {
     this.remember();
-    this.stroke = { kind: "eraser", size: ERASER_SIZES[sizeIndex] ?? ERASER_SIZES[1], last: at };
+    this.stroke = { kind: "eraser", size: ERASER_SIZES[sizeIndex] ?? ERASER_SIZES[1], round, last: at };
+    this.audio.toolDown(PENCIL_SHAPES[0].tool);
     this.move(at);
   }
 
-  wandDown(at: Point, wand: number) {
+  /**
+   * A mixer wand, as Kid Pix's works: the effect lands once on whatever the wand passes over,
+   * however often it passes. So the whole picture is mixed up front and the wand uncovers it.
+   * The Smear wand has no picture to uncover; it drags what is under it along.
+   */
+  wandDown(at: Point, wand: number, sizeIndex = 0) {
     this.remember();
-    this.stroke = { kind: "wand", effect: WAND_EFFECTS[wand] ?? "blur", last: { x: at.x - WAND_RADIUS, y: at.y } };
+    const effect = WAND_EFFECTS[wand] ?? "blur";
+    let mixed: CanvasPattern | null = null;
+    if (effect !== "smear") {
+      const { canvas, ctx } = this.composite();
+      const pixels = ctx.getImageData(0, 0, this.width, this.height);
+      mixPixels(pixels.data, this.width, this.height, effect, rgb(this.color));
+      ctx.putImageData(pixels, 0, 0);
+      mixed = this.ctx.createPattern(canvas, "no-repeat");
+    }
+    this.stroke = { kind: "wand", size: WAND_SIZES[sizeIndex] ?? WAND_SIZES[0], last: at, mixed };
     this.audio.toolDown(TOOL_NUMBER.firstWand + wand);
     this.move(at);
   }
@@ -396,7 +426,7 @@ export class KidPixEngine {
     }
     if (stroke.kind === "box") {
       ctx.putImageData(stroke.base, 0, 0);
-      brushBox(ctx, stroke.brush, stroke.start, to, this.brushEnv());
+      brushBox(ctx, stroke.brush, stroke.start, to, this.brushEnv(), stroke.memo, performance.now());
       const moved = { x: to.x - stroke.last.x, y: to.y - stroke.last.y };
       stroke.last = to;
       this.audio.toolMove(moved.x, moved.y);
@@ -415,20 +445,66 @@ export class KidPixEngine {
       else brushSegment(ctx, stroke.brush, stroke.last, to, stroke.state, this.brushEnv());
       this.hue = stroke.state.hue;
     } else if (stroke.kind === "eraser") {
-      const steps = Math.max(1, Math.ceil(Math.hypot(to.x - stroke.last.x, to.y - stroke.last.y) / 4));
+      const steps = Math.max(1, Math.ceil(Math.hypot(to.x - stroke.last.x, to.y - stroke.last.y)));
+      ctx.save();
+      ctx.globalCompositeOperation = "destination-out";
       for (let i = 0; i <= steps; i++) {
-        const x = stroke.last.x + ((to.x - stroke.last.x) * i) / steps;
-        const y = stroke.last.y + ((to.y - stroke.last.y) * i) / steps;
-        ctx.clearRect(x - stroke.size / 2, y - stroke.size / 2, stroke.size, stroke.size);
+        const x = Math.round(stroke.last.x + ((to.x - stroke.last.x) * i) / steps);
+        const y = Math.round(stroke.last.y + ((to.y - stroke.last.y) * i) / steps);
+        if (stroke.round && stroke.size > 2) {
+          for (const [dy, dx, length] of nibMask(0, stroke.size).rows) ctx.fillRect(x + dx, y + dy, length, 1);
+        } else {
+          ctx.fillRect(x - Math.floor(stroke.size / 2), y - Math.floor(stroke.size / 2), stroke.size, stroke.size);
+        }
       }
+      ctx.restore();
     } else {
-      // A wand works where it has not just been, or one spot would be mixed many times over.
-      if (Math.hypot(to.x - stroke.last.x, to.y - stroke.last.y) < WAND_RADIUS / 2) return;
-      this.mixRegion(
-        { x: Math.floor(to.x - WAND_RADIUS), y: Math.floor(to.y - WAND_RADIUS), width: WAND_RADIUS * 2, height: WAND_RADIUS * 2 },
-        stroke.effect,
-        true,
-      );
+      const still = to.x === stroke.last.x && to.y === stroke.last.y;
+      ctx.save();
+      if (stroke.mixed) {
+        ctx.fillStyle = stroke.mixed;
+        ctx.strokeStyle = stroke.mixed;
+        ctx.lineWidth = stroke.size;
+        ctx.lineCap = "round";
+        ctx.beginPath();
+        if (still) {
+          ctx.arc(to.x, to.y, stroke.size / 2, 0, Math.PI * 2);
+          ctx.fill();
+        } else {
+          ctx.moveTo(stroke.last.x, stroke.last.y);
+          ctx.lineTo(to.x, to.y);
+          ctx.stroke();
+        }
+      } else if (!still) {
+        // Smear: what is under the wand is carried along with it, thinning as it goes, 2 px at a time.
+        const reach = Math.ceil(stroke.size / 2);
+        const length = Math.hypot(to.x - stroke.last.x, to.y - stroke.last.y);
+        const steps = Math.max(1, Math.round(length / 2));
+        ctx.globalAlpha = 0.5;
+        for (let step = 1; step <= steps; step++) {
+          const from = {
+            x: stroke.last.x + ((to.x - stroke.last.x) * (step - 1)) / steps,
+            y: stroke.last.y + ((to.y - stroke.last.y) * (step - 1)) / steps,
+          };
+          const next = {
+            x: stroke.last.x + ((to.x - stroke.last.x) * step) / steps,
+            y: stroke.last.y + ((to.y - stroke.last.y) * step) / steps,
+          };
+          const behind = this.composite({
+            x: Math.round(from.x) - reach,
+            y: Math.round(from.y) - reach,
+            width: reach * 2,
+            height: reach * 2,
+          }).canvas;
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(next.x, next.y, stroke.size / 2, 0, Math.PI * 2);
+          ctx.clip();
+          ctx.drawImage(behind, Math.round(next.x) - reach, Math.round(next.y) - reach);
+          ctx.restore();
+        }
+      }
+      ctx.restore();
     }
     const moved = { x: to.x - stroke.last.x, y: to.y - stroke.last.y };
     stroke.last = to;
@@ -687,23 +763,16 @@ export class KidPixEngine {
   /** A whole-picture mixer: the result covers the drawing under it. */
   mix(mixer: number) {
     this.remember();
-    this.mixRegion({ x: 0, y: 0, width: this.width, height: this.height }, MIXER_EFFECTS[mixer] ?? "invert", false);
+    this.mixRegion({ x: 0, y: 0, width: this.width, height: this.height }, MIXER_EFFECTS[mixer] ?? "invert");
     this.audio.toolOnce(TOOL_NUMBER.firstMixer + mixer);
   }
 
-  private mixRegion(box: Box, effect: MixEffect, round: boolean) {
+  private mixRegion(box: Box, effect: MixEffect) {
     const { canvas, ctx } = this.composite(box);
     const pixels = ctx.getImageData(0, 0, box.width, box.height);
     mixPixels(pixels.data, box.width, box.height, effect, rgb(this.color));
     ctx.putImageData(pixels, 0, 0);
-    this.ctx.save();
-    if (round) {
-      this.ctx.beginPath();
-      this.ctx.arc(box.x + box.width / 2, box.y + box.height / 2, box.width / 2, 0, Math.PI * 2);
-      this.ctx.clip();
-    }
     this.ctx.drawImage(canvas, box.x, box.y);
-    this.ctx.restore();
   }
 
   /** Stamps a letter (0 is A) in the current color. Kid Pix plays clip 7320 for any stamp. */
