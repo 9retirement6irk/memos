@@ -110,7 +110,8 @@ export type MixEffect =
   | "edge"
   | "blur"
   | "mosaic"
-  | "speckle"
+  /** The Smear wand, which drags the picture along and so is done by the engine, not here. */
+  | "smear"
   | "flip"
   | "kaleidoscope"
   | "shear"
@@ -274,9 +275,6 @@ export const mixPixels = (
     }
     case "mosaic":
       displace((x, y) => [Math.floor(x / 12) * 12 + 6, Math.floor(y / 12) * 12 + 6]);
-      break;
-    case "speckle":
-      displace((x, y) => [x + (random() - 0.5) * 14, y + (random() - 0.5) * 14]);
       break;
     case "pointilize":
       // Static, with a speck of the picture's negative here and there.

@@ -7,6 +7,7 @@ import { floodMask, mixPixels, paintBounds, planTiles } from "@/components/Drawi
 import { REALISTIC_BRUSHES } from "@/components/DrawingSheet/kidpix/tips";
 import {
   BUCKET_KINDS,
+  ERASER_SIZES,
   FONTS,
   MIXER_COUNT,
   MIXER_EFFECTS,
@@ -18,6 +19,7 @@ import {
   UNDO_GUY_LINES,
   WAND_COUNT,
   WAND_EFFECTS,
+  WAND_SIZES,
 } from "@/components/DrawingSheet/kidpix/tools";
 
 /** A white picture with opaque pixels where `ink` says so. */
@@ -111,6 +113,9 @@ describe("Kid Pix tables", () => {
   it("has an effect for every mixer and wand in the tray", () => {
     expect(MIXER_EFFECTS).toHaveLength(MIXER_COUNT);
     expect(WAND_EFFECTS).toHaveLength(WAND_COUNT);
+    // The sizes measured in Kid Pix: the wand's round tip and the Little Eraser's.
+    expect(WAND_SIZES).toEqual([10, 15, 23]);
+    expect(ERASER_SIZES).toEqual([2, 10, 20]);
   });
 
   it("gives each Pencil shape Kid Pix's own tool, and has three Fill Buckets", () => {
