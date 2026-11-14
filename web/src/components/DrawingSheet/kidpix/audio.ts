@@ -1,4 +1,9 @@
-import { KIDPIX_SOUND_SPRITE, KIDPIX_TOOL_SOUNDS } from "./data";
+import { KIDPIX_SOUND_SPRITE, KIDPIX_TOOL_MOTION, KIDPIX_TOOL_SOUNDS } from "./data";
+
+/** A moving tool's loop stops this long after the pointer does (ms); Kid Pix's stops within 50. */
+const MOVING_PAUSE = 90;
+/** A stroke has turned once it has gone this far the new way (drawing px), so a shaky line is not all turns. */
+const TURN_DISTANCE = 6;
 
 interface PlayOptions {
   loop?: boolean;
@@ -22,6 +27,13 @@ export class KidPixAudio {
   private stopClip: string | null = null;
   private effectClip: string | null = null;
   private effectAt = 0;
+  /** The tool in hand's movement sounds: its loop when that runs only while moving, and its turn clips. */
+  private movingLoop: string | null = null;
+  private movingTimer = 0;
+  private turns: readonly number[] | null = null;
+  /** Which way the stroke last went on each axis, and how far it has gone since it last reversed. */
+  private heading = { x: 0, y: 0 };
+  private drift = { x: 0, y: 0 };
 
   constructor(url: string) {
     const AudioContextClass = window.AudioContext;
@@ -117,8 +129,14 @@ export class KidPixAudio {
     this.stopClip = null;
     if (!sounds) return;
     const [start, stop, loop, effect] = sounds;
+    const motion = KIDPIX_TOOL_MOTION[toolNumber];
+    this.turns = motion ? motion.slice(1) : null;
+    this.heading = { x: 0, y: 0 };
+    this.drift = { x: 0, y: 0 };
     if (start) this.play(`w${start}`);
-    if (loop) this.loop = this.play(`w${loop}`, { loop: true, volume: 0.7 });
+    // A pencil is silent until it moves; an airbrush hisses for as long as it is held.
+    if (loop && motion?.[0]) this.movingLoop = `w${loop}`;
+    else if (loop) this.loop = this.play(`w${loop}`, { loop: true, volume: 0.7 });
     if (effect) {
       this.effectClip = `w${effect}`;
       this.effectAt = performance.now();
@@ -127,7 +145,17 @@ export class KidPixAudio {
     this.stopClip = stop ? `w${stop}` : null;
   }
 
-  toolMove() {
+  /** The tool moved by (`dx`, `dy`) drawing px, down the paper being positive. */
+  toolMove(dx = 0, dy = 0) {
+    if (dx !== 0 || dy !== 0) {
+      const turn = this.turned(dx, dy);
+      if (turn) this.play(`w${turn}`);
+      if (this.movingLoop) {
+        this.loop ??= this.play(this.movingLoop, { loop: true, volume: 0.7 });
+        window.clearTimeout(this.movingTimer);
+        this.movingTimer = window.setTimeout(() => this.silenceLoop(), MOVING_PAUSE);
+      }
+    }
     if (!this.effectClip) return;
     const now = performance.now();
     if (now - this.effectAt < this.duration(this.effectClip) * 1000) return;
@@ -135,22 +163,56 @@ export class KidPixAudio {
     this.play(this.effectClip);
   }
 
+  /**
+   * The clip for a turn the stroke has just made, or 0. Kid Pix plays one when a stroke sets off
+   * or reverses along an axis, up and down before left and right, and the cfg's north is down.
+   */
+  private turned(dx: number, dy: number) {
+    if (!this.turns) return 0;
+    const [north, south, east, west] = this.turns;
+    const axis = (key: "x" | "y", delta: number) => {
+      if (delta === 0) return 0;
+      // Distance run the current way; a reversal starts it again.
+      this.drift[key] = Math.sign(this.drift[key]) === Math.sign(delta) ? this.drift[key] + delta : delta;
+      const way = Math.sign(this.drift[key]);
+      if (Math.abs(this.drift[key]) < TURN_DISTANCE || way === this.heading[key]) return 0;
+      this.heading[key] = way;
+      return way;
+    };
+    const vertical = axis("y", dy);
+    const horizontal = axis("x", dx);
+    if (vertical) return vertical > 0 ? north : south;
+    if (horizontal) return horizontal > 0 ? east : west;
+    return 0;
+  }
+
   toolUp() {
     this.silenceLoop();
+    this.movingLoop = null;
+    this.turns = null;
     this.effectClip = null;
     if (this.stopClip) this.play(this.stopClip);
     this.stopClip = null;
+  }
+
+  /** A tool put aside mid-stroke (a shape left half-made): its sound stops without its stop clip. */
+  toolDrop() {
+    this.stopClip = null;
+    this.toolUp();
   }
 
   /** One-shot tools (the Paint Can, a mixer, a stamp) only play their start. */
   toolOnce(toolNumber: number) {
     this.toolDown(toolNumber);
     this.silenceLoop();
+    this.movingLoop = null;
+    this.turns = null;
     this.effectClip = null;
     this.stopClip = null;
   }
 
   silenceLoop() {
+    window.clearTimeout(this.movingTimer);
     try {
       this.loop?.stop();
     } catch {

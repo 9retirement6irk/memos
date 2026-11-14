@@ -40,13 +40,26 @@ and gradients, the stamps, stickers, backgrounds, 22 fonts, and every sound.
 
 The sounds are wired as Kid Pix wires them:
 
-- A tube button's hover and select clips come from its button scripts in `Easel.MHK`.
-  Pointed at with a mouse, a button that is not the tool in hand loops its animation until the
-  pointer leaves, as on the disc; the tool in hand rests on its lit frame.
+- A tube button has three scripts in `Easel.MHK`, and `TUBE_TOOLS` follows them, checked against
+  the original running. Pointed at with a mouse, a button that is not the tool in hand loops its
+  hover script: its frames in the script's order, and the tool's own clip on every pass. Chosen, it
+  flashes its lit frame for one step with the chosen clip (1002, or 1000 for the libraries), and the
+  button it replaces plays its rest clip (1001). The yellow ring on the tool in hand is ours.
 - Each paint tool's start, loop, stop and effect clips come from its `[<ToolName>Snd]` section in
   `KP.cfg`. `KIDPIX_TOOL_NAMES` is the tool list from `KP.exe`; tray icon 3500 + n is tool n.
+  `KIDPIX_TOOL_MOTION` holds how a tool's sound follows the pointer, measured on the original: where
+  the section says `continuous = off` (the Pencil's kinds, most Realistic brushes) the loop sounds
+  only while the pointer moves, and a tool's direction clips play as a stroke sets off or reverses
+  up, down, left or right. The cfg's north is down the screen.
+- A shape's sound runs from its first press to its last: through a curve's bending, and from a
+  polygon's first corner to its closing one, where its stop clip plays.
 - Undo Guy's 20 lines, the dynamite's fuse and boom, the stamp clip (7320) and the color click
   (31504) are the ones the program plays.
+- The Firecracker (the dynamite on the tube) follows its button scripts and its eraser: pointed at,
+  its fuse sparks (clip 1028); clicked, it lights (1027), and a second and a half later rings spread
+  from the foot of the paper with the eraser's clip (7219) until the paint is gone. In Kid Pix the
+  rings also travel outward, so the whole picture flickers to its negative nine times a second; here
+  each ring stays where it lands, and with reduced motion the paint simply goes.
 
 Stand-ins, written for this mode:
 
@@ -83,9 +96,11 @@ when it is first shown.
 Checked against the original running under Wine.
 
 - One row of options at Kid Pix's 48 px, as many as the sheet's width fits, a page at a time; the
-  arrows turn the page and the counter between them shows which. A phone keeps its scrolling strip.
+  arrows turn the page, round from the last to the first, and the counter between them shows which. A phone keeps its scrolling strip.
 - The size control (`assets/sizes.png`): three balls for the Pencil's kinds and the paint brush.
-  `PENCIL_WIDTHS` are the widths the original draws, measured per kind. The brush's size scales
+  `PENCIL_WIDTHS` are the widths the original draws, measured per kind, and `PENCIL_NIBS` what one
+  press of each lays down: the pencil a hard-edged disc, chalk and crayon a scatter of single-pixel
+  grains that build up, the marker a thin slanted tip that stays see-through. The brush's size scales
   the Realistic brushes; the Wacky ones have none, as in Kid Pix.
 - Two mode buttons (`assets/modes.png`): Realistic and Wacky for the brush (brushes 0 to 19, and
   the rest), 3D Shapes and Moving Paint for the can. Each mode keeps its own choice.
@@ -110,7 +125,7 @@ mold is Sound Art's microphone, which is not built.
 
 - The Pencil's tray holds its sizes, then nine shapes (`PENCIL_SHAPES`, Kid Pix's modifier tools
   103 to 110, with their sounds). A line, rectangle or oval is dragged out. A curve is dragged as
-  a line, then bent with a second drag. A polygon takes a press for each corner and closes on a
+  a line; let go, it bends toward the pointer, and a press sets it (on a touch screen, a second drag). A polygon takes a press for each corner and closes on a
   press at its first, which wears a ring. Changing tool, or Undo Guy, drops a shape left half-made.
 - The Fill Buckets are three kinds, as in Kid Pix. Solid lays the color in hand through one of 42
   one-color patterns (`assets/solid-tiles.png`; the first is plain). The pattern is how much color

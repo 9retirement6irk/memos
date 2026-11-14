@@ -8,26 +8,123 @@ export interface TubeTool {
   key: KidPixTool;
   /** Kid Pix's own name for the tool; a product name, so it is not translated. */
   name: string;
+  /** The button's row in assets/tools.png: its frames in order, the lit one last. */
   row: number;
   frames: number;
-  /** Clip the button's "selected" script plays (Easel.MHK script 1014 for the pencil, and so on). */
-  selectSound: string;
-  /** Clip its hover script plays: one for the paint tools, another for the library tools. */
+  /**
+   * The button's "pointed at" script from Easel.MHK (1014 for the pencil, and so on), which
+   * Kid Pix loops while the pointer stays: a frame to show for a step, or "clip" to start
+   * `hoverSound`. The clip starts again on every pass, as it does on the disc.
+   */
+  hover: readonly (number | "clip")[];
+  /** The tool's own clip, which its hover script plays. */
   hoverSound: string;
+  /** Clip its "chosen" script plays as the button flashes: one for the paint tools, another for the libraries. */
+  selectSound: string;
+  /** Clip its "at rest" script plays when another tool takes its place; the library tools have none. */
+  restSound?: string;
 }
 
 export const TUBE_TOOLS: readonly TubeTool[] = [
   // In the tube's own order, two to a row.
-  { key: "pencil", name: "Pencil", row: 0, frames: 5, selectSound: "easel1036", hoverSound: "easel1002" },
-  { key: "text", name: "Text", row: 6, frames: 5, selectSound: "easel1038", hoverSound: "easel1002" },
-  { key: "wacky", name: "Wacky Brush", row: 1, frames: 6, selectSound: "easel1045", hoverSound: "easel1002" },
-  { key: "paint", name: "Paint Can", row: 2, frames: 6, selectSound: "easel1035", hoverSound: "easel1002" },
-  { key: "sticker", name: "Stickers", row: 9, frames: 5, selectSound: "easel1044", hoverSound: "easel1000" },
-  { key: "stamp", name: "Stamps", row: 5, frames: 5, selectSound: "easel1034", hoverSound: "easel1002" },
-  { key: "mixer", name: "Electric Mixer", row: 3, frames: 6, selectSound: "easel1039", hoverSound: "easel1002" },
-  { key: "background", name: "Backgrounds", row: 8, frames: 5, selectSound: "easel1031", hoverSound: "easel1000" },
-  { key: "move", name: "Moving Van", row: 7, frames: 6, selectSound: "easel1040", hoverSound: "easel1002" },
-  { key: "eraser", name: "Eraser", row: 4, frames: 6, selectSound: "easel1043", hoverSound: "easel1002" },
+  {
+    key: "pencil",
+    name: "Pencil",
+    row: 0,
+    frames: 5,
+    hover: ["clip", 0, 1, 2, 3],
+    hoverSound: "easel1036",
+    selectSound: "easel1002",
+    restSound: "easel1001",
+  },
+  {
+    key: "text",
+    name: "Text",
+    row: 6,
+    frames: 5,
+    hover: ["clip", 0, 1, "clip", 2, 3],
+    hoverSound: "easel1038",
+    selectSound: "easel1002",
+    restSound: "easel1001",
+  },
+  {
+    key: "wacky",
+    name: "Wacky Brush",
+    row: 1,
+    frames: 6,
+    hover: ["clip", 0, 1, 2, 3, 4],
+    hoverSound: "easel1045",
+    selectSound: "easel1002",
+    restSound: "easel1001",
+  },
+  {
+    key: "paint",
+    name: "Paint Can",
+    row: 2,
+    frames: 6,
+    hover: ["clip", 0, 1, 2, 3, 4, 3],
+    hoverSound: "easel1035",
+    selectSound: "easel1002",
+    restSound: "easel1001",
+  },
+  {
+    key: "sticker",
+    name: "Stickers",
+    row: 9,
+    frames: 5,
+    hover: [0, "clip", 1, 2, 3, 0, 1, 2, 3],
+    hoverSound: "easel1044",
+    selectSound: "easel1000",
+  },
+  {
+    key: "stamp",
+    name: "Stamps",
+    row: 5,
+    frames: 5,
+    hover: [0, 1, 2, "clip", 3],
+    hoverSound: "easel1034",
+    selectSound: "easel1002",
+    restSound: "easel1001",
+  },
+  {
+    key: "mixer",
+    name: "Electric Mixer",
+    row: 3,
+    frames: 6,
+    hover: ["clip", 0, 1, 2, 3, 4],
+    hoverSound: "easel1039",
+    selectSound: "easel1002",
+    restSound: "easel1001",
+  },
+  {
+    key: "background",
+    name: "Backgrounds",
+    row: 8,
+    frames: 5,
+    hover: ["clip", 1, 2, 3, 2, 1, 2, 3, 2, 1],
+    hoverSound: "easel1031",
+    selectSound: "easel1000",
+  },
+  {
+    key: "move",
+    name: "Moving Van",
+    row: 7,
+    frames: 6,
+    hover: ["clip", 0, 1, 2, 3, 4],
+    hoverSound: "easel1040",
+    selectSound: "easel1002",
+    restSound: "easel1001",
+  },
+  {
+    key: "eraser",
+    name: "Eraser",
+    row: 4,
+    frames: 6,
+    hover: ["clip", 1, 2, 3, 4, 1, 2],
+    hoverSound: "easel1043",
+    selectSound: "easel1002",
+    restSound: "easel1001",
+  },
 ];
 
 /**
@@ -109,17 +206,38 @@ export const SOLID_COUNT = 42;
 
 export const BRUSH_KINDS = ["Paint Brush", "Spray Can"] as const;
 
-/** Pencil and eraser sizes, in drawing px. */
 /**
  * How wide each of the Pencil's kinds draws at Kid Pix's three sizes, in drawing px, measured
- * from the original: pencil, chalk, crayon, marker.
+ * from the original as the full reach of one press: pencil, chalk, crayon, marker.
  */
 export const PENCIL_WIDTHS: readonly (readonly [number, number, number])[] = [
   [1, 10, 20],
-  [8, 12, 18],
-  [8, 14, 22],
-  [10, 17, 23],
+  [9, 15, 23],
+  [9, 15, 23],
+  [13, 19, 25],
 ];
+
+/**
+ * What one press of each kind lays down, measured from single clicks and lines in the original:
+ * - `spacing`: drawing px between presses along a line.
+ * - `share`: how much of the nib's round reach takes color in a press (chalk and crayon are grains).
+ * - `alpha`: how strongly a pixel takes it; presses build up.
+ */
+export const PENCIL_NIBS: readonly { spacing: number; share: number; alpha: number }[] = [
+  { spacing: 1, share: 1, alpha: 1 },
+  { spacing: 3.5, share: 0.33, alpha: 0.09 },
+  { spacing: 1, share: 0.27, alpha: 0.26 },
+  { spacing: 3, share: 1, alpha: 0.29 },
+];
+
+/** The Marker's slanted tip at each size: half its thickness in drawing px, and how strongly it marks. */
+export const MARKER_TIPS: readonly (readonly [number, number])[] = [
+  [1.9, 0.29],
+  [2.8, 0.29],
+  [3.7, 0.22],
+];
+/** The tip leans this far off upright, its top to the left (radians). */
+export const MARKER_LEAN = 0.23;
 /** How much a paint brush grows or shrinks at the three sizes. */
 export const BRUSH_SCALES = [0.6, 1, 1.6] as const;
 export const ERASER_SIZES = [8, 16, 28, 44] as const;
