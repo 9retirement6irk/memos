@@ -1727,7 +1727,11 @@
     "mood-trend": "Bạn đã cảm thấy thế nào",
     "mood-trend-description": "Tâm trạng hằng ngày của bạn trong tám tuần qua",
     "best-with": "Thấy tốt nhất khi có",
-    "worst-with": "Thấy khó khăn nhất khi có"
+    "worst-with": "Thấy khó khăn nhất khi có",
+    "sidebar": {
+      "journal": "Nhật ký",
+      "notes": "Ghi chú"
+    }
   },
   "dawarich": {
     "route": {

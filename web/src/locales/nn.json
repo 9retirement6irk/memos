@@ -1727,7 +1727,11 @@
     "mood-trend": "Korleis du har hatt det",
     "mood-trend-description": "Det daglege humøret ditt dei siste åtte vekene",
     "best-with": "Kjennest best med",
-    "worst-with": "Kjennest tyngst med"
+    "worst-with": "Kjennest tyngst med",
+    "sidebar": {
+      "journal": "Dagbok",
+      "notes": "Notat"
+    }
   },
   "dawarich": {
     "route": {

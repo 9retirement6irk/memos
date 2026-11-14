@@ -281,6 +281,16 @@ const optionsFor = (
 /** Kid Pix steps a tube button's animation about nine times a second, as it does the tray's. */
 const TOOL_STEP_MS = 110;
 
+/** The Firecracker's "pointed at" script (Easel.MHK 1079) in frames of assets/dynamite.png, and its lit frame. */
+const FUSE_SCRIPT = [2, 3, 4, 3, 2, 3, 4, 3, 4, 2, 3, 4, 3, 2, 3, 4] as const;
+const FUSE_LIT = 1;
+/** The original waits this long between the click and the first ring (ms). */
+const FUSE_BURN_MS = 1500;
+/** The Firecracker eraser's clip, and its rings: 20 px bands, one more a step, from this far down the paper on show. */
+const FIRECRACKER_CLIP = 7219;
+const RING_BAND = 20;
+const RING_CENTER = 0.895;
+
 /** Where a moving paint set keeps its clips. */
 const spraySounds = (set: number) => `${LIBRARY_URL}spray/${KIDPIX_SPRAY_SETS[set].file}.m4a`;
 /** A tap of the can is silent in Kid Pix; the hiss starts once it is held this long (ms). */
@@ -340,7 +350,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
   const lastTextRef = useRef("");
   const engineRef = useRef<KidPixEngine | null>(null);
   const audioRef = useRef<KidPixAudio | null>(null);
-  const timersRef = useRef<{ tool?: number; hover?: number; guy?: number; boom?: number }>({});
+  const timersRef = useRef<{ tool?: number; hover?: number; guy?: number; boom?: number; fuse?: number }>({});
   // The Spray Can's sound while it is held: the hiss waiting to start or looping, and when the next clip may play.
   const sprayRef = useRef<{ hiss?: number; loop: AudioBufferSourceNode | null; quietUntil: number }>({ loop: null, quietUntil: 0 });
   const frameRef = useRef<HTMLDivElement>(null);
@@ -398,13 +408,14 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
   const [color, setColor] = useState("#ff0080");
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [typing, setTyping] = useState<Point | null>(null);
-  // The selected tool's button plays its animation once, then rests on its last frame.
-  const [toolFrame, setToolFrame] = useState((TUBE_TOOLS.find((item) => item.key === "wacky") ?? TUBE_TOOLS[0]).frames - 1);
+  // The chosen tool's button flashes its lit frame, then rests like the others.
+  const [toolFrame, setToolFrame] = useState(0);
   // A tool pointed at with a mouse runs its animation for as long as the pointer stays on it.
   const [hovering, setHovering] = useState<{ key: KidPixTool; frame: number } | null>(null);
   const [guyFrame, setGuyFrame] = useState(UNDO_GUY_REST);
-  const [boom, setBoom] = useState<number | null>(null);
-  const [flash, setFlash] = useState(false);
+  // The Firecracker's frame (assets/dynamite.png) while it sparks or is lit, and how far its rings have spread.
+  const [fuse, setFuse] = useState<number | null>(null);
+  const [rings, setRings] = useState<{ spread: number; y: number } | null>(null);
   const [splash, setSplash] = useState(true);
 
   // The layer is as large as the view in drawing px, so its paint lands on the drawing 1:1.
@@ -453,6 +464,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
       window.clearInterval(timers.hover);
       window.clearInterval(timers.guy);
       window.clearInterval(timers.boom);
+      window.clearInterval(timers.fuse);
       // Lifts the pointer, so a Spray Can still spraying stops.
       window.clearTimeout(sprayRef.current.hiss);
       engineRef.current?.up();
@@ -658,34 +670,42 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
     window.clearInterval(timersRef.current.hover);
     setHovering(null);
   };
-  /** Kid Pix loops a tool button's animation while the pointer is on it, about nine frames a second. */
+  /**
+   * Kid Pix loops a tool button's hover script while the pointer is on it, a step about nine
+   * times a second: its frames in the script's order, and the tool's own clip on every pass.
+   */
   const startHover = (item: (typeof TUBE_TOOLS)[number]) => {
     window.clearInterval(timersRef.current.hover);
-    let frame = 1;
-    setHovering({ key: item.key, frame });
-    timersRef.current.hover = window.setInterval(() => {
-      frame = (frame + 1) % (item.frames - 1);
-      setHovering({ key: item.key, frame });
-    }, TOOL_STEP_MS);
+    let at = 0;
+    const step = () => {
+      // A clip starts with the frame after it, so the two take one step together.
+      while (item.hover[at] === "clip") {
+        play(item.hoverSound);
+        at = (at + 1) % item.hover.length;
+      }
+      setHovering({ key: item.key, frame: item.hover[at] as number });
+      at = (at + 1) % item.hover.length;
+    };
+    step();
+    timersRef.current.hover = window.setInterval(step, TOOL_STEP_MS);
   };
 
   const chooseTool = (next: (typeof TUBE_TOOLS)[number]) => {
     settle();
     stopHover();
     setPaletteOpen(false);
+    const before = TUBE_TOOLS.find((item) => item.key === tool);
     setTool(next.key);
+    // The chosen button's script flashes its lit frame for one step; the button it replaces plays its own clip as it rests.
     play(next.selectSound);
-    let frame = 0;
+    if (before?.restSound && before.key !== next.key) play(before.restSound);
+    let steps = 0;
     window.clearInterval(timersRef.current.tool);
     setToolFrame(0);
     timersRef.current.tool = window.setInterval(() => {
-      frame++;
-      if (frame >= 8) {
-        window.clearInterval(timersRef.current.tool);
-        setToolFrame(next.frames - 1);
-      } else {
-        setToolFrame(frame % (next.frames - 1));
-      }
+      steps++;
+      setToolFrame(steps === 1 ? next.frames - 1 : 0);
+      if (steps > 1) window.clearInterval(timersRef.current.tool);
     }, TOOL_STEP_MS);
   };
 
@@ -918,28 +938,60 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
     }, 40);
   };
 
-  // The dynamite: a fuse, then every bit of Kid Pix paint is gone (Undo Guy can bring it back).
+  // The Firecracker, as its button scripts and its eraser run in Kid Pix. Pointed at, its fuse sparks.
+  const sparkFuse = () => {
+    if (timersRef.current.boom !== undefined) return;
+    window.clearInterval(timersRef.current.fuse);
+    let at = 0;
+    const step = () => {
+      if (at === 0) play("easel1028");
+      setFuse(FUSE_SCRIPT[at]);
+      at = (at + 1) % FUSE_SCRIPT.length;
+    };
+    step();
+    timersRef.current.fuse = window.setInterval(step, TOOL_STEP_MS);
+  };
+  const snuffFuse = () => {
+    window.clearInterval(timersRef.current.fuse);
+    if (timersRef.current.boom === undefined) setFuse(null);
+  };
+  // Clicked, it lights; a moment later rings spread from the foot of the paper until they have
+  // covered it, and every bit of Kid Pix paint is gone (Undo Guy can bring it back).
   const dynamite = () => {
+    if (timersRef.current.boom !== undefined) return;
     commitText();
     float(null);
     engineRef.current?.settle();
+    window.clearInterval(timersRef.current.fuse);
     play("easel1027");
-    let frame = 0;
-    window.clearInterval(timersRef.current.boom);
-    setBoom(0);
-    timersRef.current.boom = window.setInterval(() => {
-      frame++;
-      if (frame < 13) {
-        setBoom(1 + (frame % 4));
+    setFuse(FUSE_LIT);
+    const finish = () => {
+      window.clearInterval(timersRef.current.boom);
+      timersRef.current.boom = undefined;
+      engineRef.current?.clear();
+      setRings(null);
+    };
+    timersRef.current.boom = window.setTimeout(() => {
+      setFuse(null);
+      play(`w${FIRECRACKER_CLIP}`);
+      // The rings start near the foot of the paper that shows above the tray, and go on past its far corners.
+      const root = rootRef.current;
+      const chrome = root?.querySelector(".kidpix-tray, .kidpix-panel");
+      const foot = root && chrome ? chrome.getBoundingClientRect().top - root.getBoundingClientRect().top : view.height;
+      const y = foot * RING_CENTER;
+      const reach = Math.hypot(view.width / 2, y);
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        finish();
         return;
       }
-      window.clearInterval(timersRef.current.boom);
-      engineRef.current?.clear();
-      play("easel1028");
-      setBoom(null);
-      setFlash(true);
-      window.setTimeout(() => setFlash(false), 460);
-    }, 110);
+      let spread = RING_BAND;
+      setRings({ spread, y });
+      timersRef.current.boom = window.setInterval(() => {
+        spread += RING_BAND;
+        if (spread > reach + RING_BAND) finish();
+        else setRings({ spread, y });
+      }, TOOL_STEP_MS);
+    }, FUSE_BURN_MS);
   };
 
   const current = TUBE_TOOLS.find((item) => item.key === tool) ?? TUBE_TOOLS[0];
@@ -970,7 +1022,6 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
         onClick={() => chooseTool(item)}
         onPointerEnter={(event) => {
           if (selected || event.pointerType !== "mouse") return;
-          play(item.hoverSound, 0.5);
           startHover(item);
         }}
         onPointerLeave={() => {
@@ -1120,7 +1171,8 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
   const page = Math.min(pages - 1, paging.key === optionsKey ? paging.page : Math.floor(chosenAt / perPage));
   const shownOptions = options.slice(page * perPage, (page + 1) * perPage);
   const turnPage = (direction: 1 | -1) => {
-    setPaging({ key: optionsKey, page: Math.max(0, Math.min(pages - 1, page + direction)) });
+    // The pages go round: back from the first is the last, as in Kid Pix.
+    setPaging({ key: optionsKey, page: (page + direction + pages) % pages });
     play("easel1029");
   };
 
@@ -1405,7 +1457,19 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
   );
 
   const dynamiteButton = (
-    <button type="button" className="kidpix-dynamite mu-focus" aria-label={labels.clear} title={labels.clear} onClick={dynamite} />
+    <button
+      type="button"
+      className="kidpix-dynamite mu-focus"
+      aria-label={labels.clear}
+      title={labels.clear}
+      data-fuse={fuse === null ? undefined : ""}
+      style={fuse === null ? undefined : ({ "--kp-fuse": fuse } as CSSProperties)}
+      onClick={dynamite}
+      onPointerEnter={(event) => {
+        if (event.pointerType === "mouse") sparkFuse();
+      }}
+      onPointerLeave={snuffFuse}
+    />
   );
 
   return (
@@ -1463,14 +1527,13 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
         />
       )}
 
-      {boom !== null && (
+      {rings !== null && (
         <span
           aria-hidden
-          className="kidpix-boom"
-          style={{ left: view.width / 2 - 52, top: view.height / 2 - 46, backgroundPosition: `-${boom * 65}px 0` }}
+          className="kidpix-rings"
+          style={{ "--kp-rings": `${rings.spread}px`, "--kp-ring-y": `${rings.y}px` } as CSSProperties}
         />
       )}
-      {flash && <span aria-hidden className="kidpix-flash" />}
 
       {compact ? (
         <div className="kidpix-panel">
@@ -1515,7 +1578,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
                 className="mu-focus"
                 aria-label={labels.previous}
                 title={labels.previous}
-                disabled={page === 0}
+                disabled={pages < 2}
                 onClick={() => turnPage(-1)}
               />
               <output aria-live="polite">{pages > 1 ? String(page + 1).padStart(2, "0") : ""}</output>
@@ -1524,7 +1587,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
                 className="mu-focus"
                 aria-label={labels.next}
                 title={labels.next}
-                disabled={page >= pages - 1}
+                disabled={pages < 2}
                 onClick={() => turnPage(1)}
               />
             </div>

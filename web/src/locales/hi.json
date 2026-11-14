@@ -1727,7 +1727,11 @@
     "mood-trend": "आपने कैसा महसूस किया",
     "mood-trend-description": "पिछले आठ हफ़्तों का आपका रोज़ का मूड",
     "best-with": "सबसे अच्छा लगता है",
-    "worst-with": "सबसे मुश्किल लगता है"
+    "worst-with": "सबसे मुश्किल लगता है",
+    "sidebar": {
+      "journal": "जर्नल",
+      "notes": "नोट्स"
+    }
   },
   "dawarich": {
     "route": {

@@ -1729,7 +1729,11 @@
     "mood-trend": "Kaip jauteisi",
     "mood-trend-description": "Tavo dienos nuotaika per paskutines aštuonias savaites",
     "best-with": "Geriausiai jautiesi su",
-    "worst-with": "Sunkiausiai jautiesi su"
+    "worst-with": "Sunkiausiai jautiesi su",
+    "sidebar": {
+      "journal": "Dienoraštis",
+      "notes": "Užrašai"
+    }
   },
   "dawarich": {
     "route": {

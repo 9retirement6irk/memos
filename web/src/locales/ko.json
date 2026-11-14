@@ -1727,7 +1727,11 @@
     "mood-trend": "그동안의 기분",
     "mood-trend-description": "최근 8주간의 하루 기분",
     "best-with": "기분이 가장 좋을 때",
-    "worst-with": "가장 힘들 때"
+    "worst-with": "가장 힘들 때",
+    "sidebar": {
+      "journal": "일기",
+      "notes": "메모"
+    }
   },
   "dawarich": {
     "route": {

@@ -1730,7 +1730,11 @@
     "mood-trend": "Jak ses cítil",
     "mood-trend-description": "Tvá denní nálada za posledních osm týdnů",
     "best-with": "Nejlépe se cítíš s",
-    "worst-with": "Nejhůř se cítíš s"
+    "worst-with": "Nejhůř se cítíš s",
+    "sidebar": {
+      "journal": "Deník",
+      "notes": "Poznámky"
+    }
   },
   "dawarich": {
     "route": {

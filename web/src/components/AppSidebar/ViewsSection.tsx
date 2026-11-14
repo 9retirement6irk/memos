@@ -17,6 +17,7 @@ import { cn } from "@/lib/utils";
 import { getCollectionHomePath, ROUTES } from "@/router/routes";
 import type { MemoView } from "@/types/proto/api/user_service_pb";
 import { useTranslate } from "@/utils/i18n";
+import JournalSwitchRow from "./JournalSwitchRow";
 import SidebarRow, {
   SIDEBAR_ROW_BOX_CLASSES,
   SIDEBAR_ROW_ICON_CLASSES,
@@ -87,6 +88,8 @@ const ViewsSection = ({ manageActive = false }: { manageActive?: boolean }) => {
         )
       }
     >
+      {/* Between your notes and your journal Space, when one is chosen in Settings → Journal. */}
+      {!manageActive && <JournalSwitchRow />}
       {!isPending && !isError && memoViews.length === 0 && (
         <SidebarRow icon={PlusIcon} label={t("setting.memo-view.create")} onClick={handleCreate} />
       )}
