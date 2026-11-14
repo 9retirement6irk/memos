@@ -66,7 +66,7 @@ Entries are ordinary Markdown memos with tags such as `#mood/pleasant`, `#felt/g
 Connect your own [Immich](https://immich.app) server in **Settings → Immich**. Each user connects
 separately. Then:
 
-- **Photos from Immich** in the editor's ＋ menu adds full-size copies to a memo. They keep
+- **Insert image → Photos from Immich** in the editor's ＋ menu adds full-size copies to a memo. They keep
   working if Immich is offline or the photo is deleted there.
 - The drawing sheet can insert Immich photos.
 - The journal uses them for its suggestions.
