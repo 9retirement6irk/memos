@@ -399,6 +399,20 @@
   height: 56px;
   border-radius: 12px;
 }
+/* Sparking or lit, the button shows that frame over the painted one. */
+.kidpix-tube > .kidpix-dynamite[data-fuse]::after {
+  content: "";
+  position: absolute;
+  left: var(--kp-fuse-x, 0);
+  top: var(--kp-fuse-y, 0);
+  width: 65px;
+  height: 58px;
+  background: url("./assets/dynamite.png") calc(var(--kp-fuse) * -65px) 0 no-repeat;
+  pointer-events: none;
+}
+.kidpix-strip > .kidpix-dynamite[data-fuse] {
+  background-position: calc(var(--kp-fuse) * -65px * 52 / 58) -3px;
+}
 
 /* Undo Guy lives in the round button on the tube's lower cap, in front of the color wheel's frame. */
 .kidpix-tube > .kidpix-undo-guy {
@@ -802,21 +816,14 @@
 
 /* ---- moments ---- */
 
-.kidpix-boom {
-  position: absolute;
-  width: 65px;
-  height: 58px;
-  background-image: url("./assets/dynamite.png");
-  background-repeat: no-repeat;
-  transform: scale(1.6);
-  transform-origin: 0 0;
-  pointer-events: none;
-}
-.kidpix-flash {
+/* The Firecracker's rings: bands that turn the picture to its negative, spreading from the foot of the paper. */
+.kidpix-rings {
   position: absolute;
   inset: 0;
-  background: #fff8c0;
-  animation: kidpix-flash 0.45s ease-out forwards;
+  background: repeating-radial-gradient(circle at 50% var(--kp-ring-y), #fff 0 20px, transparent 20px 40px);
+  -webkit-mask-image: radial-gradient(circle at 50% var(--kp-ring-y), #000 var(--kp-rings), transparent var(--kp-rings));
+  mask-image: radial-gradient(circle at 50% var(--kp-ring-y), #000 var(--kp-rings), transparent var(--kp-rings));
+  mix-blend-mode: difference;
   pointer-events: none;
 }
 .kidpix-splash {
@@ -832,14 +839,6 @@
   pointer-events: none;
 }
 
-@keyframes kidpix-flash {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
-}
 @keyframes kidpix-splash {
   0% {
     opacity: 0;
@@ -861,7 +860,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .kidpix-splash,
-  .kidpix-flash {
+  .kidpix-rings {
     display: none;
   }
 }

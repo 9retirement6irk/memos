@@ -5,7 +5,10 @@ import type { SwfPicture } from "./swf";
 import {
   BRUSH_SCALES,
   ERASER_SIZES,
+  MARKER_LEAN,
+  MARKER_TIPS,
   MIXER_EFFECTS,
+  PENCIL_NIBS,
   PENCIL_SHAPES,
   PENCIL_WIDTHS,
   TEXT_LINE,
@@ -48,7 +51,7 @@ interface EngineOptions {
 }
 
 type Stroke =
-  | { kind: "pencil"; size: number; nib: number; last: Point }
+  | { kind: "pencil"; size: number; nib: number; last: Point; carry: { run: number } }
   | { kind: "brush"; brush: number; last: Point; state: StrokeState }
   | { kind: "eraser"; size: number; last: Point }
   | { kind: "wand"; effect: MixEffect; last: Point }
@@ -89,6 +92,46 @@ const WAND_RADIUS = 22;
 
 /** The width a kind of pencil draws at one of the three sizes. */
 const pencilWidth = (nib: number, sizeIndex: number) => (PENCIL_WIDTHS[nib] ?? PENCIL_WIDTHS[0])[sizeIndex] ?? PENCIL_WIDTHS[0][1];
+
+/** A nib's pixels around its center: as rows to fill, and one by one for the kinds that lay grains. */
+interface NibMask {
+  rows: readonly (readonly [number, number, number])[];
+  pixels: readonly (readonly [number, number])[];
+  alpha: number;
+}
+const nibMasks = new Map<string, NibMask>();
+/** The pencil, chalk and crayon press a hard-edged disc; the marker a thin slanted oval. */
+const nibMask = (nib: number, size: number): NibMask => {
+  const key = `${nib}:${size}`;
+  const known = nibMasks.get(key);
+  if (known) return known;
+  const tip = nib === 3 ? MARKER_TIPS[Math.max(0, PENCIL_WIDTHS[3].indexOf(size))] : undefined;
+  const half = size / 2;
+  const sin = Math.sin(MARKER_LEAN);
+  const cos = Math.cos(MARKER_LEAN);
+  const rows: [number, number, number][] = [];
+  const pixels: [number, number][] = [];
+  const origin = -Math.floor(half);
+  for (let row = 0; row < size; row++) {
+    let first = -1;
+    let length = 0;
+    for (let column = 0; column < size; column++) {
+      const dx = column + 0.5 - half;
+      const dy = row + 0.5 - half;
+      const along = dx * sin + dy * cos;
+      const across = dx * cos - dy * sin;
+      const inside = tip ? (across / tip[0]) ** 2 + (along / half) ** 2 <= 1 : dx * dx + dy * dy <= half * half || size === 1;
+      if (!inside) continue;
+      if (first < 0) first = column;
+      length = column - first + 1;
+      pixels.push([origin + column, origin + row]);
+    }
+    if (first >= 0) rows.push([origin + row, origin + first, length]);
+  }
+  const mask = { rows, pixels, alpha: tip ? tip[1] : (PENCIL_NIBS[nib] ?? PENCIL_NIBS[0]).alpha };
+  nibMasks.set(key, mask);
+  return mask;
+};
 
 const scratch = (width: number, height: number) => {
   const canvas = document.createElement("canvas");
@@ -171,6 +214,7 @@ export class KidPixEngine {
     this.pending = null;
     this.ctx.putImageData(pending.base, 0, 0);
     this.undoStack.pop();
+    this.audio.toolDrop();
     return true;
   }
 
@@ -265,7 +309,7 @@ export class KidPixEngine {
   /** `nib` is the kind of pencil: 0 pencil, 1 chalk, 2 crayon, 3 marker. */
   pencilDown(at: Point, sizeIndex: number, nib = 0) {
     this.remember();
-    this.stroke = { kind: "pencil", size: pencilWidth(nib, sizeIndex), nib, last: at };
+    this.stroke = { kind: "pencil", size: pencilWidth(nib, sizeIndex), nib, last: at, carry: { run: 0 } };
     this.audio.toolDown(TOOL_NUMBER.pencil + nib);
     this.move(at);
   }
@@ -325,8 +369,9 @@ export class KidPixEngine {
   move(to: Point) {
     const stroke = this.stroke;
     if (!stroke) {
-      // Between presses, a polygon's next side follows the pointer.
+      // Between presses, a polygon's next side follows the pointer, and a curve bends toward it.
       if (this.pending?.shape === "polygon") this.polygonPreview(this.pending, to);
+      else if (this.pending?.shape === "curve") this.bendPreview(this.pending, to);
       return;
     }
     const ctx = this.ctx;
@@ -344,18 +389,7 @@ export class KidPixEngine {
       return;
     }
     if (stroke.kind === "bend") {
-      ctx.putImageData(stroke.base, 0, 0);
-      // A curve through the pointer: the control point sits twice as far out as the pointer does.
-      const control = { x: 2 * to.x - (stroke.from.x + stroke.to.x) / 2, y: 2 * to.y - (stroke.from.y + stroke.to.y) / 2 };
-      const points = Array.from({ length: 33 }, (_, step) => {
-        const t = step / 32;
-        const u = 1 - t;
-        return {
-          x: u * u * stroke.from.x + 2 * u * t * control.x + t * t * stroke.to.x,
-          y: u * u * stroke.from.y + 2 * u * t * control.y + t * t * stroke.to.y,
-        };
-      });
-      this.pencilPath(points, stroke.size, stroke.nib, false, false);
+      this.bendPreview(stroke, to);
       return;
     }
     if (stroke.kind === "spray") {
@@ -364,7 +398,7 @@ export class KidPixEngine {
       return;
     }
     if (stroke.kind === "pencil") {
-      this.pencilSegment(stroke.last, to, stroke.size, stroke.nib);
+      this.pencilSegment(stroke.last, to, stroke.size, stroke.nib, stroke.carry);
     } else if (stroke.kind === "brush") {
       brushSegment(ctx, stroke.brush, stroke.last, to, stroke.state, this.brushEnv());
       this.hue = stroke.state.hue;
@@ -384,13 +418,14 @@ export class KidPixEngine {
         true,
       );
     }
+    const moved = { x: to.x - stroke.last.x, y: to.y - stroke.last.y };
     stroke.last = to;
-    this.audio.toolMove();
+    this.audio.toolMove(moved.x, moved.y);
   }
 
   /**
    * The Pencil's shapes (`PENCIL_SHAPES`): a line, rectangle or oval is dragged out corner to
-   * corner; a curve is dragged as a line and bent with a second drag; a polygon takes a press
+   * corner; a curve is dragged as a line, bends toward the pointer once let go and is set by a press; a polygon takes a press
    * for each corner and closes on a press at its first.
    */
   shapeDown(at: Point, shape: number, sizeIndex: number, nib = 0) {
@@ -402,10 +437,9 @@ export class KidPixEngine {
     }
     const pending = this.pending;
     if (pending?.shape === "curve") {
-      // The second drag bends the line toward the pointer.
+      // The line has been bending toward the pointer since it was let go; a press sets it, where it is let go.
       this.stroke = { kind: "bend", size: pending.size, nib: pending.nib, from: pending.from, to: pending.to, base: pending.base };
       this.pending = null;
-      this.audio.toolDown(pending.tool);
       this.move(at);
       return;
     }
@@ -415,11 +449,10 @@ export class KidPixEngine {
         this.pending = null;
         this.ctx.putImageData(pending.base, 0, 0);
         this.pencilPath(pending.points, pending.size, pending.nib, true, pending.filled);
-        this.audio.toolOnce(pending.tool);
+        this.audio.toolUp();
         return;
       }
       pending.points.push(at);
-      this.audio.toolOnce(pending.tool);
       this.polygonPreview(pending, at);
       return;
     }
@@ -429,11 +462,31 @@ export class KidPixEngine {
     if (kind === "polygon") {
       this.pending = { shape: "polygon", tool, filled, size, nib, points: [at], base };
       this.polygonPreview(this.pending, at);
-      this.audio.toolOnce(tool);
+      // Its sound runs from the first corner to the last, as a curve's does until it is set.
+      this.audio.toolDown(tool);
       return;
     }
     this.audio.toolDown(tool);
     this.stroke = { kind: "shape", shape, size, nib, start: at, last: at, base };
+  }
+
+  /**
+   * A dragged line bent toward the pointer, as Kid Pix bends it: a cubic curve with both of its
+   * control points on the pointer, so it reaches three quarters of the way there.
+   */
+  private bendPreview(curve: { base: ImageData; from: Point; to: Point; size: number; nib: number }, at: Point) {
+    this.ctx.putImageData(curve.base, 0, 0);
+    const points = Array.from({ length: 33 }, (_, step) => {
+      const t = step / 32;
+      const u = 1 - t;
+      const ends = u * u * u;
+      const pull = 3 * u * t;
+      return {
+        x: ends * curve.from.x + pull * at.x + t * t * t * curve.to.x,
+        y: ends * curve.from.y + pull * at.y + t * t * t * curve.to.y,
+      };
+    });
+    this.pencilPath(points, curve.size, curve.nib, false, false);
   }
 
   /** The polygon so far, a line out to the pointer, and a ring on the corner that closes it. */
@@ -487,57 +540,47 @@ export class KidPixEngine {
       ctx.restore();
       if (nib === 3) return;
     }
-    if (nib === 1 || nib === 2) {
-      // Chalk and crayon are grains, laid a segment at a time.
-      const ends = closed ? [...points, points[0]] : points;
-      for (let index = 1; index < ends.length; index++) this.pencilSegment(ends[index - 1], ends[index], size, nib);
-      return;
-    }
-    // One stroke for the whole path, so the marker's see-through line does not double at the corners.
-    ctx.save();
-    ctx.strokeStyle = this.color;
-    ctx.lineWidth = size;
-    ctx.lineCap = nib === 3 ? "butt" : "round";
-    ctx.lineJoin = "round";
-    if (nib === 3) ctx.globalAlpha = 0.6;
-    trace();
-    ctx.stroke();
-    ctx.restore();
+    // Every kind draws a shape's line as it draws any other: its nib, pressed along the path.
+    const ends = closed ? [...points, points[0]] : points;
+    const carry = { run: 0 };
+    for (let index = 1; index < ends.length; index++) this.pencilSegment(ends[index - 1], ends[index], size, nib, carry);
   }
 
-  private pencilSegment(from: Point, to: Point, size: number, nib: number) {
+  /** One press of a kind's nib, as Kid Pix lays it: a solid disc, a scatter of grains, or the marker's tip. */
+  private pencilPress(x: number, y: number, size: number, nib: number) {
     const ctx = this.ctx;
-    ctx.save();
-    ctx.strokeStyle = this.color;
-    ctx.fillStyle = this.color;
-    ctx.lineWidth = size;
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
+    const mask = nibMask(nib, size);
+    const left = Math.round(x);
+    const top = Math.round(y);
+    ctx.globalAlpha = mask.alpha;
     if (nib === 1 || nib === 2) {
-      // Chalk is dusty and crayon waxy: grains along the line, the crayon's packed closer.
-      const width = size;
-      const steps = Math.max(1, Math.ceil(Math.hypot(to.x - from.x, to.y - from.y) / 2));
-      const grains = Math.ceil(width * (nib === 1 ? 0.6 : 1.4));
-      ctx.globalAlpha = nib === 1 ? 0.55 : 0.8;
-      for (let step = 0; step <= steps; step++) {
-        const x = from.x + ((to.x - from.x) * step) / steps;
-        const y = from.y + ((to.y - from.y) * step) / steps;
-        for (let grain = 0; grain < grains; grain++) {
-          ctx.fillRect(x + (Math.random() - 0.5) * width, y + (Math.random() - 0.5) * width, 1.5, 1.5);
-        }
+      const grains = Math.max(1, Math.round(mask.pixels.length * PENCIL_NIBS[nib].share));
+      for (let grain = 0; grain < grains; grain++) {
+        const [dx, dy] = mask.pixels[Math.floor(Math.random() * mask.pixels.length)];
+        ctx.fillRect(left + dx, top + dy, 1, 1);
       }
-    } else {
-      if (nib === 3) {
-        // A marker is broad, flat-tipped and a little see-through.
-        ctx.globalAlpha = 0.6;
-        ctx.lineWidth = size;
-        ctx.lineCap = "butt";
-      }
-      ctx.beginPath();
-      ctx.moveTo(from.x, from.y);
-      ctx.lineTo(to.x, to.y);
-      ctx.stroke();
+      return;
     }
+    for (const [dy, dx, length] of mask.rows) ctx.fillRect(left + dx, top + dy, length, 1);
+  }
+
+  /**
+   * A line in a kind's own mark: presses of its nib, `spacing` apart. `carry` is how far the
+   * line has run since its last press, so a stroke's presses stay evenly spaced across segments.
+   */
+  private pencilSegment(from: Point, to: Point, size: number, nib: number, carry: { run: number } = { run: 0 }) {
+    const ctx = this.ctx;
+    const spacing = (PENCIL_NIBS[nib] ?? PENCIL_NIBS[0]).spacing;
+    const length = Math.hypot(to.x - from.x, to.y - from.y);
+    ctx.save();
+    ctx.fillStyle = this.color;
+    if (carry.run === 0 && length === 0) this.pencilPress(from.x, from.y, size, nib);
+    let at = carry.run === 0 ? 0 : spacing - carry.run;
+    for (; at <= length && length > 0; at += spacing) {
+      this.pencilPress(from.x + ((to.x - from.x) * at) / length, from.y + ((to.y - from.y) * at) / length, size, nib);
+    }
+    // Never zero after a press, so the next segment does not press the same spot again.
+    if (length > 0 || carry.run === 0) carry.run = Math.max(1e-6, length === 0 ? 0 : spacing - (at - length));
     ctx.restore();
   }
 
@@ -546,7 +589,6 @@ export class KidPixEngine {
     this.stroke = null;
     if (!stroke) return;
     if (stroke.kind === "shape" && PENCIL_SHAPES[stroke.shape].kind === "curve") {
-      this.audio.toolUp();
       const { tool } = PENCIL_SHAPES[stroke.shape];
       this.pending = { shape: "curve", tool, size: stroke.size, nib: stroke.nib, from: stroke.start, to: stroke.last, base: stroke.base };
       // The line stays, waiting to be bent; a press without a drag leaves nothing to bend.
