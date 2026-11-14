@@ -1727,7 +1727,11 @@
     "mood-trend": "Как сте се чувствали",
     "mood-trend-description": "Дневното ви настроение през последните осем седмици",
     "best-with": "Най-добре с",
-    "worst-with": "Най-трудно с"
+    "worst-with": "Най-трудно с",
+    "sidebar": {
+      "journal": "Дневник",
+      "notes": "Бележки"
+    }
   },
   "dawarich": {
     "route": {

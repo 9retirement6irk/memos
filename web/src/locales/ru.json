@@ -1729,7 +1729,11 @@
     "mood-trend": "Как вы себя чувствовали",
     "mood-trend-description": "Ваше настроение по дням за последние восемь недель",
     "best-with": "Лучше всего с",
-    "worst-with": "Тяжелее всего с"
+    "worst-with": "Тяжелее всего с",
+    "sidebar": {
+      "journal": "Дневник",
+      "notes": "Заметки"
+    }
   },
   "dawarich": {
     "route": {

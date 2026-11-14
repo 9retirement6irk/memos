@@ -1728,7 +1728,11 @@
     "mood-trend": "Como você se sentiu",
     "mood-trend-description": "Seu humor diário nas últimas oito semanas",
     "best-with": "Se sente melhor com",
-    "worst-with": "Se sente pior com"
+    "worst-with": "Se sente pior com",
+    "sidebar": {
+      "journal": "Diário",
+      "notes": "Notas"
+    }
   },
   "dawarich": {
     "route": {

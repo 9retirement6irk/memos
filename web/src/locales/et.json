@@ -1727,7 +1727,11 @@
     "mood-trend": "Kuidas sa end tundsid",
     "mood-trend-description": "Sinu päevameeleolu viimase kaheksa nädala jooksul",
     "best-with": "Tunned end kõige paremini koos",
-    "worst-with": "Tunned end kõige raskemini koos"
+    "worst-with": "Tunned end kõige raskemini koos",
+    "sidebar": {
+      "journal": "Päevik",
+      "notes": "Märkmed"
+    }
   },
   "dawarich": {
     "route": {

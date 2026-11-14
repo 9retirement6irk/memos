@@ -1727,7 +1727,11 @@
     "mood-trend": "Perasaanmu selama ini",
     "mood-trend-description": "Suasana hati harianmu selama delapan minggu terakhir",
     "best-with": "Terasa paling baik dengan",
-    "worst-with": "Terasa paling berat dengan"
+    "worst-with": "Terasa paling berat dengan",
+    "sidebar": {
+      "journal": "Jurnal",
+      "notes": "Catatan"
+    }
   },
   "dawarich": {
     "route": {

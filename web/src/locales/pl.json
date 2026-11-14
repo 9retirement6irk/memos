@@ -1729,7 +1729,11 @@
     "mood-trend": "Jak się czułeś",
     "mood-trend-description": "Twój codzienny nastrój z ostatnich ośmiu tygodni",
     "best-with": "Najlepiej czujesz się przy",
-    "worst-with": "Najtrudniej czujesz się przy"
+    "worst-with": "Najtrudniej czujesz się przy",
+    "sidebar": {
+      "journal": "Dziennik",
+      "notes": "Notatki"
+    }
   },
   "dawarich": {
     "route": {

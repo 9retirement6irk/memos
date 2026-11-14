@@ -1731,7 +1731,11 @@
     "mood-trend": "كيف شعرت",
     "mood-trend-description": "مزاجك اليومي خلال الأسابيع الثمانية الأخيرة",
     "best-with": "أفضل شعور مع",
-    "worst-with": "أصعب شعور مع"
+    "worst-with": "أصعب شعور مع",
+    "sidebar": {
+      "journal": "اليوميات",
+      "notes": "الملاحظات"
+    }
   },
   "dawarich": {
     "route": {
