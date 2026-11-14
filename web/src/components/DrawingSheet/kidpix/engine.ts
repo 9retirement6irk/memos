@@ -1,9 +1,9 @@
 import type { KidPixAudio } from "./audio";
-import { type BrushEnv, brushDown, brushSegment, newStroke, type Point, type StrokeState } from "./brushes";
+import { BOX_BRUSHES, type BrushEnv, brushBox, brushDown, brushSegment, newStroke, type Point, type StrokeState } from "./brushes";
 import { type Box, floodMask, type MixEffect, mixPixels, paintBounds, planTiles } from "./raster";
+import { RealisticBrushes } from "./realistic";
 import type { SwfPicture } from "./swf";
 import {
-  BRUSH_SCALES,
   ERASER_SIZES,
   MARKER_LEAN,
   MARKER_TIPS,
@@ -11,6 +11,7 @@ import {
   PENCIL_NIBS,
   PENCIL_SHAPES,
   PENCIL_WIDTHS,
+  REALISTIC_COUNT,
   TEXT_LINE,
   type TextStyle,
   TOOL_NUMBER,
@@ -28,8 +29,11 @@ export interface KidPixImages {
   gradients?: HTMLImageElement;
   /** A strip of 48 px letter stamps, A to Z, as alpha masks. */
   letters?: HTMLImageElement;
-  /** The strip of 48 px brush icons, the source of the pattern brushes. */
-  brushes?: HTMLImageElement;
+  /** The Realistic brushes' 60 tips, as alpha masks (see tips.ts). */
+  tips?: HTMLImageElement;
+  /** The pieces the Bricks, Log, Door and Roof brushes are built from, and the Window brush's frame. */
+  brushParts?: HTMLImageElement;
+  brushWindow?: HTMLImageElement;
 }
 
 /** Something the layer can hold in a frame and press into the paint: a sticker, or a picture brought in. */
@@ -52,7 +56,8 @@ interface EngineOptions {
 
 type Stroke =
   | { kind: "pencil"; size: number; nib: number; last: Point; carry: { run: number } }
-  | { kind: "brush"; brush: number; last: Point; state: StrokeState }
+  | { kind: "brush"; brush: number; size: number; last: Point; state: StrokeState; carry: { run: number } }
+  | { kind: "box"; brush: number; start: Point; last: Point; base: ImageData }
   | { kind: "eraser"; size: number; last: Point }
   | { kind: "wand"; effect: MixEffect; last: Point }
   | { kind: "move"; start: Point; paint: ImageData }
@@ -142,6 +147,12 @@ const scratch = (width: number, height: number) => {
   return { canvas, ctx };
 };
 
+/** An image, once it can be drawn from. */
+const loaded = (image: HTMLImageElement | undefined) => (image?.complete && image.naturalWidth ? image : null);
+
+/** What the ABC brush writes until Kid Pix's "Edit ABC Text" is built. */
+const ABC_TEXT = "Kid Pix ";
+
 const rgb = (hex: string): [number, number, number] => {
   const value = Number.parseInt(hex.slice(1), 16);
   return [(value >> 16) & 255, (value >> 8) & 255, value & 255];
@@ -158,12 +169,11 @@ export class KidPixEngine {
   private readonly undoStack: Snapshot[] = [];
   private readonly redoStack: Snapshot[] = [];
   private background: HTMLImageElement | null = null;
-  private readonly patterns = new Map<number, CanvasPattern | null>();
   private backdrop: HTMLCanvasElement | null = null;
   private stroke: Stroke | null = null;
   private pending: Pending | null = null;
   private hue = 0;
-  private brushScale = 1;
+  private readonly realistic = new RealisticBrushes(() => this.options.images.tips);
 
   constructor(
     private readonly canvas: HTMLCanvasElement,
@@ -284,24 +294,11 @@ export class KidPixEngine {
   private brushEnv(): BrushEnv {
     return {
       color: this.color,
-      pattern: (brush) => this.pattern(brush),
-      fontFamily: this.options.fontFamily,
+      parts: loaded(this.options.images.brushParts),
+      windowArt: loaded(this.options.images.brushWindow),
+      text: ABC_TEXT,
       random: Math.random,
-      scale: this.brushScale,
     };
-  }
-
-  /** A repeating fill cut from a brush's icon, without the icon's margin. */
-  private pattern(brush: number) {
-    const known = this.patterns.get(brush);
-    if (known !== undefined) return known;
-    const sheet = this.options.images.brushes;
-    if (!sheet?.complete || !sheet.naturalWidth) return null;
-    const { canvas, ctx } = scratch(38, 38);
-    ctx.drawImage(sheet, brush * 48 + 5, 5, 38, 38, 0, 0, 38, 38);
-    const pattern = this.ctx.createPattern(canvas, "repeat");
-    this.patterns.set(brush, pattern);
-    return pattern;
   }
 
   // ---- strokes -------------------------------------------------------------------------
@@ -317,8 +314,13 @@ export class KidPixEngine {
   /** `sizeIndex` is the tray's size for the brushes that have one: Kid Pix's Realistic ones. */
   brushDown(at: Point, brush: number, sizeIndex = 1) {
     this.remember();
-    this.brushScale = BRUSH_SCALES[sizeIndex] ?? 1;
-    this.stroke = { kind: "brush", brush, last: at, state: newStroke(at, this.hue) };
+    if (BOX_BRUSHES.has(brush)) {
+      // Dragged out like a rectangle: the picture is redrawn in the box until it is let go.
+      this.stroke = { kind: "box", brush, start: at, last: at, base: this.ctx.getImageData(0, 0, this.width, this.height) };
+      this.audio.toolDown(brush);
+      return;
+    }
+    this.stroke = { kind: "brush", brush, size: sizeIndex, last: at, state: newStroke(at, this.hue), carry: { run: 0 } };
     this.audio.toolDown(brush);
     brushDown(this.ctx, brush, at, this.brushEnv());
     this.move(at);
@@ -392,6 +394,14 @@ export class KidPixEngine {
       this.bendPreview(stroke, to);
       return;
     }
+    if (stroke.kind === "box") {
+      ctx.putImageData(stroke.base, 0, 0);
+      brushBox(ctx, stroke.brush, stroke.start, to, this.brushEnv());
+      const moved = { x: to.x - stroke.last.x, y: to.y - stroke.last.y };
+      stroke.last = to;
+      this.audio.toolMove(moved.x, moved.y);
+      return;
+    }
     if (stroke.kind === "spray") {
       // The can follows the pointer; its timer does the dropping.
       stroke.last = to;
@@ -400,7 +410,9 @@ export class KidPixEngine {
     if (stroke.kind === "pencil") {
       this.pencilSegment(stroke.last, to, stroke.size, stroke.nib, stroke.carry);
     } else if (stroke.kind === "brush") {
-      brushSegment(ctx, stroke.brush, stroke.last, to, stroke.state, this.brushEnv());
+      // The Realistic brushes press their tips; until those have loaded, a stroke leaves nothing.
+      if (stroke.brush < REALISTIC_COUNT) this.realistic.segment(ctx, stroke.brush, stroke.size, this.color, stroke.last, to, stroke.carry);
+      else brushSegment(ctx, stroke.brush, stroke.last, to, stroke.state, this.brushEnv());
       this.hue = stroke.state.hue;
     } else if (stroke.kind === "eraser") {
       const steps = Math.max(1, Math.ceil(Math.hypot(to.x - stroke.last.x, to.y - stroke.last.y) / 4));

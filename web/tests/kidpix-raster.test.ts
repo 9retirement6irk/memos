@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 import { KIDPIX_SOUND_SPRITE, KIDPIX_TOOL_NAMES, KIDPIX_TOOL_SOUNDS } from "@/components/DrawingSheet/kidpix/data";
 import { KIDPIX_KINDS } from "@/components/DrawingSheet/kidpix/kinds";
 import { floodMask, mixPixels, paintBounds, planTiles } from "@/components/DrawingSheet/kidpix/raster";
+import { REALISTIC_BRUSHES } from "@/components/DrawingSheet/kidpix/tips";
 import {
   BUCKET_KINDS,
   FONTS,
@@ -11,6 +12,7 @@ import {
   MIXER_EFFECTS,
   PENCIL_SHAPES,
   PENCIL_WIDTHS,
+  REALISTIC_COUNT,
   TUBE_TOOLS,
   textFont,
   UNDO_GUY_LINES,
@@ -64,7 +66,21 @@ describe("Kid Pix pixel work", () => {
     expect(Array.from(data.slice(0, 4))).toEqual([255, 255, 255, 255]);
     expect(Array.from(data.slice(4, 8))).toEqual([0, 0, 0, 255]);
     mixPixels(data, 4, 4, "flip");
-    expect(Array.from(data.slice((3 * 4 + 0) * 4, (3 * 4 + 0) * 4 + 4))).toEqual([255, 255, 255, 255]);
+    // Flip mirrors left to right, as Kid Pix's does.
+    expect(Array.from(data.slice(3 * 4, 3 * 4 + 4))).toEqual([255, 255, 255, 255]);
+    // The color mixers give the values measured in Kid Pix: brightness is the strongest channel.
+    const green = () => new Uint8ClampedArray([0, 255, 0, 255, 189, 255, 189, 255]);
+    const mixed = (effect: (typeof MIXER_EFFECTS)[number]) => {
+      const pixels = green();
+      mixPixels(pixels, 2, 1, effect, [0, 255, 0]);
+      return Array.from(pixels);
+    };
+    expect(mixed("sepia")).toEqual([255, 189, 132, 255, 255, 189, 132, 255]);
+    expect(mixed("grayscale")).toEqual([255, 255, 255, 255, 255, 255, 255, 255]);
+    expect(mixed("lighten")).toEqual([8, 255, 8, 255, 197, 255, 197, 255]);
+    expect(mixed("solarize")).toEqual([0, 0, 0, 255, 0, 0, 0, 255]);
+    expect(mixed("nuclear")).toEqual([255, 0, 255, 255, 255, 189, 255, 255]);
+    expect(mixed("hue").slice(0, 3)).toEqual([0, 255, 128]);
     for (const effect of new Set([...MIXER_EFFECTS, ...WAND_EFFECTS])) {
       mixPixels(data, 4, 4, effect, [255, 0, 128], () => 0.5);
       expect(data.filter((_, index) => index % 4 === 3).every((alpha) => alpha === 255)).toBe(true);
@@ -73,6 +89,25 @@ describe("Kid Pix pixel work", () => {
 });
 
 describe("Kid Pix tables", () => {
+  it("has three tips inside the sheet for each of the twenty Realistic brushes", () => {
+    expect(REALISTIC_BRUSHES).toHaveLength(REALISTIC_COUNT);
+    for (const brush of REALISTIC_BRUSHES) {
+      expect(brush.tips).toHaveLength(3);
+      for (const [x, y, width, height] of brush.tips) {
+        // assets/brush-tips.png is 20 x 3 cells of 32 px.
+        expect(x % 32).toBe(0);
+        expect(y % 32).toBe(0);
+        expect(width).toBeLessThanOrEqual(32);
+        expect(height).toBeLessThanOrEqual(32);
+        expect(x + width).toBeLessThanOrEqual(640);
+        expect(y + height).toBeLessThanOrEqual(96);
+      }
+      expect(brush.spacing).toBeGreaterThan(0);
+      expect(brush.density).toBeGreaterThan(0);
+    }
+    expect(existsSync(resolve(__dirname, "../src/components/DrawingSheet/kidpix/assets/brush-tips.png"))).toBe(true);
+  });
+
   it("has an effect for every mixer and wand in the tray", () => {
     expect(MIXER_EFFECTS).toHaveLength(MIXER_COUNT);
     expect(WAND_EFFECTS).toHaveLength(WAND_COUNT);

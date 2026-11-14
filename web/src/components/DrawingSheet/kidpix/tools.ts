@@ -238,8 +238,8 @@ export const MARKER_TIPS: readonly (readonly [number, number])[] = [
 ];
 /** The tip leans this far off upright, its top to the left (radians). */
 export const MARKER_LEAN = 0.23;
-/** How much a paint brush grows or shrinks at the three sizes. */
-export const BRUSH_SCALES = [0.6, 1, 1.6] as const;
+/** Tools 0 to 19 are Kid Pix's Realistic brushes; the Wacky ones follow. */
+export const REALISTIC_COUNT = 20;
 export const ERASER_SIZES = [8, 16, 28, 44] as const;
 
 /** Brush icons 0 to 44 draw; 45 and up are Kid Pix's voice brushes, which need a microphone. */
@@ -253,7 +253,7 @@ export const GRADIENT_COUNT = 63;
 /** "LeakyPen" reads as "Leaky Pen". */
 export const toolLabel = (toolNumber: number) => (KIDPIX_TOOL_NAMES[toolNumber] ?? "").replace(/([a-z])([A-Z0-9])/g, "$1 $2");
 
-/** The effect standing in for each whole-picture mixer, by its position in the tray (tools 65 to 86). */
+/** The effect for each whole-picture mixer, by its position in the tray (tools 65 to 86). */
 export const MIXER_EFFECTS: readonly MixEffect[] = [
   "invert", // XRay
   "nuclear",
@@ -263,16 +263,16 @@ export const MIXER_EFFECTS: readonly MixEffect[] = [
   "colorize",
   "hue", // ColorCycle
   "grayscale", // StripColor
-  "speckle", // Pointilize
+  "pointilize",
   "posterize",
   "solarize",
   "pinch",
   "bulge", // Spherize
   "ripple",
-  "mosaic", // Bubbles
-  "blur", // Burlap
+  "bubbles",
+  "burlap",
   "whirl",
-  "zoom", // Pulse
+  "pulse",
   "wave", // Wavelet
   "shear",
   "flip",

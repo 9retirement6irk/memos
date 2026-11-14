@@ -8,12 +8,14 @@ import {
   useRef,
   useState,
 } from "react";
+import brushPartsUrl from "./assets/brush-parts.png";
+import tipsUrl from "./assets/brush-tips.png";
+import brushWindowUrl from "./assets/brush-window.png";
 import fillsUrl from "./assets/fills.jpg";
 import gradientsUrl from "./assets/grad.png";
 import lettersUrl from "./assets/letters.png";
 import solidTilesUrl from "./assets/solid-tiles.png";
 import soundsUrl from "./assets/sounds.m4a";
-import brushesUrl from "./assets/wacky.png";
 import { KidPixAudio } from "./audio";
 import type { Point } from "./brushes";
 import { KidPixEngine, type KidPixImages, type KidPixPicture, type KidPixTile } from "./engine";
@@ -35,6 +37,7 @@ import {
   PATTERN_COUNT,
   PENCIL_KINDS,
   PENCIL_SHAPES,
+  REALISTIC_COUNT,
   SCREEN_ERASER_COUNT,
   SOLID_COUNT,
   TEXT_LINE,
@@ -298,7 +301,6 @@ const SPRAY_HISS_DELAY = 150;
 /** Moving paint's clips start no closer together than this (ms). */
 const SPRAY_CLIP_GAP = 350;
 /** Kid Pix's first twenty brushes are its Realistic ones. */
-const REALISTIC_COUNT = 20;
 
 /** A picture file as something the layer can draw; the browser turns a photo upright by its EXIF. */
 const readPicture = async (file: Blob): Promise<KidPixPicture> => {
@@ -437,7 +439,9 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
       solidTiles: loadImage(solidTilesUrl),
       gradients: loadImage(gradientsUrl),
       letters: loadImage(lettersUrl),
-      brushes: loadImage(brushesUrl),
+      tips: loadImage(tipsUrl),
+      brushParts: loadImage(brushPartsUrl),
+      brushWindow: loadImage(brushWindowUrl),
     };
     audioRef.current = audio;
     engineRef.current = new KidPixEngine(canvas, {

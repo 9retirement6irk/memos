@@ -1,6 +1,7 @@
 /**
- * The Wacky Brush strokes. Kid Pix's own brush code is not in the assets, so each brush here is
- * drawn after its icon and name; the sounds, icons and names are the real ones.
+ * The Wacky Brush strokes (tools 20 to 44). Kid Pix's own brush code is not in the assets, so each
+ * brush here is drawn after its icon and name; the sounds, icons and names are the real ones. The
+ * Realistic brushes (tools 0 to 19) are in realistic.ts.
  */
 
 export interface Point {
@@ -16,19 +17,170 @@ export interface StrokeState {
   previous: Point | null;
   travelled: number;
   count: number;
+  /** How many letters or numbers the stroke has laid down. */
+  index: number;
+  /** The Looping Line's pen, which trails the pointer on a spring. */
+  lag: Point;
+  velocity: Point;
+  /** The brick and log places already filled, so each is laid once. */
+  laid: Set<string>;
 }
 
 export interface BrushEnv {
   color: string;
-  /** A repeating fill cut from the brush's own icon, for the bricks, log, window, door and roof brushes. */
-  pattern: (brush: number) => CanvasPattern | null;
-  fontFamily: string;
+  /** assets/brush-parts.png: the bricks, logs, roof tile and door pieces from Icons.MHK, once loaded. */
+  parts: CanvasImageSource | null;
+  /** assets/brush-window.png: the Window brush's frame, once loaded. */
+  windowArt: CanvasImageSource | null;
+  /** What the ABC brush writes. */
+  text: string;
   random: () => number;
-  /** How much the tray's size grows or shrinks a brush that has sizes. */
-  scale: number;
 }
 
-export const newStroke = (start: Point, hue: number): StrokeState => ({ start, hue, side: 1, previous: null, travelled: 0, count: 0 });
+export const newStroke = (start: Point, hue: number): StrokeState => ({
+  start,
+  hue,
+  side: 1,
+  previous: null,
+  travelled: 0,
+  count: 0,
+  index: 0,
+  lag: { ...start },
+  velocity: { x: 0, y: 0 },
+  laid: new Set(),
+});
+
+/** Where the pieces sit in assets/brush-parts.png: [x, y, width, height]. */
+const PARTS = {
+  roof: [0, 0, 64, 32],
+  pane: [64, 0, 15, 19],
+  knob: [80, 0, 7, 20],
+  panels: [
+    [88, 0, 20, 20],
+    [108, 0, 20, 31],
+    [128, 0, 20, 39],
+  ],
+  /** Seven logs, then six bricks, each 32 x 16. */
+  logs: { y: 40, count: 7 },
+  bricks: { y: 56, count: 6 },
+} as const;
+const COURSE = { width: 32, height: 16 };
+
+/** Brushes that draw one thing in the box dragged out, as the Draw tool's rectangle does. */
+export const BOX_BRUSHES: ReadonlySet<number> = new Set([34, 35, 36, 37, 40, 41]);
+
+const RAINBOW = ["#ff0000", "#ff8000", "#ffee00", "#00c000", "#0060ff", "#4000c0", "#9000d0"];
+
+/** Draws a box brush's picture between the corner pressed and the corner the pointer is at. */
+export const brushBox = (ctx: CanvasRenderingContext2D, brush: number, from: Point, to: Point, env: BrushEnv) => {
+  const x = Math.round(Math.min(from.x, to.x));
+  const y = Math.round(Math.min(from.y, to.y));
+  const width = Math.round(Math.abs(to.x - from.x));
+  const height = Math.round(Math.abs(to.y - from.y));
+  if (width < 2 || height < 2) return;
+  const part = ([sx, sy, w, h]: readonly [number, number, number, number], dx: number, dy: number) => {
+    if (env.parts) ctx.drawImage(env.parts, sx, sy, w, h, dx, dy, w, h);
+  };
+  const outline = () => {
+    ctx.strokeStyle = "#000000";
+    ctx.lineWidth = 1;
+    ctx.strokeRect(x + 0.5, y + 0.5, width - 1, height - 1);
+  };
+  ctx.save();
+  ctx.imageSmoothingEnabled = false;
+  switch (brush) {
+    case 34: // Window: the frame, stretched to the box.
+      if (env.windowArt) ctx.drawImage(env.windowArt, x, y, width, height);
+      break;
+    case 35: {
+      // Door: a pale door with rows of panes and a knob.
+      const shade = ctx.createLinearGradient(0, y, 0, y + height);
+      shade.addColorStop(0, "#ffffff");
+      shade.addColorStop(1, "#ffffd0");
+      ctx.fillStyle = shade;
+      ctx.fillRect(x, y, width, height);
+      outline();
+      const [, , paneWidth, paneHeight] = PARTS.pane;
+      const columns = Math.floor((width - 32 + 2) / (paneWidth + 2));
+      const rows = Math.max(1, Math.floor((height * 0.45) / (paneHeight + 2)));
+      if (height < paneHeight + 22) break;
+      for (let row = 0; row < rows; row++) {
+        for (let column = 0; column < columns; column++)
+          part(PARTS.pane, x + 16 + column * (paneWidth + 2), y + 11 + row * (paneHeight + 2));
+      }
+      if (width > 48) part(PARTS.knob, x + width - 13, y + 11 + (rows - 1) * (paneHeight + 2));
+      break;
+    }
+    case 36: {
+      // DoorPlain: an orange door with a row of square panels over a row of tall ones.
+      ctx.fillStyle = "#d06030";
+      ctx.fillRect(x, y, width, height);
+      outline();
+      const columns = Math.floor((width - 40 + 8) / 28);
+      const tall = height - 48 >= 39 ? PARTS.panels[2] : height - 48 >= 31 ? PARTS.panels[1] : null;
+      if (height < 40) break;
+      for (let column = 0; column < columns; column++) {
+        part(PARTS.panels[0], x + 20 + column * 28, y + 10);
+        if (tall) part(tall, x + 20 + column * 28, y + 38);
+      }
+      break;
+    }
+    case 37: {
+      // Roof: shingles in the color, narrowing to the ridge, with the eaves fanning out black.
+      const inset = width * 0.25;
+      ctx.fillStyle = "#fffbd0";
+      ctx.fillRect(x, y, width, height);
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(x + inset, y);
+      ctx.lineTo(x + width - inset, y);
+      ctx.lineTo(x + width, y + height);
+      ctx.lineTo(x, y + height);
+      ctx.closePath();
+      ctx.clip();
+      if (env.parts) {
+        const [sx, sy, w, h] = PARTS.roof;
+        for (let ty = y; ty < y + height; ty += h) {
+          for (let tx = x; tx < x + width; tx += w) ctx.drawImage(env.parts, sx, sy, w, h, tx, ty, w, h);
+        }
+      }
+      ctx.globalCompositeOperation = "color";
+      ctx.globalAlpha = 0.7;
+      ctx.fillStyle = env.color;
+      ctx.fillRect(x, y, width, height);
+      ctx.restore();
+      ctx.strokeStyle = "#000000";
+      ctx.lineWidth = 1.5;
+      for (let down = COURSE.height; down <= height; down += COURSE.height) {
+        ctx.beginPath();
+        ctx.moveTo(x + inset, y);
+        ctx.lineTo(x, y + down);
+        ctx.moveTo(x + width - inset, y);
+        ctx.lineTo(x + width, y + down);
+        ctx.stroke();
+      }
+      outline();
+      break;
+    }
+    case 40: {
+      // Rainbow: an arch standing on the box's foot.
+      const band = 0.45 / RAINBOW.length;
+      RAINBOW.forEach((color, at) => {
+        const scale = 1 - (at + 0.5) * band;
+        ctx.strokeStyle = color;
+        ctx.lineWidth = Math.max(width / 2, height) * band + 0.8;
+        ctx.beginPath();
+        ctx.ellipse(x + width / 2, y + height, (width / 2) * scale, height * scale, 0, Math.PI, Math.PI * 2);
+        ctx.stroke();
+      });
+      break;
+    }
+    default: // 41 ColorTile: a block of the color.
+      ctx.fillStyle = env.color;
+      ctx.fillRect(x, y, width, height);
+  }
+  ctx.restore();
+};
 
 const line = (ctx: CanvasRenderingContext2D, a: Point, b: Point, width: number, color: string | CanvasPattern) => {
   ctx.strokeStyle = color;
@@ -41,23 +193,12 @@ const line = (ctx: CanvasRenderingContext2D, a: Point, b: Point, width: number, 
   ctx.stroke();
 };
 
-const star = (ctx: CanvasRenderingContext2D, x: number, y: number, radius: number) => {
-  ctx.beginPath();
-  for (let i = 0; i < 10; i++) {
-    const angle = (i * Math.PI) / 5 - Math.PI / 2;
-    const reach = i % 2 ? radius * 0.45 : radius;
-    ctx.lineTo(x + Math.cos(angle) * reach, y + Math.sin(angle) * reach);
-  }
-  ctx.closePath();
-  ctx.fill();
-};
-
 const bright = (env: BrushEnv, lightness = 52) => `hsl(${Math.floor(env.random() * 360)} 95% ${lightness}%)`;
 
 /** A tree grows where the Tree brush lands; it draws once, not along the stroke. */
 const tree = (ctx: CanvasRenderingContext2D, env: BrushEnv, x: number, y: number, length: number, angle: number, depth: number) => {
   const end = { x: x + Math.cos(angle) * length, y: y + Math.sin(angle) * length };
-  line(ctx, { x, y }, end, Math.max(1, depth * 1.4), depth > 2 ? "#5a3a1a" : env.color);
+  line(ctx, { x, y }, end, depth > 3 ? 2 : 1, env.color);
   if (depth <= 0) return;
   const branches = 2 + (env.random() < 0.4 ? 1 : 0);
   for (let i = 0; i < branches; i++) {
@@ -67,7 +208,7 @@ const tree = (ctx: CanvasRenderingContext2D, env: BrushEnv, x: number, y: number
 
 /** Draws what a brush leaves when it first touches the paper. */
 export const brushDown = (ctx: CanvasRenderingContext2D, brush: number, at: Point, env: BrushEnv) => {
-  if (brush === 44) tree(ctx, env, at.x, at.y, 46, -Math.PI / 2, 6);
+  if (brush === 44) tree(ctx, env, at.x, at.y, 20, -Math.PI / 2, 5);
 };
 
 /** Draws one segment of a stroke, from `a` to `b`. */
@@ -80,28 +221,6 @@ export const brushSegment = (ctx: CanvasRenderingContext2D, brush: number, a: Po
   ctx.fillStyle = color;
   ctx.strokeStyle = color;
   switch (brush) {
-    case 0: // RealBrush
-      ctx.shadowColor = color;
-      ctx.shadowBlur = 6;
-      line(ctx, a, b, 9, color);
-      break;
-    case 1: // Airbrush
-      for (let i = 0; i < 26; i++) {
-        const angle = random() * Math.PI * 2;
-        const reach = random() * 16;
-        ctx.globalAlpha = 0.35;
-        ctx.fillRect(b.x + Math.cos(angle) * reach, b.y + Math.sin(angle) * reach, 1.5, 1.5);
-      }
-      break;
-    case 2: // BristleBrush
-      for (let i = -3; i <= 3; i++) line(ctx, { x: a.x + i * 2, y: a.y + i * 1.5 }, { x: b.x + i * 2, y: b.y + i * 1.5 }, 1, color);
-      break;
-    case 3: // ExtrusionBrush
-      for (let depth = 8; depth >= 0; depth -= 2) {
-        ctx.globalAlpha = depth ? 0.35 : 1;
-        line(ctx, { x: a.x + depth, y: a.y + depth }, { x: b.x + depth, y: b.y + depth }, 10, depth ? "#000000" : color);
-      }
-      break;
     case 20: // Madona
       state.hue = (state.hue + 11) % 360;
       ctx.strokeStyle = `hsl(${state.hue} 100% 50%)`;
@@ -110,7 +229,7 @@ export const brushSegment = (ctx: CanvasRenderingContext2D, brush: number, a: Po
       break;
     case 21: // Drippy
       line(ctx, a, b, 7, color);
-      if (random() < 0.18) {
+      if (random() < 0.3) {
         const drip = 12 + random() * 60;
         ctx.fillRect(b.x - 2, b.y, 4, drip);
         ctx.beginPath();
@@ -155,84 +274,110 @@ export const brushSegment = (ctx: CanvasRenderingContext2D, brush: number, a: Po
       ctx.arc(b.x + (random() - 0.5) * 10, b.y + (random() - 0.5) * 10, 10 + random() * 22, 0, Math.PI * 2);
       ctx.stroke();
       break;
-    case 26: // Particle
-      for (let i = 0; i < 5; i++) {
-        ctx.fillStyle = bright(env);
-        ctx.fillRect(b.x + (random() - 0.5) * 70, b.y + (random() - 0.5) * 70, 2, 2);
+    case 26: // Particle: a cloud of single specks around the stroke.
+      for (let i = 0; i < 40; i++) {
+        const angle = random() * Math.PI * 2;
+        const reach = (random() + random()) * 22;
+        ctx.fillRect(Math.round(b.x + Math.cos(angle) * reach), Math.round(b.y + Math.sin(angle) * reach * 0.7), 1, 1);
       }
       break;
-    case 27: // Garland
-      line(ctx, state.start, b, 2, bright(env));
-      break;
-    case 28: // LeakyPen
-      line(ctx, a, b, 3, color);
-      if (distance < 3 || state.travelled > 40) {
-        state.travelled = 0;
-        ctx.beginPath();
-        ctx.arc(b.x, b.y, 4 + random() * 8, 0, Math.PI * 2);
-        ctx.fill();
-      }
-      break;
-    case 29: // ScratchyPen
-      for (let i = 0; i < 3; i++) {
+    case 27: // Garland: short bright lines bursting from every point.
+      for (let i = 0; i < 24; i++) {
+        const angle = random() * Math.PI * 2;
+        const reach = 7 + random() * 10;
         line(
           ctx,
-          { x: a.x + (random() - 0.5) * 5, y: a.y + (random() - 0.5) * 5 },
-          { x: b.x + (random() - 0.5) * 5, y: b.y + (random() - 0.5) * 5 },
-          1,
-          color,
+          b,
+          { x: b.x + Math.cos(angle) * reach, y: b.y + Math.sin(angle) * reach },
+          2,
+          `hsl(${Math.floor(random() * 360)} 85% ${30 + Math.floor(random() * 40)}%)`,
         );
       }
       break;
-    case 30: // LoopingLine
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.arc(b.x, b.y - 12, 12, 0, Math.PI * 2);
-      ctx.stroke();
-      break;
-    case 31: // LoopingLine2
-      for (let i = 0; i < 3; i++) {
-        const angle = -Math.PI / 2 + (random() - 0.5) * 1.6;
-        const reach = 10 + random() * 24;
-        line(ctx, b, { x: b.x + Math.cos(angle) * reach, y: b.y + Math.sin(angle) * reach }, 2, color);
-      }
-      break;
-    case 32: // Bricks
-    case 33: // Log
-    case 34: // Window
-    case 35: // Door
-    case 36: // DoorPlain
-    case 37: // Roof
-      line(ctx, a, b, 38, env.pattern(brush) ?? color);
-      break;
-    case 38: // DotToDot
-      if (state.travelled > 60 || !state.previous) {
+    case 28: // LeakyPen: a blot every so often, and no line between.
+      if (state.count === 1 || state.travelled >= 12) {
         state.travelled = 0;
-        if (state.previous) line(ctx, state.previous, b, 1.5, color);
+        const wide = random() < 0.15 ? 6.5 : 5.5;
         ctx.beginPath();
-        ctx.arc(b.x, b.y, 4, 0, Math.PI * 2);
+        ctx.ellipse(b.x, b.y, wide, wide * 0.75, 0, 0, Math.PI * 2);
         ctx.fill();
-        ctx.font = `14px ${env.fontFamily}`;
-        ctx.fillText(String(Math.ceil(state.count / 8) || 1), b.x + 7, b.y - 6);
-        state.previous = b;
       }
       break;
-    case 39: // ABC
-      if (state.travelled > 26) {
+    case 29: {
+      // ScratchyPen: a hairline that keeps to the stroke but for the odd jerk aside.
+      const jerk = random() < 0.25 ? 16 : 2;
+      const point = { x: b.x + (random() - 0.5) * jerk, y: b.y + (random() - 0.5) * jerk };
+      line(ctx, state.previous ?? a, point, 1, color);
+      state.previous = point;
+      break;
+    }
+    case 30: {
+      // LoopingLine: the pen trails the pointer on a spring, rounding every corner.
+      const steps = Math.max(1, Math.ceil(distance / 4));
+      for (let step = 0; step < steps; step++) {
+        state.velocity = {
+          x: state.velocity.x * 0.9 + (b.x - state.lag.x) * 0.012,
+          y: state.velocity.y * 0.9 + (b.y - state.lag.y) * 0.012,
+        };
+        const next = { x: state.lag.x + state.velocity.x, y: state.lag.y + state.velocity.y };
+        line(ctx, state.lag, next, 2, color);
+        state.lag = next;
+      }
+      break;
+    }
+    case 31: {
+      // LoopingLine2: a saw-tooth across the stroke, 28 px a tooth.
+      if (distance === 0) break;
+      const across = ((state.travelled % 28) / 28 - 0.5) * 28;
+      const point = { x: b.x + (-(b.y - a.y) / distance) * across, y: b.y + ((b.x - a.x) / distance) * across };
+      line(ctx, state.previous ?? a, point, 2, color);
+      state.previous = point;
+      break;
+    }
+    case 32: // Bricks: laid in courses, every other course half a brick along.
+    case 33: {
+      // Log: laid in a stack.
+      if (!env.parts) break;
+      const tiles = brush === 32 ? PARTS.bricks : PARTS.logs;
+      const course = Math.floor((b.y - state.start.y + COURSE.height / 2) / COURSE.height);
+      const shift = brush === 32 && course % 2 !== 0 ? COURSE.width / 2 : 0;
+      const along = Math.floor((b.x - state.start.x + COURSE.width / 2 - shift) / COURSE.width);
+      const place = `${along}:${course}`;
+      if (state.laid.has(place)) break;
+      state.laid.add(place);
+      ctx.drawImage(
+        env.parts,
+        Math.floor(random() * tiles.count) * COURSE.width,
+        tiles.y,
+        COURSE.width,
+        COURSE.height,
+        Math.round(state.start.x - COURSE.width / 2 + shift + along * COURSE.width),
+        Math.round(state.start.y - COURSE.height / 2 + course * COURSE.height),
+        COURSE.width,
+        COURSE.height,
+      );
+      break;
+    }
+    case 38: // DotToDot: numbered dots, for joining up later.
+      if (state.count === 1 || state.travelled >= 18) {
         state.travelled = 0;
-        ctx.font = `${20 + Math.floor(random() * 18)}px ${env.fontFamily}`;
-        ctx.fillStyle = bright(env, 45);
-        ctx.fillText(String.fromCharCode(65 + Math.floor(random() * 26)), b.x - 8, b.y + 8);
+        state.index++;
+        ctx.beginPath();
+        ctx.arc(b.x, b.y, 2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.font = "12px Arial, sans-serif";
+        ctx.fillText(String(state.index), b.x + 5, b.y + 14);
       }
       break;
-    case 40: // Rainbow
-      state.hue = (state.hue + 7) % 360;
-      line(ctx, a, b, 16, `hsl(${state.hue} 100% 50%)`);
-      break;
-    case 41: // ColorTile
-      ctx.globalAlpha = 0.55;
-      ctx.fillStyle = bright(env);
-      ctx.fillRect(Math.floor(b.x / 24) * 24, Math.floor(b.y / 24) * 24, 24, 24);
+    case 39: // ABC: the brush's text, a letter at a time.
+      if (state.count === 1 || state.travelled >= 55) {
+        state.travelled = 0;
+        const letter = env.text[state.index % env.text.length] ?? "";
+        state.index++;
+        ctx.font = "20px Arial, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(letter, b.x, b.y + 7);
+      }
       break;
     case 42: {
       // 8WayMirror
@@ -243,36 +388,21 @@ export const brushSegment = (ctx: CanvasRenderingContext2D, brush: number, a: Po
         return swap ? { x: cx + dy, y: cy + dx } : { x: cx + dx, y: cy + dy };
       };
       for (let i = 0; i < 8; i++)
-        line(ctx, mirror(a, !!(i & 1), !!(i & 2), !!(i & 4)), mirror(b, !!(i & 1), !!(i & 2), !!(i & 4)), 3, color);
+        line(ctx, mirror(a, !!(i & 1), !!(i & 2), !!(i & 4)), mirror(b, !!(i & 1), !!(i & 2), !!(i & 4)), 1, color);
       break;
     }
-    case 43: // Splat
-      if (state.count % 2 === 0) {
-        ctx.fillStyle = bright(env, 60);
+    case 43: // Splat: a blob of some color at every point.
+      for (let blob = 0; blob < 3; blob++) {
+        ctx.fillStyle = `hsl(${Math.floor(random() * 360)} ${40 + Math.floor(random() * 60)}% ${25 + Math.floor(random() * 50)}%)`;
         ctx.beginPath();
-        ctx.arc(b.x + (random() - 0.5) * 30, b.y + (random() - 0.5) * 30, 5 + random() * 14, 0, Math.PI * 2);
+        ctx.arc(b.x + (random() - 0.5) * 28, b.y + (random() - 0.5) * 28, 9 + random() * 6, 0, Math.PI * 2);
         ctx.fill();
       }
       break;
     case 44: // Tree: drawn on the way down.
       break;
-    default: {
-      // CustomBrush1 to 16: the same four nibs at different sizes.
-      const width = (4 + ((brush * 5) % 20)) * env.scale;
-      const nib = brush % 4;
-      if (nib === 0) {
-        ctx.shadowColor = color;
-        ctx.shadowBlur = width / 2;
-        line(ctx, a, b, width, color);
-      } else if (nib === 1) {
-        for (let i = 0; i < width * 2; i++) ctx.fillRect(b.x + (random() - 0.5) * width * 2, b.y + (random() - 0.5) * width * 2, 1.5, 1.5);
-      } else if (nib === 2) {
-        ctx.fillStyle = bright(env);
-        star(ctx, b.x + (random() - 0.5) * width * 2, b.y + (random() - 0.5) * width * 2, 2 + random() * (width / 3));
-      } else {
-        for (let i = 0; i < width; i += 2) line(ctx, { x: a.x + i, y: a.y - i }, { x: b.x + i, y: b.y - i }, 1.5, color);
-      }
-    }
+    default:
+      break;
   }
   ctx.restore();
 };

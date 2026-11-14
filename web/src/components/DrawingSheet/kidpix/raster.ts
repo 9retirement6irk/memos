@@ -119,25 +119,42 @@ export type MixEffect =
   | "whirl"
   | "pinch"
   | "bulge"
-  | "zoom";
+  | "pointilize"
+  | "bubbles"
+  | "burlap"
+  | "pulse";
 
 const clampIndex = (value: number, max: number) => Math.max(0, Math.min(max, Math.round(value)));
 
-const rotateHue = (data: Uint8ClampedArray, i: number, degrees: number, saturation = 1) => {
-  const angle = (degrees * Math.PI) / 180;
-  const cos = Math.cos(angle) * saturation;
-  const sin = Math.sin(angle) * saturation;
+/** Turns a pixel's hue by `degrees`, keeping how bright and how strong the color is. */
+const rotateHue = (data: Uint8ClampedArray, i: number, degrees: number) => {
   const [r, g, b] = [data[i], data[i + 1], data[i + 2]];
-  // Rotation around the gray axis, in the YIQ sense.
-  data[i] = r * (0.299 + 0.701 * cos + 0.168 * sin) + g * (0.587 - 0.587 * cos + 0.33 * sin) + b * (0.114 - 0.114 * cos - 0.497 * sin);
-  data[i + 1] = r * (0.299 - 0.299 * cos - 0.328 * sin) + g * (0.587 + 0.413 * cos + 0.035 * sin) + b * (0.114 - 0.114 * cos + 0.292 * sin);
-  data[i + 2] = r * (0.299 - 0.3 * cos + 1.25 * sin) + g * (0.587 - 0.588 * cos - 1.05 * sin) + b * (0.114 + 0.886 * cos - 0.203 * sin);
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  if (max === min) return;
+  const span = max - min;
+  const hue = ((max === r ? ((g - b) / span) % 6 : max === g ? (b - r) / span + 2 : (r - g) / span + 4) * 60 + degrees + 720) % 360;
+  // Back from hue: each channel is `min` plus a share of the span.
+  const share = (offset: number) => {
+    const k = (offset + hue / 60) % 6;
+    return max - span * Math.max(0, Math.min(k, 4 - k, 1));
+  };
+  data[i] = share(5);
+  data[i + 1] = share(3);
+  data[i + 2] = share(1);
 };
+
+/** Kid Pix's sepia: this tan, as bright as the pixel's strongest channel. */
+const SEPIA = [255, 189, 132] as const;
 
 /**
  * Applies a mixer effect in place. The pixels must be opaque (the paper and the drawing under
  * the paint are already in them). `tint` is the current color, for Colorize; `random` is
  * injectable for tests.
+ *
+ * The whole-picture effects follow what Kid Pix's Mega-mixers do to a test picture: the color
+ * ones to the exact value, the bending ones by eye. Kid Pix measures brightness by a pixel's
+ * strongest channel, so pure green counts as bright as white.
  */
 export const mixPixels = (
   data: Uint8ClampedArray,
@@ -174,6 +191,7 @@ export const mixPixels = (
     });
   };
   const luma = (i: number) => source[i] * 0.299 + source[i + 1] * 0.587 + source[i + 2] * 0.114;
+  const brightest = (i: number) => Math.max(source[i], source[i + 1], source[i + 2]);
 
   switch (effect) {
     case "invert":
@@ -183,20 +201,19 @@ export const mixPixels = (
       break;
     case "grayscale":
       perPixel((i) => {
-        data[i] = data[i + 1] = data[i + 2] = luma(i);
+        data[i] = data[i + 1] = data[i + 2] = brightest(i);
       });
       break;
     case "sepia":
       perPixel((i) => {
-        const l = luma(i);
-        data[i] = l * 1.07 + 20;
-        data[i + 1] = l * 0.9 + 8;
-        data[i + 2] = l * 0.68;
+        const value = brightest(i) / 255;
+        for (let c = 0; c < 3; c++) data[i + c] = SEPIA[c] * value;
       });
       break;
     case "lighten":
+      // One step of the original's 15-bit color.
       perPixel((i) => {
-        for (let c = 0; c < 3; c++) data[i + c] = data[i + c] + (255 - data[i + c]) * 0.45;
+        for (let c = 0; c < 3; c++) data[i + c] = data[i + c] + 8;
       });
       break;
     case "posterize":
@@ -205,20 +222,23 @@ export const mixPixels = (
       });
       break;
     case "solarize":
+      // A bright pixel turns as dark as it was bright: white and pure colors go black.
       perPixel((i) => {
-        for (let c = 0; c < 3; c++) data[i + c] = data[i + c] < 128 ? 255 - data[i + c] : data[i + c];
+        const value = brightest(i);
+        if (value < 128) return;
+        for (let c = 0; c < 3; c++) data[i + c] = (data[i + c] * (255 - value)) / value;
       });
       break;
     case "hue":
-      perPixel((i) => rotateHue(data, i, 120));
+      perPixel((i) => rotateHue(data, i, 30));
       break;
     case "nuclear":
-      perPixel((i) => rotateHue(data, i, 200, 2.4));
+      perPixel((i) => rotateHue(data, i, 180));
       break;
     case "colorize":
       perPixel((i) => {
-        const l = luma(i) / 255;
-        for (let c = 0; c < 3; c++) data[i + c] = l < 0.5 ? tint[c] * l * 2 : tint[c] + (255 - tint[c]) * (l * 2 - 1);
+        const value = brightest(i) / 255;
+        for (let c = 0; c < 3; c++) data[i + c] = tint[c] * value;
       });
       break;
     case "emboss":
@@ -227,8 +247,9 @@ export const mixPixels = (
         for (let x = 0; x < width; x++) {
           const here = (y * width + x) * 4;
           const there = (Math.max(0, y - 1) * width + Math.max(0, x - 1)) * 4;
-          const difference = luma(here) - luma(there);
-          data[here] = data[here + 1] = data[here + 2] = effect === "emboss" ? 128 + difference * 2 : 255 - Math.abs(difference) * 6;
+          // Kid Pix embosses by brightness, so an edge between two bright colors does not show.
+          const difference = effect === "emboss" ? brightest(here) - brightest(there) : luma(here) - luma(there);
+          data[here] = data[here + 1] = data[here + 2] = effect === "emboss" ? 123 + difference : 255 - Math.abs(difference) * 6;
         }
       }
       break;
@@ -257,32 +278,64 @@ export const mixPixels = (
     case "speckle":
       displace((x, y) => [x + (random() - 0.5) * 14, y + (random() - 0.5) * 14]);
       break;
+    case "pointilize":
+      // Static, with a speck of the picture's negative here and there.
+      perPixel((i) => {
+        if (random() < 0.2) {
+          for (let c = 0; c < 3; c++) data[i + c] = 255 - source[i + c];
+        } else {
+          data[i] = data[i + 1] = data[i + 2] = random() * 190;
+        }
+      });
+      break;
     case "flip":
-      displace((x, y) => [x, height - 1 - y]);
+      displace((x, y) => [width - 1 - x, y]);
       break;
-    case "kaleidoscope":
-      displace((x, y) => [x < width / 2 ? x : width - 1 - x, y < height / 2 ? y : height - 1 - y]);
+    case "kaleidoscope": {
+      // Eight wedges about the middle, each a mirror of its neighbor.
+      const [cx, cy] = [width / 2, height / 2];
+      const wedge = Math.PI / 4;
+      displace((x, y) => {
+        const distance = Math.hypot(x - cx, y - cy);
+        const turn = ((Math.atan2(y - cy, x - cx) % (wedge * 2)) + wedge * 2) % (wedge * 2);
+        const angle = turn > wedge ? wedge * 2 - turn : turn;
+        return [cx + Math.cos(angle) * distance, cy + Math.sin(angle) * distance];
+      });
       break;
+    }
     case "shear":
-      displace((x, y) => [x + (y - height / 2) * 0.35, y]);
+      displace((x, y) => [x + (y - height / 2) * 0.04, y]);
       break;
     case "ripple":
-      displace((x, y) => [x + Math.sin(y / 9) * 7, y + Math.sin(x / 9) * 7]);
+      displace((x, y) => [x + Math.sin(y / 10) * 2.5, y + Math.sin(x / 10) * 2.5]);
       break;
     case "wave":
-      displace((x, y) => [x, y + Math.sin(x / 28) * 22]);
+      displace((x, y) => [x + Math.sin(y / 40) * 14, y + Math.sin(x / 40) * 14]);
       break;
+    case "bubbles":
+      displace((x, y) => [x + Math.sin(y / 2) * 1.5, y + Math.sin(x / 2) * 1.5]);
+      break;
+    case "burlap":
+      // Every third row pair slips sideways, the next one back.
+      displace((x, y) => [x + (Math.floor(y / 3) % 2 ? 3 : -3), y]);
+      break;
+    case "pulse": {
+      // Two bands across the picture shiver, row against row.
+      const band = height * 0.06;
+      displace((x, y) => {
+        const inBand = Math.abs(y - height * 0.4) < band || Math.abs(y - height * 0.62) < band;
+        return [inBand ? x + (y % 2 ? 5 : -5) : x, y];
+      });
+      break;
+    }
     case "whirl":
-      radial((d, a) => [d, a + (1 - Math.min(1, d * 1.6)) * 2.2]);
+      radial((d, a) => [d, a + (1 - Math.min(1, d * 1.6)) * 1.1]);
       break;
     case "pinch":
       radial((d, a) => [d ** 0.6, a]);
       break;
     case "bulge":
       radial((d, a) => [d ** 1.6, a]);
-      break;
-    case "zoom":
-      radial((d, a) => [d * (0.7 + 0.3 * Math.cos(d * 22)), a]);
       break;
   }
 };
