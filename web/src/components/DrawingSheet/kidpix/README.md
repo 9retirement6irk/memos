@@ -19,7 +19,8 @@ its own bitmap, laid over the drawing:
 - `KidPixLayer.tsx` is the chrome and the pointer handling. It loads on first use, with its art.
 - `engine.ts` is the paint layer: one layer pixel per drawing px, 12 undo steps.
 - `raster.ts` is the pixel work (flood fill, mixers, tiles), on plain arrays so it tests without a canvas.
-- `brushes.ts` is the Wacky Brush strokes. `audio.ts` plays clips from one audio sprite.
+- `realistic.ts` is the Realistic brushes and `brushes.ts` the Wacky ones. `audio.ts` plays clips
+  from one audio sprite.
 - `swf.ts` reads and draws stickers, which are small Flash movies. `library.ts` lists the stamp,
   sticker and background libraries, whose files are in `web/public/kidpix/`.
 
@@ -63,8 +64,39 @@ The sounds are wired as Kid Pix wires them:
 
 Stand-ins, written for this mode:
 
-- What each Wacky Brush and mixer draws. The disc holds their icons, names and sounds, not their code.
+- Five Wacky Brushes (Madona, Spiral, Poly, Tri Spin, Whispy Circle), the twelve mixer wands and
+  fifteen of the sixteen Big Eraser effects. The disc holds their icons, names and sounds, not
+  their code, and they have not yet been matched to the original running.
 - The tray's option click, and the startup jingle on entering the mode.
+
+## Brushes and mixers, matched to the original
+
+The disc has no code for what a brush draws, so each was drawn with in the original (one tap and
+one stroke on a clean page) and rebuilt here from the result.
+
+- **Realistic brushes (tools 0 to 19):** `realistic.ts` presses a tip bitmap along the stroke.
+  The 60 tips (20 brushes at three sizes) are `Brushes.MHK`'s, packed into
+  `assets/brush-tips.png`; `tips.ts` (generated) pairs each brush with its `KP.cfg` settings. What
+  the settings do was fitted to the original's pixels:
+  - `spacing`: px between presses. Where the cfg gives none it was fitted (in `tips.ts`).
+  - `oscillation`: a press lands up to 1.6 times this far from the stroke.
+  - `shadowOffset`, `shadowBias`: a black copy of the tip that far down and right, at 1/bias strength.
+  - `densityBias`: the tip marks at 1/density strength.
+  - `spatter`: pixels are dropped at random instead (one kept in spatter x density).
+  - The tray's three sizes choose among a brush's three tips.
+  - Not modeled: `glintOffset`, `dryOutRate` and `smearBias`, which did not show in a short stroke.
+- **Wacky brushes (tools 20 to 44):** twenty follow the original.
+  - Window, Door, Door Plain, Roof, Rainbow and Color Tile are dragged out as a box, like the Draw
+    tool's rectangle. The Window is `Icons.MHK`'s own frame (`assets/brush-window.png`) stretched
+    to the box; doors and the roof are built from its panes, panels, knob and shingle tile
+    (`assets/brush-parts.png`).
+  - Bricks and Log lay the disc's 32 x 16 tiles in courses.
+  - The ABC brush writes "Kid Pix", a letter at a time, until Edit ABC Text is built.
+- **Mega-mixers (tools 65 to 86):** each was run on one test picture in the original, and
+  `raster.ts` was checked against the same picture. The ten color effects match to the value;
+  Kid Pix measures brightness by a pixel's strongest channel, so pure green is as bright as
+  white. The bending effects (Pinch to Shear) match by eye; Kaleidoscope and Pointilize are close
+  but not the original's.
 
 ## The libraries
 
@@ -100,8 +132,8 @@ Checked against the original running under Wine.
 - The size control (`assets/sizes.png`): three balls for the Pencil's kinds and the paint brush.
   `PENCIL_WIDTHS` are the widths the original draws, measured per kind, and `PENCIL_NIBS` what one
   press of each lays down: the pencil a hard-edged disc, chalk and crayon a scatter of single-pixel
-  grains that build up, the marker a thin slanted tip that stays see-through. The brush's size scales
-  the Realistic brushes; the Wacky ones have none, as in Kid Pix.
+  grains that build up, the marker a thin slanted tip that stays see-through. The brush's size picks
+  among a Realistic brush's three tips; the Wacky ones have none.
 - Two mode buttons (`assets/modes.png`): Realistic and Wacky for the brush (brushes 0 to 19, and
   the rest), 3D Shapes and Moving Paint for the can. Each mode keeps its own choice.
 - The text tray: font (all 22 of the disc's), size, bold, italic, underline and alignment
