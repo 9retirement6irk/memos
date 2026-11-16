@@ -1223,6 +1223,15 @@
       "api-key-help": "Dawarich の Account › API access にあります。",
       "label": "Dawarich",
       "description": "ジャーナルの場所や、どのメモにも使える経路画像のための、あなた自身の位置履歴。API キーはこのサーバーに保存されます。"
+    },
+    "text-extraction": {
+      "claude-title": "Claude (Anthropic)",
+      "claude-description": "Anthropic Console の API キーで Claude を接続します。キーはこのサーバーに保存されます。",
+      "description": "依頼されたときに、画像、描画、スキャンした PDF の文字を読み取ります。そのたびにファイルはここで選んだプロバイダーに送られます。",
+      "model-help": "空欄にすると {{model}} を使います。",
+      "off": "オフ",
+      "provider-help": "Claude、または上の Gemini プロバイダーのいずれか。",
+      "title": "テキスト抽出"
     }
   },
   "tooltip": {

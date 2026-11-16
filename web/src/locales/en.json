@@ -1339,6 +1339,15 @@
       "api-key-help": "Find it in Dawarich under Account › API access.",
       "label": "Dawarich",
       "description": "Your own location history, for journal places and route images in any memo. Your API key stays on this server."
+    },
+    "text-extraction": {
+      "claude-title": "Claude (Anthropic)",
+      "claude-description": "Connect Claude with an API key from the Anthropic Console. The key stays on this server.",
+      "description": "Reads the text in images, drawings and scanned PDFs when someone asks. Each time, that file is sent to the provider chosen here.",
+      "model-help": "Leave empty to use {{model}}.",
+      "off": "Off",
+      "provider-help": "Claude, or one of the Gemini providers above.",
+      "title": "Text extraction"
     }
   },
   "space": {

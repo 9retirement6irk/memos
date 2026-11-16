@@ -1218,6 +1218,15 @@
       "api-key-help": "ती Dawarich मध्ये Account › API access येथे मिळेल.",
       "label": "Dawarich",
       "description": "तुमचा स्वतःचा स्थान इतिहास, जर्नलमधील ठिकाणांसाठी आणि कोणत्याही मेमोतील मार्गाच्या प्रतिमांसाठी. तुमची API की याच सर्व्हरवर राहते."
+    },
+    "text-extraction": {
+      "claude-title": "Claude (Anthropic)",
+      "claude-description": "Anthropic Console मधील API की वापरून Claude जोडा. की याच सर्व्हरवर राहते.",
+      "description": "विनंती केल्यावर प्रतिमा, रेखाचित्रे आणि स्कॅन केलेल्या PDF मधील मजकूर वाचते. प्रत्येक वेळी ती फाइल इथे निवडलेल्या प्रदात्याकडे पाठवली जाते.",
+      "model-help": "{{model}} वापरण्यासाठी रिकामे ठेवा.",
+      "off": "बंद",
+      "provider-help": "Claude किंवा वरील Gemini प्रदात्यांपैकी एक.",
+      "title": "मजकूर काढणे"
     }
   },
   "tooltip": {

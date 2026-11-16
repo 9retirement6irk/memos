@@ -1339,6 +1339,15 @@
       "api-key-help": "Onu Dawarich-də Account › API access bölməsində tapa bilərsən.",
       "label": "Dawarich",
       "description": "Öz məkan tarixçən, gündəlik yerləri və istənilən qeyddə marşrut şəkilləri üçün. API açarın bu serverdə qalır."
+    },
+    "text-extraction": {
+      "claude-title": "Claude (Anthropic)",
+      "claude-description": "Claude-u Anthropic Console-dan alınan API açarı ilə qoşun. Açar bu serverdə qalır.",
+      "description": "İstənildikdə şəkillərdəki, rəsmlərdəki və skan edilmiş PDF-lərdəki mətni oxuyur. Hər dəfə həmin fayl burada seçilmiş provayderə göndərilir.",
+      "model-help": "{{model}} istifadə etmək üçün boş saxlayın.",
+      "off": "Söndürülüb",
+      "provider-help": "Claude və ya yuxarıdakı Gemini provayderlərindən biri.",
+      "title": "Mətnin çıxarılması"
     }
   },
   "space": {

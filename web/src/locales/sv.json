@@ -1223,6 +1223,15 @@
       "api-key-help": "Du hittar den i Dawarich under Account › API access.",
       "label": "Dawarich",
       "description": "Din egen platshistorik, för platser i dagboken och ruttbilder i alla anteckningar. Din API-nyckel stannar på den här servern."
+    },
+    "text-extraction": {
+      "claude-title": "Claude (Anthropic)",
+      "claude-description": "Anslut Claude med en API-nyckel från Anthropic Console. Nyckeln stannar på den här servern.",
+      "description": "Läser texten i bilder, teckningar och skannade PDF-filer när någon ber om det. Varje gång skickas filen till leverantören som valts här.",
+      "model-help": "Lämna tomt för att använda {{model}}.",
+      "off": "Av",
+      "provider-help": "Claude eller någon av Gemini-leverantörerna ovan.",
+      "title": "Textextrahering"
     }
   },
   "tooltip": {

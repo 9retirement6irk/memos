@@ -1222,6 +1222,15 @@
       "api-key-help": "تجده في Dawarich ضمن Account › API access.",
       "label": "Dawarich",
       "description": "سجل مواقعك الخاص، لأماكن اليوميات وصور المسارات في أي مذكرة. يبقى مفتاح API على هذا الخادم."
+    },
+    "text-extraction": {
+      "claude-title": "Claude (Anthropic)",
+      "claude-description": "اربط Claude بمفتاح API من Anthropic Console. يبقى المفتاح على هذا الخادم.",
+      "description": "يقرأ النص في الصور والرسومات وملفات PDF الممسوحة عند الطلب. في كل مرة يُرسل ذلك الملف إلى المزوّد المختار هنا.",
+      "model-help": "اتركه فارغًا لاستخدام {{model}}.",
+      "off": "متوقف",
+      "provider-help": "Claude أو أحد مزوّدي Gemini أعلاه.",
+      "title": "استخراج النص"
     }
   },
   "tooltip": {

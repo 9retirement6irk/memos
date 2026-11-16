@@ -1218,6 +1218,15 @@
       "api-key-help": "Bạn sẽ thấy nó trong Dawarich tại Account › API access.",
       "label": "Dawarich",
       "description": "Lịch sử vị trí của riêng bạn, cho địa điểm trong nhật ký và ảnh lộ trình trong mọi ghi chú. Khóa API của bạn ở lại trên máy chủ này."
+    },
+    "text-extraction": {
+      "claude-title": "Claude (Anthropic)",
+      "claude-description": "Kết nối Claude bằng khóa API từ Anthropic Console. Khóa được giữ trên máy chủ này.",
+      "description": "Đọc văn bản trong hình ảnh, bản vẽ và PDF quét khi có người yêu cầu. Mỗi lần, tệp đó được gửi đến nhà cung cấp chọn ở đây.",
+      "model-help": "Để trống để dùng {{model}}.",
+      "off": "Tắt",
+      "provider-help": "Claude hoặc một nhà cung cấp Gemini ở trên.",
+      "title": "Trích xuất văn bản"
     }
   },
   "tooltip": {

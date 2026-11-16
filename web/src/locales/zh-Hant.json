@@ -1302,6 +1302,15 @@
       "api-key-help": "可在 Dawarich 的 Account › API access 中找到。",
       "label": "Dawarich",
       "description": "你自己的位置紀錄，用於日記地點和任何備忘錄中的路線圖片。你的 API 金鑰保存在此伺服器上。"
+    },
+    "text-extraction": {
+      "claude-title": "Claude (Anthropic)",
+      "claude-description": "使用 Anthropic Console 的 API 金鑰連接 Claude。金鑰保存在此伺服器上。",
+      "description": "在有人要求時讀取圖片、繪圖和掃描 PDF 中的文字。每次都會將該檔案傳送給此處選擇的提供者。",
+      "model-help": "留空即使用 {{model}}。",
+      "off": "關閉",
+      "provider-help": "Claude 或上方的其中一個 Gemini 提供者。",
+      "title": "文字擷取"
     }
   },
   "space": {

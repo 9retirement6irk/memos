@@ -1225,6 +1225,15 @@
       "api-key-help": "Znajdziesz go w Dawarich w Account › API access.",
       "label": "Dawarich",
       "description": "Twoja własna historia lokalizacji, dla miejsc w dzienniku i obrazów tras w dowolnej notatce. Twój klucz API zostaje na tym serwerze."
+    },
+    "text-extraction": {
+      "claude-title": "Claude (Anthropic)",
+      "claude-description": "Połącz Claude za pomocą klucza API z Anthropic Console. Klucz zostaje na tym serwerze.",
+      "description": "Na żądanie odczytuje tekst z obrazów, rysunków i zeskanowanych plików PDF. Za każdym razem plik jest wysyłany do wybranego tu dostawcy.",
+      "model-help": "Zostaw puste, aby użyć {{model}}.",
+      "off": "Wyłączone",
+      "provider-help": "Claude lub jeden z dostawców Gemini powyżej.",
+      "title": "Wyodrębnianie tekstu"
     }
   },
   "tooltip": {

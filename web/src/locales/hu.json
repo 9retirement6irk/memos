@@ -1223,6 +1223,15 @@
       "api-key-help": "A Dawarichban az Account › API access alatt találod.",
       "label": "Dawarich",
       "description": "A saját helyelőzményeid, a napló helyeihez és útvonalképekhez bármely jegyzetben. Az API-kulcsod ezen a szerveren marad."
+    },
+    "text-extraction": {
+      "claude-title": "Claude (Anthropic)",
+      "claude-description": "Csatlakoztasd a Claude-ot egy Anthropic Console-ból származó API-kulccsal. A kulcs ezen a szerveren marad.",
+      "description": "Kérésre kiolvassa a szöveget képekből, rajzokból és szkennelt PDF-ekből. A fájlt minden alkalommal az itt választott szolgáltatónak küldi el.",
+      "model-help": "Hagyd üresen a(z) {{model}} használatához.",
+      "off": "Ki",
+      "provider-help": "A Claude vagy a fenti Gemini-szolgáltatók egyike.",
+      "title": "Szövegkinyerés"
     }
   },
   "tooltip": {

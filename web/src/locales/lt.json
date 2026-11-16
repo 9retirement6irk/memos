@@ -1263,6 +1263,15 @@
       "api-key-help": "Jį rasi Dawarich skiltyje Account › API access.",
       "label": "Dawarich",
       "description": "Tavo paties vietų istorija – dienoraščio vietoms ir maršrutų vaizdams bet kuriame įraše. Tavo API raktas lieka šiame serveryje."
+    },
+    "text-extraction": {
+      "claude-title": "Claude (Anthropic)",
+      "claude-description": "Prijunkite Claude su API raktu iš Anthropic Console. Raktas lieka šiame serveryje.",
+      "description": "Paprašius perskaito tekstą paveikslėliuose, piešiniuose ir nuskenuotuose PDF. Kiekvieną kartą failas siunčiamas čia pasirinktam teikėjui.",
+      "model-help": "Palikite tuščią, kad būtų naudojamas {{model}}.",
+      "off": "Išjungta",
+      "provider-help": "Claude arba vienas iš aukščiau esančių Gemini teikėjų.",
+      "title": "Teksto išgavimas"
     }
   },
   "tooltip": {

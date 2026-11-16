@@ -24,6 +24,7 @@ import ManagedByConfigurationChip from "./ManagedByConfigurationChip";
 import SettingGroup from "./SettingGroup";
 import SettingSection from "./SettingSection";
 import SettingTable from "./SettingTable";
+import TextExtractionSettings from "./TextExtractionSettings";
 import useInstanceSettingUpdater, { buildInstanceSettingName } from "./useInstanceSettingUpdater";
 
 type LocalAIProvider = {
@@ -335,6 +336,11 @@ const AISection = () => {
           referencedProvider={transcriptionProviderRef}
         />
       </SettingGroup>
+
+      {/* The fork's Claude connection and its choice of AI for reading text out of images (server/textextraction). */}
+      <TextExtractionSettings
+        geminiProviders={providers.filter((provider) => provider.type === InstanceSetting_AIProviderType.GEMINI && provider.apiKeySet)}
+      />
 
       <AIProviderDialog
         provider={editingProvider}

@@ -1223,6 +1223,15 @@
       "api-key-help": "Du findest ihn in Dawarich unter Account › API access.",
       "label": "Dawarich",
       "description": "Dein eigener Standortverlauf, für Orte im Tagebuch und Routenbilder in jedem Memo. Dein API-Schlüssel bleibt auf diesem Server."
+    },
+    "text-extraction": {
+      "claude-title": "Claude (Anthropic)",
+      "claude-description": "Verbinde Claude mit einem API-Schlüssel aus der Anthropic Console. Der Schlüssel bleibt auf diesem Server.",
+      "description": "Liest den Text in Bildern, Zeichnungen und gescannten PDFs, wenn jemand darum bittet. Dabei wird die Datei jedes Mal an den hier gewählten Anbieter gesendet.",
+      "model-help": "Leer lassen, um {{model}} zu verwenden.",
+      "off": "Aus",
+      "provider-help": "Claude oder einer der Gemini-Anbieter oben.",
+      "title": "Texterkennung"
     }
   },
   "tooltip": {

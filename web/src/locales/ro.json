@@ -1262,6 +1262,15 @@
       "api-key-help": "O găsești în Dawarich la Account › API access.",
       "label": "Dawarich",
       "description": "Propriul istoric de locații, pentru locurile din jurnal și imaginile traseelor în orice notă. Cheia ta API rămâne pe acest server."
+    },
+    "text-extraction": {
+      "claude-title": "Claude (Anthropic)",
+      "claude-description": "Conectează Claude cu o cheie API din Anthropic Console. Cheia rămâne pe acest server.",
+      "description": "Citește textul din imagini, desene și PDF-uri scanate la cerere. De fiecare dată, fișierul este trimis furnizorului ales aici.",
+      "model-help": "Lasă gol pentru a folosi {{model}}.",
+      "off": "Dezactivat",
+      "provider-help": "Claude sau unul dintre furnizorii Gemini de mai sus.",
+      "title": "Extragerea textului"
     }
   },
   "tooltip": {

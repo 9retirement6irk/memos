@@ -1261,6 +1261,15 @@
       "api-key-help": "Löydät sen Dawarichista kohdasta Account › API access.",
       "label": "Dawarich",
       "description": "Oma sijaintihistoriasi päiväkirjan paikkoja ja minkä tahansa muistion reittikuvia varten. API-avaimesi pysyy tällä palvelimella."
+    },
+    "text-extraction": {
+      "claude-title": "Claude (Anthropic)",
+      "claude-description": "Yhdistä Claude Anthropic Consolen API-avaimella. Avain pysyy tällä palvelimella.",
+      "description": "Lukee tekstin kuvista, piirroksista ja skannatuista PDF-tiedostoista pyydettäessä. Tiedosto lähetetään joka kerta tässä valitulle palveluntarjoajalle.",
+      "model-help": "Jätä tyhjäksi käyttääksesi mallia {{model}}.",
+      "off": "Pois",
+      "provider-help": "Claude tai jokin yllä olevista Gemini-palveluntarjoajista.",
+      "title": "Tekstin poiminta"
     }
   },
   "tooltip": {

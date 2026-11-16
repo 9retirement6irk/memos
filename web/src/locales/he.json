@@ -1294,6 +1294,15 @@
       "api-key-help": "תמצאו אותו ב־Dawarich תחת Account › API access.",
       "label": "Dawarich",
       "description": "היסטוריית המיקומים שלכם, למקומות ביומן ולתמונות מסלול בכל פתק. מפתח ה־API נשאר בשרת הזה."
+    },
+    "text-extraction": {
+      "claude-title": "Claude (Anthropic)",
+      "claude-description": "חברו את Claude עם מפתח API מ-Anthropic Console. המפתח נשאר בשרת הזה.",
+      "description": "קורא את הטקסט בתמונות, בציורים ובקובצי PDF סרוקים לפי בקשה. בכל פעם הקובץ נשלח לספק שנבחר כאן.",
+      "model-help": "השאירו ריק כדי להשתמש ב-{{model}}.",
+      "off": "כבוי",
+      "provider-help": "Claude או אחד מספקי Gemini שלמעלה.",
+      "title": "חילוץ טקסט"
     }
   },
   "tooltip": {

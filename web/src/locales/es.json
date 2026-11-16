@@ -1224,6 +1224,15 @@
       "api-key-help": "La encontrarás en Dawarich en Account › API access.",
       "label": "Dawarich",
       "description": "Tu propio historial de ubicaciones, para los lugares del diario y las imágenes de rutas en cualquier nota. Tu clave de API se queda en este servidor."
+    },
+    "text-extraction": {
+      "claude-title": "Claude (Anthropic)",
+      "claude-description": "Conecta Claude con una clave de API de Anthropic Console. La clave se queda en este servidor.",
+      "description": "Lee el texto de imágenes, dibujos y PDF escaneados cuando alguien lo pide. Cada vez, ese archivo se envía al proveedor elegido aquí.",
+      "model-help": "Déjalo vacío para usar {{model}}.",
+      "off": "Desactivado",
+      "provider-help": "Claude o uno de los proveedores de Gemini de arriba.",
+      "title": "Extracción de texto"
     }
   },
   "tooltip": {
