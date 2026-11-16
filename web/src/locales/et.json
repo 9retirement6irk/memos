@@ -332,7 +332,8 @@
       "resolve-image-uploads": "Lahenda piltide üleslaadimine enne salvestamist",
       "save-in-progress": "Salvestamine pooleli",
       "unsupported-attachment-image-url": "Toetamata manuse pildi URL: {{url}}",
-      "wait-for-upload": "Oota üleslaadimise lõppemist"
+      "wait-for-upload": "Oota üleslaadimise lõppemist",
+      "wait-for-conversion": "Oota, kuni fotode teisendamine lõpeb"
     },
     "blocks": {
       "task": "Ülesanne",
@@ -392,7 +393,11 @@
     "remove-location": "Eemalda asukoht",
     "recording-unsupported": "See brauser ei toeta helisalvestust.",
     "microphone-denied": "Mikrofoni luba keelati.",
-    "recording-failed": "Helisalvestuse alustamine ebaõnnestus."
+    "recording-failed": "Helisalvestuse alustamine ebaõnnestus.",
+    "heic": {
+      "converting": "HEIC-fotode teisendamine JPEG-iks ({{count}})…",
+      "failed": "HEIC-fotod, mida ei õnnestunud teisendada: {{count}}. Need lisati muutmata kujul ja võivad olla nähtavad ainult Safaris."
+    }
   },
   "inbox": {
     "failed-to-load": "Postkasti üksuse laadimine ebaõnnestus",

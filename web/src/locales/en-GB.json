@@ -294,7 +294,8 @@
       "resolve-image-uploads": "Resolve image uploads before saving",
       "save-in-progress": "Save in progress",
       "unsupported-attachment-image-url": "Unsupported attachment image URL: {{url}}",
-      "wait-for-upload": "Wait for upload to complete"
+      "wait-for-upload": "Wait for upload to complete",
+      "wait-for-conversion": "Wait for photos to finish converting"
     },
     "blocks": {
       "task": "Task",
@@ -354,7 +355,11 @@
     "remove-location": "Remove location",
     "recording-unsupported": "Audio recording is not supported in this browser.",
     "microphone-denied": "Microphone permission was denied.",
-    "recording-failed": "Failed to start audio recording."
+    "recording-failed": "Failed to start audio recording.",
+    "heic": {
+      "converting": "Converting HEIC photos to JPEG ({{count}})…",
+      "failed": "HEIC photos that couldn't be converted: {{count}}. They were attached as they are and may show only in Safari."
+    }
   },
   "inbox": {
     "failed-to-load": "Failed to load inbox item",

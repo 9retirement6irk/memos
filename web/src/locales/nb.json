@@ -294,7 +294,8 @@
       "resolve-image-uploads": "Løs bildeopplastinger før lagring",
       "save-in-progress": "Lagring pågår",
       "unsupported-attachment-image-url": "Ustøttet vedleggsbilde-URL: {{url}}",
-      "wait-for-upload": "Vent til opplastingen er fullført"
+      "wait-for-upload": "Vent til opplastingen er fullført",
+      "wait-for-conversion": "Vent til bildene er ferdig konvertert"
     },
     "blocks": {
       "task": "Gjøremål",
@@ -354,7 +355,11 @@
     "remove-location": "Fjern plassering",
     "recording-unsupported": "Lydopptak støttes ikke i denne nettleseren.",
     "microphone-denied": "Tilgang til mikrofonen ble avslått.",
-    "recording-failed": "Kunne ikke starte lydopptaket."
+    "recording-failed": "Kunne ikke starte lydopptaket.",
+    "heic": {
+      "converting": "Konverterer HEIC-bilder til JPEG ({{count}})…",
+      "failed": "HEIC-bilder som ikke kunne konverteres: {{count}}. De ble lagt ved som de er og vises kanskje bare i Safari."
+    }
   },
   "inbox": {
     "failed-to-load": "Kunne ikke laste innbokselement",

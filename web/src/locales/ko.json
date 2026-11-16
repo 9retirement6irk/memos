@@ -294,7 +294,8 @@
       "resolve-image-uploads": "저장하기 전에 이미지 업로드를 해결하세요",
       "save-in-progress": "저장 중",
       "unsupported-attachment-image-url": "지원되지 않는 첨부 이미지 URL: {{url}}",
-      "wait-for-upload": "업로드가 완료될 때까지 기다리세요"
+      "wait-for-upload": "업로드가 완료될 때까지 기다리세요",
+      "wait-for-conversion": "사진 변환이 끝날 때까지 기다려 주세요"
     },
     "blocks": {
       "task": "할 일",
@@ -354,7 +355,11 @@
     "remove-location": "위치 제거",
     "recording-unsupported": "이 브라우저에서는 오디오 녹음을 지원하지 않습니다.",
     "microphone-denied": "마이크 권한이 거부되었습니다.",
-    "recording-failed": "오디오 녹음을 시작하지 못했습니다."
+    "recording-failed": "오디오 녹음을 시작하지 못했습니다.",
+    "heic": {
+      "converting": "HEIC 사진을 JPEG로 변환하는 중({{count}})…",
+      "failed": "변환하지 못한 HEIC 사진: {{count}}. 그대로 첨부되었으며 Safari에서만 표시될 수 있습니다."
+    }
   },
   "inbox": {
     "failed-to-load": "알림함 항목을 불러오지 못했습니다",

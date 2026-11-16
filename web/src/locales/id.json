@@ -294,7 +294,8 @@
       "resolve-image-uploads": "Selesaikan unggahan gambar sebelum menyimpan",
       "save-in-progress": "Penyimpanan sedang berlangsung",
       "unsupported-attachment-image-url": "URL gambar lampiran tidak didukung: {{url}}",
-      "wait-for-upload": "Tunggu hingga unggahan selesai"
+      "wait-for-upload": "Tunggu hingga unggahan selesai",
+      "wait-for-conversion": "Tunggu hingga foto selesai dikonversi"
     },
     "blocks": {
       "task": "Tugas",
@@ -354,7 +355,11 @@
     "remove-location": "Hapus lokasi",
     "recording-unsupported": "Perekaman audio tidak didukung di browser ini.",
     "microphone-denied": "Izin mikrofon ditolak.",
-    "recording-failed": "Gagal memulai perekaman audio."
+    "recording-failed": "Gagal memulai perekaman audio.",
+    "heic": {
+      "converting": "Mengonversi foto HEIC ke JPEG ({{count}})…",
+      "failed": "Foto HEIC yang tidak dapat dikonversi: {{count}}. Foto dilampirkan apa adanya dan mungkin hanya tampil di Safari."
+    }
   },
   "inbox": {
     "failed-to-load": "Gagal memuat item kotak masuk",

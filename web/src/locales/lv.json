@@ -332,7 +332,8 @@
       "resolve-image-uploads": "Atrisiniet attēlu augšupielādi pirms saglabāšanas",
       "save-in-progress": "Notiek saglabāšana",
       "unsupported-attachment-image-url": "Neatbalstīts pielikuma attēla URL: {{url}}",
-      "wait-for-upload": "Pagaidiet, līdz augšupielāde ir pabeigta"
+      "wait-for-upload": "Pagaidiet, līdz augšupielāde ir pabeigta",
+      "wait-for-conversion": "Uzgaidiet, līdz fotoattēlu pārvēršana beigsies"
     },
     "blocks": {
       "task": "Uzdevums",
@@ -392,7 +393,11 @@
     "remove-location": "Noņemt atrašanās vietu",
     "recording-unsupported": "Šī pārlūkprogramma neatbalsta audio ierakstīšanu.",
     "microphone-denied": "Piekļuve mikrofonam tika liegta.",
-    "recording-failed": "Neizdevās sākt audio ierakstīšanu."
+    "recording-failed": "Neizdevās sākt audio ierakstīšanu.",
+    "heic": {
+      "converting": "HEIC fotoattēli tiek pārvērsti JPEG formātā ({{count}})…",
+      "failed": "HEIC fotoattēli, kurus neizdevās pārvērst: {{count}}. Tie pievienoti tādi, kādi ir, un var būt redzami tikai Safari."
+    }
   },
   "inbox": {
     "failed-to-load": "Neizdevās ielādēt iesūtnes vienumu",

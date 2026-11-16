@@ -294,7 +294,8 @@
       "resolve-image-uploads": "حل مشكلة تحميل الصور قبل الحفظ",
       "save-in-progress": "جارٍ الحفظ",
       "unsupported-attachment-image-url": "رابط صورة المرفق غير مدعوم: {{url}}",
-      "wait-for-upload": "انتظر حتى يكتمل التحميل"
+      "wait-for-upload": "انتظر حتى يكتمل التحميل",
+      "wait-for-conversion": "انتظر حتى ينتهي تحويل الصور"
     },
     "blocks": {
       "task": "مهمة",
@@ -354,7 +355,11 @@
     "remove-location": "إزالة الموقع",
     "recording-unsupported": "تسجيل الصوت غير مدعوم في هذا المتصفح.",
     "microphone-denied": "تم رفض إذن الميكروفون.",
-    "recording-failed": "فشل بدء تسجيل الصوت."
+    "recording-failed": "فشل بدء تسجيل الصوت.",
+    "heic": {
+      "converting": "جارٍ تحويل صور HEIC إلى JPEG ({{count}})…",
+      "failed": "صور HEIC التي تعذّر تحويلها: {{count}}. أُرفقت كما هي وقد لا تظهر إلا في Safari."
+    }
   },
   "inbox": {
     "failed-to-load": "فشل تحميل عنصر صندوق الوارد",

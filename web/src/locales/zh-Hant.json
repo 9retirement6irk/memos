@@ -353,7 +353,8 @@
       "resolve-image-uploads": "請先處理未完成的圖片上傳",
       "save-in-progress": "正在儲存",
       "unsupported-attachment-image-url": "不支援的附件圖片網址：{{url}}",
-      "wait-for-upload": "請等待上傳完成"
+      "wait-for-upload": "請等待上傳完成",
+      "wait-for-conversion": "請等待相片轉換完成"
     },
     "audio-recorder": {
       "attachment-label": "錄音",
@@ -433,7 +434,11 @@
     "remove-location": "移除位置",
     "recording-unsupported": "此瀏覽器不支援錄音。",
     "microphone-denied": "麥克風權限遭拒。",
-    "recording-failed": "無法開始錄音。"
+    "recording-failed": "無法開始錄音。",
+    "heic": {
+      "converting": "正在將 HEIC 相片轉換為 JPEG（{{count}}）…",
+      "failed": "無法轉換的 HEIC 相片：{{count}}。已依原樣附加，可能只能在 Safari 中顯示。"
+    }
   },
   "inbox": {
     "failed-to-load": "載入失敗",

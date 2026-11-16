@@ -332,7 +332,8 @@
       "resolve-image-uploads": "Prieš įrašydami išspręskite vaizdų įkėlimą",
       "save-in-progress": "Vykdomas išsaugojimas",
       "unsupported-attachment-image-url": "Nepalaikomas priedo vaizdo URL: {{url}}",
-      "wait-for-upload": "Palaukite, kol įkėlimas bus baigtas"
+      "wait-for-upload": "Palaukite, kol įkėlimas bus baigtas",
+      "wait-for-conversion": "Palaukite, kol nuotraukos bus konvertuotos"
     },
     "blocks": {
       "task": "Užduotis",
@@ -392,7 +393,11 @@
     "remove-location": "Pašalinti vietą",
     "recording-unsupported": "Ši naršyklė nepalaiko garso įrašymo.",
     "microphone-denied": "Prieiga prie mikrofono atmesta.",
-    "recording-failed": "Nepavyko pradėti garso įrašymo."
+    "recording-failed": "Nepavyko pradėti garso įrašymo.",
+    "heic": {
+      "converting": "HEIC nuotraukos konvertuojamos į JPEG ({{count}})…",
+      "failed": "HEIC nuotraukos, kurių nepavyko konvertuoti: {{count}}. Jos pridėtos tokios, kokios yra, ir gali būti rodomos tik Safari."
+    }
   },
   "inbox": {
     "failed-to-load": "Nepavyko įkelti gautųjų elemento",

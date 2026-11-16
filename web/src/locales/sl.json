@@ -294,7 +294,8 @@
       "resolve-image-uploads": "Pred shranjevanjem razrešite nalaganje slik",
       "save-in-progress": "Shranjevanje v teku",
       "unsupported-attachment-image-url": "URL nepodprte slike priloge: {{url}}",
-      "wait-for-upload": "Počakajte, da se nalaganje zaključi"
+      "wait-for-upload": "Počakajte, da se nalaganje zaključi",
+      "wait-for-conversion": "Počakajte, da se pretvorba fotografij konča"
     },
     "blocks": {
       "task": "Opravilo",
@@ -354,7 +355,11 @@
     "remove-location": "Odstrani lokacijo",
     "recording-unsupported": "Ta brskalnik ne podpira snemanja zvoka.",
     "microphone-denied": "Dostop do mikrofona je bil zavrnjen.",
-    "recording-failed": "Snemanja zvoka ni bilo mogoče začeti."
+    "recording-failed": "Snemanja zvoka ni bilo mogoče začeti.",
+    "heic": {
+      "converting": "Pretvarjanje fotografij HEIC v JPEG ({{count}})…",
+      "failed": "Fotografije HEIC, ki jih ni bilo mogoče pretvoriti: {{count}}. Priložene so takšne, kot so, in so morda vidne samo v Safariju."
+    }
   },
   "inbox": {
     "failed-to-load": "Ni bilo mogoče naložiti elementa prejetega",

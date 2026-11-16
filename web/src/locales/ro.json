@@ -332,7 +332,8 @@
       "resolve-image-uploads": "Rezolvați încărcările de imagini înainte de salvare",
       "save-in-progress": "Salvare în curs",
       "unsupported-attachment-image-url": "Adresa URL a imaginii atașate neacceptată: {{url}}",
-      "wait-for-upload": "Așteptați finalizarea încărcării"
+      "wait-for-upload": "Așteptați finalizarea încărcării",
+      "wait-for-conversion": "Așteaptă să se termine conversia fotografiilor"
     },
     "blocks": {
       "task": "Sarcină",
@@ -392,7 +393,11 @@
     "remove-location": "Eliminați locația",
     "recording-unsupported": "Înregistrarea audio nu este acceptată în acest browser.",
     "microphone-denied": "Permisiunea pentru microfon a fost refuzată.",
-    "recording-failed": "Pornirea înregistrării audio a eșuat."
+    "recording-failed": "Pornirea înregistrării audio a eșuat.",
+    "heic": {
+      "converting": "Se convertesc fotografiile HEIC în JPEG ({{count}})…",
+      "failed": "Fotografii HEIC care nu au putut fi convertite: {{count}}. Au fost atașate așa cum sunt și s-ar putea să apară doar în Safari."
+    }
   },
   "inbox": {
     "failed-to-load": "Nu s-a încărcat elementul din căsuța de e-mail",

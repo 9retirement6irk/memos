@@ -294,7 +294,8 @@
       "resolve-image-uploads": "保存する前に画像のアップロードを解決してください",
       "save-in-progress": "保存処理中",
       "unsupported-attachment-image-url": "サポートされていない添付ファイル画像のURL: {{url}}",
-      "wait-for-upload": "アップロードが完了するまでお待ちください"
+      "wait-for-upload": "アップロードが完了するまでお待ちください",
+      "wait-for-conversion": "写真の変換が終わるまでお待ちください"
     },
     "blocks": {
       "task": "タスク",
@@ -354,7 +355,11 @@
     "remove-location": "場所を削除",
     "recording-unsupported": "このブラウザーは音声録音に対応していません。",
     "microphone-denied": "マイクへのアクセスが拒否されました。",
-    "recording-failed": "音声録音を開始できませんでした。"
+    "recording-failed": "音声録音を開始できませんでした。",
+    "heic": {
+      "converting": "HEIC 写真を JPEG に変換しています（{{count}}）…",
+      "failed": "変換できなかった HEIC 写真：{{count}}。そのまま添付したため、Safari でしか表示されない場合があります。"
+    }
   },
   "inbox": {
     "failed-to-load": "受信トレイアイテムの読み込みに失敗しました",

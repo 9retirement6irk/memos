@@ -8,6 +8,7 @@ export { useBlobUrls } from "./useBlobUrls";
 export { type DrawingSession, useDrawing } from "./useDrawing";
 export { pairAppleLivePhotoFiles, toLocalFiles, useFileUpload } from "./useFileUpload";
 export { useFocusMode } from "./useFocusMode";
+export { useHeicConversion } from "./useHeicConversion";
 export { splitInlineLocalFiles, useInlineImageUpload } from "./useInlineImageUpload";
 export { useLinkMemo } from "./useLinkMemo";
 export { useLocation } from "./useLocation";

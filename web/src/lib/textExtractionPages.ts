@@ -1,5 +1,6 @@
 import type { PDFDocumentProxy } from "pdfjs-dist";
 import { loadPdfjs } from "@/components/MemoMetadata/Attachment/pdfDocument";
+import { decodeImage } from "./heic";
 import { type ExtractImage, type ExtractResult, MAX_EXTRACT_IMAGE_BYTES, MAX_EXTRACT_IMAGES } from "./textExtraction";
 
 /**
@@ -112,7 +113,8 @@ const encode = async (draw: (context: CanvasRenderingContext2D, width: number, h
 export const prepareImage = async (url: string, signal?: AbortSignal): Promise<PreparedPage[]> => {
   const response = await fetch(url, { credentials: "same-origin", signal });
   if (!response.ok) throw new Error(response.statusText || "the file could not be downloaded");
-  const bitmap = await createImageBitmap(await response.blob());
+  // A HEIC photo uploaded before conversion existed is decoded with libheif where the browser can't.
+  const bitmap = await decodeImage(await response.blob());
   try {
     const scale = fitScale(bitmap.width, bitmap.height);
     const image = await encode(

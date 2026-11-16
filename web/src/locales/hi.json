@@ -294,7 +294,8 @@
       "resolve-image-uploads": "सेव करने से पहले इमेज अपलोड को ठीक करें",
       "save-in-progress": "सेव हो रहा है",
       "unsupported-attachment-image-url": "अनसपोर्टेड अटैचमेंट इमेज URL: {{url}}",
-      "wait-for-upload": "अपलोड पूरा होने का इंतज़ार करें"
+      "wait-for-upload": "अपलोड पूरा होने का इंतज़ार करें",
+      "wait-for-conversion": "फ़ोटो बदलने का काम पूरा होने तक प्रतीक्षा करें"
     },
     "blocks": {
       "task": "टास्क",
@@ -354,7 +355,11 @@
     "remove-location": "स्थान हटाएँ",
     "recording-unsupported": "इस ब्राउज़र में ऑडियो रिकॉर्डिंग समर्थित नहीं है।",
     "microphone-denied": "माइक्रोफ़ोन की अनुमति अस्वीकार कर दी गई।",
-    "recording-failed": "ऑडियो रिकॉर्डिंग शुरू नहीं हो सकी।"
+    "recording-failed": "ऑडियो रिकॉर्डिंग शुरू नहीं हो सकी।",
+    "heic": {
+      "converting": "HEIC फ़ोटो को JPEG में बदला जा रहा है ({{count}})…",
+      "failed": "HEIC फ़ोटो जो बदली नहीं जा सकीं: {{count}}। इन्हें जैसा है वैसा जोड़ा गया है और ये शायद सिर्फ़ Safari में दिखें।"
+    }
   },
   "inbox": {
     "failed-to-load": "इनबॉक्स आइटम लोड करने में विफल",

@@ -294,7 +294,8 @@
       "resolve-image-uploads": "Riješite prijenose slika prije spremanja",
       "save-in-progress": "Spremanje u tijeku",
       "unsupported-attachment-image-url": "Nepodržani URL slike privitka: {{url}}",
-      "wait-for-upload": "Pričekajte da se prijenos dovrši"
+      "wait-for-upload": "Pričekajte da se prijenos dovrši",
+      "wait-for-conversion": "Pričekajte da se fotografije pretvore"
     },
     "blocks": {
       "task": "Zadatak",
@@ -354,7 +355,11 @@
     "remove-location": "Ukloni lokaciju",
     "recording-unsupported": "Ovaj preglednik ne podržava snimanje zvuka.",
     "microphone-denied": "Dopuštenje za mikrofon je odbijeno.",
-    "recording-failed": "Pokretanje snimanja zvuka nije uspjelo."
+    "recording-failed": "Pokretanje snimanja zvuka nije uspjelo.",
+    "heic": {
+      "converting": "Pretvaranje HEIC fotografija u JPEG ({{count}})…",
+      "failed": "HEIC fotografije koje nije bilo moguće pretvoriti: {{count}}. Priložene su takve kakve jesu i možda se prikazuju samo u Safariju."
+    }
   },
   "inbox": {
     "failed-to-load": "Neuspjelo učitavanje stavke pristigle pošte",

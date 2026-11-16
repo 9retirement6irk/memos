@@ -294,7 +294,8 @@
       "resolve-image-uploads": "Giải quyết việc tải ảnh lên trước khi lưu",
       "save-in-progress": "Đang lưu",
       "unsupported-attachment-image-url": "URL ảnh đính kèm không được hỗ trợ: {{url}}",
-      "wait-for-upload": "Chờ quá trình tải lên hoàn tất"
+      "wait-for-upload": "Chờ quá trình tải lên hoàn tất",
+      "wait-for-conversion": "Đợi ảnh chuyển đổi xong"
     },
     "blocks": {
       "task": "Việc cần làm",
@@ -354,7 +355,11 @@
     "remove-location": "Xóa vị trí",
     "recording-unsupported": "Trình duyệt này không hỗ trợ ghi âm.",
     "microphone-denied": "Quyền truy cập micrô đã bị từ chối.",
-    "recording-failed": "Không thể bắt đầu ghi âm."
+    "recording-failed": "Không thể bắt đầu ghi âm.",
+    "heic": {
+      "converting": "Đang chuyển ảnh HEIC sang JPEG ({{count}})…",
+      "failed": "Ảnh HEIC không chuyển được: {{count}}. Ảnh được đính kèm nguyên trạng và có thể chỉ hiển thị trong Safari."
+    }
   },
   "inbox": {
     "failed-to-load": "Không thể tải mục hộp thư",

@@ -223,7 +223,8 @@
       "resolve-image-uploads": "请先处理未完成的图片上传",
       "save-in-progress": "正在保存",
       "unsupported-attachment-image-url": "不支持的附件图片地址：{{url}}",
-      "wait-for-upload": "请等待上传完成"
+      "wait-for-upload": "请等待上传完成",
+      "wait-for-conversion": "请等待照片转换完成"
     },
     "insert-menu": {
       "add-attachment": "添加附件",
@@ -390,7 +391,11 @@
     "remove-location": "移除位置",
     "recording-unsupported": "此浏览器不支持录音。",
     "microphone-denied": "麦克风权限被拒绝。",
-    "recording-failed": "无法开始录音。"
+    "recording-failed": "无法开始录音。",
+    "heic": {
+      "converting": "正在将 HEIC 照片转换为 JPEG（{{count}}）…",
+      "failed": "无法转换的 HEIC 照片：{{count}}。已按原样附加，可能只能在 Safari 中显示。"
+    }
   },
   "inbox": {
     "failed-to-load": "加载失败",

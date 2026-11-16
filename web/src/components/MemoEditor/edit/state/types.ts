@@ -3,7 +3,7 @@ import type { Location, MemoRelation } from "@/types/proto/api/memo_service_pb";
 import { Visibility } from "@/types/proto/api/memo_service_pb";
 import type { LocalFile } from "../types/attachment";
 
-export type LoadingKey = "saving" | "uploading" | "loading" | "transcribing";
+export type LoadingKey = "saving" | "uploading" | "loading" | "transcribing" | "converting";
 
 export interface EditorState {
   content: string;
@@ -23,6 +23,8 @@ export interface EditorState {
       uploading: boolean;
       loading: boolean;
       transcribing: boolean;
+      /** HEIC photos are being converted to JPEG before they join the memo. */
+      converting: boolean;
     };
     /** Save landed and the editor is about to close; the toolbar shows a brief
      *  confirmation instead of the commit verb. Only hosts that unmount after
@@ -82,6 +84,7 @@ const defaultState: EditorState = {
       uploading: false,
       loading: false,
       transcribing: false,
+      converting: false,
     },
     justSaved: false,
   },
