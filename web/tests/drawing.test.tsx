@@ -147,7 +147,7 @@ describe("drawing attachments", () => {
     expect(isDrawingFilename("photo.png")).toBe(false);
   });
 
-  it("offers Edit drawing only on drawings this server stores", () => {
+  it("offers Edit markup on drawings this server stores, and Markup on other images", () => {
     const onEditDrawing = vi.fn();
     const photo = create(AttachmentSchema, { name: "attachments/photo", filename: "photo.png", type: "image/png" });
     const linked = create(AttachmentSchema, {
@@ -159,22 +159,28 @@ describe("drawing attachments", () => {
     const local = toLocalFile(new File([fixturePng], "drawing-20261106-120000.canvas.png", { type: "image/png" }));
     render(<AttachmentListEditor attachments={[drawingAttachment, photo, linked]} localFiles={[local]} onEditDrawing={onEditDrawing} />);
 
-    const actions = screen.getAllByRole("button", { name: "Edit drawing" });
+    const actions = screen.getAllByRole("button", { name: "Edit markup" });
     expect(actions).toHaveLength(2);
     fireEvent.click(actions[0]);
     expect(onEditDrawing).toHaveBeenLastCalledWith({ kind: "attachment", attachment: drawingAttachment });
     fireEvent.click(actions[1]);
     expect(onEditDrawing).toHaveBeenLastCalledWith({ kind: "local", localFile: local });
+
+    // An ordinary image stored here can be marked up; a linked file cannot.
+    const markup = screen.getAllByRole("button", { name: "Markup" });
+    expect(markup).toHaveLength(1);
+    fireEvent.click(markup[0]);
+    expect(onEditDrawing).toHaveBeenLastCalledWith({ kind: "attachment", attachment: photo });
   });
 
-  it("keeps only the glyph of Edit drawing on narrow rows", () => {
+  it("keeps only the glyph of Edit markup on narrow rows", () => {
     const wide = window.matchMedia;
     window.matchMedia = (() => ({ matches: false, addEventListener: () => undefined, removeEventListener: () => undefined })) as never;
     try {
       const onEditDrawing = vi.fn();
       render(<AttachmentListEditor attachments={[drawingAttachment]} onEditDrawing={onEditDrawing} />);
-      const action = screen.getByRole("button", { name: "Edit drawing" });
-      expect(action).not.toHaveTextContent("Edit drawing");
+      const action = screen.getByRole("button", { name: "Edit markup" });
+      expect(action).not.toHaveTextContent("Edit markup");
       fireEvent.click(action);
       expect(onEditDrawing).toHaveBeenCalledWith({ kind: "attachment", attachment: drawingAttachment });
     } finally {
@@ -182,7 +188,7 @@ describe("drawing attachments", () => {
     }
   });
 
-  it("Edit drawing downloads the original file, not the thumbnail", async () => {
+  it("Edit markup downloads the original file, not the thumbnail", async () => {
     const fetchMock = vi.fn(async () => new Response(fixturePng));
     vi.stubGlobal("fetch", fetchMock);
     const { result } = renderDrawing();
@@ -359,6 +365,28 @@ describe("drawing attachments", () => {
       "drawing-4.canvas.png",
     ]);
     expect(state.attachmentOrder).toEqual([swapped.previewUrl, plain.previewUrl, "blob:drawing-4.canvas.png"]);
+  });
+
+  it("marks up an ordinary image on a sheet of its own, and adds the markup right after it", async () => {
+    const first = toLocalFile(new File([await exportDrawing()], "drawing-1.canvas.png", { type: "image/png" }));
+    const photo = toLocalFile(new File([fixturePng.slice(0, 33)], "photo.png", { type: "image/png" }));
+    const last = toLocalFile(new File(["notes"], "notes.txt", { type: "text/plain" }));
+    const { result } = renderDrawing();
+    act(() => result.current.editor.dispatch(result.current.editor.actions.setLocalFiles([first, photo, last])));
+
+    await act(() => result.current.drawing.openExisting({ kind: "local", localFile: photo }));
+    await waitFor(() => expect(openedPage(result.current.drawing.session)?.content?.background).toBeInstanceOf(Blob));
+    // The draft's drawing is not a page of this sheet.
+    expect(result.current.drawing.session).toMatchObject({ mode: "new", initialPage: photo.previewUrl });
+    expect(result.current.drawing.session?.pages.map((page) => page.key)).toEqual([photo.previewUrl]);
+
+    act(() =>
+      result.current.drawing.done(pageDone(photo.previewUrl, new File([fixturePng], "drawing-9.canvas.png", { type: "image/png" }))),
+    );
+    const state = result.current.editor.getState();
+    // The photo is untouched; the markup follows it in the memo's order.
+    expect(state.localFiles.map((item) => item.file.name)).toContain("photo.png");
+    expect(state.attachmentOrder).toEqual([first.previewUrl, photo.previewUrl, "blob:drawing-9.canvas.png", last.previewUrl]);
   });
 
   it("opens a new drawing as a new page after the draft's drawings", () => {

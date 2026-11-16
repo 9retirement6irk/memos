@@ -27,7 +27,7 @@ MemoEditor                 memo level: name | draft seed, mode, data, draft stor
 - **`view/`** is the read-only surface over `MemoMarkdown`: tags and mentions navigate, in-memo anchors scroll, a paragraph that is one bare link becomes a preview card through the editor's block view (`linkCards.ts`), the page's search matches are painted, and heading ids match the outline. Tag and mention clicks arrive through the editor's `onClick` callbacks. Read-only tags with a click handler are focusable buttons; Enter activates on press and Space on release through the same click callback. Editable tags remain text. Nothing in memos matches the editor's class names or mutates its DOM. Previews that have Markdown but no memo query (the link-memo search, the share image) use `MemoContentView` directly.
 - **`edit/`** is the editing surface: `EditSession` renders the chrome (timestamp, attachments, suggestions, toolbar, focus mode, audio recording) over the draft store `MemoEditor` provides, persists the draft while open, and saves through the memo mutations. `Editor.tsx` is the composer's editor: `MemoMarkdown` editable with the composer's own extensions (`#tag` and `:emoji` autocomplete, file paste and drop), behind the `EditorController` contract in `controller.ts`.
 
-Memo content uses 16px text on 24px lines with 12px between blocks; the editor keeps list rows compact. Code blocks use the full `well` fill so they remain distinct from the surrounding surface in Dark. Task items use `control-edge` for their checkbox border and darken Dark's pale accent behind the editor's white checkmark. Callouts use the app's accent, success, warning and danger colors. Custom tag tints bound lightness and sRGB channels so black and white remain visible across themes without coloring the text.
+Memo content uses 16px text on 24px lines with 12px between blocks; the editor keeps list rows compact. Rich-text code blocks use the full `well` fill so they remain distinct from the surrounding surface in Dark; Markdown source mode stays transparent. Task items use `control-edge` for their checkbox border and darken Dark's pale accent behind the editor's white checkmark. Callouts use the app's accent, success, warning and danger colors. Custom tag tints bound lightness and sRGB channels so black and white remain visible across themes without coloring the text.
 
 Code blocks use lazy-loaded `@pierre/highlights` tokens as editor decorations, without an HTML conversion. GitHub Light and GitHub Dark Dimmed colors follow the document's color scheme; ordinary text and structural punctuation keep the editor's text color. Unsupported languages, unavailable WebAssembly, or browsers without `light-dark()` colors leave the code as plain text. Highlighting never changes the saved Markdown.
 
@@ -49,7 +49,7 @@ A reducer (`edit/state/reducer.ts`) drives an external store; consumers subscrib
 
 ### Formatting and source mode
 
-Formatting is the editor's own: its toolbar appears over selected text, the slash menu and Markdown shortcuts change block types, and its keys cover the rest. The editor's `mode` option shows the whole memo as Markdown text, with its syntax highlighted, and edits it as text; `useSourceMode` (`@/hooks/useSourceMode`) keeps the choice in the account's `EDITOR` user setting (`source_mode`), so it follows the user to every device; a switch applies at once and reverts if saving fails, and Settings → Editor changes the same value. To people it is "Markdown mode", the ＋ menu's item with the code glyph (Lucide `CodeXml`), checked while on; in code it keeps the editor's name, source mode. A small, noninteractive `Markdown` label sits beside the commit button while source mode is on, where it never covers the text. Switching changes no text and emits no change. In source mode the toolbar, slash menu, block handle and link card do not show; the `#tag` and `:emoji` popups open as in rich mode, the formatting keys edit the Markdown, and the checklist chip toggles the task marker on the caret's line through the same `toggleTaskList` command. The controller reads tags and checklists from the text parsed as a memo. The source text is in the body font (the editor's `sourceFont` token is left at its default) so a switch keeps the text's rhythm; nothing in memos targets the editor's source classes.
+Formatting is the editor's own: its toolbar appears over selected text, the slash menu and Markdown shortcuts change block types, and its keys cover the rest. The editor's `mode` option shows the whole memo as Markdown text, with its syntax highlighted, and edits it as text; `useSourceMode` (`@/hooks/useSourceMode`) keeps the choice in the account's `EDITOR` user setting (`source_mode`), so it follows the user to every device; a switch applies at once and reverts if saving fails, and Settings → Editor changes the same value. To people it is "Markdown mode", the ＋ menu's item with the code glyph (Lucide `CodeXml`), checked while on; in code it keeps the editor's name, source mode. Switching changes no text and emits no change. In source mode the toolbar, slash menu, block handle and link card do not show; the `#tag` and `:emoji` popups open as in rich mode, the formatting keys edit the Markdown, and the checklist chip toggles the task marker on the caret's line through the same `toggleTaskList` command. The controller reads tags and checklists from the text parsed as a memo. The source text is in the body font (the editor's `sourceFont` token is left at its default) so a switch keeps the text's rhythm; nothing in memos targets the editor's source classes.
 
 ### Saving
 
@@ -73,7 +73,40 @@ The draft's attachments take the saved memo's shape: images, videos and drawings
 
 ### Drawings
 
-A drawing is a PNG attachment made with [`@usememos/canvas`](https://github.com/usememos/canvas) (pinned to an exact version: it uses CalVer, so a version number does not signal breaking changes). The editable scene sits inside the file in a `zTXt` chunk named `memos-canvas`, and the name ends in `.canvas.png`. Everywhere outside the editor it is a plain image. The ＋ menu's "Drawing" and the attachment row's "Edit drawing" open `components/DrawingSheet`, loaded on first use. It is a dialog that sits 24px inside the window from `md` up and fills the screen below that, with its controls floating on the paper (`DrawingFrame`). The package draws and edits the scene; the controls, strings, paper (`DRAWING_PAPER`, the same in every theme) and discard prompt are memos'. In a memo, a drawing opens in `DrawingViewer`, the same dialog with the canvas read-only, whose Edit saves in place. `useDrawing` owns the session: Done joins the draft through the same `LocalFile` path as a picked image, so the memo's save uploads it. "Edit drawing" reads the original file, never the thumbnail. Done on a file still in the draft swaps it in place. Done on a saved drawing keeps the attachment in the draft and queues the edit as a `LocalFile` with `replaces` set: the row shows the edit, and the save uploads it with `UploadAttachmentSpec.replace_attachment`, so the attachment keeps its name and place (`mergeUploadedAttachments`) while the server swaps the file and drops its thumbnail. Removing the pending row drops the edit. A saved drawing someone else uploaded stays, since only they or an admin may replace or remove it; its edit joins the draft as a new attachment. A file with the suffix but no readable scene opens as the background of a new drawing. The server must store `image/png` uploads unchanged, which `server/fileserver/drawing_png_test.go` checks.
+The contract and acceptance cases are in
+[`docs/design/drawing-annotation-and-recovery.md`](../../../../docs/design/drawing-annotation-and-recovery.md).
+Canvas is pinned to `26.11.3`; its editable PNG remains an ordinary image outside the drawing UI.
+
+The insert menu starts a drawing. Ordinary local and instance-hosted images offer **Markup**; editable PNGs offer
+**Edit markup**. Annotation loads the original bytes, opens a locked background with a clean undo baseline, and starts with red
+ink. Applying it keeps the original and inserts a new `.canvas.png` beside it. Saved image previews provide the same annotation
+flow, with **Save copy** binding directly to that memo. External images and motion-photo groups are excluded.
+
+The sheet has one short commit action: **Add** for new work, **Save** for edits, and **Save copy** for direct annotation or a copy
+required by ownership. The editor's own save uploads pending files. An owned saved drawing uses `LocalFile.replaces`, preserving
+its attachment name and links. Input is frozen before export until the host accepts or rejects it. Retries retain acknowledged
+uploads in memory and finish the remaining bind or timestamp update; partial failures show an exception icon and tooltip.
+
+This first release has no Memos markup-draft UI or persistence. **Close** confirms discarding unsaved changes; it does not retain a
+recoverable markup. There is no Continue entry, no markup-dependent memo-save blocker, and no permanent More/Download/Discard menu.
+Normal states add no copy or badges to the canvas. Viewing and editing share one dialog and Canvas instance, retaining the visible content, pan and zoom across mode changes. Both modes keep a ghost X at the top left and the current action at the top right, without bordered action containers or a visible mode heading. A live zoom percentage opens the same four-action zoom menu in both modes (zoom in, zoom out, fit, reset to 100%). The trigger stays at the bottom left, above the phone tools bar and clear of the safe area. Editing adds the tools bar at the top center on desktop and at the bottom on phones. Available phone Undo/Redo actions follow X as quiet ghost icons; unavailable history actions are omitted. Returning to view focuses Edit; discarding restores the accepted scene.
+
+Canvas `26.11.3` provides checkpoints for a future recovery integration. The current editor's text-only localStorage draft behavior
+is unchanged and excludes local file bytes. The server preserves editable PNGs unchanged (`server/fileserver/drawing_png_test.go`).
+Browser regressions live in `tests/browser/`: run `pnpm test:drawings` after `pnpm exec playwright install chromium`. They verify
+image preparation, original bytes/order, active Chinese text at export, desktop/360px controls, and view/edit content, viewport, focus and discard behavior.
+
+**In this fork** the sheet is not upstream's: it keeps the fork's multi-page sheet (below), with upstream's Markup behavior
+ported onto it. What differs from the paragraphs above:
+
+- Viewing and editing are two surfaces, not one shared Canvas instance: Edit mounts the sheet on the viewer's pages, so the pan
+  and zoom are not carried across, and returning shows the saved drawing afresh.
+- An image opened to mark up is a sheet of its own, with that image as its one page; the memo's drawings are not its pages.
+- The viewer re-reads the memo before saving and stops when it, or the image being marked up, is gone. It never replaces a
+  drawing whose file changed since it was read: that edit becomes **Save copy**. A failed memo update after an upload says so,
+  and the retry reuses the upload. There is no exception icon; failures show as error toasts.
+- `tests/browser/` is upstream's suite for upstream's sheet. Its harness compiles against this sheet, but the view/edit
+  viewport cases describe the shared surface and are expected to fail here.
 
 Pages: the sheet shows every drawing in the memo as a page, numbered in the memo's attachment order, under page tabs; the ＋ menu's "Drawing" opens on a new page after them, and "Add page" puts a blank page after the one on show. Nothing records that the drawings belong together: each page is its own `.canvas.png` attachment and the memo's attachment order is the page order, so stock Memos (and any client without pages) shows the same files as separate drawings, with no data lost. A page is read when it is first shown, and its canvas stays mounted (hidden and inert) after that, so its undo history survives a switch; the tool and style carry over. Done exports only the pages that changed, and drops an added page left blank. Each changed page goes back as above; a new page, a drawing over a picture and an edit of someone else's drawing join as new attachments right after the page before them in the order (`placeNewPages` in `DrawingSheet/pages.ts`). The viewer pages through the same drawings, and its Edit saves every changed page in one memo update. Kid Pix mode belongs to the page on show; the tabs are put away while it is on.
 
@@ -119,6 +152,7 @@ MemoEditor/
 ## Testing
 
 - `tests/memo-record.test.tsx`: reads by name, freshness, optimistic patches, the comment mutations.
+- `tests/browser/editor-style.spec.ts`: source-mode transparency and rich-text code backgrounds in Light, Dark and Paper; run `pnpm exec playwright test --config tests/browser/editor-style.config.ts` from `web/`.
 - `tests/memo-editor-view.test.tsx`: view mode by name, task ticking through the mutation.
 - `tests/memo-content-view.test.tsx`, `tests/editor.test.tsx`: the surfaces over the binding.
 - `tests/use-memo-init.test.tsx`, `tests/draft-key.test.ts`, `tests/use-auto-save.test.tsx`: drafts and keys.

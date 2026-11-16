@@ -15,6 +15,10 @@ const makeHandle = (label: string) => ({
   canUndo: vi.fn(() => false),
   canRedo: vi.fn(() => false),
   zoomToFit: vi.fn(),
+  getViewport: vi.fn(() => ({ zoom: 1, scrollX: 0, scrollY: 0 })),
+  zoomTo: vi.fn(),
+  setScene: vi.fn(),
+  getScene: vi.fn(() => ({ elements: [], files: {}, appState: {} })),
   focus: vi.fn(),
   setSelection: vi.fn(),
   insertImage: vi.fn(async () => "image1"),
@@ -54,7 +58,7 @@ vi.mock("@/utils/i18n", async (importOriginal) => ({
 }));
 
 const scene = { type: "memos-canvas", version: 1, elements: [], files: {}, appState: {} } as never;
-const pageLabel = (number: number) => `editor.drawing.edit, editor.drawing.page ${number}`;
+const pageLabel = (number: number) => `editor.insert-menu.drawing, editor.drawing.page ${number}`;
 
 beforeAll(() => {
   Object.defineProperty(window, "matchMedia", {
@@ -189,7 +193,7 @@ describe("DrawingSheet with pages", () => {
     act(() => {
       handleFor(pageLabel(2)).dirty = true;
     });
-    fireEvent.click(screen.getByRole("button", { name: "editor.drawing.done" }));
+    fireEvent.click(screen.getByRole("button", { name: /^common\.(add|save)$/ }));
 
     await waitFor(() => expect(onDone).toHaveBeenCalledTimes(1));
     const { order, files } = onDone.mock.calls[0][0] as { order: string[]; files: { key: string; file: File }[] };
@@ -218,7 +222,7 @@ describe("DrawingSheet with pages", () => {
     );
 
     fireEvent.click(screen.getByRole("button", { name: "editor.drawing.add-page" }));
-    fireEvent.click(screen.getByRole("button", { name: "editor.drawing.done" }));
+    fireEvent.click(screen.getByRole("button", { name: /^common\.(add|save)$/ }));
 
     await waitFor(() => expect(onDone).toHaveBeenCalledTimes(1));
     const { order } = onDone.mock.calls[0][0] as { order: string[] };
@@ -232,7 +236,7 @@ describe("DrawingSheet with pages", () => {
     render(<DrawingSheet mode="new" pages={[{ key: "a" }]} initialPage="a" onDone={onDone} onClose={vi.fn()} />);
 
     fireEvent.click(screen.getByRole("button", { name: "editor.drawing.add-page" }));
-    fireEvent.click(screen.getByRole("button", { name: "editor.drawing.done" }));
+    fireEvent.click(screen.getByRole("button", { name: /^common\.(add|save)$/ }));
 
     await waitFor(() => expect(onDone).toHaveBeenCalledTimes(1));
     expect(onDone.mock.calls[0][0].files).toEqual([]);
@@ -258,7 +262,7 @@ describe("DrawingSheet with pages", () => {
     fireEvent.click(screen.getByRole("button", { name: "editor.drawing.page 2" }));
     await screen.findByRole("img", { name: pageLabel(2) });
 
-    fireEvent.click(screen.getByRole("button", { name: "common.cancel" }));
+    fireEvent.click(screen.getByRole("button", { name: "common.close" }));
 
     expect(onClose).not.toHaveBeenCalled();
     expect(await screen.findByText("editor.drawing.discard-edit-title")).toBeInTheDocument();

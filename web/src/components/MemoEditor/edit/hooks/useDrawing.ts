@@ -72,8 +72,9 @@ const draftDrawings = (state: EditorState, currentUser: User | undefined): Draft
 };
 
 /**
- * The drawing sheet's session in the editor: a new drawing from the ＋ menu, or "Edit
- * drawing" on an attachment row. Either way the sheet shows every drawing in the draft as a
+ * The drawing sheet's session in the editor: a new drawing from the ＋ menu, "Edit markup" on
+ * a drawing's attachment row, or "Markup" on an ordinary image's row (the image becomes the
+ * locked background of a new drawing, which joins the draft right after it). Either way the sheet shows every drawing in the draft as a
  * page, so a new drawing is a new page after them. Each page stays its own file: Done joins
  * the draft through the same LocalFile path as a picked image, so the memo's save uploads it.
  * An edited page takes the place of the drawing it came from: a local file is swapped in the
@@ -151,7 +152,9 @@ export const useDrawing = (toLocalFile: (file: File) => LocalFile) => {
               ? { kind: "local", localFile: source.localFile }
               : { kind: "attachment", attachment: source.attachment, canReplace: canManageAttachment(source.attachment, currentUser) },
         };
-        const all = drawings.some((drawing) => drawing.key === sourceId) ? drawings : [...drawings, opened];
+        const isDrawing = isDrawingFilename(source.kind === "local" ? source.localFile.file.name : source.attachment.filename);
+        // An ordinary image opened to mark up is the sheet's only page: it is not one of the draft's drawings.
+        const all = drawings.some((drawing) => drawing.key === sourceId) ? drawings : isDrawing ? [...drawings, opened] : [opened];
         // No scene inside: draw on the picture as a new drawing and leave the original alone.
         openSheet(content.scene ? "edit" : "new", all, toPage(opened, content));
       } catch (error) {
@@ -180,8 +183,10 @@ export const useDrawing = (toLocalFile: (file: File) => LocalFile) => {
         for (const { key, file } of files) {
           const localFile = toLocalFile(file);
           const target = targets.current.get(key);
-          if (!target || isNewPageKey(key) || pictures.current.has(key)) {
-            // A new page, or a drawing over a picture: a new file, and the original stays.
+          // A draft file removed from the draft while its page was open has no place to go back to.
+          const gone = target?.kind === "local" && !localFiles.some((item) => item.previewUrl === target.localFile.previewUrl);
+          if (!target || gone || isNewPageKey(key) || pictures.current.has(key)) {
+            // A new page, a drawing over a picture, or an edit whose draft file is gone: a new file.
             localFiles.push(localFile);
             added.set(key, localFile.previewUrl);
           } else if (target.kind === "local") {

@@ -13,12 +13,12 @@ import {
   NotebookTextIcon,
   PencilIcon,
   Redo2Icon,
-  ScanIcon,
   SquareIcon,
   TypeIcon,
   Undo2Icon,
   Volume2Icon,
   VolumeXIcon,
+  XIcon,
 } from "lucide-react";
 import { type ClipboardEvent, type ComponentProps, lazy, type ReactElement, Suspense, useEffect, useRef, useState } from "react";
 import ImmichPickerDialog from "@/components/ImmichPicker/ImmichPickerDialog";
@@ -29,13 +29,14 @@ import { cn } from "@/lib/utils";
 import { type Translations, useTranslate } from "@/utils/i18n";
 import { primaryModifierGlyph } from "@/utils/platform";
 import { DrawingDialogPopup, FloatingAction, FloatingBar, FloatingRow } from "./DrawingFrame";
-import type { DrawingContent } from "./drawing";
+import { DrawingActionError, type DrawingContent } from "./drawing";
 import kidPixToolsUrl from "./kidpix/assets/tools.png";
 import type { KidPixHandle, KidPixView } from "./kidpix/KidPixLayer";
 import { PageTabs } from "./PageTabs";
 import { type DrawingPage, type DrawingPagesResult, newPageKey } from "./pages";
 import { findPaperElement, loadPaper, PAPERS, type PaperId } from "./paper/papers";
 import { DRAWING_HUES, DRAWING_PAPER, useCanvasTheme } from "./useCanvasTheme";
+import { useCanvasZoom, ZoomMenu } from "./ZoomMenu";
 
 const TOOLS: { name: ToolName; label: Translations; shortcut: string; icon: ReactElement }[] = [
   { name: "select", label: "editor.drawing.tool-select", shortcut: "V", icon: <MousePointer2Icon /> },
@@ -61,6 +62,9 @@ const KIDPIX_TILE_LIMIT = 1440;
 /** Screen px between photos added together, so none hides the one before it. */
 const PHOTO_CASCADE = 32;
 
+/** The ink a markup over a picture starts with, from the palette. */
+const MARKUP_RED = "#e03131";
+
 const WIDTHS: { value: number; label: Translations }[] = [
   { value: 1, label: "editor.drawing.width-thin" },
   { value: 2, label: "editor.drawing.width-medium" },
@@ -77,6 +81,8 @@ export interface DrawingSheetProps {
   pages: DrawingPage[];
   /** The key of the page the sheet opens on. */
   initialPage: string;
+  /** The primary action's label, when it is not Add (a new drawing) or Save (an edit): Save copy. */
+  commitLabel?: Translations;
   /**
    * The finished drawings: each page that changed, and each added page drawn on, as a PNG with
    * its scene embedded, named `drawing-YYYYMMDD-HHMMSS.canvas.png`, with the sheet's page order.
@@ -102,7 +108,7 @@ const initialPageState = (page: DrawingPage): PageState | undefined =>
  * read when it is first shown, and its canvas stays mounted (hidden) after that, so its undo
  * history survives a switch. Done exports only the pages that changed.
  */
-const DrawingSheet = ({ mode, pages: initialPages, initialPage, onDone, onClose }: DrawingSheetProps) => {
+const DrawingSheet = ({ mode, pages: initialPages, initialPage, commitLabel, onDone, onClose }: DrawingSheetProps) => {
   const t = useTranslate();
   const isWide = useMediaQuery("sm");
   // Small controls on a desktop; a phone keeps the 32px ones, 44px apart, for touch.
@@ -113,7 +119,10 @@ const DrawingSheet = ({ mode, pages: initialPages, initialPage, onDone, onClose 
   const [tool, setTool] = useState<ToolName>("pen");
   const [history, setHistory] = useState({ undo: false, redo: false });
   // Null follows the theme's ink, so a drawing started in one theme keeps reading in the other.
-  const [color, setColor] = useState<string | null>(null);
+  // A sheet opened to mark up a picture starts in red, which shows on a photo.
+  const [color, setColor] = useState<string | null>(() =>
+    initialPages.find((page) => page.key === initialPage)?.content?.background ? MARKUP_RED : null,
+  );
   const [width, setWidth] = useState(2);
   const [isExporting, setIsExporting] = useState(false);
   const [discardOpen, setDiscardOpen] = useState(false);
@@ -143,16 +152,21 @@ const DrawingSheet = ({ mode, pages: initialPages, initialPage, onDone, onClose 
   const immichAvailable = Boolean(immichConnection?.configured);
   const [immichOpen, setImmichOpen] = useState(false);
   const kidPixCompact = !isWide || (kidPix !== null && kidPix.height < KIDPIX_FULL_CHROME_HEIGHT);
-  const title = t(mode === "edit" ? "editor.drawing.edit" : "editor.drawing.new-title");
+  const title = t("editor.insert-menu.drawing");
+  const actionLabel = commitLabel ?? (mode === "edit" ? "common.save" : "common.add");
   const currentColor = color ?? ink;
   const activeState = pageStates[activeKey];
 
   /** The canvas of the page on show. */
   const activeCanvas = () => canvases.current.get(activeRef.current);
 
+  const { zoom, sync: syncZoom, schedule: scheduleZoom } = useCanvasZoom(activeCanvas);
+  const [zoomMenuOpen, setZoomMenuOpen] = useState(false);
+
   const syncHistory = () => {
     const canvas = activeCanvas();
     setHistory({ undo: Boolean(canvas?.canUndo()), redo: Boolean(canvas?.canRedo()) });
+    syncZoom();
   };
 
   /** The tool and style chosen on another page carry over. The canvas has no selection here, so nothing is restyled. */
@@ -172,9 +186,13 @@ const DrawingSheet = ({ mode, pages: initialPages, initialPage, onDone, onClose 
     canvas
       .insertImage(background, { background: true })
       .then(() => {
-        // The picture is where the drawing starts, not a change to discard.
+        // The picture is where the drawing starts: not a change to discard, and not a step Undo
+        // can take back. Reloading the scene clears the history; markSaved alone would not.
+        canvas.setScene(canvas.getScene());
+        applyControls(canvas);
         canvas.markSaved();
         canvas.zoomToFit();
+        if (key === activeRef.current) syncHistory();
       })
       .catch(() => showErrorToast(t("editor.drawing.image-failed")))
       .finally(() =>
@@ -468,11 +486,19 @@ const DrawingSheet = ({ mode, pages: initialPages, initialPage, onDone, onClose 
       }
       await onDone({ order: pages.map((page) => page.key), files });
       // Only once Done went through: after a failed save, Cancel still asks before discarding.
-      // The host may have closed the sheet already.
-      for (const { canvas } of changed) canvas.markSaved();
+      // The host may have closed the sheet already, and a canvas that has unmounted refuses the
+      // call: nothing is left to mark, and the save did go through.
+      for (const { canvas } of changed) {
+        try {
+          canvas.markSaved();
+        } catch {
+          // Unmounted with the sheet.
+        }
+      }
     } catch (error) {
       console.error(error);
-      showErrorToast(t("editor.drawing.export-failed"));
+      // The host names the part that failed (the memo update after an upload, say); otherwise it was the export.
+      showErrorToast(t(error instanceof DrawingActionError ? error.label : "editor.drawing.export-failed"));
     } finally {
       setIsExporting(false);
     }
@@ -660,7 +686,6 @@ const DrawingSheet = ({ mode, pages: initialPages, initialPage, onDone, onClose 
   );
   const viewControls = (
     <>
-      <IconAction size={size} label={t("editor.drawing.zoom-to-fit")} icon={<ScanIcon />} onClick={() => activeCanvas()?.zoomToFit()} />
       {imageControl}
       {paperControl}
     </>
@@ -719,10 +744,17 @@ const DrawingSheet = ({ mode, pages: initialPages, initialPage, onDone, onClose 
       </Tooltip.Root>
     </>
   );
-  const cancelButton = (
-    <Button variant="ghost" size={size} onClick={requestClose}>
-      {t("common.cancel")}
-    </Button>
+  const cancelButton = <IconAction size={size} label={t("common.close")} icon={<XIcon />} disabled={isExporting} onClick={requestClose} />;
+  const zoomMenu = (
+    <ZoomMenu
+      zoom={zoom}
+      getCanvas={activeCanvas}
+      onZoomed={syncZoom}
+      size={size}
+      disabled={activeState?.status !== "ready"}
+      open={zoomMenuOpen}
+      onOpenChange={setZoomMenuOpen}
+    />
   );
   const doneButton = (
     <Button
@@ -731,9 +763,9 @@ const DrawingSheet = ({ mode, pages: initialPages, initialPage, onDone, onClose 
       onClick={handleDone}
       disabled={preparing.size > 0}
       loading={isExporting}
-      loadingLabel={t("editor.drawing.done")}
+      loadingLabel={t(actionLabel)}
     >
-      {t("editor.drawing.done")}
+      {t(actionLabel)}
     </Button>
   );
   const pageTabs = (
@@ -769,8 +801,13 @@ const DrawingSheet = ({ mode, pages: initialPages, initialPage, onDone, onClose 
           <div
             ref={surfaceRef}
             className={cn("absolute inset-0", isPreparing && "pointer-events-none")}
+            // While the zoom menu is open the paper holds still, so a click on it closes the menu without drawing.
+            inert={zoomMenuOpen}
             aria-busy={isPreparing || activeState?.status === "loading" || undefined}
             onPointerUp={syncHistory}
+            onPointerCancel={syncHistory}
+            onPointerMove={scheduleZoom}
+            onWheel={scheduleZoom}
             onKeyUp={syncHistory}
           >
             {pages.map((page, index) => {
@@ -882,7 +919,14 @@ const DrawingSheet = ({ mode, pages: initialPages, initialPage, onDone, onClose 
               <FloatingAction>{doneButton}</FloatingAction>
             </FloatingRow>
           ) : null}
-          {!kidPix && isWide && <FloatingRow edge="bottom">{pageTabs}</FloatingRow>}
+          {!kidPix && isWide && (
+            <>
+              <FloatingRow edge="bottom" className="justify-start">
+                <FloatingAction>{zoomMenu}</FloatingAction>
+              </FloatingRow>
+              <FloatingRow edge="bottom">{pageTabs}</FloatingRow>
+            </>
+          )}
           {!kidPix && !isWide && (
             <>
               <FloatingRow edge="top">
@@ -902,8 +946,9 @@ const DrawingSheet = ({ mode, pages: initialPages, initialPage, onDone, onClose 
                   {styleControl}
                 </FloatingBar>
               </FloatingRow>
-              {/* The pages and the way into Kid Pix mode sit above the tools: neither phone bar has room for them. */}
-              <FloatingRow edge="bottom" className="bottom-[calc(72px+env(safe-area-inset-bottom))] justify-between">
+              {/* The zoom, the pages and the way into Kid Pix mode sit above the tools: neither phone bar has room for them. */}
+              <FloatingRow edge="bottom" className="bottom-[calc(72px+env(safe-area-inset-bottom))] items-center justify-between">
+                <FloatingAction>{zoomMenu}</FloatingAction>
                 {pageTabs}
                 <FloatingBar>{kidPixEnter}</FloatingBar>
               </FloatingRow>

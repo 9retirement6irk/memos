@@ -16,12 +16,19 @@ const mocks = vi.hoisted(() => ({
   uploadFile: vi.fn(),
   updateMemo: vi.fn(),
   currentUser: undefined as unknown,
+  // The memo as the server has it when Save re-reads it.
+  getMemo: vi.fn(),
+  toast: vi.fn(),
 }));
 
 const handle = {
   setTool: vi.fn(),
   setStyle: vi.fn(),
   zoomToFit: vi.fn(),
+  getViewport: vi.fn(() => ({ zoom: 1, scrollX: 0, scrollY: 0 })),
+  zoomTo: vi.fn(),
+  setScene: vi.fn(),
+  getScene: vi.fn(() => ({ elements: [], files: {}, appState: {} })),
   canUndo: () => false,
   canRedo: () => false,
   isDirty: () => true,
@@ -42,6 +49,8 @@ vi.mock("@usememos/canvas/react", () => ({
 }));
 vi.mock("@/components/MemoEditor/edit/services/uploadService", () => ({ uploadService: { uploadFile: mocks.uploadFile } }));
 vi.mock("@/hooks/useMemoQueries", () => ({ useUpdateMemo: () => ({ mutateAsync: mocks.updateMemo }) }));
+vi.mock("@/connect", () => ({ memoServiceClient: { getMemo: mocks.getMemo } }));
+vi.mock("@/lib/toast", () => ({ showErrorToast: mocks.toast }));
 vi.mock("@/hooks/useCurrentUser", () => ({ default: () => mocks.currentUser }));
 vi.mock("@/hooks/useImmichQueries", () => ({ useImmichConnection: () => ({ data: undefined }) }));
 vi.mock("@/utils/i18n", async (importOriginal) => ({
@@ -105,6 +114,11 @@ beforeAll(() => {
 beforeEach(async () => {
   mocks.canvasProps.length = 0;
   mocks.currentUser = author;
+  mocks.getMemo.mockReset().mockResolvedValue(memo);
+  mocks.toast.mockReset();
+  mocks.uploadFile.mockReset();
+  mocks.updateMemo.mockReset();
+  handle.insertImage.mockReset().mockResolvedValue("background");
   const bytes = await withScene();
   vi.stubGlobal(
     "fetch",
@@ -117,12 +131,12 @@ afterEach(() => {
 });
 
 describe("DrawingViewer", () => {
-  it("shows the drawing read-only, with Zoom to fit and Edit for the author", async () => {
+  it("shows the drawing read-only, with the zoom menu and Edit for the author", async () => {
     render(<DrawingViewer attachment={drawing} memo={memo} canEdit onClose={vi.fn()} onNoScene={vi.fn()} />);
 
     await waitFor(() => expect(mocks.canvasProps.at(-1)?.initialScene?.elements).toHaveLength(1));
     expect(mocks.canvasProps.at(-1)?.readOnly).toBe(true);
-    expect(screen.getByRole("button", { name: "editor.drawing.zoom-to-fit" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "editor.drawing.zoom 100%" })).toBeInTheDocument();
     expect(screen.queryByRole("link")).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: "common.edit" })).toBeEnabled();
   });
@@ -152,12 +166,12 @@ describe("DrawingViewer", () => {
     render(<DrawingViewer attachment={drawing} memo={memo} canEdit onClose={vi.fn()} onNoScene={vi.fn()} />);
 
     await startEditing();
-    fireEvent.click(await screen.findByRole("button", { name: "editor.drawing.done" }));
+    fireEvent.click(await screen.findByRole("button", { name: /^common\.(add|save)$/ }));
 
     await waitFor(() => expect(mocks.updateMemo).toHaveBeenCalledWith({ update: { name: memo.name }, updateMask: ["update_time"] }));
     expect(mocks.uploadFile.mock.calls[0][0].replaces).toBe(drawing.name);
     // Back in the viewer, read-only again.
-    await waitFor(() => expect(screen.getByRole("button", { name: "editor.drawing.zoom-to-fit" })).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByRole("button", { name: "editor.drawing.zoom 100%" })).toBeInTheDocument());
     expect(mocks.canvasProps.at(-1)?.readOnly).toBe(true);
   });
 
@@ -168,18 +182,12 @@ describe("DrawingViewer", () => {
     handle.exportPng.mockResolvedValue(new Blob([await withScene()], { type: "image/png" }));
     mocks.uploadFile.mockResolvedValue(copy);
     mocks.updateMemo.mockRejectedValueOnce(new Error("offline"));
-    render(
-      <DrawingViewer
-        attachment={othersDrawing}
-        memo={create(MemoSchema, { ...memo, attachments: [othersDrawing] })}
-        canEdit
-        onClose={vi.fn()}
-        onNoScene={vi.fn()}
-      />,
-    );
+    const othersMemo = create(MemoSchema, { ...memo, attachments: [othersDrawing] });
+    mocks.getMemo.mockResolvedValue(othersMemo);
+    render(<DrawingViewer attachment={othersDrawing} memo={othersMemo} canEdit onClose={vi.fn()} onNoScene={vi.fn()} />);
 
     await startEditing();
-    const done = await screen.findByRole("button", { name: "editor.drawing.done" });
+    const done = await screen.findByRole("button", { name: /^common\.(add|save)$/ });
     fireEvent.click(done);
     await waitFor(() => expect(mocks.updateMemo).toHaveBeenCalledTimes(1));
     expect(mocks.uploadFile.mock.calls[0][0].replaces).toBeUndefined();
@@ -196,7 +204,7 @@ describe("DrawingViewer", () => {
     fireEvent.click(done);
     await waitFor(() => expect(mocks.updateMemo).toHaveBeenCalledTimes(2));
     expect(mocks.uploadFile.mock.calls[1][0].replaces).toBe(copy.name);
-    await waitFor(() => expect(screen.getByRole("button", { name: "editor.drawing.zoom-to-fit" })).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByRole("button", { name: "editor.drawing.zoom 100%" })).toBeInTheDocument());
   });
 });
 
@@ -218,6 +226,7 @@ describe("DrawingViewer pages", () => {
   });
 
   it("pages through the memo's drawings, reading each one when it is first shown", async () => {
+    mocks.getMemo.mockResolvedValue(twoPages);
     render(<DrawingViewer attachment={second} memo={twoPages} canEdit onClose={vi.fn()} onNoScene={vi.fn()} />);
 
     // The photo is not a page; the drawing opened is page 2.
@@ -249,11 +258,12 @@ describe("DrawingViewer pages", () => {
     );
     mocks.updateMemo.mockReset();
     mocks.updateMemo.mockResolvedValue(undefined);
+    mocks.getMemo.mockResolvedValue(twoPages);
     render(<DrawingViewer attachment={drawing} memo={twoPages} canEdit onClose={vi.fn()} onNoScene={vi.fn()} />);
 
     await startEditing();
     fireEvent.click(await screen.findByRole("button", { name: "editor.drawing.add-page" }));
-    fireEvent.click(screen.getByRole("button", { name: "editor.drawing.done" }));
+    fireEvent.click(screen.getByRole("button", { name: /^common\.(add|save)$/ }));
 
     await waitFor(() => expect(mocks.updateMemo).toHaveBeenCalledTimes(1));
     // Page 1 (shown, and dirty in this mock) is replaced in place; the new page uploads as its own file.
@@ -273,5 +283,101 @@ describe("drawings in a memo's gallery", () => {
 
     expect(await screen.findByRole("dialog", { name: "editor.insert-menu.drawing" })).toBeInTheDocument();
     expect(onImagePreview).not.toHaveBeenCalled();
+  });
+});
+
+describe("DrawingViewer safeguards and markup", () => {
+  const photo = create(AttachmentSchema, { name: "attachments/p1", creator: author.name, filename: "photo.png", type: "image/png" });
+  const after = create(AttachmentSchema, { name: "attachments/z9", creator: author.name, filename: "notes.pdf", type: "application/pdf" });
+  const photoMemo = create(MemoSchema, { name: "memos/m1", creator: author.name, attachments: [photo, after] });
+
+  it("opens an image to mark up in the sheet at once, and Save copy adds the markup right after it", async () => {
+    // The image holds no scene: it becomes the locked background of a new drawing.
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => new Response(fixturePng.slice(0, 33))),
+    );
+    const copy = create(AttachmentSchema, { name: "attachments/m2", filename: "drawing-2.canvas.png", type: "image/png" });
+    handle.exportPng.mockResolvedValue(new Blob([await withScene()], { type: "image/png" }));
+    mocks.uploadFile.mockResolvedValue(copy);
+    mocks.getMemo.mockResolvedValue(photoMemo);
+    const onClose = vi.fn();
+    const onNoScene = vi.fn();
+    render(<DrawingViewer attachment={photo} memo={photoMemo} canEdit annotate onClose={onClose} onNoScene={onNoScene} />);
+
+    const save = await screen.findByRole("button", { name: "editor.drawing.save-copy" });
+    expect(onNoScene).not.toHaveBeenCalled();
+    await waitFor(() => expect(handle.insertImage).toHaveBeenCalledWith(expect.anything(), { background: true }));
+    // Red ink shows on a photo; the memo's drawings are not pages of this sheet.
+    expect(handle.setStyle).toHaveBeenCalledWith(expect.objectContaining({ strokeColor: "#e03131" }));
+    expect(screen.queryByRole("button", { name: "editor.drawing.page 2" })).not.toBeInTheDocument();
+    await waitFor(() => expect(save).toBeEnabled());
+    fireEvent.click(save);
+
+    await waitFor(() => expect(mocks.updateMemo).toHaveBeenCalled());
+    // A new file, never over the photo; the photo keeps its place and the markup follows it.
+    expect(mocks.uploadFile.mock.calls[0][0].replaces).toBeUndefined();
+    const update = mocks.updateMemo.mock.calls[0][0];
+    expect(update.updateMask).toEqual(["attachments"]);
+    expect(update.update.attachments.map((item: { name: string }) => item.name)).toEqual([photo.name, copy.name, after.name]);
+    await waitFor(() => expect(onClose).toHaveBeenCalled());
+  });
+
+  it("stops when the image being marked up has left the memo", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => new Response(fixturePng.slice(0, 33))),
+    );
+    handle.exportPng.mockResolvedValue(new Blob([await withScene()], { type: "image/png" }));
+    mocks.getMemo.mockResolvedValue(create(MemoSchema, { ...photoMemo, attachments: [after] }));
+    render(<DrawingViewer attachment={photo} memo={photoMemo} canEdit annotate onClose={vi.fn()} onNoScene={vi.fn()} />);
+
+    const save = await screen.findByRole("button", { name: "editor.drawing.save-copy" });
+    await waitFor(() => expect(save).toBeEnabled());
+    fireEvent.click(save);
+
+    await waitFor(() => expect(mocks.toast).toHaveBeenCalledWith("editor.drawing.unavailable"));
+    expect(mocks.uploadFile).not.toHaveBeenCalled();
+    expect(mocks.updateMemo).not.toHaveBeenCalled();
+  });
+
+  it("never overwrites a drawing that changed elsewhere: it offers Save copy instead", async () => {
+    const copy = create(AttachmentSchema, { name: "attachments/d2", filename: "drawing-2.canvas.png", type: "image/png" });
+    handle.exportPng.mockResolvedValue(new Blob([await withScene()], { type: "image/png" }));
+    mocks.uploadFile.mockResolvedValue(copy);
+    render(<DrawingViewer attachment={drawing} memo={memo} canEdit onClose={vi.fn()} onNoScene={vi.fn()} />);
+    await startEditing();
+
+    // Another tab saved the drawing after this one read it.
+    const elsewhere = { ...scene, elements: [{ ...scene.elements[0], width: 200 }] } as unknown as Scene;
+    const changed = new Uint8Array(await insertSceneChunk(fixturePng, elsewhere));
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => new Response(changed)),
+    );
+    fireEvent.click(await screen.findByRole("button", { name: "common.save" }));
+
+    await waitFor(() => expect(mocks.toast).toHaveBeenCalledWith("editor.drawing.changed-save-copy"));
+    expect(mocks.uploadFile).not.toHaveBeenCalled();
+
+    // The same edit, saved beside the drawing.
+    fireEvent.click(await screen.findByRole("button", { name: "editor.drawing.save-copy" }));
+    await waitFor(() => expect(mocks.updateMemo).toHaveBeenCalled());
+    expect(mocks.uploadFile.mock.calls[0][0].replaces).toBeUndefined();
+    const update = mocks.updateMemo.mock.calls[0][0];
+    expect(update.update.attachments.map((item: { name: string }) => item.name)).toEqual([drawing.name, copy.name]);
+  });
+
+  it("says the drawing is saved when only the memo update failed", async () => {
+    handle.exportPng.mockResolvedValue(new Blob([await withScene()], { type: "image/png" }));
+    mocks.uploadFile.mockResolvedValue(drawing);
+    mocks.updateMemo.mockRejectedValueOnce(new Error("offline"));
+    render(<DrawingViewer attachment={drawing} memo={memo} canEdit onClose={vi.fn()} onNoScene={vi.fn()} />);
+    await startEditing();
+    fireEvent.click(await screen.findByRole("button", { name: "common.save" }));
+
+    await waitFor(() => expect(mocks.toast).toHaveBeenCalledWith("editor.drawing.saved-needs-update"));
+    // Still in the sheet, to retry.
+    expect(screen.getByRole("button", { name: "common.save" })).toBeInTheDocument();
   });
 });

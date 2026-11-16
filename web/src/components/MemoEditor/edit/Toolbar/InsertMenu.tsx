@@ -9,8 +9,8 @@ import {
   MapPinIcon,
   Maximize2Icon,
   MicIcon,
+  PaletteIcon,
   PaperclipIcon,
-  PencilLineIcon,
   PlusIcon,
   RouteIcon,
   SmilePlusIcon,
@@ -154,7 +154,7 @@ const InsertMenu = (props: InsertMenuProps) => {
     { key: "attachment", label: t("editor.insert-menu.add-attachment"), icon: PaperclipIcon, onClick: handleAttachmentUploadClick },
     { key: "inline-image", label: t("editor.insert-menu.insert-image"), icon: ImageIcon, onClick: handleInlineImageUploadClick },
     ...(props.onDrawingClick
-      ? [{ key: "drawing", label: t("editor.insert-menu.drawing"), icon: PencilLineIcon, onClick: props.onDrawingClick }]
+      ? [{ key: "drawing", label: t("editor.insert-menu.drawing"), icon: PaletteIcon, onClick: props.onDrawingClick }]
       : []),
     ...(routeAvailable
       ? [{ key: "route", label: t("dawarich.route.insert"), icon: RouteIcon, onClick: () => setRouteDialogOpen(true) }]
@@ -217,8 +217,8 @@ const InsertMenu = (props: InsertMenuProps) => {
           )}
           {/* How the composer presents itself. Focus mode is absent when a host owns the
               editor's presentation; Markdown mode (the editor's source mode) only changes how
-              the text is edited, so every composer has it. Checked while on, with a corner
-              label in the composer. The code glyph says this mode shows the markup. */}
+              the text is edited, so every composer has it. Checked while on.
+              The code glyph says this mode shows the markup. */}
           <Menu.Separator />
           {viewToggles && (
             <Menu.Item onClick={viewToggles.onToggleFocusMode} icon={<Maximize2Icon />}>
