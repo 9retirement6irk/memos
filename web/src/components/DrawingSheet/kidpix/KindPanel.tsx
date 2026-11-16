@@ -5,9 +5,15 @@ import brushPanel from "./assets/kinds-brush-panel.png";
 import bucketArt from "./assets/kinds-bucket.png";
 import bucketMask from "./assets/kinds-bucket-mask.png";
 import bucketPanel from "./assets/kinds-bucket-panel.png";
+import eraserArt from "./assets/kinds-eraser.png";
+import eraserMask from "./assets/kinds-eraser-mask.png";
+import eraserPanel from "./assets/kinds-eraser-panel.png";
 import grabArt from "./assets/kinds-grab.png";
 import grabMask from "./assets/kinds-grab-mask.png";
 import grabPanel from "./assets/kinds-grab-panel.png";
+import mixerArt from "./assets/kinds-mixer.png";
+import mixerMask from "./assets/kinds-mixer-mask.png";
+import mixerPanel from "./assets/kinds-mixer-panel.png";
 import pencilArt from "./assets/kinds-pencil.png";
 import pencilMask from "./assets/kinds-pencil-mask.png";
 import pencilPanel from "./assets/kinds-pencil-panel.png";
@@ -20,6 +26,8 @@ const SHEETS: Record<KindArt, { art: string; mask: string; panel: string }> = {
   brush: { art: brushArt, mask: brushMask, panel: brushPanel },
   bucket: { art: bucketArt, mask: bucketMask, panel: bucketPanel },
   grab: { art: grabArt, mask: grabMask, panel: grabPanel },
+  mixer: { art: mixerArt, mask: mixerMask, panel: mixerPanel },
+  eraser: { art: eraserArt, mask: eraserMask, panel: eraserPanel },
 };
 
 /** Kid Pix steps its tray animations about nine times a second. */
@@ -36,6 +44,8 @@ interface KindPanelProps {
   /** The color in hand: the kinds' bodies and tips take it. */
   color: string;
   onSelect: (index: number) => void;
+  /** What Kid Pix's help calls each kind, for the question mark. */
+  help?: readonly string[];
   play: (clip: string) => void;
 }
 
@@ -44,7 +54,7 @@ interface KindPanelProps {
  * mold, wiggles when pointed at, and is picked up when chosen while the one before it is laid
  * back down. The frames and their order are the disc's button scripts (`kinds.ts`).
  */
-const KindPanel = ({ art, label, names, selected, color, onSelect, play }: KindPanelProps) => {
+const KindPanel = ({ art, label, names, selected, color, onSelect, play, help }: KindPanelProps) => {
   const group = KIDPIX_KINDS[art];
   const sheets = SHEETS[art];
   // The cell each kind shows: the one in hand held up, the rest in their molds.
@@ -126,6 +136,7 @@ const KindPanel = ({ art, label, names, selected, color, onSelect, play }: KindP
             aria-label={names[index]}
             aria-pressed={selected === index}
             title={names[index]}
+            data-help={help?.[index]}
             style={{ left: restX, top: restY, width: restWidth, height: restHeight }}
             onClick={() => choose(index)}
             onPointerEnter={(event) => {

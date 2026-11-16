@@ -228,6 +228,8 @@
       "kidpix-cut-free": "Prosta oblika",
       "kidpix-cut-polygon": "Mnogokotnik",
       "kidpix-cutter": "Modelček {{number}}",
+      "kidpix-rotate": "Zavrti",
+      "kidpix-texture": "Tekstura {{number}}",
       "pages": "Strani",
       "page": "Stran {{number}}",
       "add-page": "Dodaj stran",

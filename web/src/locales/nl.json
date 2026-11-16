@@ -228,6 +228,8 @@
       "kidpix-cut-free": "Vrije vorm",
       "kidpix-cut-polygon": "Veelhoek",
       "kidpix-cutter": "Uitsteekvorm {{number}}",
+      "kidpix-rotate": "Draaien",
+      "kidpix-texture": "Textuur {{number}}",
       "pages": "Pagina's",
       "page": "Pagina {{number}}",
       "add-page": "Pagina toevoegen",

@@ -228,6 +228,8 @@
       "kidpix-cut-free": "Freihand",
       "kidpix-cut-polygon": "Vieleck",
       "kidpix-cutter": "Ausstechform {{number}}",
+      "kidpix-rotate": "Drehen",
+      "kidpix-texture": "Textur {{number}}",
       "pages": "Seiten",
       "page": "Seite {{number}}",
       "add-page": "Seite hinzufügen",

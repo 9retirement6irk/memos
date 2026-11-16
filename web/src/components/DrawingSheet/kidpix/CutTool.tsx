@@ -54,6 +54,8 @@ interface CutToolProps {
   engine: () => KidPixEngine | null;
   audio: () => KidPixAudio | null;
   play: (clip: string) => void;
+  /** Kid Pix's cursors, as CSS: the scissors, the hand over a piece, and the hand holding one. */
+  cursors: readonly [string, string, string];
   /** A press on the paper, before the scissors act on it. */
   onPress: () => void;
 }
@@ -71,7 +73,7 @@ const canvasOf = (width: number, height: number) => {
  * pointer, floating over the picture until a press elsewhere sticks it down. The tray's
  * Trash Can, Duplicate and Paste buttons act on it through the handle.
  */
-const CutTool = ({ ref, active, option, width, height, zoom, engine, audio, play, onPress }: CutToolProps) => {
+const CutTool = ({ ref, active, option, width, height, zoom, engine, audio, play, cursors, onPress }: CutToolProps) => {
   const [piece, setPieceState] = useState<Piece | null>(null);
   const [gesture, setGestureState] = useState<Gesture | null>(null);
   const [hover, setHover] = useState<Point | null>(null);
@@ -318,8 +320,12 @@ const CutTool = ({ ref, active, option, width, height, zoom, engine, audio, play
   return (
     <div
       className="kidpix-cut"
-      data-over={piece && hover && onPiece(piece, hover) ? "piece" : undefined}
-      style={{ width: width * zoom, height: height * zoom, pointerEvents: active ? undefined : "none" }}
+      style={{
+        width: width * zoom,
+        height: height * zoom,
+        pointerEvents: active ? undefined : "none",
+        cursor: dragRef.current ? cursors[2] : piece && hover && onPiece(piece, hover) ? cursors[1] : cursors[0],
+      }}
       onPointerDown={handleDown}
       onPointerMove={handleMove}
       onPointerUp={handleUp}

@@ -23,6 +23,7 @@ import {
   PENCIL_SHAPES,
   PENCIL_WIDTHS,
   REALISTIC_COUNT,
+  STAMP_SIZES,
   TEXT_LINE,
   type TextStyle,
   TOOL_NUMBER,
@@ -95,6 +96,33 @@ export type SprayFrames = readonly SprayFrame[];
 /** Kid Pix's can drops a picture this often (ms) for as long as it is held, whether or not the pointer moves. */
 const SPRAY_TICK = 108;
 
+/**
+ * Thins what a stroke laid by the paper's texture: where `after` differs from `before`, the
+ * change is kept in proportion to the texture there (255 keeps it all). Works in place on `after`.
+ */
+export const grainPixels = (before: Uint8ClampedArray, after: Uint8ClampedArray, texture: Uint8Array) => {
+  for (let at = 0, pixel = 0; at < after.length; at += 4, pixel++) {
+    if (
+      after[at] === before[at] &&
+      after[at + 1] === before[at + 1] &&
+      after[at + 2] === before[at + 2] &&
+      after[at + 3] === before[at + 3]
+    )
+      continue;
+    const keep = texture[pixel] / 255;
+    // Mixed with the colors weighted by how solid they are, so paint laid on bare paper keeps its color.
+    const solidBefore = before[at + 3] * (1 - keep);
+    const solidAfter = after[at + 3] * keep;
+    const solid = solidBefore + solidAfter;
+    if (solid === 0) {
+      after[at + 3] = 0;
+      continue;
+    }
+    for (let part = 0; part < 3; part++) after[at + part] = (before[at + part] * solidBefore + after[at + part] * solidAfter) / solid;
+    after[at + 3] = solid;
+  }
+};
+
 /** One undo step: the paint, and the background behind it. */
 interface Snapshot {
   paint: ImageData;
@@ -102,9 +130,8 @@ interface Snapshot {
 }
 
 const HISTORY_STEPS = 12;
-/** Rubber stamps are 32 px bitmaps, stamped at twice their size, as Kid Pix's middle size does. */
+/** Rubber stamps are 32 px bitmaps, stamped at one of three sizes (`STAMP_SIZES`). */
 const STAMP_CELL = 32;
-const STAMP_SIZE = 64;
 
 /** The width a kind of pencil draws at one of the three sizes. */
 const pencilWidth = (nib: number, sizeIndex: number) => (PENCIL_WIDTHS[nib] ?? PENCIL_WIDTHS[0])[sizeIndex] ?? PENCIL_WIDTHS[0][1];
@@ -182,6 +209,9 @@ const TILE_OVERLAP = 6;
 
 export class KidPixEngine {
   color = "#ff0080";
+  private texture: Uint8Array | null = null;
+  /** The paint as it was before a textured stroke began, until that stroke is finished. */
+  private grain: ImageData | null = null;
   private readonly ctx: CanvasRenderingContext2D;
   private readonly undoStack: Snapshot[] = [];
   private readonly redoStack: Snapshot[] = [];
@@ -239,6 +269,7 @@ export class KidPixEngine {
     const pending = this.pending;
     if (!pending) return false;
     this.pending = null;
+    this.grain = null;
     this.ctx.putImageData(pending.base, 0, 0);
     this.undoStack.pop();
     this.audio.toolDrop();
@@ -522,7 +553,44 @@ export class KidPixEngine {
    * corner; a curve is dragged as a line, bends toward the pointer once let go and is set by a press; a polygon takes a press
    * for each corner and closes on a press at its first.
    */
+  /**
+   * The paper's texture, or none: a gray picture, tiled over the paper, whose light parts take
+   * the Chalk, the Crayon and the Marker and whose dark parts let the paper show through.
+   */
+  setTexture(image: HTMLImageElement | null) {
+    this.texture = null;
+    if (!image?.complete || !image.naturalWidth) return;
+    const { ctx } = scratch(this.width, this.height);
+    const pattern = ctx.createPattern(image, "repeat");
+    if (!pattern) return;
+    ctx.fillStyle = pattern;
+    ctx.fillRect(0, 0, this.width, this.height);
+    const pixels = ctx.getImageData(0, 0, this.width, this.height).data;
+    const texture = new Uint8Array(this.width * this.height);
+    for (let at = 0; at < texture.length; at++) texture[at] = pixels[at * 4];
+    this.texture = texture;
+  }
+
+  /** Once a textured stroke or shape is finished, what it laid is thinned by the texture. */
+  private grainIfDone() {
+    const before = this.grain;
+    const texture = this.texture;
+    if (!before || this.stroke || this.pending) return;
+    this.grain = null;
+    if (!texture) return;
+    const after = this.ctx.getImageData(0, 0, this.width, this.height);
+    grainPixels(before.data, after.data, texture);
+    this.ctx.putImageData(after, 0, 0);
+  }
+
   shapeDown(at: Point, shape: number, sizeIndex: number, nib = 0) {
+    const fresh = !this.pending;
+    this.shapeStart(at, shape, sizeIndex, nib);
+    // The Pencil itself is too fine for the texture; its other three kinds show it.
+    if (fresh && nib > 0 && this.texture) this.grain = this.undoStack[this.undoStack.length - 1]?.paint ?? null;
+    this.grainIfDone();
+  }
+  private shapeStart(at: Point, shape: number, sizeIndex: number, nib: number) {
     const size = pencilWidth(nib, sizeIndex);
     const kind = PENCIL_SHAPES[shape]?.kind ?? "free";
     if (kind === "free") {
@@ -692,6 +760,7 @@ export class KidPixEngine {
     if (stroke.kind === "spray") window.clearInterval(stroke.timer);
     else if (stroke.kind === "move") this.audio.play("w7430");
     else this.audio.toolUp();
+    this.grainIfDone();
   }
 
   // ---- one-shot tools ------------------------------------------------------------------
@@ -782,7 +851,26 @@ export class KidPixEngine {
   }
 
   /** Stamps a letter (0 is A) in the current color. Kid Pix plays clip 7320 for any stamp. */
-  stamp(at: Point, letter: number) {
+  /**
+   * A rubber stamp as the Stamp Editor takes it, 32 px a side: a letter in the color in hand
+   * (no sheet), or a picture from a sheet of them. Null until the sheet has loaded.
+   */
+  stampPixels(sheet: HTMLImageElement | undefined, index: number): Uint8ClampedArray | null {
+    const source = sheet ?? this.options.images.letters;
+    if (!source?.complete || !source.naturalWidth) return null;
+    const { ctx } = scratch(STAMP_CELL, STAMP_CELL);
+    if (sheet) ctx.drawImage(sheet, index * STAMP_CELL, 0, STAMP_CELL, STAMP_CELL, 0, 0, STAMP_CELL, STAMP_CELL);
+    else {
+      ctx.drawImage(source, index * 48, 0, 48, 48, 0, 0, STAMP_CELL, STAMP_CELL);
+      ctx.globalCompositeOperation = "source-in";
+      ctx.fillStyle = this.color;
+      ctx.fillRect(0, 0, STAMP_CELL, STAMP_CELL);
+    }
+    return ctx.getImageData(0, 0, STAMP_CELL, STAMP_CELL).data;
+  }
+
+  /** Presses a letter stamp, in the color in hand, at one of the three sizes. */
+  stamp(at: Point, letter: number, sizeIndex = 1) {
     const sheet = this.options.images.letters;
     if (!sheet?.complete || !sheet.naturalWidth) return;
     this.remember();
@@ -791,27 +879,28 @@ export class KidPixEngine {
     ctx.globalCompositeOperation = "source-in";
     ctx.fillStyle = this.color;
     ctx.fillRect(0, 0, 48, 48);
-    this.ctx.drawImage(canvas, at.x - 48, at.y - 48, 96, 96);
+    // A letter's cell is half as big again as a stamp's, and so is the letter.
+    const side = (STAMP_SIZES[sizeIndex] ?? STAMP_SIZES[1]) * 1.5;
+    this.ctx.drawImage(canvas, at.x - side / 2, at.y - side / 2, side, side);
     this.audio.play("w7320");
   }
-
-  /** Stamps one 32 px rubber stamp from a category's strip, with hard pixels. */
-  stampFrom(at: Point, sheet: HTMLImageElement, index: number) {
+  /** Presses a rubber stamp from a sheet of them, its pixels kept square. */
+  stampFrom(at: Point, sheet: HTMLImageElement, index: number, sizeIndex = 1) {
     if (!sheet.complete || !sheet.naturalWidth) return;
+    this.pressStamp(at, sheet, index * STAMP_CELL, sizeIndex);
+  }
+  /** Presses a stamp changed in the Stamp Editor. */
+  stampEdited(at: Point, pixels: Uint8ClampedArray, sizeIndex = 1) {
+    const { canvas, ctx } = scratch(STAMP_CELL, STAMP_CELL);
+    ctx.putImageData(new ImageData(new Uint8ClampedArray(pixels), STAMP_CELL, STAMP_CELL), 0, 0);
+    this.pressStamp(at, canvas, 0, sizeIndex);
+  }
+  private pressStamp(at: Point, source: CanvasImageSource, sx: number, sizeIndex: number) {
+    const side = STAMP_SIZES[sizeIndex] ?? STAMP_SIZES[1];
     this.remember();
     this.ctx.save();
     this.ctx.imageSmoothingEnabled = false;
-    this.ctx.drawImage(
-      sheet,
-      index * STAMP_CELL,
-      0,
-      STAMP_CELL,
-      STAMP_CELL,
-      at.x - STAMP_SIZE / 2,
-      at.y - STAMP_SIZE / 2,
-      STAMP_SIZE,
-      STAMP_SIZE,
-    );
+    this.ctx.drawImage(source, sx, 0, STAMP_CELL, STAMP_CELL, Math.round(at.x - side / 2), Math.round(at.y - side / 2), side, side);
     this.ctx.restore();
     this.audio.play("w7320");
   }
@@ -826,6 +915,19 @@ export class KidPixEngine {
     ctx.scale(((flipX ? -1 : 1) * box.width) / picture.width, ((flipY ? -1 : 1) * box.height) / picture.height);
     picture.draw(ctx);
     ctx.restore();
+  }
+
+  /** The Eye Dropper: the color showing at a point, paint over background over drawing over paper. */
+  colorAt(at: Point): string {
+    const x = Math.floor(at.x);
+    const y = Math.floor(at.y);
+    if (x < 0 || y < 0 || x >= this.width || y >= this.height) return this.options.paper;
+    const { ctx } = scratch(1, 1);
+    ctx.fillStyle = this.options.paper;
+    ctx.fillRect(0, 0, 1, 1);
+    ctx.drawImage(this.composite({ x, y, width: 1, height: 1 }).canvas, 0, 0);
+    const [red, green, blue] = ctx.getImageData(0, 0, 1, 1).data;
+    return `#${[red, green, blue].map((part) => part.toString(16).padStart(2, "0")).join("")}`;
   }
 
   // ---- the scissors ---------------------------------------------------------------------

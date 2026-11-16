@@ -166,6 +166,10 @@ mold is Sound Art's microphone, which is not built.
 The Moving Van's tray has Kid Pix's Grab pair in the same panel (scripts 18128 to 18133): the hand,
 which moves all the paint as before, and the scissors.
 
+The Electric Mixer and the Eraser have their pairs too (scripts 18090 to 18095 and 18134 to 18139):
+Mega-Mixer and Mini-Mixer, Little Eraser and Big Eraser. Each tool's options are still one list;
+a kind shows its part of it and remembers its own choice.
+
 ## The scissors
 
 Kid Pix's cut tool (`CutTool.tsx`, `cut.ts`), built from the original running side by side:
@@ -190,6 +194,38 @@ Unlike Kid Pix, a piece carries only paint: the original's picture is one opaque
 pieces take the white around the paint with them and leave a white hole. Here the paper, a
 background and the drawing under the paint stay where they are, as with the Little Eraser. A piece
 also cannot be resized, and text and stickers already pressed in are paint like the rest.
+
+## Cursors, colors, textures, stamps, help and ideas
+
+- **Cursors.** The pointer over the paper is the disc's cursor for the tool or kind in hand
+  (`General.MHK`, 29 of them, 16 px, shown at 32; `cursors.ts`, generated). Which cursor goes with
+  which tool was read off the pictures, not the program (`PENCIL_CURSORS`, `TOOL_CURSORS`). The Text
+  tool keeps the browser's text cursor.
+- **Color picker.** The wheel opens Kid Pix's own panel (`BigPicker.MHK`, `assets/picker.png`) with
+  its clips. The grid's colors are read off its picture (`picker.ts`, generated): grays down the
+  left, skin tones down the right. The Eye Dropper takes the color showing at the next press on
+  the paper, whether paint, background, drawing or paper.
+- **Paper Texture.** A button beside the picker offers plain paper or one of the disc's twenty
+  textures (`TextureMaps.MHK`, 600 x 452 gray pictures, fetched from `web/public/kidpix/textures`
+  when chosen). The Chalk, the Crayon and the Marker show it: once a stroke or shape is finished,
+  what it laid is kept where the texture is light and thinned where it is dark (`grainPixels`).
+  The original shows the texture while the stroke is being drawn; here it appears on letting go.
+- **Stamp sizes and the Stamp Editor.** Stamps take the size control: 32, 64 or 96 px (the middle
+  is what the mode always stamped; the other two are not measured). Edit Stamp opens Kid Pix's
+  Stamp Editor on the stamp in hand (`StampEditor.tsx`; window, buttons, grid and clips from
+  `StampEd.MHK`, laid out by `stampEditor.ts`, generated): Pencil, Fill Bucket, Undo (one step, and
+  back again), Firecracker, Flip, Rotate, Restore Original, Cancel, OK. An edited stamp is used for
+  as long as the mode stays open; the tray still shows the original.
+- **Help.** With the tube's question mark in hand, the next click asks about what was clicked
+  instead of using it: a window shows Kid Pix's words for it and plays the disc's narration
+  (`help.ts`, generated from `KP.cfg`, `kplang_en.ini` and `RHelpDlg.MHK`; 83 lines, a file each
+  under `web/public/kidpix/help`, fetched when asked for). Controls name their line with a
+  `data-help` attribute. The words are the disc's, in English, like the narration. The window is
+  this mode's own, not the disc's.
+- **Idea Machine.** The tube's other cap button opens the disc's 572 picture starters in their 52
+  folders under nine topics (`ideas.ts`, generated; pictures and thumbnail strips under
+  `web/public/kidpix/ideas`, fetched a folder at a time). A `.kpx` file is a Mohawk archive holding
+  the picture as a JPEG. A starter becomes the background, like one of Kid Pix's own.
 
 ## Shapes, buckets and stickers
 

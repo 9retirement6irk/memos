@@ -228,6 +228,8 @@
       "kidpix-cut-free": "Slobodni oblik",
       "kidpix-cut-polygon": "Mnogokut",
       "kidpix-cutter": "Kalup {{number}}",
+      "kidpix-rotate": "Zakreni",
+      "kidpix-texture": "Tekstura {{number}}",
       "pages": "Stranice",
       "page": "Stranica {{number}}",
       "add-page": "Dodaj stranicu",

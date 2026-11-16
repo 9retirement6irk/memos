@@ -266,6 +266,8 @@
       "kidpix-cut-free": "Vapaa muoto",
       "kidpix-cut-polygon": "Monikulmio",
       "kidpix-cutter": "Muotti {{number}}",
+      "kidpix-rotate": "Kierrä",
+      "kidpix-texture": "Tekstuuri {{number}}",
       "pages": "Sivut",
       "page": "Sivu {{number}}",
       "add-page": "Lisää sivu",

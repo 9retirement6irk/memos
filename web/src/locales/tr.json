@@ -277,6 +277,8 @@
       "kidpix-cut-free": "Serbest biçim",
       "kidpix-cut-polygon": "Çokgen",
       "kidpix-cutter": "Kalıp {{number}}",
+      "kidpix-rotate": "Döndür",
+      "kidpix-texture": "Doku {{number}}",
       "pages": "Sayfalar",
       "page": "Sayfa {{number}}",
       "add-page": "Sayfa ekle",

@@ -228,6 +228,8 @@
       "kidpix-cut-free": "Forma lliure",
       "kidpix-cut-polygon": "Polígon",
       "kidpix-cutter": "Motlle {{number}}",
+      "kidpix-rotate": "Gira",
+      "kidpix-texture": "Textura {{number}}",
       "pages": "Pàgines",
       "page": "Pàgina {{number}}",
       "add-page": "Afegeix una pàgina",

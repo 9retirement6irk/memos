@@ -19,36 +19,46 @@ import soundsUrl from "./assets/sounds.m4a";
 import { KidPixAudio } from "./audio";
 import type { Point } from "./brushes";
 import CutTool, { type CutToolHandle } from "./CutTool";
+import { KIDPIX_CURSORS } from "./cursors";
 import { CUT_GESTURES, CUT_OPTION_COUNT } from "./cut";
 import { KIDPIX_TOOL_SOUNDS } from "./data";
 import { KidPixEngine, type KidPixImages, type KidPixPicture, type KidPixTile } from "./engine";
+import { KIDPIX_HELP, type KidPixHelpKey } from "./help";
+import IdeaMachine from "./IdeaMachine";
 import "./kidpix.css";
 import KindPanel, { type KindArt } from "./KindPanel";
 import { KIDPIX_BACKGROUNDS, KIDPIX_STAMPS, KIDPIX_STICKERS } from "./library";
+import { KIDPIX_PICKER, KIDPIX_PICKER_COLORS } from "./picker";
+import StampEditor from "./StampEditor";
 import { KIDPIX_SPRAY_SETS } from "./spray";
+import type { StampPixels } from "./stampEdit";
 import { readStickers, type SwfPicture } from "./swf";
 import {
   BRUSH_COUNT,
   BRUSH_KINDS,
   BUCKET_KINDS,
   CUT_BUTTONS,
+  ERASER_KINDS,
   ERASER_TIPS,
   FONTS,
   GRAB_KINDS,
   GRADIENT_COUNT,
   type KidPixTool,
   MIXER_COUNT,
-  PALETTE,
+  MIXER_KINDS,
   PATTERN_COUNT,
+  PENCIL_CURSORS,
   PENCIL_KINDS,
   PENCIL_SHAPES,
   REALISTIC_COUNT,
   SCREEN_ERASER_COUNT,
   SOLID_COUNT,
+  STAMP_EDITOR_NAMES,
   TEXT_LINE,
   TEXT_SIZE,
   TEXT_SIZES,
   type TextStyle,
+  TOOL_CURSORS,
   TOOL_NUMBER,
   TUBE_TOOLS,
   textFont,
@@ -108,6 +118,13 @@ export interface KidPixLayerProps {
     cutFree: string;
     cutPolygon: string;
     cutter: (number: number) => string;
+    /** The paper textures: plain paper, and a texture by its number. */
+    noTexture: string;
+    texture: (number: number) => string;
+    /** The Stamp Editor's buttons that Kid Pix leaves unnamed. */
+    rotate: string;
+    cancel: string;
+    ok: string;
     font: string;
     fontSize: string;
     bold: string;
@@ -342,6 +359,66 @@ const readPicture = async (file: Blob): Promise<KidPixPicture> => {
 const PICTURE_FIT = 0.7;
 const PICTURE_CASCADE = 28;
 
+/** One of Kid Pix's cursors, as CSS: the browser's own stands in where it cannot show a picture. */
+const cursorCss = (index: number, fallback = "crosshair") => {
+  const cursor = KIDPIX_CURSORS[index];
+  return cursor ? `url("${cursor[0]}") ${cursor[1]} ${cursor[2]}, ${fallback}` : fallback;
+};
+
+/** Kid Pix's names for the tube's two cap buttons, and for the help window's replay. */
+const IDEA_MACHINE = "Idea Machine";
+const HELP = "Help";
+const REPLAY = "Replay";
+/** What Kid Pix's help calls each tube tool, each tool's kinds, its options and its sizes. */
+const TOOL_HELP: Record<KidPixTool, KidPixHelpKey> = {
+  pencil: "pencil",
+  text: "text",
+  wacky: "paint",
+  paint: "fill",
+  sticker: "stickers",
+  stamp: "Stamps",
+  mixer: "mix",
+  background: "backgrounds",
+  move: "grab",
+  eraser: "eraser",
+};
+const KIND_HELP: Record<KindArt, readonly KidPixHelpKey[]> = {
+  pencil: ["PencilTool", "ChalkTool", "CrayonTool", "MarkerTool"],
+  brush: ["PaintBrush", "SprayCan"],
+  bucket: ["SolidFill", "GradientFill", "PatternFill"],
+  grab: ["GrabTool", "CutTool"],
+  mixer: ["BigMixer", "MixerWand"],
+  eraser: ["SmEraser", "BigEraser"],
+};
+const SHAPE_HELP: readonly KidPixHelpKey[] = [
+  "DrawFreehand",
+  "DrawLine",
+  "DrawArc",
+  "DrawBox",
+  "DrawBoxFilled",
+  "DrawOvalOutline",
+  "DrawOvalFilled",
+  "DrawPolyOutline",
+  "DrawPolyFilled",
+];
+const CUT_HELP: readonly KidPixHelpKey[] = ["TrashCan", "Duplicate", "Merge"];
+
+/** Kid Pix's name for its paper textures, and how many the disc holds. */
+const PAPER_TEXTURE = "Paper Texture";
+const TEXTURE_COUNT = 20;
+/** Kid Pix's name for the picker's color-taking tool. */
+const EYE_DROPPER = "Eye Dropper";
+/** A part of assets/picker.png as a CSS background. */
+const pickerCut = ([x, y, cellWidth, cellHeight]: readonly number[]): CSSProperties => ({
+  width: cellWidth,
+  height: cellHeight,
+  backgroundPosition: `-${x}px -${y}px`,
+});
+
+/** A "#rrggbb" color as a pixel's four bytes. */
+const inkOf = (hex: string) =>
+  [Number.parseInt(hex.slice(1, 3), 16), Number.parseInt(hex.slice(3, 5), 16), Number.parseInt(hex.slice(5, 7), 16), 255] as const;
+
 const loadImage = (url: string) => {
   const image = new Image();
   image.src = url;
@@ -401,6 +478,8 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
   // The Fill Bucket in hand (solid, blend, pattern) and the fill each one last used.
   const [bucketKind, setBucketKind] = useState(0);
   const [grabKind, setGrabKind] = useState(0);
+  // The Mixer's and the Eraser's options are one list each; a kind shows its part and remembers its own choice.
+  const [kindChoice, setKindChoice] = useState({ mixer: [0, MIXER_COUNT], eraser: [1, ERASER_TIPS] });
   const cutRef = useRef<CutToolHandle>(null);
   const [bucketChoice, setBucketChoice] = useState<readonly number[]>([0, 0, 0]);
   const [floating, setFloating] = useState<FloatingSticker | null>(null);
@@ -413,6 +492,10 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
   // The mixer wand starts at its smallest, as Kid Pix's does.
   const [wandSize, setWandSize] = useState(0);
   const [eraserSize, setEraserSize] = useState(2);
+  const [stampSize, setStampSize] = useState(1);
+  // Stamps changed in the Stamp Editor, by category and place, for as long as the mode is open.
+  const editedStampsRef = useRef(new Map<string, StampPixels>());
+  const [editingStamp, setEditingStamp] = useState<{ key: string; pixels: StampPixels; original: StampPixels } | null>(null);
   const [brushChoice, setBrushChoice] = useState<readonly number[]>([0, 40]);
   // The can's mode (0 3D shapes, 1 moving paint) and the set each last used, counted through all the sets.
   const [sprayMode, setSprayMode] = useState(0);
@@ -433,6 +516,15 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
   const [paging, setPaging] = useState({ key: "", page: 0 });
   const [color, setColor] = useState("#ff0080");
   const [paletteOpen, setPaletteOpen] = useState(false);
+  const [dropping, setDropping] = useState(false);
+  // The paper's texture: none, or one of the disc's twenty, fetched when it is chosen.
+  const [texture, setTexture] = useState(0);
+  const [texturesOpen, setTexturesOpen] = useState(false);
+  // The question mark: while it is in hand, a click anywhere asks what that is instead of using it.
+  const [helping, setHelping] = useState(false);
+  const [helpShown, setHelpShown] = useState<KidPixHelpKey | null>(null);
+  const helpAudioRef = useRef<HTMLAudioElement | null>(null);
+  const [ideasOpen, setIdeasOpen] = useState(false);
   const [typing, setTyping] = useState<Point | null>(null);
   // The chosen tool's button flashes its lit frame, then rests like the others.
   const [toolFrame, setToolFrame] = useState(0);
@@ -854,6 +946,10 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
       return;
     }
     setChosen((previous) => ({ ...previous, [tool]: index }));
+    if (tool === "mixer" || tool === "eraser") {
+      const kind = index >= (tool === "mixer" ? MIXER_COUNT : ERASER_TIPS) ? 1 : 0;
+      setKindChoice((previous) => ({ ...previous, [tool]: previous[tool].map((choice, at) => (at === kind ? index : choice)) }));
+    }
     if (tool === "background") {
       chooseBackground(index);
       return;
@@ -869,6 +965,56 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
     if (tool === "stamp") stampSheet(next);
     optionsRef.current?.scrollTo({ left: 0 });
     play("easel1029");
+  };
+
+  /** Says a help line: the narration from the disc, unless the sounds are off. */
+  const sayHelp = (key: KidPixHelpKey) => {
+    helpAudioRef.current?.pause();
+    helpAudioRef.current = null;
+    if (muted || typeof Audio !== "function") return;
+    const narration = new Audio(`${LIBRARY_URL}help/${KIDPIX_HELP[key][0]}.m4a`);
+    helpAudioRef.current = narration;
+    void narration.play().catch(() => undefined);
+  };
+  const closeHelp = () => {
+    helpAudioRef.current?.pause();
+    helpAudioRef.current = null;
+    setHelpShown(null);
+  };
+  /** With the question mark in hand, a click is a question: it never reaches what was clicked. */
+  const askHelp = (event: { target: EventTarget; preventDefault: () => void; stopPropagation: () => void }) => {
+    if (!helping) return;
+    event.preventDefault();
+    event.stopPropagation();
+    const asked = event.target instanceof Element ? event.target.closest("[data-help]")?.getAttribute("data-help") : null;
+    setHelping(false);
+    if (!asked || !(asked in KIDPIX_HELP)) return;
+    setHelpShown(asked as KidPixHelpKey);
+    sayHelp(asked as KidPixHelpKey);
+  };
+  const swallowWhileHelping = (event: { preventDefault: () => void; stopPropagation: () => void }) => {
+    if (!helping) return;
+    event.preventDefault();
+    event.stopPropagation();
+  };
+  // A picture starter from the Idea Machine becomes the background, as one of Kid Pix's own does.
+  const pickIdea = (url: string) => {
+    setIdeasOpen(false);
+    const image = loadImage(url);
+    image.addEventListener("load", () => engineRef.current?.setBackground(image), { once: true });
+  };
+
+  const chooseTexture = (next: number) => {
+    setTexture(next);
+    setTexturesOpen(false);
+    setPaletteOpen(false);
+    play("misc31504");
+    if (next === 0) {
+      engineRef.current?.setTexture(null);
+      return;
+    }
+    const image = loadImage(`${LIBRARY_URL}textures/${String(next).padStart(2, "0")}.jpg`);
+    image.onload = () => engineRef.current?.setTexture(image);
   };
 
   const chooseColor = (next: string) => {
@@ -938,8 +1084,10 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
       } else engine.wipe(effect);
     } else if (tool === "stamp") {
       const sheet = stampSheet(category.stamp);
-      if (sheet) engine.stampFrom(at, sheet, option);
-      else engine.stamp(at, option);
+      const edited = editedStampsRef.current.get(`${category.stamp}:${option}`);
+      if (edited) engine.stampEdited(at, edited, stampSize);
+      else if (sheet) engine.stampFrom(at, sheet, option, stampSize);
+      else engine.stamp(at, option, stampSize);
     } else if (tool === "text") {
       // The press is the middle of the first line; the box grows right and down from there.
       setDraft("");
@@ -1048,7 +1196,9 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
 
   const current = TUBE_TOOLS.find((item) => item.key === tool) ?? TUBE_TOOLS[0];
   const toolCategory = isLibraryTool(tool) ? category[tool] : 0;
-  const options = optionsFor(
+  const mixerKind = chosen.mixer >= MIXER_COUNT ? 1 : 0;
+  const eraserKind = chosen.eraser >= ERASER_TIPS ? 1 : 0;
+  const allOptions = optionsFor(
     tool,
     spraying,
     brushMode,
@@ -1060,6 +1210,36 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
     labels.noBackground,
     labels.eraserTips,
   );
+  // The pointer over the paper is the tool in hand, as Kid Pix draws it.
+  const toolCursor =
+    tool === "pencil"
+      ? PENCIL_CURSORS[pencilKind]
+      : tool === "wacky"
+        ? spraying
+          ? TOOL_CURSORS.sprayCan
+          : TOOL_CURSORS.brush
+        : tool === "paint"
+          ? TOOL_CURSORS.bucket
+          : tool === "mixer"
+            ? mixerKind === 1
+              ? TOOL_CURSORS.miniMixer
+              : TOOL_CURSORS.megaMixer
+            : tool === "eraser"
+              ? eraserKind === 1
+                ? TOOL_CURSORS.bigEraser
+                : TOOL_CURSORS.littleEraser
+              : tool === "stamp"
+                ? TOOL_CURSORS.stamp
+                : tool === "text"
+                  ? -1
+                  : TOOL_CURSORS.hand;
+  // A Mixer or an Eraser shows the options of the kind in hand.
+  const options =
+    tool === "mixer"
+      ? allOptions.filter((option) => option.index >= MIXER_COUNT === (mixerKind === 1))
+      : tool === "eraser"
+        ? allOptions.filter((option) => option.index >= ERASER_TIPS === (eraserKind === 1))
+        : allOptions;
   // The scissors' shapes: four to draw, then the cookie cutters.
   const cutting = tool === "move" && grabKind === 1;
   if (cutting) {
@@ -1079,6 +1259,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
         aria-label={item.name}
         aria-pressed={selected}
         title={item.name}
+        data-help={TOOL_HELP[item.key]}
         onClick={() => chooseTool(item)}
         onPointerEnter={(event) => {
           if (selected || event.pointerType !== "mouse") return;
@@ -1217,11 +1398,12 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
   // One row of options, as many as fit, a page at a time; a phone's strip scrolls through them all.
   const wanding = tool === "mixer" && chosen.mixer >= MIXER_COUNT;
   const rubbing = tool === "eraser" && chosen.eraser < ERASER_TIPS;
-  const sizeValue = tool === "pencil" ? chosen.pencil : wanding ? wandSize : rubbing ? eraserSize : brushSize;
-  const hasSizes = tool === "pencil" || (tool === "wacky" && !spraying) || wanding || rubbing;
+  const stamping = tool === "stamp";
+  const sizeValue = tool === "pencil" ? chosen.pencil : wanding ? wandSize : rubbing ? eraserSize : stamping ? stampSize : brushSize;
+  const hasSizes = tool === "pencil" || (tool === "wacky" && !spraying) || wanding || rubbing || stamping;
   const modes = tool === "wacky" ? (spraying ? "spray" : "brush") : null;
   const modeValue = spraying ? sprayMode : brushMode;
-  const optionsKey = [tool, modes, modeValue, bucketKind, grabKind, toolCategory].join("/");
+  const optionsKey = [tool, modes, modeValue, bucketKind, grabKind, mixerKind, eraserKind, toolCategory].join("/");
   const room = optionsWidth - (hasSizes ? SIZES_ROOM : 0) - (modes ? MODES_ROOM : 0) - (cutting ? CUT_BUTTONS_ROOM : 0);
   const perPage = compact || optionsWidth === 0 ? Math.max(1, options.length) : Math.max(1, Math.floor(room / OPTION_CELL));
   const pages = Math.max(1, Math.ceil(options.length / perPage));
@@ -1243,6 +1425,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
     if (tool === "pencil") setChosen((previous) => ({ ...previous, pencil: index }));
     else if (wanding) setWandSize(index);
     else if (rubbing) setEraserSize(index);
+    else if (stamping) setStampSize(index);
     else setBrushSize(index);
     play("easel1029");
   };
@@ -1256,7 +1439,14 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
   };
   // Kid Pix's size control: three balls, small to large, the one in hand lit.
   const sizesControl = hasSizes && (
-    <div role="group" aria-label={labels.size} className="kidpix-sizes">
+    <div
+      role="group"
+      aria-label={labels.size}
+      className="kidpix-sizes"
+      data-help={
+        tool === "pencil" ? "LineSize" : wanding ? "MixerWandSizing" : rubbing ? "EraserSz" : stamping ? "StampSizing" : "PaintBrushSizes"
+      }
+    >
       {SIZE_BALLS.map(([x, y, ballWidth, ballHeight], index) => {
         const at = (state: number) => `-${67 + (index * 3 + state) * 26 + (26 - ballWidth) / 2}px -${(26 - ballHeight) / 2}px`;
         return (
@@ -1285,6 +1475,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
           aria-label={MODE_NAMES[modes][index]}
           aria-pressed={modeValue === index}
           title={MODE_NAMES[modes][index]}
+          data-help={(modes === "spray" ? ["SprayShapesPaint", "SprayMovingPaint"] : ["RealPaintOpts", "WackyPaint"])[index]}
           style={states(`-108px -${row * 34}px`, `0 -${row * 34}px`, `-54px -${row * 34}px`)}
           onClick={() => chooseMode(index)}
         />
@@ -1305,6 +1496,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
             className="kidpix-sprite-button mu-focus"
             aria-label={name}
             title={name}
+            data-help={CUT_HELP[row]}
             style={states(at(0), at(1), at(2))}
             onClick={() => {
               audioRef.current?.wake();
@@ -1414,6 +1606,30 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
     </div>
   );
 
+  const optionsHelp: KidPixHelpKey | undefined =
+    tool === "wacky"
+      ? spraying
+        ? "SprayPaintBrushStyleOpts"
+        : "PaintBrushStyleOpts"
+      : tool === "paint"
+        ? "FillPatternIcons"
+        : tool === "mixer"
+          ? mixerKind === 1
+            ? "MixerWandStyles"
+            : "BigMixerStyles"
+          : tool === "eraser"
+            ? eraserKind === 1
+              ? "BigEraserSettings"
+              : "EraserShapes"
+            : tool === "stamp"
+              ? "StampThumbs"
+              : tool === "sticker"
+                ? "StickGraphicSelectIcons"
+                : tool === "background"
+                  ? "BackgrdGraphicSelectIcons"
+                  : tool === "move"
+                    ? "GrabCutSettings"
+                    : undefined;
   const optionButtons = (
     <div ref={optionsRef} role="group" aria-label={current.name} className="kidpix-options">
       {sizesControl}
@@ -1428,6 +1644,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
           aria-label={option.label}
           aria-pressed={pressedOption(option.index)}
           title={option.label}
+          data-help={tool === "pencil" ? SHAPE_HELP[option.index] : optionsHelp}
           onClick={() => chooseOption(option.index)}
         >
           {"sheet" in option.content ? (
@@ -1476,6 +1693,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
     <select
       className="kidpix-category mu-focus"
       aria-label={current.name}
+      data-help={tool === "stamp" ? "StampFolder" : tool === "sticker" ? "StickPreLibFolders" : "BackgrdPreLibFolders"}
       value={toolCategory}
       onChange={(event) => chooseCategory(Number(event.target.value))}
     >
@@ -1498,6 +1716,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
       selected={selected}
       color={color}
       play={play}
+      help={KIND_HELP[art]}
       onSelect={(index) => {
         settle();
         select(index);
@@ -1513,6 +1732,8 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
     set(index);
     optionsRef.current?.scrollTo({ left: 0 });
   };
+  const chooseKindOf = (key: "mixer" | "eraser") => (index: number) =>
+    setChosen((previous) => ({ ...previous, [key]: kindChoice[key][index] }));
   const chooseBucketKind = (index: number) => {
     setBucketKind(index);
     optionsRef.current?.scrollTo({ left: 0 });
@@ -1526,8 +1747,51 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
           ? kindButtons("bucket", BUCKET_KINDS, bucketKind, chooseBucketKind)
           : tool === "move"
             ? kindButtons("grab", GRAB_KINDS, grabKind, chooseKindWith(setGrabKind))
-            : null;
-  const toolPanel = pencilKinds || textControls || categorySelect;
+            : tool === "mixer"
+              ? kindButtons("mixer", MIXER_KINDS, mixerKind, chooseKindWith(chooseKindOf("mixer")))
+              : tool === "eraser"
+                ? kindButtons("eraser", ERASER_KINDS, eraserKind, chooseKindWith(chooseKindOf("eraser")))
+                : null;
+  // The Stamp Editor opens on the stamp in hand, as it is now; a letter comes in the color in hand.
+  const editStamp = () => {
+    const key = `${category.stamp}:${chosen.stamp}`;
+    const original = engineRef.current?.stampPixels(stampSheet(category.stamp), chosen.stamp);
+    if (!original) return;
+    settle();
+    play("easel1029");
+    setEditingStamp({ key, original, pixels: editedStampsRef.current.get(key) ?? original });
+  };
+  const stampPanel = tool === "stamp" && (
+    <div className="kidpix-stamp-tools">
+      {categorySelect}
+      <button type="button" className="kidpix-edit-stamp mu-focus" data-help="StampEditTool" onClick={editStamp}>
+        {STAMP_EDITOR_NAMES.open}
+      </button>
+    </div>
+  );
+  const stampEditor = editingStamp && (
+    <StampEditor
+      pixels={editingStamp.pixels}
+      original={editingStamp.original}
+      color={inkOf(color)}
+      scale={Math.min(1, (view.width - 16) / 516, (view.height - 16) / 346)}
+      labels={{
+        ...STAMP_EDITOR_NAMES,
+        undo: labels.undo,
+        flip: labels.flipHorizontal,
+        rotate: labels.rotate,
+        cancel: labels.cancel,
+        ok: labels.ok,
+        color: labels.color,
+      }}
+      play={play}
+      onDone={(pixels) => {
+        if (pixels) editedStampsRef.current.set(editingStamp.key, pixels);
+        setEditingStamp(null);
+      }}
+    />
+  );
+  const toolPanel = pencilKinds || textControls || stampPanel || categorySelect;
 
   const colorButton = (
     <button
@@ -1536,9 +1800,12 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
       aria-label={labels.color}
       aria-expanded={paletteOpen}
       title={labels.color}
+      data-help="FixedColorsToggle"
       onClick={() => {
+        setDropping(false);
+        setTexturesOpen(false);
+        play(paletteOpen ? "picker1500" : "picker1501");
         setPaletteOpen((open) => !open);
-        play("easel1029");
       }}
     >
       <span aria-hidden style={{ background: color }} />
@@ -1547,15 +1814,79 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
   );
 
   const undoGuy = (
-    <button type="button" className="kidpix-undo-guy mu-focus" aria-label={labels.undo} title={labels.undo} onClick={undo}>
+    <button type="button" className="kidpix-undo-guy mu-focus" aria-label={labels.undo} title={labels.undo} data-help="Undo" onClick={undo}>
       <span aria-hidden style={{ backgroundPosition: `-${guyFrame * 40}px 0` }} />
     </button>
+  );
+
+  // The tube's cap: the Idea Machine, and the question mark that explains whatever is clicked next.
+  const capButtons = (
+    <>
+      <button
+        type="button"
+        className="kidpix-cap mu-focus"
+        data-cap="ideas"
+        data-help="ideas"
+        aria-label={IDEA_MACHINE}
+        title={IDEA_MACHINE}
+        onClick={() => {
+          settle();
+          play("easel1029");
+          setIdeasOpen(true);
+        }}
+      >
+        <svg aria-hidden viewBox="0 0 20 20" fill="currentColor">
+          <path d="M10 1a6 6 0 0 0-3.6 10.8c.4.3.6.8.6 1.2v1h6v-1c0-.4.2-.9.6-1.2A6 6 0 0 0 10 1ZM7.5 15.5h5V17a1 1 0 0 1-1 1h-3a1 1 0 0 1-1-1v-1.5Z" />
+        </svg>
+      </button>
+      <button
+        type="button"
+        className="kidpix-cap mu-focus"
+        data-cap="help"
+        data-help="Help"
+        aria-label={HELP}
+        aria-pressed={helping}
+        title={HELP}
+        onClick={() => {
+          settle();
+          play("easel1029");
+          setHelping(true);
+        }}
+      >
+        ?
+      </button>
+    </>
+  );
+  const helpWindow = helpShown && (
+    <div className="kidpix-stamp-editor-veil">
+      <div role="dialog" aria-modal="true" aria-label={HELP} className="kidpix-help">
+        {KIDPIX_HELP[helpShown][1]}
+        <div>
+          <button type="button" className="mu-focus" onClick={() => sayHelp(helpShown)}>
+            {REPLAY}
+          </button>
+          <button type="button" className="mu-focus" onClick={closeHelp}>
+            {labels.ok}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+  const ideaMachine = ideasOpen && (
+    <IdeaMachine
+      libraryUrl={LIBRARY_URL}
+      labels={{ title: IDEA_MACHINE, close: labels.cancel }}
+      play={play}
+      onPick={pickIdea}
+      onClose={() => setIdeasOpen(false)}
+    />
   );
 
   const dynamiteButton = (
     <button
       type="button"
       className="kidpix-dynamite mu-focus"
+      data-help="FirecrackerErase"
       aria-label={labels.clear}
       title={labels.clear}
       data-fuse={fuse === null ? undefined : ""}
@@ -1569,7 +1900,17 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
   );
 
   return (
-    <div ref={rootRef} tabIndex={-1} className="kidpix" data-compact={compact || undefined}>
+    <div
+      ref={rootRef}
+      tabIndex={-1}
+      className="kidpix"
+      data-compact={compact || undefined}
+      data-helping={helping || undefined}
+      style={{ "--kp-help-cursor": cursorCss(TOOL_CURSORS.help, "help") } as CSSProperties}
+      onClickCapture={askHelp}
+      onPointerDownCapture={swallowWhileHelping}
+      onMouseDownCapture={swallowWhileHelping}
+    >
       <canvas
         ref={backgroundRef}
         aria-hidden
@@ -1584,7 +1925,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
         data-tool={tool}
         width={width}
         height={height}
-        style={{ width: view.width, height: view.height }}
+        style={{ width: view.width, height: view.height, cursor: toolCursor < 0 ? undefined : cursorCss(toolCursor) }}
         // A press must not take the focus from the text field it has just opened.
         onMouseDown={(event) => event.preventDefault()}
         onPointerDown={handlePointerDown}
@@ -1593,10 +1934,14 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
         onPointerCancel={liftPointer}
       />
 
+      {stampEditor}
+      {helpWindow}
+      {ideaMachine}
       {stickerFrame}
       <CutTool
         ref={cutRef}
         active={cutting}
+        cursors={[cursorCss(TOOL_CURSORS.scissors), cursorCss(TOOL_CURSORS.hand, "move"), cursorCss(TOOL_CURSORS.holding, "move")]}
         option={chosen.move}
         width={width}
         height={height}
@@ -1657,6 +2002,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
           <div role="toolbar" aria-label={labels.tools} className="kidpix-strip">
             {toolButtons}
             {dynamiteButton}
+            {capButtons}
           </div>
         </div>
       ) : (
@@ -1667,6 +2013,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
             </div>
             {dynamiteButton}
             {undoGuy}
+            {capButtons}
           </div>
           <div className="kidpix-wheel">{colorButton}</div>
           <div className="kidpix-tray">
@@ -1677,13 +2024,13 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
               {pencilKinds || textControls || (
                 <>
                   <strong>{current.name}</strong>
-                  {categorySelect}
+                  {stampPanel || categorySelect}
                 </>
               )}
             </div>
             {optionButtons}
             {/* The arrows turn the tray's pages; the number between them is the page on show. */}
-            <div className="kidpix-pager">
+            <div className="kidpix-pager" data-help="OptionsTrayNum">
               <button
                 type="button"
                 className="mu-focus"
@@ -1707,19 +2054,103 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
       )}
 
       {paletteOpen && (
-        <div role="group" aria-label={labels.color} className="kidpix-palette">
-          {PALETTE.map((swatch) => (
-            <button
-              key={swatch}
-              type="button"
-              className="mu-focus"
-              aria-label={swatch}
-              aria-pressed={swatch === color}
-              style={{ background: swatch }}
-              onClick={() => chooseColor(swatch)}
-            />
-          ))}
+        <div
+          role="group"
+          aria-label={labels.color}
+          className="kidpix-picker"
+          style={{
+            ...pickerCut(KIDPIX_PICKER.panel),
+            zoom: compact
+              ? Math.max(0.5, Math.min(2, (view.width - 16) / KIDPIX_PICKER.panel[2], (view.height - 240) / KIDPIX_PICKER.panel[3]))
+              : Math.min(1, (view.height - 150) / KIDPIX_PICKER.panel[3]),
+          }}
+        >
+          <div
+            className="kidpix-picker-grid"
+            style={{ ...pickerCut(KIDPIX_PICKER.grid.cell), left: KIDPIX_PICKER.grid.at[0], top: KIDPIX_PICKER.grid.at[1] }}
+          >
+            {KIDPIX_PICKER_COLORS.map(([x, y, swatchWidth, swatchHeight, swatch]) => (
+              <button
+                key={`${x}/${y}`}
+                type="button"
+                className="mu-focus"
+                aria-label={swatch}
+                aria-pressed={swatch === color}
+                style={{ left: x, top: y, width: swatchWidth, height: swatchHeight }}
+                onClick={() => chooseColor(swatch)}
+              />
+            ))}
+          </div>
+          <button
+            type="button"
+            className="kidpix-sprite-button mu-focus"
+            aria-label={EYE_DROPPER}
+            aria-pressed={dropping}
+            title={EYE_DROPPER}
+            style={{
+              ...pickerCut(KIDPIX_PICKER.dropper.cells[0]),
+              left: KIDPIX_PICKER.dropper.at[0],
+              top: KIDPIX_PICKER.dropper.at[1],
+              ...states(...(KIDPIX_PICKER.dropper.cells.map(([x, y]) => `-${x}px -${y}px`) as [string, string, string])),
+            }}
+            onClick={() => {
+              settle();
+              setDropping(true);
+              setPaletteOpen(false);
+              play("picker1502");
+            }}
+          />
+          <button
+            type="button"
+            className="kidpix-texture-button mu-focus"
+            aria-expanded={texturesOpen}
+            style={{ left: KIDPIX_PICKER.panel[2] + 6 }}
+            onClick={() => {
+              setTexturesOpen((open) => !open);
+              play("easel1029");
+            }}
+          >
+            {PAPER_TEXTURE}
+          </button>
+          {texturesOpen && (
+            <div role="group" aria-label={PAPER_TEXTURE} className="kidpix-textures" style={{ left: KIDPIX_PICKER.panel[2] + 6 }}>
+              {Array.from({ length: TEXTURE_COUNT + 1 }, (_, index) => (
+                <button
+                  key={index}
+                  type="button"
+                  className="mu-focus"
+                  aria-label={index === 0 ? labels.noTexture : labels.texture(index)}
+                  aria-pressed={texture === index}
+                  title={index === 0 ? labels.noTexture : labels.texture(index)}
+                  style={
+                    index === 0
+                      ? undefined
+                      : {
+                          backgroundImage: `url("${LIBRARY_URL}textures/thumbs.jpg")`,
+                          backgroundPosition: `-${(index - 1) * 36}px 0`,
+                          backgroundSize: `${TEXTURE_COUNT * 36}px 36px`,
+                        }
+                  }
+                  onClick={() => chooseTexture(index)}
+                />
+              ))}
+            </div>
+          )}
         </div>
+      )}
+      {dropping && (
+        <div
+          className="kidpix-dropping"
+          style={{ width: view.width, height: view.height, cursor: cursorCss(TOOL_CURSORS.dropper) }}
+          onPointerDown={(event) => {
+            // The Eye Dropper takes the color under it, whatever laid it there, and is put away.
+            const box = event.currentTarget.getBoundingClientRect();
+            const at = { x: ((event.clientX - box.left) * width) / box.width, y: ((event.clientY - box.top) * height) / box.height };
+            const picked = engineRef.current?.colorAt(at);
+            setDropping(false);
+            if (picked) chooseColor(picked);
+          }}
+        />
       )}
 
       {splash && <span aria-hidden className="kidpix-splash" />}

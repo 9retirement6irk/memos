@@ -228,6 +228,8 @@
       "kidpix-cut-free": "Free-form",
       "kidpix-cut-polygon": "Polygon",
       "kidpix-cutter": "Cookie cutter {{number}}",
+      "kidpix-rotate": "Rotate",
+      "kidpix-texture": "Texture {{number}}",
       "pages": "Pages",
       "page": "Page {{number}}",
       "add-page": "Add page",

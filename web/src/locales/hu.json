@@ -228,6 +228,8 @@
       "kidpix-cut-free": "Szabad forma",
       "kidpix-cut-polygon": "Sokszög",
       "kidpix-cutter": "Kiszúró {{number}}",
+      "kidpix-rotate": "Forgatás",
+      "kidpix-texture": "Textúra {{number}}",
       "pages": "Oldalak",
       "page": "{{number}}. oldal",
       "add-page": "Oldal hozzáadása",

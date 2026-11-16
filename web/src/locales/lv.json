@@ -266,6 +266,8 @@
       "kidpix-cut-free": "Brīva forma",
       "kidpix-cut-polygon": "Daudzstūris",
       "kidpix-cutter": "Formiņa {{number}}",
+      "kidpix-rotate": "Pagriezt",
+      "kidpix-texture": "Tekstūra {{number}}",
       "pages": "Lapas",
       "page": "{{number}}. lapa",
       "add-page": "Pievienot lapu",

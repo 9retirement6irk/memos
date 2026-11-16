@@ -266,6 +266,8 @@
       "kidpix-cut-free": "Ελεύθερο σχήμα",
       "kidpix-cut-polygon": "Πολύγωνο",
       "kidpix-cutter": "Κουπ πατ {{number}}",
+      "kidpix-rotate": "Περιστροφή",
+      "kidpix-texture": "Υφή {{number}}",
       "pages": "Σελίδες",
       "page": "Σελίδα {{number}}",
       "add-page": "Προσθήκη σελίδας",

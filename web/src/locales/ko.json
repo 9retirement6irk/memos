@@ -230,6 +230,8 @@
       "kidpix-cut-free": "자유형",
       "kidpix-cut-polygon": "다각형",
       "kidpix-cutter": "모양 틀 {{number}}",
+      "kidpix-rotate": "회전",
+      "kidpix-texture": "질감 {{number}}",
       "pages": "페이지",
       "page": "{{number}}페이지",
       "add-page": "페이지 추가",

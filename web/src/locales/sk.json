@@ -266,6 +266,8 @@
       "kidpix-cut-free": "Voľný tvar",
       "kidpix-cut-polygon": "Mnohouholník",
       "kidpix-cutter": "Vykrajovačka {{number}}",
+      "kidpix-rotate": "Otočiť",
+      "kidpix-texture": "Textúra {{number}}",
       "pages": "Strany",
       "page": "Strana {{number}}",
       "add-page": "Pridať stranu",

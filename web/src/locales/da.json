@@ -266,6 +266,8 @@
       "kidpix-cut-free": "Fri form",
       "kidpix-cut-polygon": "Polygon",
       "kidpix-cutter": "Udstikker {{number}}",
+      "kidpix-rotate": "Rotér",
+      "kidpix-texture": "Tekstur {{number}}",
       "pages": "Sider",
       "page": "Side {{number}}",
       "add-page": "Tilføj side",
