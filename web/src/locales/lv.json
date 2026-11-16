@@ -1262,6 +1262,15 @@
       "api-key-help": "To atradīsi Dawarich sadaļā Account › API access.",
       "label": "Dawarich",
       "description": "Tava paša atrašanās vietu vēsture – dienasgrāmatas vietām un maršrutu attēliem jebkurā piezīmē. Tava API atslēga paliek šajā serverī."
+    },
+    "text-extraction": {
+      "claude-title": "Claude (Anthropic)",
+      "claude-description": "Pievienojiet Claude ar API atslēgu no Anthropic Console. Atslēga paliek šajā serverī.",
+      "description": "Pēc pieprasījuma nolasa tekstu attēlos, zīmējumos un skenētos PDF. Katru reizi fails tiek nosūtīts šeit izvēlētajam pakalpojumu sniedzējam.",
+      "model-help": "Atstājiet tukšu, lai izmantotu {{model}}.",
+      "off": "Izslēgts",
+      "provider-help": "Claude vai kāds no augstāk esošajiem Gemini pakalpojumu sniedzējiem.",
+      "title": "Teksta izvilkšana"
     }
   },
   "tooltip": {

@@ -1261,6 +1261,15 @@
       "api-key-help": "Ще го намерите в Dawarich под Account › API access.",
       "label": "Dawarich",
       "description": "Вашата собствена история на местоположенията, за места в дневника и изображения на маршрути във всяка бележка. API ключът ви остава на този сървър."
+    },
+    "text-extraction": {
+      "claude-title": "Claude (Anthropic)",
+      "claude-description": "Свържете Claude с API ключ от Anthropic Console. Ключът остава на този сървър.",
+      "description": "Чете текста в изображения, рисунки и сканирани PDF файлове при поискване. Всеки път файлът се изпраща на избрания тук доставчик.",
+      "model-help": "Оставете празно, за да се използва {{model}}.",
+      "off": "Изключено",
+      "provider-help": "Claude или някой от доставчиците Gemini по-горе.",
+      "title": "Извличане на текст"
     }
   },
   "tooltip": {

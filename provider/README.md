@@ -6,7 +6,7 @@ swapped.
 
 | Package | Backend |
 | --- | --- |
-| `ai/` | speech-to-text and audio-capable LLM providers (OpenAI, Gemini) |
+| `ai/` | speech-to-text and audio-capable LLM providers (OpenAI, Gemini); `ai/anthropic` is the fork's Claude client for text extraction |
 | `idp/` | identity providers for SSO (OAuth2) |
 | `storage/` | attachment object storage (local disk, S3) |
 

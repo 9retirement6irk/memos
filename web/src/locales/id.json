@@ -1218,6 +1218,15 @@
       "api-key-help": "Temukan di Dawarich di Account › API access.",
       "label": "Dawarich",
       "description": "Riwayat lokasimu sendiri, untuk tempat di jurnal dan gambar rute di memo mana pun. Kunci API-mu tetap di server ini."
+    },
+    "text-extraction": {
+      "claude-title": "Claude (Anthropic)",
+      "claude-description": "Hubungkan Claude dengan kunci API dari Anthropic Console. Kunci tetap di server ini.",
+      "description": "Membaca teks pada gambar, lukisan, dan PDF hasil pindaian saat diminta. Setiap kali, berkas itu dikirim ke penyedia yang dipilih di sini.",
+      "model-help": "Biarkan kosong untuk memakai {{model}}.",
+      "off": "Mati",
+      "provider-help": "Claude atau salah satu penyedia Gemini di atas.",
+      "title": "Ekstraksi teks"
     }
   },
   "tooltip": {

@@ -1263,6 +1263,15 @@
       "api-key-help": "Nájdeš ho v Dawarich v Account › API access.",
       "label": "Dawarich",
       "description": "Tvoja vlastná história polohy, pre miesta v denníku a obrázky trás v akejkoľvek poznámke. Tvoj kľúč API zostáva na tomto serveri."
+    },
+    "text-extraction": {
+      "claude-title": "Claude (Anthropic)",
+      "claude-description": "Pripojte Claude pomocou kľúča API z Anthropic Console. Kľúč zostáva na tomto serveri.",
+      "description": "Na požiadanie prečíta text v obrázkoch, kresbách a naskenovaných PDF. Zakaždým sa daný súbor odošle poskytovateľovi zvolenému tu.",
+      "model-help": "Ponechajte prázdne pre použitie {{model}}.",
+      "off": "Vypnuté",
+      "provider-help": "Claude alebo jeden z poskytovateľov Gemini vyššie.",
+      "title": "Extrakcia textu"
     }
   },
   "tooltip": {

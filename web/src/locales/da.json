@@ -1261,6 +1261,15 @@
       "api-key-help": "Du finder den i Dawarich under Account › API access.",
       "label": "Dawarich",
       "description": "Din egen placeringshistorik, til steder i dagbogen og rutebilleder i alle memoer. Din API-nøgle bliver på denne server."
+    },
+    "text-extraction": {
+      "claude-title": "Claude (Anthropic)",
+      "claude-description": "Forbind Claude med en API-nøgle fra Anthropic Console. Nøglen bliver på denne server.",
+      "description": "Læser teksten i billeder, tegninger og scannede PDF'er, når nogen beder om det. Hver gang sendes filen til den udbyder, der er valgt her.",
+      "model-help": "Lad feltet være tomt for at bruge {{model}}.",
+      "off": "Fra",
+      "provider-help": "Claude eller en af Gemini-udbyderne ovenfor.",
+      "title": "Tekstudtræk"
     }
   },
   "tooltip": {

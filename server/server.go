@@ -26,6 +26,7 @@ import (
 	"github.com/usememos/memos/server/immich"
 	"github.com/usememos/memos/server/journal"
 	"github.com/usememos/memos/server/mcp"
+	"github.com/usememos/memos/server/textextraction"
 	"github.com/usememos/memos/store"
 )
 
@@ -113,6 +114,8 @@ func NewServer(ctx context.Context, profile *profile.Profile, store *store.Store
 	immich.NewService(s.Store, s.Secret).RegisterRoutes(mux)
 	// Each user's Dawarich location history: their saved connection and a read-only proxy.
 	dawarich.NewService(s.Store, s.Secret).RegisterRoutes(mux)
+	// The Claude connection and which AI reads text out of images, drawings and PDFs.
+	textextraction.NewService(s.Store, s.Secret).RegisterRoutes(mux)
 	// Each user's journal settings and Home Assistant streak reminder.
 	journal.NewService(s.Store, s.Secret).RegisterRoutes(mux)
 	// Preserve unclean-path routing without ServeMux's automatic redirects.
