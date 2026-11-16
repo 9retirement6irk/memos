@@ -469,6 +469,13 @@ const PICTURE_FITS = ["Shrink/Stretch to Fit", "Fill without Shrinking/Scaling",
 /** Kid Pix's name for its paper textures, and how many the disc holds. */
 const PAPER_TEXTURE = "Paper Texture";
 const TEXTURE_COUNT = 20;
+/**
+ * On a phone: room kept over the picker for the sheet's own buttons, and under it for its Paper
+ * Texture button; and the width of the textures, five to a row, laid over it.
+ */
+const PICKER_ABOVE = 56;
+const PICKER_BELOW = 30;
+const PICKER_TEXTURES_WIDTH = 212;
 /** Kid Pix's name for the picker's color-taking tool. */
 const EYE_DROPPER = "Eye Dropper";
 /** A part of assets/picker.png as a CSS background. */
@@ -590,6 +597,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
   const [color, setColor] = useState("#ff0080");
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [dropping, setDropping] = useState(false);
+  const [layerSize, setLayerSize] = useState<readonly [number, number]>([0, 0]);
   // The paper's texture: none, or one of the disc's twenty, fetched when it is chosen.
   const [texture, setTexture] = useState(0);
   const [texturesOpen, setTexturesOpen] = useState(false);
@@ -681,6 +689,17 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
     // A text box opened again is typed on from its end.
     input.setSelectionRange(input.value.length, input.value.length);
   }, [typing]);
+
+  // The sheet's own size, for fitting the color picker on a phone.
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root || typeof ResizeObserver === "undefined") return;
+    const measure = () => setLayerSize([root.clientWidth, root.clientHeight]);
+    const observer = new ResizeObserver(measure);
+    observer.observe(root);
+    measure();
+    return () => observer.disconnect();
+  }, []);
 
   // How many options fit the tray's one row depends on how wide the sheet is.
   useEffect(() => {
@@ -2149,6 +2168,98 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
     </button>
   );
 
+  /**
+   * The color picker. On a phone it sits in the middle of the sheet, as large as fits with room
+   * for its Paper Texture button, and may cover part of the tray while it is open.
+   */
+  const pickerZoom = Math.max(
+    0.6,
+    Math.min(1.6, (layerSize[0] - 16) / PICKER_TEXTURES_WIDTH, (layerSize[1] - 16 - PICKER_ABOVE - PICKER_BELOW) / KIDPIX_PICKER.panel[3]),
+  );
+  const picker = (
+    <div
+      role="group"
+      aria-label={labels.color}
+      className="kidpix-picker"
+      style={{
+        ...pickerCut(KIDPIX_PICKER.panel),
+        zoom: compact ? pickerZoom : Math.min(1, (view.height - 150) / KIDPIX_PICKER.panel[3]),
+      }}
+    >
+      <div
+        className="kidpix-picker-grid"
+        style={{ ...pickerCut(KIDPIX_PICKER.grid.cell), left: KIDPIX_PICKER.grid.at[0], top: KIDPIX_PICKER.grid.at[1] }}
+      >
+        {KIDPIX_PICKER_COLORS.map(([x, y, swatchWidth, swatchHeight, swatch]) => (
+          <button
+            key={`${x}/${y}`}
+            type="button"
+            className="mu-focus"
+            aria-label={swatch}
+            aria-pressed={swatch === color}
+            style={{ left: x, top: y, width: swatchWidth, height: swatchHeight }}
+            onClick={() => chooseColor(swatch)}
+          />
+        ))}
+      </div>
+      <button
+        type="button"
+        className="kidpix-sprite-button mu-focus"
+        aria-label={EYE_DROPPER}
+        aria-pressed={dropping}
+        title={EYE_DROPPER}
+        style={{
+          ...pickerCut(KIDPIX_PICKER.dropper.cells[0]),
+          left: KIDPIX_PICKER.dropper.at[0],
+          top: KIDPIX_PICKER.dropper.at[1],
+          ...states(...(KIDPIX_PICKER.dropper.cells.map(([x, y]) => `-${x}px -${y}px`) as [string, string, string])),
+        }}
+        onClick={() => {
+          settle();
+          setDropping(true);
+          setPaletteOpen(false);
+          play("picker1502");
+        }}
+      />
+      <button
+        type="button"
+        className="kidpix-texture-button mu-focus"
+        aria-expanded={texturesOpen}
+        style={{ left: KIDPIX_PICKER.panel[2] + 6 }}
+        onClick={() => {
+          setTexturesOpen((open) => !open);
+          play("easel1029");
+        }}
+      >
+        {PAPER_TEXTURE}
+      </button>
+      {texturesOpen && (
+        <div role="group" aria-label={PAPER_TEXTURE} className="kidpix-textures" style={{ left: KIDPIX_PICKER.panel[2] + 6 }}>
+          {Array.from({ length: TEXTURE_COUNT + 1 }, (_, index) => (
+            <button
+              key={index}
+              type="button"
+              className="mu-focus"
+              aria-label={index === 0 ? labels.noTexture : labels.texture(index)}
+              aria-pressed={texture === index}
+              title={index === 0 ? labels.noTexture : labels.texture(index)}
+              style={
+                index === 0
+                  ? undefined
+                  : {
+                      backgroundImage: `url("${LIBRARY_URL}textures/thumbs.jpg")`,
+                      backgroundPosition: `-${(index - 1) * 36}px 0`,
+                      backgroundSize: `${TEXTURE_COUNT * 36}px 36px`,
+                    }
+              }
+              onClick={() => chooseTexture(index)}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+
   // The tube's cap: the Idea Machine, and the question mark that explains whatever is clicked next.
   const capButtons = (
     <>
@@ -2404,91 +2515,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
         </>
       )}
 
-      {paletteOpen && (
-        <div
-          role="group"
-          aria-label={labels.color}
-          className="kidpix-picker"
-          style={{
-            ...pickerCut(KIDPIX_PICKER.panel),
-            zoom: compact
-              ? Math.max(0.5, Math.min(2, (view.width - 16) / KIDPIX_PICKER.panel[2], (view.height - 240) / KIDPIX_PICKER.panel[3]))
-              : Math.min(1, (view.height - 150) / KIDPIX_PICKER.panel[3]),
-          }}
-        >
-          <div
-            className="kidpix-picker-grid"
-            style={{ ...pickerCut(KIDPIX_PICKER.grid.cell), left: KIDPIX_PICKER.grid.at[0], top: KIDPIX_PICKER.grid.at[1] }}
-          >
-            {KIDPIX_PICKER_COLORS.map(([x, y, swatchWidth, swatchHeight, swatch]) => (
-              <button
-                key={`${x}/${y}`}
-                type="button"
-                className="mu-focus"
-                aria-label={swatch}
-                aria-pressed={swatch === color}
-                style={{ left: x, top: y, width: swatchWidth, height: swatchHeight }}
-                onClick={() => chooseColor(swatch)}
-              />
-            ))}
-          </div>
-          <button
-            type="button"
-            className="kidpix-sprite-button mu-focus"
-            aria-label={EYE_DROPPER}
-            aria-pressed={dropping}
-            title={EYE_DROPPER}
-            style={{
-              ...pickerCut(KIDPIX_PICKER.dropper.cells[0]),
-              left: KIDPIX_PICKER.dropper.at[0],
-              top: KIDPIX_PICKER.dropper.at[1],
-              ...states(...(KIDPIX_PICKER.dropper.cells.map(([x, y]) => `-${x}px -${y}px`) as [string, string, string])),
-            }}
-            onClick={() => {
-              settle();
-              setDropping(true);
-              setPaletteOpen(false);
-              play("picker1502");
-            }}
-          />
-          <button
-            type="button"
-            className="kidpix-texture-button mu-focus"
-            aria-expanded={texturesOpen}
-            style={{ left: KIDPIX_PICKER.panel[2] + 6 }}
-            onClick={() => {
-              setTexturesOpen((open) => !open);
-              play("easel1029");
-            }}
-          >
-            {PAPER_TEXTURE}
-          </button>
-          {texturesOpen && (
-            <div role="group" aria-label={PAPER_TEXTURE} className="kidpix-textures" style={{ left: KIDPIX_PICKER.panel[2] + 6 }}>
-              {Array.from({ length: TEXTURE_COUNT + 1 }, (_, index) => (
-                <button
-                  key={index}
-                  type="button"
-                  className="mu-focus"
-                  aria-label={index === 0 ? labels.noTexture : labels.texture(index)}
-                  aria-pressed={texture === index}
-                  title={index === 0 ? labels.noTexture : labels.texture(index)}
-                  style={
-                    index === 0
-                      ? undefined
-                      : {
-                          backgroundImage: `url("${LIBRARY_URL}textures/thumbs.jpg")`,
-                          backgroundPosition: `-${(index - 1) * 36}px 0`,
-                          backgroundSize: `${TEXTURE_COUNT * 36}px 36px`,
-                        }
-                  }
-                  onClick={() => chooseTexture(index)}
-                />
-              ))}
-            </div>
-          )}
-        </div>
-      )}
+      {paletteOpen && (compact ? <div className="kidpix-picker-place">{picker}</div> : picker)}
       {dropping && (
         <div
           className="kidpix-dropping"
