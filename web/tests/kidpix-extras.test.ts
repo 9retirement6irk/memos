@@ -132,3 +132,13 @@ describe("the letter stamps' spoken names", () => {
     for (let clip = 22026; clip <= 22050; clip++) expect(sprite[`stamp${clip}`]?.[1]).toBeGreaterThan(0);
   });
 });
+
+describe("a text box's words", () => {
+  it("wrap at spaces to the box's width, keep their own line breaks, and leave a long word whole", async () => {
+    const { wrapText } = await import("@/components/DrawingSheet/kidpix/engine");
+    const byLetters = (text: string) => text.length * 10;
+    expect(wrapText("one two three four", 80, byLetters)).toBe("one two\nthree\nfour");
+    expect(wrapText("one\ntwo three", 200, byLetters)).toBe("one\ntwo three");
+    expect(wrapText("extraordinary day", 50, byLetters)).toBe("extraordinary\nday");
+  });
+});

@@ -134,13 +134,13 @@ export const grainPixels = (before: Uint8ClampedArray, after: Uint8ClampedArray,
 };
 
 /** Draws a text box's lines one under the other from the origin, set left, centered or right within the widest. */
-const drawText = (ctx: CanvasRenderingContext2D, value: string, style: TextStyle, color: string) => {
+const drawText = (ctx: CanvasRenderingContext2D, value: string, style: TextStyle, color: string, boxWidth = 0) => {
   const lines = value.replace(/\s+$/, "").split("\n");
   ctx.font = textFont(style);
   ctx.fillStyle = color;
   ctx.textBaseline = "middle";
   const widths = lines.map((line) => ctx.measureText(line).width);
-  const box = Math.max(...widths);
+  const box = Math.max(boxWidth, ...widths);
   const lineHeight = style.size * TEXT_LINE;
   lines.forEach((line, index) => {
     const x = style.align === "left" ? 0 : (box - widths[index]) / (style.align === "center" ? 2 : 1);
@@ -155,18 +155,46 @@ const drawText = (ctx: CanvasRenderingContext2D, value: string, style: TextStyle
  * A text box as a picture the layer can hold loose, like a sticker: its size as it reads in
  * its font, and how to draw it. Null for a box with nothing in it.
  */
-export const textPicture = (value: string, style: TextStyle, color: string): KidPixPicture | null => {
+export const textPicture = (value: string, style: TextStyle, color: string, boxWidth = 0): KidPixPicture | null => {
   if (value.split("\n").every((line) => !line.trim())) return null;
-  const { width, height } = drawText(scratch(1, 1).ctx, value, style, color);
+  const { width, height } = drawText(scratch(1, 1).ctx, value, style, color, boxWidth);
   return {
     width: Math.max(1, Math.ceil(width)),
     height: Math.max(1, Math.ceil(height + style.size * 0.1)),
     draw: (ctx) => {
       ctx.save();
-      drawText(ctx, value, style, color);
+      drawText(ctx, value, style, color, boxWidth);
       ctx.restore();
     },
   };
+};
+
+/**
+ * A text box's words fitted to a width, as Kid Pix re-wraps them when the box is resized: a
+ * line breaks at a space once it would run past `width`; a word wider than the box stands alone.
+ */
+export const wrapText = (value: string, width: number, measure: (text: string) => number) =>
+  value
+    .split("\n")
+    .map((line) => {
+      const rows: string[] = [];
+      let row = "";
+      for (const word of line.split(" ")) {
+        const longer = row ? `${row} ${word}` : word;
+        if (row && measure(longer) > width) {
+          rows.push(row);
+          row = word;
+        } else row = longer;
+      }
+      return [...rows, row].join("\n");
+    })
+    .join("\n");
+
+/** How wide a line of a text box reads in its font, for `wrapText`. */
+export const textMeasure = (style: TextStyle) => {
+  const { ctx } = scratch(1, 1);
+  ctx.font = textFont(style);
+  return (text: string) => ctx.measureText(text).width;
 };
 
 /** One undo step: the paint, and the background behind it. */

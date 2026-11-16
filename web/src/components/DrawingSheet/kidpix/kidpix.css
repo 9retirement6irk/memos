@@ -1319,3 +1319,14 @@
   opacity: 0.5;
   cursor: default;
 }
+
+/* The frame's Trash Can and Duplicate hang under its lower edge. */
+.kidpix-floating > .kidpix-frame-buttons {
+  position: absolute;
+  left: 50%;
+  top: calc(100% + 6px);
+  flex-direction: row;
+  gap: 6px;
+  width: auto;
+  translate: -50% 0;
+}
