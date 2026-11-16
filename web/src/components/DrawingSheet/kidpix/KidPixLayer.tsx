@@ -22,7 +22,7 @@ import CutTool, { type CutToolHandle } from "./CutTool";
 import { KIDPIX_CURSORS } from "./cursors";
 import { CUT_GESTURES, CUT_OPTION_COUNT } from "./cut";
 import { KIDPIX_TOOL_SOUNDS } from "./data";
-import { KidPixEngine, type KidPixImages, type KidPixPicture, type KidPixTile } from "./engine";
+import { KidPixEngine, type KidPixImages, type KidPixPicture, type KidPixTile, textPicture } from "./engine";
 import { KIDPIX_HELP, type KidPixHelpKey } from "./help";
 import IdeaMachine from "./IdeaMachine";
 import "./kidpix.css";
@@ -149,7 +149,43 @@ interface FloatingSticker {
   height: number;
   flipX: boolean;
   flipY: boolean;
+  /** A text box keeps what it says and how, so the Text tool can open it again. */
+  text?: { value: string; style: TextStyle; font: number; color: string };
 }
+
+/** A loose sticker or text box that is not the one in the frame: drawn at its size, turned as it was flipped. */
+const LoosePicture = ({ item, zoom, onPick }: { item: FloatingSticker; zoom: number; onPick?: () => void }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext("2d");
+    if (!canvas || !ctx) return;
+    const scale = zoom * (window.devicePixelRatio || 1);
+    canvas.width = Math.max(1, Math.round(item.width * scale));
+    canvas.height = Math.max(1, Math.round(item.height * scale));
+    ctx.translate(item.flipX ? canvas.width : 0, item.flipY ? canvas.height : 0);
+    ctx.scale(((item.flipX ? -1 : 1) * canvas.width) / item.picture.width, ((item.flipY ? -1 : 1) * canvas.height) / item.picture.height);
+    item.picture.draw(ctx);
+  }, [item, zoom]);
+  return (
+    <button
+      type="button"
+      className="kidpix-loose mu-focus"
+      aria-label={item.name}
+      tabIndex={onPick ? 0 : -1}
+      style={{
+        left: item.x * zoom,
+        top: item.y * zoom,
+        width: item.width * zoom,
+        height: item.height * zoom,
+        pointerEvents: onPick ? undefined : "none",
+      }}
+      onClick={onPick}
+    >
+      <canvas ref={canvasRef} aria-hidden />
+    </button>
+  );
+};
 
 /**
  * The tray's own controls, as Kid Pix draws them. Each is cut from a sheet with three states
@@ -291,8 +327,7 @@ const optionsFor = (
         ),
       ];
     case "stamp": {
-      if (category === 0)
-        return Array.from({ length: 26 }, (_, index) => sprite("letters", index, 26, index, String.fromCharCode(65 + index)));
+      if (category === 0) return LETTER_STAMPS.map((glyph, index) => sprite("letters", index, LETTER_STAMPS.length, index, glyph));
       const { slug, name, count } = KIDPIX_STAMPS[category - 1];
       return Array.from({ length: count }, (_, index) =>
         strip(`${LIBRARY_URL}stamps/${slug}.png`, count, index, `${name} ${index + 1}`, index, true),
@@ -355,8 +390,7 @@ const readPicture = async (file: Blob): Promise<KidPixPicture> => {
   }
 };
 
-/** A picture brought in fills at most this much of the paper, and several step apart by this many px. */
-const PICTURE_FIT = 0.7;
+/** Several pictures brought in at once step apart by this many px. */
 const PICTURE_CASCADE = 28;
 
 /** One of Kid Pix's cursors, as CSS: the browser's own stands in where it cannot show a picture. */
@@ -402,6 +436,21 @@ const SHAPE_HELP: readonly KidPixHelpKey[] = [
   "DrawPolyFilled",
 ];
 const CUT_HELP: readonly KidPixHelpKey[] = ["TrashCan", "Duplicate", "Merge"];
+
+/**
+ * The letter stamps, in the order of assets/letters.png: the alphabet, the digits and the marks
+ * (each with its spoken name), then what the disc's Spanish alphabet adds.
+ */
+const LETTER_STAMPS = [...'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!?,:;&+-=.#@"*/', "CH", "LL", "Ñ", "¿", "¡"];
+const LETTER_NAMED = 51;
+
+/** Kid Pix's names for what the sticker tray and the ABC brush add, and for Add Graphic's four ways to fit a picture. */
+const FLATTEN_STICKERS = "Flatten Stickers";
+const IMPORT_STICKER = "Import Sticker";
+const EDIT_ABC_TEXT = "Edit ABC Text";
+const ABC_BRUSH = 39;
+const ADD_GRAPHIC = "Add Graphic";
+const PICTURE_FITS = ["Shrink/Stretch to Fit", "Fill without Shrinking/Scaling", "Center at Original Size", "Repeat Many Times"] as const;
 
 /** Kid Pix's name for its paper textures, and how many the disc holds. */
 const PAPER_TEXTURE = "Paper Texture";
@@ -484,6 +533,13 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
   const cutRef = useRef<CutToolHandle>(null);
   const [bucketChoice, setBucketChoice] = useState<readonly number[]>([0, 0, 0]);
   const [floating, setFloating] = useState<FloatingSticker | null>(null);
+  // Every sticker and text box stays loose over the paint until it is flattened; the one in the frame is `floating`.
+  const [loose, setLooseState] = useState<readonly FloatingSticker[]>([]);
+  // Pictures brought in, waiting for one of Add Graphic's four fits to be chosen.
+  const [addingPictures, setAddingPictures] = useState<readonly { name: string; picture: KidPixPicture }[] | null>(null);
+  const [abcText, setAbcText] = useState("Kid Pix ");
+  const importRef = useRef<HTMLInputElement>(null);
+  const looseRef = useRef<readonly FloatingSticker[]>([]);
   // The brush zone's kind (0 the paint brush, 1 the Spray Can) and the picture set in the can.
   const [brushKind, setBrushKind] = useState(0);
   const spraying = tool === "wacky" && brushKind === 1;
@@ -603,7 +659,11 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
   }, [muted]);
 
   useEffect(() => {
-    if (typing) inputRef.current?.focus();
+    const input = inputRef.current;
+    if (!typing || !input) return;
+    input.focus();
+    // A text box opened again is typed on from its end.
+    input.setSelectionRange(input.value.length, input.value.length);
   }, [typing]);
 
   // How many options fit the tray's one row depends on how wide the sheet is.
@@ -653,6 +713,10 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
     setFloating(next);
   };
 
+  const setLoose = (next: readonly FloatingSticker[]) => {
+    looseRef.current = next;
+    setLooseState(next);
+  };
   /** Presses the sticker in its frame into the paint, as it lies. */
   const flattenSticker = () => {
     const sticker = floatingRef.current;
@@ -660,46 +724,107 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
     float(null);
     engineRef.current?.sticker(sticker.picture, sticker, sticker.flipX, sticker.flipY);
   };
+  /** Lets the sticker out of its frame; it stays loose where it lies, to be picked up again. */
+  const park = () => {
+    const sticker = floatingRef.current;
+    if (!sticker) return;
+    float(null);
+    setLoose([...looseRef.current, sticker]);
+  };
+  /** Kid Pix's Flatten: every loose sticker and text box becomes paint, the lowest first. */
+  const flattenAll = () => {
+    park();
+    for (const item of looseRef.current) engineRef.current?.sticker(item.picture, item, item.flipX, item.flipY);
+    setLoose([]);
+  };
+  /** Takes a loose one back into the frame; the Text tool opens a text box to be typed in again. */
+  const pickLoose = (item: FloatingSticker) => {
+    commitText();
+    park();
+    setLoose(looseRef.current.filter((other) => other !== item));
+    if (tool === "text" && item.text) {
+      const { value, style, font, color: ink } = item.text;
+      setChosen((previous) => ({ ...previous, text: font }));
+      setTextSize(style.size);
+      setBold(style.bold);
+      setItalic(style.italic);
+      setUnderline(style.underline);
+      setAlign(style.align);
+      chooseColor(ink);
+      setDraft(value);
+      setTyping({ x: item.x, y: item.y });
+      return;
+    }
+    float(item);
+    requestAnimationFrame(() => frameRef.current?.focus());
+  };
 
+  /**
+   * Puts a picture on the paper one of Add Graphic's four ways. It lands loose in the frame, to
+   * be sized and moved like a sticker; the one that was in the frame stays loose where it lay.
+   */
+  const placePicture = (name: string, picture: KidPixPicture, fit: number, offset: number) => {
+    park();
+    const cover = Math.max(width / picture.width, height / picture.height);
+    // Stretched to the paper; grown or shrunk to cover it, keeping its shape; as it is; or laid side by side to fill it.
+    const [pictureWidth, pictureHeight] =
+      fit === 0 || fit === 3
+        ? [width, height]
+        : fit === 1
+          ? [Math.round(picture.width * cover), Math.round(picture.height * cover)]
+          : [picture.width, picture.height];
+    const tiled: KidPixPicture = {
+      width,
+      height,
+      draw: (ctx) => {
+        for (let y = 0; y < height; y += picture.height)
+          for (let x = 0; x < width; x += picture.width) {
+            ctx.save();
+            ctx.translate(x, y);
+            picture.draw(ctx);
+            ctx.restore();
+          }
+      },
+    };
+    float({
+      name,
+      picture: fit === 3 ? tiled : picture,
+      x: Math.round((width - pictureWidth) / 2 + offset),
+      y: Math.round((height - pictureHeight) / 2 + offset),
+      width: pictureWidth,
+      height: pictureHeight,
+      flipX: false,
+      flipY: false,
+    });
+  };
+  const fitPictures = (fit: number) => {
+    const pictures = addingPictures ?? [];
+    setAddingPictures(null);
+    pictures.forEach(({ name, picture }, index) => {
+      placePicture(name, picture, fit, (index - (pictures.length - 1) / 2) * PICTURE_CASCADE);
+    });
+    if (pictures.length > 0) {
+      play("misc31501");
+      requestAnimationFrame(() => frameRef.current?.focus());
+    }
+  };
+
+  /** Reads the pictures brought in, then asks how they should fit, as Kid Pix's Add Graphic does. */
   const addPictures = async (files: readonly File[]) => {
     commitText();
     engineRef.current?.settle();
     let failed = 0;
-    let placed = 0;
+    const read: { name: string; picture: KidPixPicture }[] = [];
     for (const file of files) {
-      let picture: KidPixPicture;
       try {
-        picture = await readPicture(file);
+        const picture = await readPicture(file);
+        if (picture.width && picture.height) read.push({ name: file.name, picture });
+        else failed++;
       } catch {
         failed++;
-        continue;
       }
-      if (!picture.width || !picture.height) {
-        failed++;
-        continue;
-      }
-      // Only one thing is loose at a time: the picture before this one becomes paint where it lies.
-      flattenSticker();
-      const fit = Math.min(1, (width * PICTURE_FIT) / picture.width, (height * PICTURE_FIT) / picture.height);
-      const pictureWidth = Math.max(1, Math.round(picture.width * fit));
-      const pictureHeight = Math.max(1, Math.round(picture.height * fit));
-      const offset = (placed - (files.length - 1) / 2) * PICTURE_CASCADE;
-      float({
-        name: file.name,
-        picture,
-        x: Math.round((width - pictureWidth) / 2 + offset),
-        y: Math.round((height - pictureHeight) / 2 + offset),
-        width: pictureWidth,
-        height: pictureHeight,
-        flipX: false,
-        flipY: false,
-      });
-      placed++;
     }
-    if (placed > 0) {
-      play("misc31501");
-      requestAnimationFrame(() => frameRef.current?.focus());
-    }
+    if (read.length > 0) setAddingPictures(read);
     return failed;
   };
 
@@ -707,12 +832,13 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
     addPictures,
     hasPaint: () =>
       Boolean(floatingRef.current) ||
+      looseRef.current.length > 0 ||
       Boolean(cutRef.current?.holding()) ||
       Boolean(typing && draft.trim()) ||
       Boolean(engineRef.current?.hasPaint()),
     takeTiles: (maxSide) => {
       commitText();
-      flattenSticker();
+      flattenAll();
       cutRef.current?.settle();
       return engineRef.current?.takeTiles(maxSide) ?? Promise.resolve([]);
     },
@@ -742,11 +868,26 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
 
   const textStyle: TextStyle = { family: FONTS[chosen.text].family, size: textSize, bold, italic, underline, align };
 
-  /** Presses the text box into the paint, as it reads. */
+  /** Leaves the text box: it stays loose where it is, like a sticker, until it is flattened. */
   const commitText = () => {
     if (!typing) return;
     if (draft.trim()) lastTextRef.current = draft;
-    engineRef.current?.text(typing, draft, textStyle);
+    const picture = textPicture(draft, textStyle, color);
+    if (picture)
+      setLoose([
+        ...looseRef.current,
+        {
+          name: draft.trim().split("\n")[0].slice(0, 40),
+          picture,
+          x: typing.x,
+          y: typing.y,
+          width: picture.width,
+          height: picture.height,
+          flipX: false,
+          flipY: false,
+          text: { value: draft, style: textStyle, font: chosen.text, color },
+        },
+      ]);
     setTyping(null);
     setDraft("");
   };
@@ -789,7 +930,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
   /** Whatever is half-done is finished or dropped before the tray changes under it. */
   const settle = () => {
     commitText();
-    flattenSticker();
+    park();
     cutRef.current?.settle();
     engineRef.current?.settle();
   };
@@ -957,7 +1098,9 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
       return;
     }
     // A letter says its name, as Kid Pix's alphabet panel does; other trays click.
-    play(tool === "stamp" && category.stamp === 0 ? `letter${String.fromCharCode(65 + index)}` : "easel1029");
+    // The digits and marks say theirs too; the Spanish alphabet's extras have no English name on the disc.
+    const spoken = index < 26 ? `letter${String.fromCharCode(65 + index)}` : index < LETTER_NAMED ? `stamp${22000 + index}` : "easel1029";
+    play(tool === "stamp" && category.stamp === 0 ? spoken : "easel1029");
   };
 
   const chooseCategory = (next: number) => {
@@ -1043,8 +1186,8 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
     const at = pointOf(event);
     const option = chosen[tool];
     if (floatingRef.current) {
-      // A press on the paper lets the sticker go; with the Stickers tool it also puts down the next.
-      flattenSticker();
+      // A press on the paper lets the sticker go, still loose; with the Stickers tool it also puts down the next.
+      park();
       if (tool !== "sticker") return;
     }
     if (tool === "sticker") {
@@ -1179,6 +1322,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
     if (timersRef.current.boom !== undefined) return;
     commitText();
     float(null);
+    setLoose([]);
     cutRef.current?.drop();
     engineRef.current?.settle();
     window.clearInterval(timersRef.current.fuse);
@@ -1608,6 +1752,20 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
     </div>
   );
 
+  // The ABC brush writes these letters, one a step; Kid Pix's Edit ABC Text.
+  const abcControl = tool === "wacky" && !spraying && brushChoice[brushMode] === ABC_BRUSH && (
+    <input
+      className="kidpix-abc mu-focus"
+      aria-label={EDIT_ABC_TEXT}
+      title={EDIT_ABC_TEXT}
+      value={abcText}
+      maxLength={60}
+      onChange={(event) => {
+        setAbcText(event.target.value);
+        if (engineRef.current) engineRef.current.abcText = event.target.value;
+      }}
+    />
+  );
   const optionsHelp: KidPixHelpKey | undefined =
     tool === "wacky"
       ? spraying
@@ -1636,6 +1794,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
     <div ref={optionsRef} role="group" aria-label={current.name} className="kidpix-options">
       {sizesControl}
       {modesControl}
+      {abcControl}
       {cutControl}
       {readControls}
       {shownOptions.map((option) => (
@@ -1771,6 +1930,53 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
       </button>
     </div>
   );
+  // The sticker tray's first panel: the category, Flatten for everything loose, and a picture of one's own as a sticker.
+  const stickerPanel = tool === "sticker" && (
+    <div className="kidpix-stamp-tools">
+      {categorySelect}
+      <button type="button" className="kidpix-edit-stamp mu-focus" disabled={!floating && loose.length === 0} onClick={flattenAll}>
+        {FLATTEN_STICKERS}
+      </button>
+      <button type="button" className="kidpix-edit-stamp mu-focus" onClick={() => importRef.current?.click()}>
+        {IMPORT_STICKER}
+      </button>
+      <input
+        ref={importRef}
+        type="file"
+        accept="image/*"
+        hidden
+        onChange={(event) => {
+          const files = Array.from(event.target.files ?? []);
+          event.target.value = "";
+          // A sticker of one's own comes in as it is, at its own size, ready to be sized and moved.
+          void (async () => {
+            for (const file of files) {
+              try {
+                placePicture(file.name, await readPicture(file), 2, 0);
+              } catch {
+                // A file that is not a picture is left out.
+              }
+            }
+          })();
+        }}
+      />
+    </div>
+  );
+  const fitWindow = addingPictures && (
+    <div className="kidpix-stamp-editor-veil">
+      <div role="dialog" aria-modal="true" aria-label={ADD_GRAPHIC} className="kidpix-help kidpix-fits">
+        <strong>{ADD_GRAPHIC}</strong>
+        {PICTURE_FITS.map((name, index) => (
+          <button key={name} type="button" className="mu-focus" onClick={() => fitPictures(index)}>
+            {name}
+          </button>
+        ))}
+        <button type="button" className="mu-focus" onClick={() => setAddingPictures(null)}>
+          {labels.cancel}
+        </button>
+      </div>
+    </div>
+  );
   const stampEditor = editingStamp && (
     <StampEditor
       pixels={editingStamp.pixels}
@@ -1793,7 +1999,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
       }}
     />
   );
-  const toolPanel = pencilKinds || textControls || stampPanel || categorySelect;
+  const toolPanel = pencilKinds || textControls || stampPanel || stickerPanel || categorySelect;
 
   const colorButton = (
     <button
@@ -1936,7 +2142,19 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
         onPointerCancel={liftPointer}
       />
 
+      {loose.map((item, index) => (
+        <LoosePicture
+          key={index}
+          item={item}
+          zoom={view.zoom}
+          // The hand and the Stickers tool pick any of them up; the Text tool, a text box.
+          onPick={
+            tool === "sticker" || (tool === "move" && grabKind === 0) || (tool === "text" && item.text) ? () => pickLoose(item) : undefined
+          }
+        />
+      ))}
       {stampEditor}
+      {fitWindow}
       {helpWindow}
       {ideaMachine}
       {/* Moving paint moves here, over the paint, until it comes to rest. */}
@@ -1973,7 +2191,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
           aria-label={current.name}
           value={draft}
           wrap="off"
-          spellCheck={false}
+          spellCheck
           style={{
             left: typing.x * view.zoom - TEXT_PAD,
             top: typing.y * view.zoom - TEXT_PAD,
@@ -2035,7 +2253,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
               {pencilKinds || textControls || (
                 <>
                   <strong>{current.name}</strong>
-                  {stampPanel || categorySelect}
+                  {stampPanel || stickerPanel || categorySelect}
                 </>
               )}
             </div>

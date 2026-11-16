@@ -76,6 +76,7 @@ type Stroke =
   | { kind: "eraser"; size: number; round: boolean; last: Point }
   | { kind: "wand"; size: number; last: Point; mixed: CanvasPattern | null }
   | { kind: "move"; start: Point; paint: ImageData }
+  | { kind: "blend"; start: Point; option: number; mask: Uint8Array; box: Box; base: ImageData }
   | { kind: "shape"; shape: number; size: number; nib: number; start: Point; last: Point; base: ImageData }
   | { kind: "bend"; size: number; nib: number; from: Point; to: Point; base: ImageData }
   | { kind: "spray"; sheet: HTMLImageElement; frames: SprayFrames; last: Point; timer: number; dropped?: (frame: SprayFrame) => void };
@@ -130,6 +131,42 @@ export const grainPixels = (before: Uint8ClampedArray, after: Uint8ClampedArray,
     for (let part = 0; part < 3; part++) after[at + part] = (before[at + part] * solidBefore + after[at + part] * solidAfter) / solid;
     after[at + 3] = solid;
   }
+};
+
+/** Draws a text box's lines one under the other from the origin, set left, centered or right within the widest. */
+const drawText = (ctx: CanvasRenderingContext2D, value: string, style: TextStyle, color: string) => {
+  const lines = value.replace(/\s+$/, "").split("\n");
+  ctx.font = textFont(style);
+  ctx.fillStyle = color;
+  ctx.textBaseline = "middle";
+  const widths = lines.map((line) => ctx.measureText(line).width);
+  const box = Math.max(...widths);
+  const lineHeight = style.size * TEXT_LINE;
+  lines.forEach((line, index) => {
+    const x = style.align === "left" ? 0 : (box - widths[index]) / (style.align === "center" ? 2 : 1);
+    const y = lineHeight * (index + 0.5);
+    ctx.fillText(line, x, y);
+    if (style.underline && widths[index] > 0) ctx.fillRect(x, y + style.size * 0.42, widths[index], Math.max(1, style.size / 14));
+  });
+  return { width: box, height: lineHeight * lines.length };
+};
+
+/**
+ * A text box as a picture the layer can hold loose, like a sticker: its size as it reads in
+ * its font, and how to draw it. Null for a box with nothing in it.
+ */
+export const textPicture = (value: string, style: TextStyle, color: string): KidPixPicture | null => {
+  if (value.split("\n").every((line) => !line.trim())) return null;
+  const { width, height } = drawText(scratch(1, 1).ctx, value, style, color);
+  return {
+    width: Math.max(1, Math.ceil(width)),
+    height: Math.max(1, Math.ceil(height + style.size * 0.1)),
+    draw: (ctx) => {
+      ctx.save();
+      drawText(ctx, value, style, color);
+      ctx.restore();
+    },
+  };
 };
 
 /** One undo step: the paint, and the background behind it. */
@@ -220,6 +257,8 @@ export class KidPixEngine {
   color = "#ff0080";
   private drops: { sheet: HTMLImageElement; frame: SprayFrame; at: Point; born: number }[] = [];
   private dropTimer = 0;
+  /** What the ABC brush writes, a letter at a time: Kid Pix's Edit ABC Text. */
+  abcText = ABC_TEXT;
   private texture: Uint8Array | null = null;
   /** The paint as it was before a textured stroke began, until that stroke is finished. */
   private grain: ImageData | null = null;
@@ -357,7 +396,7 @@ export class KidPixEngine {
       color: this.color,
       parts: loaded(this.options.images.brushParts),
       windowArt: loaded(this.options.images.brushWindow),
-      text: ABC_TEXT,
+      text: this.abcText || ABC_TEXT,
       random: Math.random,
     };
   }
@@ -493,6 +532,10 @@ export class KidPixEngine {
       return;
     }
     const ctx = this.ctx;
+    if (stroke.kind === "blend") {
+      this.layBlend(stroke, to);
+      return;
+    }
     if (stroke.kind === "move") {
       ctx.clearRect(0, 0, this.width, this.height);
       ctx.putImageData(stroke.paint, Math.round(to.x - stroke.start.x), Math.round(to.y - stroke.start.y));
@@ -808,7 +851,7 @@ export class KidPixEngine {
     }
     if (stroke.kind === "spray") window.clearInterval(stroke.timer);
     else if (stroke.kind === "move") this.audio.play("w7430");
-    else this.audio.toolUp();
+    else if (stroke.kind !== "blend") this.audio.toolUp();
     this.grainIfDone();
   }
 
@@ -867,7 +910,12 @@ export class KidPixEngine {
       source.ctx.fillRect(box.x, box.y, box.width, box.height);
     } else {
       if (!gradients?.complete || !gradients.naturalWidth) return;
-      source.ctx.drawImage(gradients, option * 48 + 1, 1, 46, 46, box.x, box.y, box.width, box.height);
+      // The blend appears, and for as long as the button is held it follows the pointer.
+      this.remember();
+      this.stroke = { kind: "blend", start: at, option, mask, box, base: this.ctx.getImageData(0, 0, this.width, this.height) };
+      this.layBlend(this.stroke, at);
+      this.audio.toolOnce(TOOL_NUMBER.fillGradient);
+      return;
     }
     this.remember();
     const fillPixels = source.ctx.getImageData(0, 0, this.width, this.height).data;
@@ -979,6 +1027,32 @@ export class KidPixEngine {
     return `#${[red, green, blue].map((part) => part.toString(16).padStart(2, "0")).join("")}`;
   }
 
+  /** Lays a Blend fill in its area, its colors slid by how far the pointer has moved since the press. */
+  private layBlend(stroke: Extract<Stroke, { kind: "blend" }>, to: Point) {
+    const gradients = this.options.images.gradients;
+    if (!gradients) return;
+    const { box, mask, option } = stroke;
+    const source = scratch(this.width, this.height);
+    const wrap = (moved: number, side: number) => ((Math.round(moved) % side) + side) % side;
+    const dx = wrap(to.x - stroke.start.x, box.width);
+    const dy = wrap(to.y - stroke.start.y, box.height);
+    // The blend runs off one edge of its area and back in at the other.
+    for (const x of [dx - box.width, dx])
+      for (const y of [dy - box.height, dy])
+        source.ctx.drawImage(gradients, option * 48 + 1, 1, 46, 46, box.x + x, box.y + y, box.width, box.height);
+    const fillPixels = source.ctx.getImageData(0, 0, this.width, this.height).data;
+    const paint = new ImageData(new Uint8ClampedArray(stroke.base.data), this.width, this.height);
+    for (let i = 0; i < mask.length; i++) {
+      if (!mask[i]) continue;
+      const j = i * 4;
+      paint.data[j] = fillPixels[j];
+      paint.data[j + 1] = fillPixels[j + 1];
+      paint.data[j + 2] = fillPixels[j + 2];
+      paint.data[j + 3] = 255;
+    }
+    this.ctx.putImageData(paint, 0, 0);
+  }
+
   // ---- the scissors ---------------------------------------------------------------------
 
   /**
@@ -1013,27 +1087,12 @@ export class KidPixEngine {
    * top-left corner, set left, centered or right within the widest of them.
    */
   text(at: Point, value: string, style: TextStyle) {
-    const lines = value.replace(/\s+$/, "").split("\n");
-    if (lines.every((line) => !line.trim())) return;
+    if (value.split("\n").every((line) => !line.trim())) return;
     this.remember();
-    const ctx = this.ctx;
-    ctx.save();
-    ctx.font = textFont(style);
-    ctx.fillStyle = this.color;
-    ctx.textBaseline = "middle";
-    const widths = lines.map((line) => ctx.measureText(line).width);
-    const box = Math.max(...widths);
-    const lineHeight = style.size * TEXT_LINE;
-    lines.forEach((line, index) => {
-      const x = at.x + (style.align === "left" ? 0 : (box - widths[index]) / (style.align === "center" ? 2 : 1));
-      const y = at.y + lineHeight * (index + 0.5);
-      ctx.fillText(line, x, y);
-      if (style.underline && widths[index] > 0) {
-        const thick = Math.max(1, style.size / 14);
-        ctx.fillRect(x, y + style.size * 0.42, widths[index], thick);
-      }
-    });
-    ctx.restore();
+    this.ctx.save();
+    this.ctx.translate(at.x, at.y);
+    drawText(this.ctx, value, style, this.color);
+    this.ctx.restore();
   }
 
   /** Dynamite: every bit of paint goes at once. */
