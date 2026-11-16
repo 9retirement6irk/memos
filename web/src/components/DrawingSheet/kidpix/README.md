@@ -244,8 +244,11 @@ also cannot be resized, and text and stickers already pressed in are paint like 
   and back in at the other; how far the original slides it was not measured.
 - The ABC brush writes the tray's Edit ABC Text, a letter a step.
 - The letter stamps are 56: the alphabet, the digits and fifteen marks, each saying its name when
-  chosen (the names past Z are matched to the stamps by their order on the disc, not by ear), then
-  CH, LL, Ñ, ¿ and ¡ from the disc's Spanish alphabet, which have no English name.
+  chosen, then
+  CH, LL, Ñ, ¿ and ¡ from the disc's Spanish alphabet, which have no English name. Past the
+  digits the disc's clips are not in the stamps' order (`letterClip`): a speech recogniser put
+  "and, plus, minus, equal" three clips before their stamps, so the comma, colon and semicolon
+  have no name and the marks from the ampersand on are taken three back. Not heard in the original.
 - A sticker goes down in a frame: drag inside to move it, a round corner to resize it, the square
   corners to flip it left to right or top to bottom; the arrow keys nudge it, Delete removes it.
   As in Kid Pix, every sticker stays loose over the paint until it is flattened: a press on the
@@ -253,15 +256,18 @@ also cannot be resized, and text and stickers already pressed in are paint like 
   any of them up again. Flatten Stickers in the tray, Enter on the one in the frame, or leaving the
   mode makes them paint. Import Sticker brings in a picture of one's own at its own size.
 - A text box left is loose in the same way, and the Text tool opens it again to be typed on, in
-  the font, size, style and color it had; the hand moves it, and in its frame it can be sized,
-  flipped or deleted. Sizing stretches the letters; Kid Pix re-wraps them instead. The box checks
-  spelling as the browser does.
+  the font, size, style and color it had; the hand moves it, and in its frame it can be flipped or
+  made wider or narrower: its words wrap again to the new width and the letters keep their size,
+  as in Kid Pix (`wrapText`). Opened again, it is typed on as first written, unwrapped. The box
+  checks spelling as the browser does; Kid Pix's own spelling window is not built.
+- The frame carries Kid Pix's Trash Can and Duplicate under its lower edge, for a sticker, a
+  picture or a text box: Duplicate leaves a copy loose and steps the frame aside.
 
 - Pictures: the sheet's Insert image button stays in the mode's top bar (from this device, or from
   Immich when it is connected), and a pasted picture counts too. This is Kid Pix's Add Graphic, and
   asks its four fits: stretched to the paper, grown or shrunk to cover it, centered at its own size,
-  or repeated to fill it. The picture then lies loose in the sticker's frame. Import Background is
-  not built: set the picture down and paint over it.
+  or repeated to fill it. The picture then lies loose in the sticker's frame. Import Background, in
+  the Backgrounds tray, asks the same four and puts the picture behind the paint.
   The sheet hands the files to the layer's `addPictures`.
 
 Not built: animations and recorded sounds (a saved drawing is a still PNG and cannot hold

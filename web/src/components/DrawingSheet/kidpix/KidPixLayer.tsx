@@ -22,7 +22,7 @@ import CutTool, { type CutToolHandle } from "./CutTool";
 import { KIDPIX_CURSORS } from "./cursors";
 import { CUT_GESTURES, CUT_OPTION_COUNT } from "./cut";
 import { KIDPIX_TOOL_SOUNDS } from "./data";
-import { KidPixEngine, type KidPixImages, type KidPixPicture, type KidPixTile, textPicture } from "./engine";
+import { KidPixEngine, type KidPixImages, type KidPixPicture, type KidPixTile, textMeasure, textPicture, wrapText } from "./engine";
 import { KIDPIX_HELP, type KidPixHelpKey } from "./help";
 import IdeaMachine from "./IdeaMachine";
 import "./kidpix.css";
@@ -442,11 +442,25 @@ const CUT_HELP: readonly KidPixHelpKey[] = ["TrashCan", "Duplicate", "Merge"];
  * (each with its spoken name), then what the disc's Spanish alphabet adds.
  */
 const LETTER_STAMPS = [...'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!?,:;&+-=.#@"*/', "CH", "LL", "Ñ", "¿", "¡"];
-const LETTER_NAMED = 51;
+/**
+ * The clip that says a letter stamp's name. The disc's clips are not in the stamps' order past the
+ * digits: "and, plus, minus, equal" are three clips before their stamps, so the comma, colon and
+ * semicolon have none and every mark from the ampersand on is three back. Read off the clips with a
+ * speech recogniser, not heard in the original.
+ */
+const letterClip = (index: number) =>
+  index < 26
+    ? `letter${String.fromCharCode(65 + index)}`
+    : index < 38
+      ? `stamp${22000 + index}`
+      : index >= 41 && index < 51
+        ? `stamp${22000 + index - 3}`
+        : "easel1029";
 
 /** Kid Pix's names for what the sticker tray and the ABC brush add, and for Add Graphic's four ways to fit a picture. */
 const FLATTEN_STICKERS = "Flatten Stickers";
 const IMPORT_STICKER = "Import Sticker";
+const IMPORT_BACKGROUND = "Import Background";
 const EDIT_ABC_TEXT = "Edit ABC Text";
 const ABC_BRUSH = 39;
 const ADD_GRAPHIC = "Add Graphic";
@@ -539,6 +553,8 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
   const [addingPictures, setAddingPictures] = useState<readonly { name: string; picture: KidPixPicture }[] | null>(null);
   const [abcText, setAbcText] = useState("Kid Pix ");
   const importRef = useRef<HTMLInputElement>(null);
+  const importBackgroundRef = useRef<HTMLInputElement>(null);
+  const addingBackgroundRef = useRef(false);
   const looseRef = useRef<readonly FloatingSticker[]>([]);
   // The brush zone's kind (0 the paint brush, 1 the Spray Can) and the picture set in the can.
   const [brushKind, setBrushKind] = useState(0);
@@ -731,6 +747,13 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
     float(null);
     setLoose([...looseRef.current, sticker]);
   };
+  /** Duplicate: a copy of what is in the frame is left loose where it lies, and the frame steps aside with the original. */
+  const duplicateFloating = () => {
+    const sticker = floatingRef.current;
+    if (!sticker) return;
+    setLoose([...looseRef.current, { ...sticker }]);
+    float({ ...sticker, x: sticker.x + 16, y: sticker.y + 16 });
+  };
   /** Kid Pix's Flatten: every loose sticker and text box becomes paint, the lowest first. */
   const flattenAll = () => {
     park();
@@ -797,9 +820,40 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
       flipY: false,
     });
   };
+  /** Import Background: the picture, fitted one of the four ways, becomes the background behind the paint. */
+  const fitBackground = (picture: KidPixPicture, fit: number) => {
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, width, height);
+    const cover = Math.max(width / picture.width, height / picture.height);
+    const [scaleX, scaleY] = fit === 0 ? [width / picture.width, height / picture.height] : fit === 1 ? [cover, cover] : [1, 1];
+    const across = fit === 3 ? Math.ceil(width / picture.width) : 1;
+    const down = fit === 3 ? Math.ceil(height / picture.height) : 1;
+    for (let row = 0; row < down; row++)
+      for (let column = 0; column < across; column++) {
+        ctx.save();
+        // Repeated, the pictures start at the corner; any other fit is centered.
+        if (fit === 3) ctx.translate(column * picture.width, row * picture.height);
+        else ctx.translate((width - picture.width * scaleX) / 2, (height - picture.height * scaleY) / 2);
+        ctx.scale(scaleX, scaleY);
+        picture.draw(ctx);
+        ctx.restore();
+      }
+    const image = loadImage(canvas.toDataURL("image/png"));
+    image.addEventListener("load", () => engineRef.current?.setBackground(image), { once: true });
+  };
   const fitPictures = (fit: number) => {
     const pictures = addingPictures ?? [];
     setAddingPictures(null);
+    if (addingBackgroundRef.current) {
+      addingBackgroundRef.current = false;
+      if (pictures[0]) fitBackground(pictures[0].picture, fit);
+      return;
+    }
     pictures.forEach(({ name, picture }, index) => {
       placePicture(name, picture, fit, (index - (pictures.length - 1) / 2) * PICTURE_CASCADE);
     });
@@ -1099,7 +1153,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
     }
     // A letter says its name, as Kid Pix's alphabet panel does; other trays click.
     // The digits and marks say theirs too; the Spanish alphabet's extras have no English name on the disc.
-    const spoken = index < 26 ? `letter${String.fromCharCode(65 + index)}` : index < LETTER_NAMED ? `stamp${22000 + index}` : "easel1029";
+    const spoken = letterClip(index);
     play(tool === "stamp" && category.stamp === 0 ? spoken : "easel1029");
   };
 
@@ -1448,6 +1502,21 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
       float({ ...from, x: from.x + dx, y: from.y + dy });
       return;
     }
+    // A text box is made wider or narrower and its words wrap again, as Kid Pix's does; the letters keep their size.
+    if (from.text) {
+      const { value, style, color: ink } = from.text;
+      const boxWidth = Math.max(style.size, Math.min(width * 2, from.width + (mode === "se" ? dx : -dx)));
+      const picture = textPicture(wrapText(value, boxWidth, textMeasure(style)), style, ink, boxWidth);
+      if (!picture) return;
+      float({
+        ...from,
+        picture,
+        width: picture.width,
+        height: picture.height,
+        x: mode === "nw" ? from.x + from.width - picture.width : from.x,
+      });
+      return;
+    }
     // A Scale corner keeps the sticker's shape and holds the opposite corner still.
     const aspect = from.height / from.width;
     const pull = mode === "se" ? Math.max(dx, dy / aspect) : Math.max(-dx, -dy / aspect);
@@ -1538,6 +1607,26 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
         onPointerDown={(event) => event.stopPropagation()}
         onClick={() => floatingRef.current && float({ ...floatingRef.current, flipY: !floatingRef.current.flipY })}
       />
+      {/* Kid Pix's Trash Can and Duplicate, for whatever is in the frame: a sticker, a picture or a text box. */}
+      <div className="kidpix-frame-buttons kidpix-cut-buttons" onPointerDown={(event) => event.stopPropagation()}>
+        {[() => float(null), duplicateFloating].map((act, row) => {
+          const at = (state: number) => `-${state * CUT_BUTTON_CELL[0]}px -${row * CUT_BUTTON_CELL[1]}px`;
+          return (
+            <button
+              key={CUT_BUTTONS[row]}
+              type="button"
+              className="kidpix-sprite-button mu-focus"
+              aria-label={CUT_BUTTONS[row]}
+              title={CUT_BUTTONS[row]}
+              style={states(at(0), at(1), at(2))}
+              onClick={() => {
+                play("easel1029");
+                act();
+              }}
+            />
+          );
+        })}
+      </div>
     </div>
   );
 
@@ -1962,16 +2051,49 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
       />
     </div>
   );
+  // The background tray's first panel: the category, and a picture of one's own as the background.
+  const backgroundPanel = tool === "background" && (
+    <div className="kidpix-stamp-tools">
+      {categorySelect}
+      <button type="button" className="kidpix-edit-stamp mu-focus" onClick={() => importBackgroundRef.current?.click()}>
+        {IMPORT_BACKGROUND}
+      </button>
+      <input
+        ref={importBackgroundRef}
+        type="file"
+        accept="image/*"
+        hidden
+        onChange={(event) => {
+          const file = event.target.files?.[0];
+          event.target.value = "";
+          if (!file) return;
+          void readPicture(file)
+            .then((picture) => {
+              addingBackgroundRef.current = true;
+              setAddingPictures([{ name: file.name, picture }]);
+            })
+            .catch(() => undefined);
+        }}
+      />
+    </div>
+  );
   const fitWindow = addingPictures && (
     <div className="kidpix-stamp-editor-veil">
       <div role="dialog" aria-modal="true" aria-label={ADD_GRAPHIC} className="kidpix-help kidpix-fits">
-        <strong>{ADD_GRAPHIC}</strong>
+        <strong>{addingBackgroundRef.current ? IMPORT_BACKGROUND : ADD_GRAPHIC}</strong>
         {PICTURE_FITS.map((name, index) => (
           <button key={name} type="button" className="mu-focus" onClick={() => fitPictures(index)}>
             {name}
           </button>
         ))}
-        <button type="button" className="mu-focus" onClick={() => setAddingPictures(null)}>
+        <button
+          type="button"
+          className="mu-focus"
+          onClick={() => {
+            addingBackgroundRef.current = false;
+            setAddingPictures(null);
+          }}
+        >
           {labels.cancel}
         </button>
       </div>
@@ -1999,7 +2121,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
       }}
     />
   );
-  const toolPanel = pencilKinds || textControls || stampPanel || stickerPanel || categorySelect;
+  const toolPanel = pencilKinds || textControls || stampPanel || stickerPanel || backgroundPanel || categorySelect;
 
   const colorButton = (
     <button
@@ -2253,7 +2375,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
               {pencilKinds || textControls || (
                 <>
                   <strong>{current.name}</strong>
-                  {stampPanel || stickerPanel || categorySelect}
+                  {stampPanel || stickerPanel || backgroundPanel || categorySelect}
                 </>
               )}
             </div>
