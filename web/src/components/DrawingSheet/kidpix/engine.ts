@@ -60,6 +60,8 @@ interface EngineOptions {
   paper: string;
   /** A canvas under the paint and over the drawing, for a Kid Pix background. */
   backgroundCanvas: HTMLCanvasElement;
+  /** A canvas over the paint, for moving paint while it moves. Without one, a drop lands at once. */
+  overlayCanvas?: HTMLCanvasElement;
   /** The drawing's own canvases, for the Paint Can and the mixers to see what is under the paint. */
   backdropSources: () => HTMLCanvasElement[];
   images: KidPixImages;
@@ -95,6 +97,13 @@ export type SprayFrames = readonly SprayFrame[];
 
 /** Kid Pix's can drops a picture this often (ms) for as long as it is held, whether or not the pointer moves. */
 const SPRAY_TICK = 108;
+/**
+ * Moving paint's animation: Kid Pix steps it about nine times a second, and every other step is
+ * shipped, so each one shown lasts two. A drop's frame holds seven numbers, then six a step.
+ */
+const DROP_STEP_MS = 220;
+const DROP_HEAD = 7;
+const DROP_STEP = 6;
 
 /**
  * Thins what a stroke laid by the paper's texture: where `after` differs from `before`, the
@@ -209,6 +218,8 @@ const TILE_OVERLAP = 6;
 
 export class KidPixEngine {
   color = "#ff0080";
+  private drops: { sheet: HTMLImageElement; frame: SprayFrame; at: Point; born: number }[] = [];
+  private dropTimer = 0;
   private texture: Uint8Array | null = null;
   /** The paint as it was before a textured stroke began, until that stroke is finished. */
   private grain: ImageData | null = null;
@@ -245,12 +256,13 @@ export class KidPixEngine {
 
   /** True once any paint, or a background, is on the layer. */
   hasPaint() {
-    if (this.background) return true;
+    if (this.background || this.drops.length > 0) return true;
     return paintBounds(this.ctx.getImageData(0, 0, this.width, this.height).data, this.width, this.height) !== null;
   }
 
   /** Saves the layer before a change, as one undo step. */
   private remember() {
+    this.landDrops();
     this.settle();
     this.undoStack.push(this.snapshot());
     if (this.undoStack.length > HISTORY_STEPS) this.undoStack.shift();
@@ -277,6 +289,7 @@ export class KidPixEngine {
   }
 
   undo() {
+    this.landDrops();
     // Taking back a half-made shape is the undo.
     if (this.settle()) return true;
     const previous = this.undoStack.pop();
@@ -423,9 +436,45 @@ export class KidPixEngine {
     const stroke = this.stroke;
     if (stroke?.kind !== "spray") return;
     const frame = stroke.frames[Math.floor(Math.random() * stroke.frames.length)];
-    const [x, y, width, height, dx = -width / 2, dy = -height / 2] = frame;
-    this.ctx.drawImage(stroke.sheet, x, y, width, height, Math.round(stroke.last.x + dx), Math.round(stroke.last.y + dy), width, height);
     stroke.dropped?.(frame);
+    const still = typeof window.matchMedia === "function" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (frame.length <= DROP_HEAD || !this.options.overlayCanvas || still) {
+      this.landDrop(stroke.sheet, frame, stroke.last);
+      return;
+    }
+    // Moving paint plays its animation over the picture, then comes to rest as paint.
+    this.drops.push({ sheet: stroke.sheet, frame, at: stroke.last, born: performance.now() });
+    if (!this.dropTimer) this.dropTimer = window.setInterval(() => this.stepDrops(), DROP_STEP_MS / 4);
+    this.stepDrops();
+  }
+  private landDrop(sheet: HTMLImageElement, frame: SprayFrame, at: Point) {
+    const [x, y, width, height, dx = -width / 2, dy = -height / 2] = frame;
+    this.ctx.drawImage(sheet, x, y, width, height, Math.round(at.x + dx), Math.round(at.y + dy), width, height);
+  }
+  /** Shows each moving drop at the step it has reached; one that has played through lands in the paint. */
+  private stepDrops(finish = false) {
+    const overlay = this.options.overlayCanvas?.getContext("2d");
+    overlay?.clearRect(0, 0, this.width, this.height);
+    const now = performance.now();
+    this.drops = this.drops.filter((drop) => {
+      const step = Math.floor((now - drop.born) / DROP_STEP_MS);
+      const at = DROP_HEAD + step * DROP_STEP;
+      if (finish || at + DROP_STEP > drop.frame.length) {
+        this.landDrop(drop.sheet, drop.frame, drop.at);
+        return false;
+      }
+      const [x, y, width, height, dx, dy] = drop.frame.slice(at, at + DROP_STEP);
+      overlay?.drawImage(drop.sheet, x, y, width, height, Math.round(drop.at.x + dx), Math.round(drop.at.y + dy), width, height);
+      return true;
+    });
+    if (this.drops.length === 0) {
+      window.clearInterval(this.dropTimer);
+      this.dropTimer = 0;
+    }
+  }
+  /** Brings every moving drop to rest at once: before the paint is read, kept for undo, or taken away. */
+  landDrops() {
+    if (this.drops.length > 0) this.stepDrops(true);
   }
 
   /** The Moving Van picks up all the paint; the drawing under it stays put. */
@@ -1039,6 +1088,7 @@ export class KidPixEngine {
    * are left out; an empty layer gives none. A background comes along under the paint.
    */
   async takeTiles(maxSide: number): Promise<KidPixTile[]> {
+    this.landDrops();
     this.settle();
     // With a background the whole layer is the picture; without one, only where there is paint.
     const bounds = this.background

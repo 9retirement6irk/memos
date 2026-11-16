@@ -434,6 +434,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
   const rootRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const backgroundRef = useRef<HTMLCanvasElement>(null);
+  const overlayRef = useRef<HTMLCanvasElement>(null);
   // What the library tools have fetched, by category: stamp strips, sticker pictures, backgrounds.
   const libraryRef = useRef({
     stamps: new Map<number, HTMLImageElement>(),
@@ -563,6 +564,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
     engineRef.current = new KidPixEngine(canvas, {
       paper,
       backgroundCanvas,
+      overlayCanvas: overlayRef.current ?? undefined,
       backdropSources: () => backdropRef.current(),
       images,
       audio,
@@ -1937,6 +1939,15 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
       {stampEditor}
       {helpWindow}
       {ideaMachine}
+      {/* Moving paint moves here, over the paint, until it comes to rest. */}
+      <canvas
+        ref={overlayRef}
+        aria-hidden
+        className="kidpix-backdrop"
+        width={width}
+        height={height}
+        style={{ width: view.width, height: view.height }}
+      />
       {stickerFrame}
       <CutTool
         ref={cutRef}
