@@ -15,6 +15,8 @@ const handle = {
   canUndo: vi.fn(() => false),
   canRedo: vi.fn(() => false),
   zoomToFit: vi.fn(),
+  setScene: vi.fn(),
+  getScene: vi.fn(() => ({ elements: [], files: {}, appState: {} })),
   zoomTo: vi.fn((zoom: number) => {
     viewport = { ...viewport, zoom };
   }),
@@ -103,8 +105,8 @@ describe("DrawingSheet in Kid Pix mode", () => {
     expect(handle.setSelection).toHaveBeenCalledWith([]);
     expect(screen.queryByRole("button", { name: "editor.drawing.tool-pen" })).toBeNull();
     // Cancel and Done stay, clear of the tube; Cancel on a bar of its own.
-    expect(screen.getByRole("button", { name: "common.cancel" }).closest(".left-\\[148px\\]")).not.toBeNull();
-    expect(screen.getByRole("button", { name: "editor.drawing.done" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "common.close" }).closest(".left-\\[148px\\]")).not.toBeNull();
+    expect(screen.getByRole("button", { name: /^common\.(add|save)$/ })).toBeInTheDocument();
   });
 
   it("puts a picture chosen in the mode on the paint layer, not on the drawing under it", async () => {
@@ -165,7 +167,7 @@ describe("DrawingSheet in Kid Pix mode", () => {
     await enterKidPix();
     tiles = [tile(0, 0, 50, 50)];
 
-    fireEvent.click(screen.getByRole("button", { name: "editor.drawing.done" }));
+    fireEvent.click(screen.getByRole("button", { name: /^common\.(add|save)$/ }));
 
     await waitFor(() => expect(onDone).toHaveBeenCalledTimes(1));
     expect(calls).toEqual(["select ", "insert -5,35", "exportPng"]);
@@ -177,7 +179,7 @@ describe("DrawingSheet in Kid Pix mode", () => {
     await enterKidPix();
     tiles = [tile(0, 0, 50, 50)];
 
-    fireEvent.click(screen.getByRole("button", { name: "common.cancel" }));
+    fireEvent.click(screen.getByRole("button", { name: "common.close" }));
 
     expect(onClose).not.toHaveBeenCalled();
     expect(await screen.findByText("editor.drawing.discard-title")).toBeInTheDocument();

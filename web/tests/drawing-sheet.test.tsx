@@ -12,6 +12,9 @@ const handle = {
   canUndo: vi.fn(() => false),
   canRedo: vi.fn(() => false),
   zoomToFit: vi.fn(),
+  zoomTo: vi.fn(),
+  setScene: vi.fn(),
+  getScene: vi.fn(() => ({ elements: [], files: {}, appState: {} })),
   insertImage: vi.fn(async (_blob: Blob, _opts?: unknown) => "image1"),
   getViewport: vi.fn(() => ({ zoom: 1, scrollX: 0, scrollY: 0 })),
   setSelection: vi.fn(),
@@ -56,6 +59,8 @@ const immich = vi.hoisted(() => ({
   connection: undefined as { configured: boolean; url: string } | undefined,
   pickerSize: undefined as string | undefined,
 }));
+const toast = vi.hoisted(() => ({ showErrorToast: vi.fn() }));
+vi.mock("@/lib/toast", () => toast);
 vi.mock("@/hooks/useImmichQueries", () => ({ useImmichConnection: () => ({ data: immich.connection }) }));
 // The picker itself is tested on its own; here it hands back two photos.
 vi.mock("@/components/ImmichPicker/ImmichPickerDialog", () => ({
@@ -88,6 +93,7 @@ beforeAll(() => {
 });
 
 beforeEach(() => {
+  toast.showErrorToast.mockReset();
   calls.length = 0;
   immich.connection = undefined;
   handle.insertImage.mockClear();
@@ -108,12 +114,12 @@ describe("DrawingSheet", () => {
     render(<DrawingSheet mode="new" pages={blank} initialPage="p1" onDone={vi.fn()} onClose={vi.fn()} />);
 
     expect(screen.getByRole("dialog")).toHaveClass("w-[calc(100vw-48px)]", "h-[calc(100dvh-48px)]");
-    for (const name of ["common.cancel", "editor.drawing.tool-pen", "editor.drawing.undo", "editor.drawing.done"]) {
+    for (const name of ["common.close", "editor.drawing.tool-pen", "editor.drawing.undo", "common.add", "editor.drawing.zoom 100%"]) {
       expect(screen.getByRole("button", { name }).closest("[data-theme]")).toHaveAttribute("data-theme", "light");
     }
-    // One bordered surface per group: the tools share a bar, while Cancel and Done stand alone.
+    // One bordered surface per group: the tools share a bar, while Close, Add and the zoom stand alone.
     expect(screen.getByRole("button", { name: "editor.drawing.tool-pen" }).closest(".border-mu-edge")).not.toBeNull();
-    for (const name of ["common.cancel", "editor.drawing.done"]) {
+    for (const name of ["common.close", "common.add", "editor.drawing.zoom 100%"]) {
       expect(screen.getByRole("button", { name }).closest(".border-mu-edge")).toBeNull();
     }
   });
@@ -123,7 +129,7 @@ describe("DrawingSheet", () => {
     const onDone = vi.fn();
     render(<DrawingSheet mode="new" pages={blank} initialPage="p1" onDone={onDone} onClose={vi.fn()} />);
 
-    fireEvent.click(screen.getByRole("button", { name: "editor.drawing.done" }));
+    fireEvent.click(screen.getByRole("button", { name: /^common\.(add|save)$/ }));
 
     await waitFor(() => expect(onDone).toHaveBeenCalledTimes(1));
     expect(calls).toEqual(["commitText", "exportPng"]);
@@ -138,7 +144,7 @@ describe("DrawingSheet", () => {
     const onDone = vi.fn();
     render(<DrawingSheet mode="new" pages={blank} initialPage="p1" onDone={onDone} onClose={vi.fn()} />);
 
-    fireEvent.click(screen.getByRole("button", { name: "editor.drawing.done" }));
+    fireEvent.click(screen.getByRole("button", { name: /^common\.(add|save)$/ }));
 
     await waitFor(() => expect(onDone).toHaveBeenCalledWith({ order: ["p1"], files: [] }));
     expect(calls).not.toContain("exportPng");
@@ -147,14 +153,14 @@ describe("DrawingSheet", () => {
   it("closes at once when nothing changed, and asks first when the drawing has changes", async () => {
     const onClose = vi.fn();
     const { unmount } = render(<DrawingSheet mode="new" pages={blank} initialPage="p1" onDone={vi.fn()} onClose={onClose} />);
-    fireEvent.click(screen.getByRole("button", { name: "common.cancel" }));
+    fireEvent.click(screen.getByRole("button", { name: "common.close" }));
     expect(onClose).toHaveBeenCalledTimes(1);
     unmount();
 
     onClose.mockClear();
     handle.isDirty.mockReturnValue(true);
     render(<DrawingSheet mode="edit" pages={blank} initialPage="p1" onDone={vi.fn()} onClose={onClose} />);
-    fireEvent.click(screen.getByRole("button", { name: "common.cancel" }));
+    fireEvent.click(screen.getByRole("button", { name: "common.close" }));
     expect(await screen.findByText("editor.drawing.discard-edit-title")).toBeInTheDocument();
     expect(onClose).not.toHaveBeenCalled();
 
@@ -162,15 +168,36 @@ describe("DrawingSheet", () => {
     expect(onClose).toHaveBeenCalledTimes(1);
   });
 
-  it("drives the canvas from the toolbar", () => {
+  it("reports no failure when the host closes the sheet as Done goes through", async () => {
+    // A canvas that has unmounted refuses markSaved; the save itself succeeded.
+    handle.isDirty.mockReturnValue(true);
+    handle.exportPng.mockResolvedValue(new Blob(["png"], { type: "image/png" }));
+    handle.markSaved.mockImplementationOnce(() => {
+      throw new Error("Canvas is not mounted (markSaved)");
+    });
+    const onDone = vi.fn();
+    render(<DrawingSheet mode="new" pages={blank} initialPage="p1" onDone={onDone} onClose={vi.fn()} />);
+    fireEvent.click(screen.getByRole("button", { name: "common.add" }));
+
+    await waitFor(() => expect(onDone).toHaveBeenCalled());
+    await waitFor(() => expect(screen.getByRole("button", { name: "common.add" })).toBeEnabled());
+    expect(toast.showErrorToast).not.toHaveBeenCalled();
+  });
+
+  it("drives the canvas from the toolbar", async () => {
     render(<DrawingSheet mode="new" pages={blank} initialPage="p1" onDone={vi.fn()} onClose={vi.fn()} />);
 
     fireEvent.click(screen.getByRole("button", { name: "editor.drawing.tool-rectangle" }));
     expect(handle.setTool).toHaveBeenLastCalledWith("rectangle");
     expect(screen.getByRole("button", { name: "editor.drawing.tool-rectangle" })).toHaveAttribute("aria-pressed", "true");
 
-    fireEvent.click(screen.getByRole("button", { name: "editor.drawing.zoom-to-fit" }));
+    // The zoom percentage opens the zoom actions; none of them changes the drawing.
+    fireEvent.click(screen.getByRole("button", { name: "editor.drawing.zoom 100%" }));
+    fireEvent.click(await screen.findByRole("menuitem", { name: "editor.drawing.zoom-to-fit" }));
     expect(handle.zoomToFit).toHaveBeenCalled();
+    fireEvent.click(screen.getByRole("button", { name: "editor.drawing.zoom 100%" }));
+    fireEvent.click(await screen.findByRole("menuitem", { name: "map.zoom-in" }));
+    expect(handle.zoomTo).toHaveBeenLastCalledWith(1.2);
     expect(screen.getByRole("button", { name: "editor.drawing.undo" })).toBeDisabled();
   });
 
@@ -179,7 +206,7 @@ describe("DrawingSheet", () => {
     expect(screen.getByRole("button", { name: "editor.drawing.undo" })).toBeDisabled();
 
     handle.canUndo.mockReturnValue(true);
-    fireEvent.pointerUp(screen.getByRole("img", { name: "editor.drawing.new-title" }));
+    fireEvent.pointerUp(screen.getByRole("img", { name: "editor.insert-menu.drawing" }));
 
     expect(screen.getByRole("button", { name: "editor.drawing.undo" })).toBeEnabled();
   });
@@ -222,7 +249,7 @@ describe("DrawingSheet", () => {
 
     // The drawing surface holds the page's canvas.
     const surface = () => screen.getByRole("img").parentElement?.parentElement;
-    const done = screen.getByRole("button", { name: "editor.drawing.done" });
+    const done = screen.getByRole("button", { name: /^common\.(add|save)$/ });
     await waitFor(() => expect(handle.insertImage).toHaveBeenCalled());
     expect(done).toBeDisabled();
     expect(surface()).toHaveAttribute("aria-busy", "true");
@@ -238,9 +265,9 @@ describe("DrawingSheet", () => {
     const onDone = vi.fn().mockRejectedValue(new Error("offline"));
     render(<DrawingSheet mode="new" pages={blank} initialPage="p1" onDone={onDone} onClose={vi.fn()} />);
 
-    fireEvent.click(await screen.findByRole("button", { name: "editor.drawing.done" }));
+    fireEvent.click(await screen.findByRole("button", { name: /^common\.(add|save)$/ }));
     await waitFor(() => expect(onDone).toHaveBeenCalled());
-    await waitFor(() => expect(screen.getByRole("button", { name: "editor.drawing.done" })).toBeEnabled());
+    await waitFor(() => expect(screen.getByRole("button", { name: /^common\.(add|save)$/ })).toBeEnabled());
     expect(handle.markSaved).not.toHaveBeenCalled();
   });
 

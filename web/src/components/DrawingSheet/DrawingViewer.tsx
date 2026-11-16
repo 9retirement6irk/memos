@@ -1,9 +1,10 @@
 import type { CanvasHandle } from "@usememos/canvas";
 import { Canvas } from "@usememos/canvas/react";
 import { Button, Dialog, Spinner, Tooltip } from "@usememos/ui";
-import { PencilLineIcon, ScanIcon, XIcon } from "lucide-react";
+import { PaletteIcon, XIcon } from "lucide-react";
 import { type ReactElement, useEffect, useEffectEvent, useRef, useState } from "react";
 import { uploadService } from "@/components/MemoEditor/edit/services/uploadService";
+import { memoServiceClient } from "@/connect";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import useMediaQuery from "@/hooks/useMediaQuery";
 import { useUpdateMemo } from "@/hooks/useMemoQueries";
@@ -13,13 +14,14 @@ import type { Attachment } from "@/types/proto/api/attachment_service_pb";
 import type { Memo } from "@/types/proto/api/memo_service_pb";
 import { getAttachmentUrl } from "@/utils/attachment";
 import { useTranslate } from "@/utils/i18n";
-import { canManageAttachment } from "@/utils/user";
-import { DrawingDialogPopup, FloatingBar, FloatingRow } from "./DrawingFrame";
+import { canManageAttachment, canManageMemo } from "@/utils/user";
+import { DrawingDialogPopup, FloatingAction, FloatingBar, FloatingRow } from "./DrawingFrame";
 import DrawingSheet from "./DrawingSheet";
-import { type DrawingContent, fetchDrawingFile, isDrawingFilename, readDrawing } from "./drawing";
+import { DrawingActionError, type DrawingContent, fetchDrawingFile, isDrawingFilename, readDrawing, sceneContent } from "./drawing";
 import { PageTabs } from "./PageTabs";
 import { type DrawingPage, type DrawingPagesResult, isNewPageKey, placeNewPages } from "./pages";
 import { useCanvasTheme } from "./useCanvasTheme";
+import { useCanvasZoom, ZoomMenu } from "./ZoomMenu";
 
 export interface DrawingViewerProps {
   attachment: Attachment;
@@ -27,6 +29,11 @@ export interface DrawingViewerProps {
   memo: Pick<Memo, "name" | "attachments">;
   /** Whether the viewer may change the memo: its author or an admin. */
   canEdit: boolean;
+  /**
+   * Opened on an ordinary image to mark it up: the sheet opens at once with the image as a
+   * locked background, and Save copy adds the markup to the memo right after the image.
+   */
+  annotate?: boolean;
   onClose: () => void;
   /** The file carries no readable scene: show it as the plain image it is. */
   onNoScene: () => void;
@@ -46,8 +53,11 @@ type PageView = { status: "loading" } | { status: "failed" } | { status: "ready"
  * Done replaces each changed drawing's file under the same name, adds each new page right
  * after the page before it, stamps the memo's update time and returns to viewing. An edit of
  * someone else's drawing is added to the memo beside it.
+ *
+ * With `annotate`, the viewer is the way into marking up an ordinary image: there is nothing
+ * to view first, so it opens the sheet on that image alone and closes with it.
  */
-const DrawingViewer = ({ attachment: initialAttachment, memo, canEdit, onClose, onNoScene }: DrawingViewerProps) => {
+const DrawingViewer = ({ attachment: initialAttachment, memo, canEdit, annotate = false, onClose, onNoScene }: DrawingViewerProps) => {
   const t = useTranslate();
   const currentUser = useCurrentUser();
   const isWide = useMediaQuery("sm");
@@ -56,6 +66,8 @@ const DrawingViewer = ({ attachment: initialAttachment, memo, canEdit, onClose, 
   const { theme, fontFamily } = useCanvasTheme();
   const { mutateAsync: updateMemo } = useUpdateMemo(memo.name);
   const canvasRef = useRef<CanvasHandle>(null);
+  const { zoom, sync: syncZoom, schedule: scheduleZoom } = useCanvasZoom(() => canvasRef.current);
+  const [zoomMenuOpen, setZoomMenuOpen] = useState(false);
   const [activeName, setActiveName] = useState(initialAttachment.name);
   const [views, setViews] = useState<Record<string, PageView | undefined>>({});
   const [isEditing, setIsEditing] = useState(false);
@@ -65,6 +77,14 @@ const DrawingViewer = ({ attachment: initialAttachment, memo, canEdit, onClose, 
   const loads = useRef(new Map<string, AbortController>());
   // Pages whose file holds no scene: their edit is drawn over the picture, so it joins the memo beside it.
   const pictures = useRef(new Set<string>());
+  // Each drawing as it was read, to tell at Save whether its file changed elsewhere meanwhile;
+  // one that did is never overwritten: its edit is saved as a copy beside it.
+  const baselines = useRef(new Map<string, string>());
+  const copies = useRef(new Set<string>());
+  const [savesCopy, setSavesCopy] = useState(false);
+  const remember = (key: string, content: DrawingContent) => {
+    if (content.scene) baselines.current.set(key, sceneContent(content.scene));
+  };
   // The pages report through the host's committed callbacks.
   const showNoScene = useEffectEvent(onNoScene);
   const failToOpen = useEffectEvent(() => {
@@ -74,7 +94,12 @@ const DrawingViewer = ({ attachment: initialAttachment, memo, canEdit, onClose, 
 
   const listed = memoDrawings(memo.attachments);
   // The drawing opened stays a page even before the memo lists it.
-  const pages = listed.some((item) => item.name === initialAttachment.name) ? listed : [initialAttachment, ...listed];
+  // An image being marked up is the sheet's only page: the memo's drawings are not its pages.
+  const pages = annotate
+    ? [initialAttachment]
+    : listed.some((item) => item.name === initialAttachment.name)
+      ? listed
+      : [initialAttachment, ...listed];
   const active = pages.find((item) => item.name === activeName) ?? initialAttachment;
   const activeView = views[active.name];
 
@@ -88,9 +113,12 @@ const DrawingViewer = ({ attachment: initialAttachment, memo, canEdit, onClose, 
       .then((content) => {
         if (controller.signal.aborted) return;
         // The drawing opened from the memo without a scene is the plain image it is.
-        if (!content.scene && attachment.name === initialAttachment.name) showNoScene();
+        if (!content.scene && attachment.name === initialAttachment.name && !annotate) showNoScene();
         else {
+          // An image to mark up goes straight to the sheet, as a picture to draw on.
+          if (!content.scene && annotate) setIsEditing(true);
           if (!content.scene) pictures.current.add(attachment.name);
+          remember(attachment.name, content);
           setViews((current) => ({ ...current, [attachment.name]: { status: "ready", content, version: 0 } }));
         }
       })
@@ -121,8 +149,18 @@ const DrawingViewer = ({ attachment: initialAttachment, memo, canEdit, onClose, 
 
   /** Uploads one finished page: over its own file, or as a new file (a new page, or a copy of someone else's drawing). */
   const uploadPage = async (key: string, file: File, over?: Attachment): Promise<{ saved: Attachment; isNew: boolean }> => {
-    if (over && canManageAttachment(over, currentUser)) {
-      return { saved: await uploadService.uploadFile({ file, previewUrl: "", replaces: over.name }), isNew: false };
+    if (over && canManageAttachment(over, currentUser) && !copies.current.has(key)) {
+      // Never over a drawing that changed since it was read here: another tab or person saved it.
+      const original = await readDrawing(await fetchDrawingFile(over));
+      if (!original.scene || sceneContent(original.scene) !== baselines.current.get(key)) {
+        copies.current.add(key);
+        setSavesCopy(true);
+        throw new DrawingActionError("editor.drawing.changed-save-copy");
+      }
+      const saved = await uploadService.uploadFile({ file, previewUrl: "", replaces: over.name });
+      // The file now holds this edit, so a retry after a later failure compares against it.
+      remember(key, await readDrawing(file));
+      return { saved, isNew: false };
     }
     const saved = await uploadService.uploadFile({ file, previewUrl: "", replaces: unlinkedUploads.current.get(key)?.name });
     unlinkedUploads.current.set(key, saved);
@@ -133,7 +171,13 @@ const DrawingViewer = ({ attachment: initialAttachment, memo, canEdit, onClose, 
   // uploaded stays, since only they or an admin may replace or remove it, and its edit joins
   // the memo beside it; a new page joins the memo after the page before it.
   const saveEdit = async ({ order, files }: DrawingPagesResult) => {
-    const byName = new Map(memo.attachments.map((item) => [item.name, item]));
+    // The memo as it is now, not as it was opened: another tab may have changed its attachments.
+    const current = await memoServiceClient.getMemo({ name: memo.name }).catch(() => {
+      throw new DrawingActionError("editor.drawing.unavailable");
+    });
+    const sourceGone = annotate && !current.attachments.some((item) => item.name === initialAttachment.name);
+    if (!canEdit || !canManageMemo(current, currentUser) || sourceGone) throw new DrawingActionError("editor.drawing.unavailable");
+    const byName = new Map(current.attachments.map((item) => [item.name, item]));
     const saved = new Map<string, Attachment>();
     // Each new file, by the page it belongs after (itself, for a new page).
     const added = new Map<string, Attachment>();
@@ -153,17 +197,26 @@ const DrawingViewer = ({ attachment: initialAttachment, memo, canEdit, onClose, 
         return extra ? [...own, extra.name] : own;
       });
       const addedNames = new Set(Array.from(added.values(), (item) => item.name));
-      const all = new Map([...memo.attachments, ...added.values(), ...saved.values()].map((item) => [item.name, item]));
+      const all = new Map([...current.attachments, ...added.values(), ...saved.values()].map((item) => [item.name, item]));
       const names = placeNewPages(
-        memo.attachments.map((item) => item.name),
+        current.attachments.map((item) => item.name),
         pageNames,
         (name) => addedNames.has(name),
       );
       // Whole attachments, not names: the optimistic update shows them until the memo reloads.
       const attachments = names.flatMap((name) => all.get(name) ?? []);
-      await updateMemo({ update: { name: memo.name, attachments }, updateMask: ["attachments"] });
+      // The files are uploaded by now; a failure here says so, and a retry reuses them.
+      try {
+        await updateMemo({ update: { name: memo.name, attachments }, updateMask: ["attachments"] });
+      } catch {
+        throw new DrawingActionError("editor.drawing.bind-failed");
+      }
     } else if (files.length > 0) {
-      await updateMemo({ update: { name: memo.name }, updateMask: ["update_time"] });
+      try {
+        await updateMemo({ update: { name: memo.name }, updateMask: ["update_time"] });
+      } catch {
+        throw new DrawingActionError("editor.drawing.saved-needs-update");
+      }
     }
     unlinkedUploads.current.clear();
     // The changed pages show their new drawings; added pages are read when they are first shown.
@@ -180,8 +233,15 @@ const DrawingViewer = ({ attachment: initialAttachment, memo, canEdit, onClose, 
       }
       return next;
     });
-    setIsEditing(false);
+    if (annotate) onClose();
+    else setIsEditing(false);
   };
+
+  // A page's canvas mounts with its own view; the percentage follows it.
+  const shownScene = activeView?.status === "ready" ? `${active.name}:${activeView.version}` : undefined;
+  useEffect(() => {
+    if (shownScene && !isEditing) scheduleZoom();
+  }, [shownScene, isEditing]);
 
   if (isEditing && activeView?.status === "ready") {
     const sheetPages: DrawingPage[] = pages.map((item) => {
@@ -193,11 +253,21 @@ const DrawingViewer = ({ attachment: initialAttachment, memo, canEdit, onClose, 
             load: async (signal) => {
               const content = await readDrawing(await fetchDrawingFile(item, signal));
               if (!content.scene) pictures.current.add(item.name);
+              remember(item.name, content);
               return content;
             },
           };
     });
-    return <DrawingSheet mode="edit" pages={sheetPages} initialPage={active.name} onDone={saveEdit} onClose={() => setIsEditing(false)} />;
+    return (
+      <DrawingSheet
+        mode={annotate ? "new" : "edit"}
+        pages={sheetPages}
+        initialPage={active.name}
+        commitLabel={annotate || savesCopy ? "editor.drawing.save-copy" : undefined}
+        onDone={saveEdit}
+        onClose={annotate ? onClose : () => setIsEditing(false)}
+      />
+    );
   }
 
   const title = t("editor.insert-menu.drawing");
@@ -214,16 +284,27 @@ const DrawingViewer = ({ attachment: initialAttachment, memo, canEdit, onClose, 
           {activeView?.status === "ready" && scene ? (
             // No autofocus: a viewer should not draw a focus ring around the page as it opens.
             // A new key per page and per saved edit: the read-only canvas opens its scene once.
-            <Canvas
-              key={`${active.name}:${activeView.version}`}
-              ref={canvasRef}
+            <div
               className="absolute inset-0"
-              readOnly
-              ariaLabel={pages.length > 1 ? `${title}, ${t("editor.drawing.page", { number: pages.indexOf(active) + 1 })}` : title}
-              initialScene={scene}
-              theme={theme}
-              fontFamily={fontFamily}
-            />
+              // While the zoom menu is open the paper holds still, so a click on it closes the menu without panning.
+              inert={zoomMenuOpen}
+              onPointerUp={syncZoom}
+              onPointerCancel={syncZoom}
+              onPointerMove={scheduleZoom}
+              onWheel={scheduleZoom}
+              onKeyUp={syncZoom}
+            >
+              <Canvas
+                key={`${active.name}:${activeView.version}`}
+                ref={canvasRef}
+                className="absolute inset-0"
+                readOnly
+                ariaLabel={pages.length > 1 ? `${title}, ${t("editor.drawing.page", { number: pages.indexOf(active) + 1 })}` : title}
+                initialScene={scene}
+                theme={theme}
+                fontFamily={fontFamily}
+              />
+            </div>
           ) : activeView?.status === "ready" ? (
             // A page whose file holds no scene is the plain image it is.
             <img
@@ -247,20 +328,28 @@ const DrawingViewer = ({ attachment: initialAttachment, memo, canEdit, onClose, 
               <IconAction size={size} label={t("common.close")} icon={<XIcon />} onClick={onClose} />
               <span className={cn("truncate text-mu-text", isWide ? "mu-label-sm" : "mu-label")}>{title}</span>
             </FloatingBar>
-            <FloatingBar className={isWide ? undefined : "gap-3"}>
-              <IconAction
-                size={size}
-                label={t("editor.drawing.zoom-to-fit")}
-                icon={<ScanIcon />}
-                onClick={() => canvasRef.current?.zoomToFit()}
-              />
-              {canEdit && (
-                // Flat inside the bar: the bar is the one bordered surface.
-                <Button variant="ghost" size={size} icon={<PencilLineIcon />} disabled={!scene} onClick={() => setIsEditing(true)}>
+            {canEdit && (
+              <FloatingBar>
+                {/* Flat inside the bar: the bar is the one bordered surface. */}
+                <Button variant="ghost" size={size} icon={<PaletteIcon />} disabled={!scene} onClick={() => setIsEditing(true)}>
                   {t("common.edit")}
                 </Button>
-              )}
-            </FloatingBar>
+              </FloatingBar>
+            )}
+          </FloatingRow>
+          {/* The zoom keeps the place it has in the sheet: bottom left, clear of where a phone's tools go. */}
+          <FloatingRow edge="bottom" className="justify-start max-sm:bottom-[calc(72px+env(safe-area-inset-bottom))]">
+            <FloatingAction>
+              <ZoomMenu
+                zoom={zoom}
+                getCanvas={() => canvasRef.current}
+                onZoomed={syncZoom}
+                size={size}
+                disabled={!scene}
+                open={zoomMenuOpen}
+                onOpenChange={setZoomMenuOpen}
+              />
+            </FloatingAction>
           </FloatingRow>
           {pages.length > 1 && (
             <FloatingRow edge="bottom">

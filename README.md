@@ -85,6 +85,9 @@ Connect [Dawarich](https://dawarich.app) in **Settings → Dawarich**, again per
 
 - **Pages:** a memo's drawings work as pages of one drawing, with tabs in the drawing sheet and the
   viewer. **Add page** puts a new page after the current one.
+- **Markup on images:** upstream's Markup, on this sheet. **Markup** on an image in the composer or
+  in a saved memo's image preview draws over it in red; the original stays and the markup is added
+  right after it.
 - **Notebook paper:** draw on college-ruled, wide-ruled, Gregg-ruled, graph or dot-grid paper.
 - **Kid Pix mode:** a second set of tools in the style of Kid Pix Deluxe 4, with its art, fonts and
   sounds:

@@ -287,7 +287,7 @@
       "image-upload-failed": "Bəzi şəkillər yüklənə bilmədi. Yenidən cəhd edin və ya yüklənmiş faylları qoşma kimi saxlayın.",
       "image-upload-stopped": "Şəkil yükləməsi dayandırıldı {{completed}}/{{total}}",
       "insert-image": "Şəkil daxil et",
-      "drawing": "Rəsm",
+      "drawing": "İşarələmə",
       "keep-as-attachments": "Qoşma kimi saxla",
       "link-memo": "Qeydə keçid əlavə et",
       "retry-image-upload": "Yenidən cəhd et",
@@ -295,8 +295,7 @@
       "uploading-images": "Şəkillər yüklənir {{completed}}/{{total}}"
     },
     "drawing": {
-      "new-title": "Yeni rəsm",
-      "edit": "Rəsmi redaktə et",
+      "edit": "İşarələməni redaktə et",
       "tools": "Alətlər",
       "tool-select": "Seç",
       "tool-pen": "Qələm",
@@ -322,7 +321,6 @@
       "undo": "Geri al",
       "redo": "Təkrarla",
       "zoom-to-fit": "Pəncərəyə sığdır",
-      "done": "Hazır",
       "discard-title": "Bu rəsm silinsin?",
       "discard-description": "Hələ qeydə əlavə edilməyib.",
       "discard-edit-title": "Dəyişikliklər silinsin?",
@@ -356,7 +354,14 @@
       "paper-wide-ruled": "Enli xətli",
       "paper-gregg-ruled": "Stenoqrafiya",
       "paper-graph": "Dama",
-      "paper-dot-grid": "Nöqtəli"
+      "paper-dot-grid": "Nöqtəli",
+      "zoom": "Miqyas",
+      "annotate": "İşarələmə",
+      "save-copy": "Surəti saxla",
+      "unavailable": "Təyinat əlçatan deyil.",
+      "saved-needs-update": "Rəsm saxlanıldı. Qeydi yeniləməyə yenidən cəhd edin.",
+      "changed-save-copy": "Orijinal dəyişib. Surətini saxlayın.",
+      "bind-failed": "Rəsm yükləndi. Qeydə əlavə etməyə yenidən cəhd edin."
     },
     "new-memo": "Yeni qeyd",
     "no-changes-detected": "Dəyişiklik aşkarlanmadı",
@@ -1340,7 +1345,7 @@
       "search-emoji": "Emoji axtar və ya yapışdır…",
       "no-results": "Uyğun nəticə yoxdur",
       "emoji-help": "Emoji seçin və ya öz emojinizi yapışdırın.",
-      "reset": "Standarta qaytar",
+      "reset": "Standart ikonadan istifadə et",
       "use-emoji": "{{emoji}} istifadə et"
     },
     "unavailable": "Bu sahə mövcud deyil və ya ona giriş icazəniz yoxdur.",

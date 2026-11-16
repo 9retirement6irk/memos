@@ -1,5 +1,5 @@
 import { Button, Tooltip } from "@usememos/ui";
-import { CheckIcon } from "lucide-react";
+import { CheckIcon, CircleAlertIcon } from "lucide-react";
 import { type FC, useId } from "react";
 import { type Location, Visibility } from "@/types/proto/api/memo_service_pb";
 import { useTranslate } from "@/utils/i18n";
@@ -37,6 +37,7 @@ export const EditorToolbar: FC<EditorToolbarProps> = ({
   // A journal entry with a mood or activities picked is worth saving without text.
   const valid = ownValid || (Boolean(hasExtraContent) && blockedReason === "editor.validation.content-required");
   const isSaving = useEditorSelector((s) => s.ui.isLoading.saving);
+  const drawingSaveError = useEditorSelector((s) => s.drawingSaveError);
   const justSaved = useEditorSelector((s) => s.ui.justSaved);
   const isUploading = useEditorSelector((s) => s.ui.isLoading.uploading);
   const location = useEditorSelector((s) => s.metadata.location);
@@ -92,6 +93,7 @@ export const EditorToolbar: FC<EditorToolbarProps> = ({
         render={
           <Button
             variant="primary"
+            iconEnd={drawingSaveError ? <CircleAlertIcon /> : undefined}
             onClick={onSave}
             loading={isSaving}
             loadingLabel={commitLabel}
@@ -103,7 +105,7 @@ export const EditorToolbar: FC<EditorToolbarProps> = ({
       </Tooltip.Trigger>
       {/* The save shortcut shows in the tooltip, so the primary action reads as a plain verb. */}
       <Tooltip.Popup side="top" shortcut={`${primaryModifierGlyph()} Enter`}>
-        {commitLabel}
+        {drawingSaveError ? t(drawingSaveError) : commitLabel}
       </Tooltip.Popup>
     </Tooltip.Root>
   );
@@ -137,12 +139,6 @@ export const EditorToolbar: FC<EditorToolbarProps> = ({
       </div>
 
       <div className="flex shrink-0 flex-row items-center justify-end gap-1">
-        {/* Markdown mode is said beside the commit button, where it never covers the text. */}
-        {sourceMode.isSourceMode && (
-          <span className="px-1.5 mu-label-xs font-mono text-mu-text-secondary select-none" aria-label={t("editor.markdown-mode")}>
-            Markdown
-          </span>
-        )}
         {onCancel && (
           <Button variant="ghost" onClick={onCancel} disabled={committing}>
             {t("common.cancel")}
