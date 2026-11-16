@@ -68,7 +68,8 @@ type ConnectionResponse struct {
 	URL        string `json:"url"`
 }
 
-// ConnectionRequest updates the connection. An empty APIKey keeps the saved one.
+// ConnectionRequest updates the connection. An empty APIKey keeps the saved
+// one, as long as URL is still the server it was saved for.
 type ConnectionRequest struct {
 	URL    string `json:"url"`
 	APIKey string `json:"apiKey"`
@@ -141,6 +142,10 @@ func (s *Service) putConnection(w http.ResponseWriter, r *http.Request) error {
 		}
 		if saved == nil {
 			return &httphandler.Error{Code: http.StatusBadRequest, Message: "enter your Dawarich API key"}
+		}
+		// The saved key is never sent to a server other than the one it was saved for.
+		if !safehttp.SameServer(saved.URL, baseURL) {
+			return &httphandler.Error{Code: http.StatusBadRequest, Message: "enter the API key again to use a different server address"}
 		}
 		apiKey = saved.APIKey
 	}

@@ -184,6 +184,32 @@ func NormalizeBaseURL(rawURL, exampleHost string, trimSuffixes ...string) (strin
 	return parsed.String(), nil
 }
 
+// SameServer reports whether two server addresses name the same scheme, host
+// and port, whatever their paths. A saved key may be reused only for the
+// server it was saved for: sent anywhere else, it would be handed to whoever
+// runs that address. Addresses that don't parse are never the same.
+func SameServer(a, b string) bool {
+	first, errFirst := url.Parse(strings.TrimSpace(a))
+	second, errSecond := url.Parse(strings.TrimSpace(b))
+	if errFirst != nil || errSecond != nil || first.Hostname() == "" || second.Hostname() == "" {
+		return false
+	}
+	return strings.EqualFold(first.Scheme, second.Scheme) &&
+		strings.EqualFold(first.Hostname(), second.Hostname()) &&
+		effectivePort(first) == effectivePort(second)
+}
+
+// effectivePort is the port a URL dials: its own, or its scheme's default.
+func effectivePort(address *url.URL) string {
+	if port := address.Port(); port != "" {
+		return port
+	}
+	if strings.EqualFold(address.Scheme, "https") {
+		return "443"
+	}
+	return "80"
+}
+
 // MovedBase returns base with the scheme and host a followed redirect led to,
 // so later calls skip the redirect; POSTs especially, which a 301 or 302
 // would turn into GETs. It returns base unchanged when nothing moved.

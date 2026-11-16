@@ -8,6 +8,7 @@ import (
 	"net/http/httptest"
 	"strings"
 	"sync"
+	"sync/atomic"
 	"testing"
 	"time"
 
@@ -239,4 +240,44 @@ func TestStreakEnding(t *testing.T) {
 	days["2026-11-12"] = true
 	require.Equal(t, 3, streakEnding(days, now))
 	require.Equal(t, 0, streakEnding(map[string]bool{"2026-11-01": true}, now))
+}
+
+// otherServer is a server the saved key was never meant for; it counts the
+// requests it gets.
+func otherServer(t *testing.T) (*httptest.Server, *atomic.Int32) {
+	t.Helper()
+	requests := &atomic.Int32{}
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		requests.Add(1)
+		w.WriteHeader(http.StatusUnauthorized)
+	}))
+	t.Cleanup(server.Close)
+	return server, requests
+}
+
+func TestSavedTokenStaysWithItsHomeAssistant(t *testing.T) {
+	t.Parallel()
+	ctx := context.Background()
+	homeAssistant := newFakeHomeAssistant(t)
+	defer homeAssistant.Close()
+	env := newTestEnv(ctx, t, homeAssistant)
+	other, requests := otherServer(t)
+
+	response := env.request(http.MethodPut, "/api/journal/reminder", reminderBody(homeAssistant.URL, "good-token"), true)
+	require.Equal(t, http.StatusOK, response.Code, response.Body.String())
+
+	// Neither saving nor listing notifiers sends the saved token to another address.
+	response = env.request(http.MethodPut, "/api/journal/reminder", reminderBody(other.URL, ""), true)
+	require.Equal(t, http.StatusBadRequest, response.Code)
+	require.Contains(t, response.Body.String(), "enter the access token again")
+	response = env.request(http.MethodPost, "/api/journal/reminder/notifiers", `{"url":"`+other.URL+`"}`, true)
+	require.Equal(t, http.StatusBadRequest, response.Code)
+	require.Contains(t, response.Body.String(), "enter the access token again")
+	require.Zero(t, requests.Load())
+
+	// The saved address still lists notifiers with the saved token.
+	response = env.request(http.MethodPost, "/api/journal/reminder/notifiers", `{"url":"`+homeAssistant.URL+`"}`, true)
+	require.Equal(t, http.StatusOK, response.Code, response.Body.String())
+	response = env.request(http.MethodGet, "/api/journal/reminder", "", true)
+	require.Contains(t, response.Body.String(), homeAssistant.URL)
 }

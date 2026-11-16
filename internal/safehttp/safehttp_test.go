@@ -54,3 +54,25 @@ func TestSafeDialSkipsBlockedAnswers(t *testing.T) {
 	require.Equal(t, "localhost", blocked.Host)
 	require.True(t, blocked.IP.IsLoopback())
 }
+
+func TestSameServer(t *testing.T) {
+	t.Parallel()
+	for _, pair := range [][2]string{
+		{"http://immich.example.com:2283", "http://IMMICH.example.com:2283/api"},
+		{"https://ha.example.com", "https://ha.example.com:443/"},
+		{"http://ha.example.com", "http://ha.example.com:80"},
+	} {
+		require.True(t, SameServer(pair[0], pair[1]), pair)
+	}
+	for _, pair := range [][2]string{
+		{"http://immich.example.com:2283", "http://photos.example.com:2283"},
+		{"http://immich.example.com:2283", "http://immich.example.com:2284"},
+		{"https://immich.example.com", "http://immich.example.com"},
+		{"https://immich.example.com", "https://immich.example.com.evil.example.com"},
+		{"https://immich.example.com", ""},
+		{"", ""},
+		{"https://immich.example.com", "://"},
+	} {
+		require.False(t, SameServer(pair[0], pair[1]), pair)
+	}
+}

@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"strings"
+	"sync/atomic"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -187,4 +188,36 @@ func TestStockSettingsIgnoreTheRow(t *testing.T) {
 	for _, setting := range settings {
 		require.NotEqual(t, storepb.InstanceSettingKey_INSTANCE_SETTING_KEY_UNSPECIFIED, setting.GetKey())
 	}
+}
+
+// otherServer is a server the saved key was never meant for; it counts the
+// requests it gets.
+func otherServer(t *testing.T) (*httptest.Server, *atomic.Int32) {
+	t.Helper()
+	requests := &atomic.Int32{}
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		requests.Add(1)
+		w.WriteHeader(http.StatusUnauthorized)
+	}))
+	t.Cleanup(server.Close)
+	return server, requests
+}
+
+func TestSavedKeyStaysWithItsEndpoint(t *testing.T) {
+	ctx := context.Background()
+	claude := fakeClaude(t)
+	env := newTestEnv(ctx, t, claude)
+	other, requests := otherServer(t)
+
+	decode(t, env.do(http.MethodPut, "/api/text-extraction/claude", `{"endpoint":"`+claude.URL+`","apiKey":"`+goodKey+`"}`, env.admin))
+
+	// Another endpoint without a key is refused before anything is sent there;
+	// so is an empty endpoint, which means Anthropic's own.
+	for _, endpoint := range []string{other.URL, ""} {
+		refused := env.do(http.MethodPut, "/api/text-extraction/claude", `{"endpoint":"`+endpoint+`"}`, env.admin)
+		require.Equal(t, http.StatusBadRequest, refused.Code, endpoint)
+		require.Contains(t, refused.Body.String(), "enter the API key again")
+	}
+	require.Zero(t, requests.Load())
+	require.Equal(t, claude.URL, decode(t, env.do(http.MethodGet, "/api/text-extraction/settings", "", env.admin)).Claude.Endpoint)
 }

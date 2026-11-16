@@ -83,7 +83,8 @@ type SettingsResponse struct {
 	Model      string         `json:"model"`
 }
 
-// ClaudeRequest updates the Claude connection. An empty APIKey keeps the saved one.
+// ClaudeRequest updates the Claude connection. An empty APIKey keeps the saved
+// one, as long as Endpoint is still the one it was saved for.
 type ClaudeRequest struct {
 	Endpoint string `json:"endpoint"`
 	APIKey   string `json:"apiKey"`
@@ -196,6 +197,15 @@ func (s *Service) putClaude(w http.ResponseWriter, r *http.Request) error {
 	if apiKey == "" {
 		if settings.Claude == nil {
 			return &httphandler.Error{Code: http.StatusBadRequest, Message: "enter your Anthropic API key"}
+		}
+		// The saved key is never sent to an endpoint other than the one it
+		// was saved for.
+		endpoint, err := anthropic.NormalizeEndpoint(request.Endpoint)
+		if err != nil {
+			return &httphandler.Error{Code: http.StatusBadRequest, Message: err.Error()}
+		}
+		if !safehttp.SameServer(settings.Claude.Endpoint, endpoint) {
+			return &httphandler.Error{Code: http.StatusBadRequest, Message: "enter the API key again to use a different endpoint"}
 		}
 		apiKey = settings.Claude.APIKey
 	}
