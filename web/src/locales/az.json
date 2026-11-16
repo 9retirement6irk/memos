@@ -380,7 +380,8 @@
       "resolve-image-uploads": "Yadda saxlamazdan əvvəl şəkil yükləmələrini tamamlayın",
       "save-in-progress": "Yadda saxlanılır",
       "unsupported-attachment-image-url": "Dəstəklənməyən qoşma şəkli URL-i: {{url}}",
-      "wait-for-upload": "Yükləmənin tamamlanmasını gözləyin"
+      "wait-for-upload": "Yükləmənin tamamlanmasını gözləyin",
+      "wait-for-conversion": "Fotoların çevrilməsinin bitməsini gözləyin"
     },
     "audio-recorder": {
       "attachment-label": "Audio yazısı",
@@ -456,7 +457,11 @@
     "remove-location": "Məkanı çıxar",
     "recording-unsupported": "Bu brauzer audio yazmağı dəstəkləmir.",
     "microphone-denied": "Mikrofon icazəsi rədd edildi.",
-    "recording-failed": "Audio yazmağa başlamaq alınmadı."
+    "recording-failed": "Audio yazmağa başlamaq alınmadı.",
+    "heic": {
+      "converting": "HEIC fotoları JPEG-ə çevrilir ({{count}})…",
+      "failed": "Çevrilə bilməyən HEIC fotoları: {{count}}. Olduğu kimi əlavə edildi və yalnız Safari-də görünə bilər."
+    }
   },
   "inbox": {
     "failed-to-load": "Gələnlər elementi yüklənmədi",

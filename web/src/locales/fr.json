@@ -294,7 +294,8 @@
       "resolve-image-uploads": "Résoudre le problème de chargement des images avant d'enregistrer",
       "save-in-progress": "Enregistrement en cours",
       "unsupported-attachment-image-url": "URL d'image de pièce jointe non prise en charge : {{url}}",
-      "wait-for-upload": "Veuillez patienter jusqu'à la fin du chargement"
+      "wait-for-upload": "Veuillez patienter jusqu'à la fin du chargement",
+      "wait-for-conversion": "Attendez la fin de la conversion des photos"
     },
     "blocks": {
       "task": "Tâche",
@@ -354,7 +355,11 @@
     "remove-location": "Retirer l'emplacement",
     "recording-unsupported": "L'enregistrement audio n'est pas pris en charge par ce navigateur.",
     "microphone-denied": "L'accès au microphone a été refusé.",
-    "recording-failed": "Impossible de démarrer l'enregistrement audio."
+    "recording-failed": "Impossible de démarrer l'enregistrement audio.",
+    "heic": {
+      "converting": "Conversion des photos HEIC en JPEG ({{count}})…",
+      "failed": "Photos HEIC qui n'ont pas pu être converties : {{count}}. Elles ont été jointes telles quelles et risquent de ne s'afficher que dans Safari."
+    }
   },
   "inbox": {
     "failed-to-load": "Échec du chargement de l'élément",

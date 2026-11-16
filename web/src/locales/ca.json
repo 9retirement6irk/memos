@@ -294,7 +294,8 @@
       "resolve-image-uploads": "Resol les càrregues d'imatges abans de desar",
       "save-in-progress": "Desa en curs",
       "unsupported-attachment-image-url": "URL d'imatge adjunta no compatible: {{url}}",
-      "wait-for-upload": "Espera que es completi la càrrega"
+      "wait-for-upload": "Espera que es completi la càrrega",
+      "wait-for-conversion": "Espereu que acabi la conversió de les fotos"
     },
     "blocks": {
       "task": "Tasca",
@@ -354,7 +355,11 @@
     "remove-location": "Elimina la ubicació",
     "recording-unsupported": "Aquest navegador no admet l'enregistrament d'àudio.",
     "microphone-denied": "S'ha denegat el permís del micròfon.",
-    "recording-failed": "No s'ha pogut iniciar l'enregistrament d'àudio."
+    "recording-failed": "No s'ha pogut iniciar l'enregistrament d'àudio.",
+    "heic": {
+      "converting": "S'estan convertint les fotos HEIC a JPEG ({{count}})…",
+      "failed": "Fotos HEIC que no s'han pogut convertir: {{count}}. S'han adjuntat tal com són i potser només es veuran a Safari."
+    }
   },
   "inbox": {
     "failed-to-load": "Error en carregar la bústia",

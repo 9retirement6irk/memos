@@ -294,7 +294,8 @@
       "resolve-image-uploads": "Resolver uploads de imagens antes de guardar",
       "save-in-progress": "Guardar em andamento",
       "unsupported-attachment-image-url": "URL de imagem de anexo não suportado: {{url}}",
-      "wait-for-upload": "Aguardar conclusão do upload"
+      "wait-for-upload": "Aguardar conclusão do upload",
+      "wait-for-conversion": "Aguarde que a conversão das fotografias termine"
     },
     "blocks": {
       "task": "Tarefa",
@@ -354,7 +355,11 @@
     "remove-location": "Remover local",
     "recording-unsupported": "A gravação de áudio não é suportada neste navegador.",
     "microphone-denied": "A permissão do microfone foi negada.",
-    "recording-failed": "Falha ao iniciar a gravação de áudio."
+    "recording-failed": "Falha ao iniciar a gravação de áudio.",
+    "heic": {
+      "converting": "A converter fotografias HEIC para JPEG ({{count}})…",
+      "failed": "Fotografias HEIC que não foi possível converter: {{count}}. Foram anexadas tal como estão e poderão aparecer apenas no Safari."
+    }
   },
   "inbox": {
     "failed-to-load": "Falha ao carregar item da caixa de entrada",

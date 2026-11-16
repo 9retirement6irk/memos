@@ -294,7 +294,8 @@
       "resolve-image-uploads": "Resolver cargas de imágenes antes de guardar",
       "save-in-progress": "Guardado en curso",
       "unsupported-attachment-image-url": "URL de imagen de adjunto no compatible: {{url}}",
-      "wait-for-upload": "Esperar a que finalice la carga"
+      "wait-for-upload": "Esperar a que finalice la carga",
+      "wait-for-conversion": "Espera a que terminen de convertirse las fotos"
     },
     "blocks": {
       "task": "Tarea",
@@ -354,7 +355,11 @@
     "remove-location": "Quitar ubicación",
     "recording-unsupported": "Este navegador no admite la grabación de audio.",
     "microphone-denied": "Se denegó el permiso del micrófono.",
-    "recording-failed": "No se pudo iniciar la grabación de audio."
+    "recording-failed": "No se pudo iniciar la grabación de audio.",
+    "heic": {
+      "converting": "Convirtiendo fotos HEIC a JPEG ({{count}})…",
+      "failed": "Fotos HEIC que no se pudieron convertir: {{count}}. Se adjuntaron tal cual y puede que solo se vean en Safari."
+    }
   },
   "inbox": {
     "failed-to-load": "Error al cargar el elemento de bandeja de entrada",

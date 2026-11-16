@@ -294,7 +294,8 @@
       "resolve-image-uploads": "Afbeeldingsuploads oplossen voordat u opslaat",
       "save-in-progress": "Opslaan bezig",
       "unsupported-attachment-image-url": "Niet-ondersteunde URL voor bijlageafbeelding: {{url}}",
-      "wait-for-upload": "Wachten tot de upload is voltooid"
+      "wait-for-upload": "Wachten tot de upload is voltooid",
+      "wait-for-conversion": "Wacht tot de foto's zijn omgezet"
     },
     "blocks": {
       "task": "Taak",
@@ -354,7 +355,11 @@
     "remove-location": "Locatie verwijderen",
     "recording-unsupported": "Audio opnemen wordt niet ondersteund in deze browser.",
     "microphone-denied": "Toegang tot de microfoon is geweigerd.",
-    "recording-failed": "Kan audio-opname niet starten."
+    "recording-failed": "Kan audio-opname niet starten.",
+    "heic": {
+      "converting": "HEIC-foto's worden omgezet naar JPEG ({{count}})…",
+      "failed": "HEIC-foto's die niet konden worden omgezet: {{count}}. Ze zijn bijgevoegd zoals ze zijn en worden misschien alleen in Safari getoond."
+    }
   },
   "inbox": {
     "failed-to-load": "Postvak-item laden mislukt",

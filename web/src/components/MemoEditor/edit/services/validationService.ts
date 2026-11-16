@@ -25,6 +25,11 @@ export const validationService = {
       return { valid: false, reason: "editor.validation.wait-for-upload" };
     }
 
+    // Converted HEIC photos join the memo when they're ready.
+    if (state.ui.isLoading.converting) {
+      return { valid: false, reason: "editor.validation.wait-for-conversion" };
+    }
+
     if (state.ui.pendingInlineImageInsertions > 0) {
       return { valid: false, reason: "editor.validation.resolve-image-uploads" };
     }

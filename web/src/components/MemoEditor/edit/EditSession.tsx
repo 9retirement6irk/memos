@@ -4,6 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useInstance } from "@/contexts/InstanceContext";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import { useSourceMode } from "@/hooks/useSourceMode";
+import { isHeicFile } from "@/lib/heic";
 import { showErrorToast, toast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 import { InstanceSetting_Key } from "@/types/proto/api/instance_service_pb";
@@ -23,6 +24,7 @@ import {
   useBlobUrls,
   useDrawing,
   useFocusMode,
+  useHeicConversion,
   useInlineImageUpload,
   useMemoInit,
   useMemoSave,
@@ -87,6 +89,7 @@ export const EditSession: React.FC<EditSessionProps> = ({
   const { createBlobUrl } = useBlobUrls();
   const saveMediaMetadata = userGeneralSetting?.saveMediaMetadata ?? false;
   const inlineImageUpload = useInlineImageUpload(editorRef);
+  const convertHeic = useHeicConversion();
   const toDrawingFile = useCallback(
     (file: File) => toLocalFiles([file], { createBlobUrl, saveMediaMetadata })[0],
     [createBlobUrl, saveMediaMetadata],
@@ -278,12 +281,18 @@ export const EditSession: React.FC<EditSessionProps> = ({
   const handleFiles = useCallback(
     (files: File[], placement: { inline: false } | { inline: true; position?: EditorPosition | null }) => {
       if (getState().ui.isLoading.saving) return;
-      const localFiles = toLocalFiles(files, { createBlobUrl, saveMediaMetadata });
-      const { inline, attachments } = placement.inline ? splitInlineLocalFiles(localFiles) : { inline: [], attachments: localFiles };
-      attachments.forEach((file) => dispatch(actions.addLocalFile(file)));
-      if (placement.inline) inlineImageUpload.insertLocalImages(inline, placement.position);
+      const ingest = (ready: File[]) => {
+        if (getState().ui.isLoading.saving) return;
+        const localFiles = toLocalFiles(ready, { createBlobUrl, saveMediaMetadata });
+        const { inline, attachments } = placement.inline ? splitInlineLocalFiles(localFiles) : { inline: [], attachments: localFiles };
+        attachments.forEach((file) => dispatch(actions.addLocalFile(file)));
+        if (placement.inline) inlineImageUpload.insertLocalImages(inline, placement.position);
+      };
+      // HEIC photos become JPEGs first, so every browser can show them; anything else joins at once.
+      if (files.some(isHeicFile)) void convertHeic(files).then(ingest);
+      else ingest(files);
     },
-    [actions, createBlobUrl, dispatch, getState, inlineImageUpload.insertLocalImages, saveMediaMetadata],
+    [actions, convertHeic, createBlobUrl, dispatch, getState, inlineImageUpload.insertLocalImages, saveMediaMetadata],
   );
 
   /** Photos picked from Immich join the attachment list, like an upload. */

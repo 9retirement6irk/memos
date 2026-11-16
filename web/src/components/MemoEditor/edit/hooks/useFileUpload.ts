@@ -2,6 +2,7 @@ import { create } from "@bufbuild/protobuf";
 import { useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { useAuth } from "@/contexts/AuthContext";
+import { heicOriginal, isHeicFile } from "@/lib/heic";
 import { type MotionMedia, MotionMediaFamily, MotionMediaRole, MotionMediaSchema } from "@/types/proto/api/attachment_service_pb";
 import { mediaMetadataService } from "../services/mediaMetadataService";
 import type { LocalFile } from "../types/attachment";
@@ -18,11 +19,16 @@ export const toLocalFiles = (files: File[], options: { createBlobUrl: (file: Fil
       file,
       previewUrl: options.createBlobUrl(file),
       origin: "upload",
-      mediaMetadata: options.saveMediaMetadata ? mediaMetadataService.extract(file) : undefined,
+      // A converted HEIC's details (date, place, camera, size) are read from the original: the JPEG has none.
+      mediaMetadata: options.saveMediaMetadata ? mediaMetadataService.extract(heicOriginal(file) ?? file) : undefined,
     })),
   );
 
-export const useFileUpload = (onFilesSelected: (localFiles: LocalFile[]) => void) => {
+/**
+ * The hidden file input's handler. `convertHeic` (useHeicConversion) turns HEIC photos into JPEGs first; files
+ * without any join at once, as before.
+ */
+export const useFileUpload = (onFilesSelected: (localFiles: LocalFile[]) => void, convertHeic?: (files: File[]) => Promise<File[]>) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const selectingFlagRef = useRef(false);
   // Track preview blob URLs so they're revoked on unmount instead of leaking
@@ -37,8 +43,11 @@ export const useFileUpload = (onFilesSelected: (localFiles: LocalFile[]) => void
       return;
     }
     selectingFlagRef.current = true;
-    const localFiles = toLocalFiles(files, { createBlobUrl, saveMediaMetadata });
-    onFilesSelected(localFiles);
+    if (convertHeic && files.some(isHeicFile)) {
+      void convertHeic(files).then((converted) => onFilesSelected(toLocalFiles(converted, { createBlobUrl, saveMediaMetadata })));
+    } else {
+      onFilesSelected(toLocalFiles(files, { createBlobUrl, saveMediaMetadata }));
+    }
     selectingFlagRef.current = false;
     // Optionally clear input value to allow re-selecting the same file
     if (fileInputRef.current) fileInputRef.current.value = "";

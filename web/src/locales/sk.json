@@ -332,7 +332,8 @@
       "resolve-image-uploads": "Pred uložením vyriešte nahrávanie obrázkov",
       "save-in-progress": "Prebieha ukladanie",
       "unsupported-attachment-image-url": "Nepodporovaná URL adresa obrázka prílohy: {{url}}",
-      "wait-for-upload": "Počkajte na dokončenie nahrávania"
+      "wait-for-upload": "Počkajte na dokončenie nahrávania",
+      "wait-for-conversion": "Počkajte, kým sa konverzia fotiek dokončí"
     },
     "blocks": {
       "task": "Úloha",
@@ -392,7 +393,11 @@
     "remove-location": "Odstrániť polohu",
     "recording-unsupported": "Tento prehliadač nepodporuje nahrávanie zvuku.",
     "microphone-denied": "Prístup k mikrofónu bol zamietnutý.",
-    "recording-failed": "Nahrávanie zvuku sa nepodarilo spustiť."
+    "recording-failed": "Nahrávanie zvuku sa nepodarilo spustiť.",
+    "heic": {
+      "converting": "Fotky HEIC sa konvertujú na JPEG ({{count}})…",
+      "failed": "Fotky HEIC, ktoré sa nepodarilo skonvertovať: {{count}}. Boli priložené tak, ako sú, a možno sa zobrazia len v Safari."
+    }
   },
   "inbox": {
     "failed-to-load": "Nepodarilo sa načítať položku doručenej pošty",

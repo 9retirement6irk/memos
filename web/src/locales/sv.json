@@ -294,7 +294,8 @@
       "resolve-image-uploads": "Åtgärda bilduppladdningar innan du sparar",
       "save-in-progress": "Spara pågår",
       "unsupported-attachment-image-url": "Bild-URL för bilaga som inte stöds: {{url}}",
-      "wait-for-upload": "Vänta tills uppladdningen är klar"
+      "wait-for-upload": "Vänta tills uppladdningen är klar",
+      "wait-for-conversion": "Vänta tills bilderna har konverterats"
     },
     "blocks": {
       "task": "Uppgift",
@@ -354,7 +355,11 @@
     "remove-location": "Ta bort plats",
     "recording-unsupported": "Ljudinspelning stöds inte i den här webbläsaren.",
     "microphone-denied": "Åtkomst till mikrofonen nekades.",
-    "recording-failed": "Det gick inte att starta ljudinspelningen."
+    "recording-failed": "Det gick inte att starta ljudinspelningen.",
+    "heic": {
+      "converting": "Konverterar HEIC-bilder till JPEG ({{count}})…",
+      "failed": "HEIC-bilder som inte kunde konverteras: {{count}}. De bifogades som de är och kanske bara visas i Safari."
+    }
   },
   "inbox": {
     "failed-to-load": "Misslyckades att ladda inkorgsobjekt",

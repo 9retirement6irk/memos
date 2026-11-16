@@ -344,7 +344,8 @@
       "resolve-image-uploads": "פתרו את העלאות התמונות לפני השמירה",
       "save-in-progress": "השמירה מתבצעת",
       "unsupported-attachment-image-url": "כתובת תמונה של קובץ מצורף אינה נתמכת: {{url}}",
-      "wait-for-upload": "המתינו לסיום ההעלאה"
+      "wait-for-upload": "המתינו לסיום ההעלאה",
+      "wait-for-conversion": "יש להמתין לסיום המרת התמונות"
     },
     "audio-recorder": {
       "attachment-label": "הקלטת שמע",
@@ -425,7 +426,11 @@
     "remove-location": "הסרת המיקום",
     "recording-unsupported": "הקלטת שמע אינה נתמכת בדפדפן זה.",
     "microphone-denied": "הגישה למיקרופון נדחתה.",
-    "recording-failed": "הפעלת הקלטת השמע נכשלה."
+    "recording-failed": "הפעלת הקלטת השמע נכשלה.",
+    "heic": {
+      "converting": "ממיר תמונות HEIC ל-JPEG ({{count}})…",
+      "failed": "תמונות HEIC שלא ניתן היה להמיר: {{count}}. הן צורפו כמו שהן וייתכן שיוצגו רק ב-Safari."
+    }
   },
   "inbox": {
     "failed-to-load": "טעינת פריט מתיבת הדואר הנכנס נכשלה",

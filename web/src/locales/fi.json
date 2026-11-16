@@ -332,7 +332,8 @@
       "resolve-image-uploads": "Ratkaise kuvien lataukset ennen tallennusta",
       "save-in-progress": "Tallennus käynnissä",
       "unsupported-attachment-image-url": "Liitteenä olevan kuvan URL-osoitetta ei tueta: {{url}}",
-      "wait-for-upload": "Odota latauksen valmistumista"
+      "wait-for-upload": "Odota latauksen valmistumista",
+      "wait-for-conversion": "Odota, että kuvien muuntaminen valmistuu"
     },
     "blocks": {
       "task": "Tehtävä",
@@ -392,7 +393,11 @@
     "remove-location": "Poista sijainti",
     "recording-unsupported": "Tämä selain ei tue äänen tallennusta.",
     "microphone-denied": "Mikrofonin käyttöoikeus evättiin.",
-    "recording-failed": "Äänen tallennuksen aloittaminen epäonnistui."
+    "recording-failed": "Äänen tallennuksen aloittaminen epäonnistui.",
+    "heic": {
+      "converting": "Muunnetaan HEIC-kuvia JPEG-muotoon ({{count}})…",
+      "failed": "HEIC-kuvat, joita ei voitu muuntaa: {{count}}. Ne liitettiin sellaisenaan ja saattavat näkyä vain Safarissa."
+    }
   },
   "inbox": {
     "failed-to-load": "Saapuneet-kansion kohteen lataaminen epäonnistui",

@@ -294,7 +294,8 @@
       "resolve-image-uploads": "Bild-Uploads vor dem Speichern abschließen",
       "save-in-progress": "Speichern läuft",
       "unsupported-attachment-image-url": "Nicht unterstützte URL für Anhangsbild: {{url}}",
-      "wait-for-upload": "Warten, bis der Upload abgeschlossen ist"
+      "wait-for-upload": "Warten, bis der Upload abgeschlossen ist",
+      "wait-for-conversion": "Warten, bis die Fotos umgewandelt sind"
     },
     "blocks": {
       "task": "Aufgabe",
@@ -354,7 +355,11 @@
     "remove-location": "Standort entfernen",
     "recording-unsupported": "Audioaufnahme wird in diesem Browser nicht unterstützt.",
     "microphone-denied": "Der Zugriff auf das Mikrofon wurde verweigert.",
-    "recording-failed": "Audioaufnahme konnte nicht gestartet werden."
+    "recording-failed": "Audioaufnahme konnte nicht gestartet werden.",
+    "heic": {
+      "converting": "HEIC-Fotos werden in JPEG umgewandelt ({{count}})…",
+      "failed": "HEIC-Fotos, die nicht umgewandelt werden konnten: {{count}}. Sie wurden unverändert angehängt und werden eventuell nur in Safari angezeigt."
+    }
   },
   "inbox": {
     "failed-to-load": "Fehler beim Laden des Eintrags",

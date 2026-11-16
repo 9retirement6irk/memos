@@ -294,7 +294,8 @@
       "resolve-image-uploads": "Risolvi i caricamenti delle immagini prima di salvare",
       "save-in-progress": "Salvataggio in corso",
       "unsupported-attachment-image-url": "URL immagine allegato non supportato: {{url}}",
-      "wait-for-upload": "Attendi il completamento del caricamento"
+      "wait-for-upload": "Attendi il completamento del caricamento",
+      "wait-for-conversion": "Attendi che la conversione delle foto finisca"
     },
     "blocks": {
       "task": "Attività",
@@ -354,7 +355,11 @@
     "remove-location": "Rimuovi posizione",
     "recording-unsupported": "La registrazione audio non è supportata da questo browser.",
     "microphone-denied": "L'autorizzazione al microfono è stata negata.",
-    "recording-failed": "Impossibile avviare la registrazione audio."
+    "recording-failed": "Impossibile avviare la registrazione audio.",
+    "heic": {
+      "converting": "Conversione delle foto HEIC in JPEG ({{count}})…",
+      "failed": "Foto HEIC che non è stato possibile convertire: {{count}}. Sono state allegate così come sono e potrebbero vedersi solo in Safari."
+    }
   },
   "inbox": {
     "failed-to-load": "Impossibile caricare l'elemento della posta in arrivo",

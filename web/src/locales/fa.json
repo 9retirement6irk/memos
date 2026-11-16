@@ -294,7 +294,8 @@
       "resolve-image-uploads": "قبل از ذخیره، آپلود تصاویر را حل کنید",
       "save-in-progress": "در حال ذخیره در حال انجام است",
       "unsupported-attachment-image-url": "آدرس تصویر پیوست پشتیبانی نشده: {{url}}",
-      "wait-for-upload": "منتظر بمانید تا آپلود کامل شود"
+      "wait-for-upload": "منتظر بمانید تا آپلود کامل شود",
+      "wait-for-conversion": "صبر کنید تا تبدیل عکس‌ها تمام شود"
     },
     "blocks": {
       "task": "کار",
@@ -354,7 +355,11 @@
     "remove-location": "حذف مکان",
     "recording-unsupported": "ضبط صدا در این مرورگر پشتیبانی نمی‌شود.",
     "microphone-denied": "اجازه دسترسی به میکروفون رد شد.",
-    "recording-failed": "شروع ضبط صدا ناموفق بود."
+    "recording-failed": "شروع ضبط صدا ناموفق بود.",
+    "heic": {
+      "converting": "در حال تبدیل عکس‌های HEIC به JPEG ({{count}})…",
+      "failed": "عکس‌های HEIC که تبدیل نشدند: {{count}}. همان‌طور که بودند پیوست شدند و ممکن است فقط در Safari نمایش داده شوند."
+    }
   },
   "inbox": {
     "failed-to-load": "بارگذاری آیتم صندوق ورودی ناموفق بود",

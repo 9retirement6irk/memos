@@ -370,7 +370,8 @@
       "resolve-image-uploads": "Ordne biletopplastingane før du lagrar",
       "save-in-progress": "Lagring går føre seg",
       "unsupported-attachment-image-url": "Biletadressa til vedlegget er ikkje støtta: {{url}}",
-      "wait-for-upload": "Vent til opplastinga er ferdig"
+      "wait-for-upload": "Vent til opplastinga er ferdig",
+      "wait-for-conversion": "Vent til bileta er ferdig konverterte"
     },
     "blocks": {
       "task": "Gjeremål",
@@ -430,7 +431,11 @@
     "remove-location": "Fjern staden",
     "recording-unsupported": "Ljodopptak er ikkje støtta i denne nettlesaren.",
     "microphone-denied": "Tilgang til mikrofonen vart avslått.",
-    "recording-failed": "Klarte ikkje å starte ljodopptaket."
+    "recording-failed": "Klarte ikkje å starte ljodopptaket.",
+    "heic": {
+      "converting": "Konverterer HEIC-bilete til JPEG ({{count}})…",
+      "failed": "HEIC-bilete som ikkje kunne konverterast: {{count}}. Dei vart lagde ved som dei er og blir kanskje berre viste i Safari."
+    }
   },
   "inbox": {
     "failed-to-load": "Klarte diverre ikkje å laste innbokselementet",

@@ -309,7 +309,8 @@
       "resolve-image-uploads": "Kaydetmeden önce görsel yüklemelerini tamamla",
       "save-in-progress": "Kaydediliyor",
       "unsupported-attachment-image-url": "Desteklenmeyen görsel bağlantısı: {{url}}",
-      "wait-for-upload": "Yüklemenin bitmesini bekle"
+      "wait-for-upload": "Yüklemenin bitmesini bekle",
+      "wait-for-conversion": "Fotoğrafların dönüştürülmesinin bitmesini bekleyin"
     },
     "audio-recorder": {
       "attachment-label": "Ses kaydı",
@@ -385,7 +386,11 @@
     "remove-location": "Konumu kaldır",
     "recording-unsupported": "Bu tarayıcı ses kaydını desteklemiyor.",
     "microphone-denied": "Mikrofon izni verilmedi.",
-    "recording-failed": "Ses kaydı başlatılamadı."
+    "recording-failed": "Ses kaydı başlatılamadı.",
+    "heic": {
+      "converting": "HEIC fotoğraflar JPEG'e dönüştürülüyor ({{count}})…",
+      "failed": "Dönüştürülemeyen HEIC fotoğraflar: {{count}}. Oldukları gibi eklendiler ve yalnızca Safari'de görünebilirler."
+    }
   },
   "inbox": {
     "failed-to-load": "Bildirim yüklenemedi",

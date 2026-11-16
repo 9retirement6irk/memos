@@ -26,7 +26,7 @@ import { useDawarichConnection } from "@/hooks/useDawarichQueries";
 import { useImmichConnection } from "@/hooks/useImmichQueries";
 import type { MemoRelation } from "@/types/proto/api/memo_service_pb";
 import { useTranslate } from "@/utils/i18n";
-import { useFileUpload, useLinkMemo, useLocation } from "../hooks";
+import { useFileUpload, useHeicConversion, useLinkMemo, useLocation } from "../hooks";
 import { useEditorContext, useEditorSelector } from "../state";
 import type { InsertMenuProps } from "../types";
 import type { LocalFile } from "../types/attachment";
@@ -50,10 +50,11 @@ const InsertMenu = (props: InsertMenuProps) => {
   const createTime = useEditorSelector((s) => s.timestamps.createTime);
   const inlineImageInputRef = useRef<HTMLInputElement>(null);
 
+  const convertHeic = useHeicConversion();
   const { fileInputRef, selectingFlag, handleFileInputChange, handleUploadClick } = useFileUpload((newFiles: LocalFile[]) => {
     if (getState().ui.isLoading.saving) return;
     newFiles.forEach((file) => dispatch(actions.addLocalFile(file)));
-  });
+  }, convertHeic);
 
   const linkMemo = useLinkMemo({
     isOpen: linkDialogOpen,

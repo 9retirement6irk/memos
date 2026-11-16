@@ -294,7 +294,8 @@
       "resolve-image-uploads": "แก้ไขปัญหาการอัปโหลดรูปภาพก่อนบันทึก",
       "save-in-progress": "กำลังบันทึก",
       "unsupported-attachment-image-url": "URL รูปภาพไฟล์แนบไม่รองรับ: {{url}}",
-      "wait-for-upload": "รอจนกว่าการอัปโหลดจะเสร็จสมบูรณ์"
+      "wait-for-upload": "รอจนกว่าการอัปโหลดจะเสร็จสมบูรณ์",
+      "wait-for-conversion": "รอให้แปลงรูปเสร็จก่อน"
     },
     "blocks": {
       "task": "งาน",
@@ -354,7 +355,11 @@
     "remove-location": "ลบตำแหน่ง",
     "recording-unsupported": "เบราว์เซอร์นี้ไม่รองรับการบันทึกเสียง",
     "microphone-denied": "การอนุญาตใช้ไมโครโฟนถูกปฏิเสธ",
-    "recording-failed": "เริ่มบันทึกเสียงไม่สำเร็จ"
+    "recording-failed": "เริ่มบันทึกเสียงไม่สำเร็จ",
+    "heic": {
+      "converting": "กำลังแปลงรูป HEIC เป็น JPEG ({{count}})…",
+      "failed": "รูป HEIC ที่แปลงไม่ได้: {{count}} แนบไว้ตามเดิมและอาจแสดงได้เฉพาะใน Safari"
+    }
   },
   "inbox": {
     "failed-to-load": "ไม่สามารถโหลดรายการกล่องจดหมายได้",

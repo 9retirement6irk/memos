@@ -116,6 +116,14 @@ Each page is still an ordinary `.canvas.png` attachment, so stock Memos shows ev
 A PDF attached to a memo shows in the memo, one page at a time, with page turning, open and
 download. PDFs load only when they scroll into view.
 
+### HEIC photos
+
+Photos from an iPhone or Mac are often HEIC, which only Safari can show. The editor converts
+them to JPEG as you add them, so they show in every browser, get thumbnails, and have their
+location and camera details removed like any other photo. The original HEIC isn't kept.
+Safari converts them itself; other browsers load a HEIC decoder (about 800 KB) the first time
+you add one. HEIC photos uploaded before this aren't changed, but **Read text** can read them.
+
 ### Reading text from files
 
 **Read text** pulls the text out of an image, a drawing or a PDF, handwriting included, using
@@ -199,6 +207,10 @@ Memos is open source under the [MIT License](LICENSE). This fork's own code is u
 license, and so are the files made for it: the notebook paper backgrounds in
 `web/src/components/DrawingSheet/paper/` and the hand-drawn SVGs in `web/src/themes/aero/`
 (the check marks and the window caption buttons).
+
+HEIC photos are decoded with [heic-to](https://github.com/hoppergee/heic-to), a build of
+[libheif](https://github.com/strukturag/libheif), under the LGPL-3.0. It is an unmodified npm
+dependency, bundled into its own file that the app loads only when it needs it.
 
 ### Third-party assets
 
