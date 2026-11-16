@@ -635,7 +635,9 @@
       "theme-aero-system": "Aero · システムに合わせる",
       "theme-aero-light": "Aero · ライト",
       "theme-aero-dark": "Aero · ダーク",
-      "theme-aero-paper": "Aero · ペーパー"
+      "theme-aero-paper": "Aero · ペーパー",
+      "sidebar-spaces-title": "サイドバーのスペース",
+      "sidebar-spaces-description": "サイドバーに表示するスペースを選びます。この選択はこのブラウザーに保存されます。"
     },
     "editor": {
       "label": "エディター",
@@ -1719,11 +1721,7 @@
     "mood-trend": "これまでの気分",
     "mood-trend-description": "直近8週間の毎日の気分",
     "best-with": "いちばん気分が良いとき",
-    "worst-with": "いちばんつらいとき",
-    "sidebar": {
-      "journal": "ジャーナル",
-      "notes": "メモ"
-    }
+    "worst-with": "いちばんつらいとき"
   },
   "dawarich": {
     "route": {

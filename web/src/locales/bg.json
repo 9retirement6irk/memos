@@ -751,7 +751,9 @@
       "theme-aero-system": "Aero · Според системата",
       "theme-aero-light": "Aero · Светла",
       "theme-aero-dark": "Aero · Тъмна",
-      "theme-aero-paper": "Aero · Хартия"
+      "theme-aero-paper": "Aero · Хартия",
+      "sidebar-spaces-title": "Пространства в страничната лента",
+      "sidebar-spaces-description": "Изберете кои пространства да се показват в страничната лента. Изборът се пази в този браузър."
     },
     "editor": {
       "label": "Редактор",
@@ -1719,11 +1721,7 @@
     "mood-trend": "Как сте се чувствали",
     "mood-trend-description": "Дневното ви настроение през последните осем седмици",
     "best-with": "Най-добре с",
-    "worst-with": "Най-трудно с",
-    "sidebar": {
-      "journal": "Дневник",
-      "notes": "Бележки"
-    }
+    "worst-with": "Най-трудно с"
   },
   "dawarich": {
     "route": {

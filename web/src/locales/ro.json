@@ -752,7 +752,9 @@
       "theme-aero-system": "Aero · Sincronizare cu sistemul",
       "theme-aero-light": "Aero · Luminos",
       "theme-aero-dark": "Aero · Întunecat",
-      "theme-aero-paper": "Aero · Hârtie"
+      "theme-aero-paper": "Aero · Hârtie",
+      "sidebar-spaces-title": "Spații în bara laterală",
+      "sidebar-spaces-description": "Alege ce spații apar în bara laterală. Alegerea se păstrează în acest browser."
     },
     "editor": {
       "label": "Editor",
@@ -1720,11 +1722,7 @@
     "mood-trend": "Cum te-ai simțit",
     "mood-trend-description": "Dispoziția ta zilnică din ultimele opt săptămâni",
     "best-with": "Te simți cel mai bine cu",
-    "worst-with": "Te simți cel mai greu cu",
-    "sidebar": {
-      "journal": "Jurnal",
-      "notes": "Notițe"
-    }
+    "worst-with": "Te simți cel mai greu cu"
   },
   "dawarich": {
     "route": {

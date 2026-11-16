@@ -554,7 +554,9 @@
       "theme-aero-system": "Aero · 시스템 설정과 동기화",
       "theme-aero-light": "Aero · 라이트",
       "theme-aero-dark": "Aero · 다크",
-      "theme-aero-paper": "Aero · 페이퍼"
+      "theme-aero-paper": "Aero · 페이퍼",
+      "sidebar-spaces-title": "사이드바의 공간",
+      "sidebar-spaces-description": "사이드바에 표시할 공간을 선택하세요. 선택은 이 브라우저에 저장됩니다."
     },
     "editor": {
       "label": "편집기",
@@ -1719,11 +1721,7 @@
     "mood-trend": "그동안의 기분",
     "mood-trend-description": "최근 8주간의 하루 기분",
     "best-with": "기분이 가장 좋을 때",
-    "worst-with": "가장 힘들 때",
-    "sidebar": {
-      "journal": "일기",
-      "notes": "메모"
-    }
+    "worst-with": "가장 힘들 때"
   },
   "dawarich": {
     "route": {

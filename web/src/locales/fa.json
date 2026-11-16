@@ -554,7 +554,9 @@
       "theme-aero-system": "Aero · همگام با سیستم",
       "theme-aero-light": "Aero · روشن",
       "theme-aero-dark": "Aero · تیره",
-      "theme-aero-paper": "Aero · کاغذی"
+      "theme-aero-paper": "Aero · کاغذی",
+      "sidebar-spaces-title": "فضاها در نوار کناری",
+      "sidebar-spaces-description": "انتخاب کنید کدام فضاها در نوار کناری نمایش داده شوند. این انتخاب در همین مرورگر نگه داشته می‌شود."
     },
     "editor": {
       "label": "ویرایشگر",
@@ -1719,11 +1721,7 @@
     "mood-trend": "حال شما در این مدت",
     "mood-trend-description": "حال روزانهٔ شما در هشت هفتهٔ اخیر",
     "best-with": "بهترین حس با",
-    "worst-with": "سخت‌ترین حس با",
-    "sidebar": {
-      "journal": "روزنوشت",
-      "notes": "یادداشت‌ها"
-    }
+    "worst-with": "سخت‌ترین حس با"
   },
   "dawarich": {
     "route": {

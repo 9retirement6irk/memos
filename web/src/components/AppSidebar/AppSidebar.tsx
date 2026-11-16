@@ -47,6 +47,7 @@ import { getSidebarRouteKind } from "./routes";
 import SidebarRow, { SIDEBAR_ROW_CLASSES, SidebarRowIconSlot, sidebarRowStateAttributes, sidebarRowStateClasses } from "./SidebarRow";
 import SidebarSection, { SIDEBAR_SECTION_STACK_CLASSES } from "./SidebarSection";
 import SpaceSwitcher from "./SpaceSwitcher";
+import SpacesSection from "./SpacesSection";
 import {
   SIDEBAR_LEADING_SLOT_CLASSES,
   SIDEBAR_NAV_LEADING_SLOT_CLASSES,
@@ -114,6 +115,7 @@ const CollectionSidebarContent = ({
         </SidebarSection>
       )}
       {/* Every collection route narrows the same way: views (yours, so signed-in only), days, tags. */}
+      {currentUser && <SpacesSection />}
       {currentUser && <ViewsSection />}
       <TagsSection tagCount={tags} scope={tagStateScope} onSelect={() => setMobileOpen(false)} />
     </div>

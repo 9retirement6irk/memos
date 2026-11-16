@@ -751,7 +751,9 @@
       "theme-aero-system": "Aero · Følg systemet",
       "theme-aero-light": "Aero · Lyst",
       "theme-aero-dark": "Aero · Mørkt",
-      "theme-aero-paper": "Aero · Papir"
+      "theme-aero-paper": "Aero · Papir",
+      "sidebar-spaces-title": "Rum i sidepanelet",
+      "sidebar-spaces-description": "Vælg, hvilke rum der vises i sidepanelet. Valget gemmes i denne browser."
     },
     "editor": {
       "label": "Editor",
@@ -1719,11 +1721,7 @@
     "mood-trend": "Hvordan du har haft det",
     "mood-trend-description": "Dit daglige humør de sidste otte uger",
     "best-with": "Føles bedst med",
-    "worst-with": "Føles sværest med",
-    "sidebar": {
-      "journal": "Dagbog",
-      "notes": "Noter"
-    }
+    "worst-with": "Føles sværest med"
   },
   "dawarich": {
     "route": {

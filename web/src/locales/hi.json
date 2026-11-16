@@ -554,7 +554,9 @@
       "theme-aero-system": "Aero · सिस्टम के अनुसार",
       "theme-aero-light": "Aero · लाइट",
       "theme-aero-dark": "Aero · डार्क",
-      "theme-aero-paper": "Aero · पेपर"
+      "theme-aero-paper": "Aero · पेपर",
+      "sidebar-spaces-title": "साइडबार में स्पेस",
+      "sidebar-spaces-description": "चुनें कि साइडबार में कौन-से स्पेस दिखें। यह चुनाव इसी ब्राउज़र में सहेजा जाता है।"
     },
     "editor": {
       "label": "एडिटर",
@@ -1719,11 +1721,7 @@
     "mood-trend": "आपने कैसा महसूस किया",
     "mood-trend-description": "पिछले आठ हफ़्तों का आपका रोज़ का मूड",
     "best-with": "सबसे अच्छा लगता है",
-    "worst-with": "सबसे मुश्किल लगता है",
-    "sidebar": {
-      "journal": "जर्नल",
-      "notes": "नोट्स"
-    }
+    "worst-with": "सबसे मुश्किल लगता है"
   },
   "dawarich": {
     "route": {

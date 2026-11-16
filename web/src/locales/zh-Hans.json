@@ -633,7 +633,9 @@
       "theme-aero-system": "Aero · 跟随系统",
       "theme-aero-light": "Aero · 浅色",
       "theme-aero-dark": "Aero · 深色",
-      "theme-aero-paper": "Aero · 纸张"
+      "theme-aero-paper": "Aero · 纸张",
+      "sidebar-spaces-title": "侧边栏中的空间",
+      "sidebar-spaces-description": "选择在侧边栏中列出哪些空间。此选择保存在此浏览器中。"
     },
     "editor": {
       "label": "编辑器",
@@ -1719,11 +1721,7 @@
     "mood-trend": "你的感受",
     "mood-trend-description": "最近八周每天的心情",
     "best-with": "感觉最好时有",
-    "worst-with": "感觉最难时有",
-    "sidebar": {
-      "journal": "日记",
-      "notes": "笔记"
-    }
+    "worst-with": "感觉最难时有"
   },
   "dawarich": {
     "route": {

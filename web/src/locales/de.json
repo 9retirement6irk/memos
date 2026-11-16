@@ -635,7 +635,9 @@
       "theme-aero-system": "Aero · Mit System synchronisieren",
       "theme-aero-light": "Aero · Hell",
       "theme-aero-dark": "Aero · Dunkel",
-      "theme-aero-paper": "Aero · Papier"
+      "theme-aero-paper": "Aero · Papier",
+      "sidebar-spaces-title": "Bereiche in der Seitenleiste",
+      "sidebar-spaces-description": "Wähle, welche Bereiche in der Seitenleiste aufgeführt werden. Die Auswahl wird in diesem Browser gespeichert."
     },
     "editor": {
       "label": "Editor",
@@ -1719,11 +1721,7 @@
     "mood-trend": "Wie du dich gefühlt hast",
     "mood-trend-description": "Deine Tagesstimmung der letzten acht Wochen",
     "best-with": "Fühlt sich am besten an mit",
-    "worst-with": "Fühlt sich am schwersten an mit",
-    "sidebar": {
-      "journal": "Tagebuch",
-      "notes": "Notizen"
-    }
+    "worst-with": "Fühlt sich am schwersten an mit"
   },
   "dawarich": {
     "route": {

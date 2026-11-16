@@ -751,7 +751,9 @@
       "theme-aero-system": "Aero · Συγχρονισμός με το σύστημα",
       "theme-aero-light": "Aero · Φωτεινό",
       "theme-aero-dark": "Aero · Σκοτεινό",
-      "theme-aero-paper": "Aero · Χαρτί"
+      "theme-aero-paper": "Aero · Χαρτί",
+      "sidebar-spaces-title": "Χώροι στην πλαϊνή στήλη",
+      "sidebar-spaces-description": "Επιλέξτε ποιοι χώροι εμφανίζονται στην πλαϊνή στήλη. Η επιλογή αποθηκεύεται σε αυτό το πρόγραμμα περιήγησης."
     },
     "editor": {
       "label": "Πρόγραμμα επεξεργασίας",
@@ -1719,11 +1721,7 @@
     "mood-trend": "Πώς νιώσατε",
     "mood-trend-description": "Η καθημερινή σας διάθεση τις τελευταίες οκτώ εβδομάδες",
     "best-with": "Νιώθετε καλύτερα με",
-    "worst-with": "Νιώθετε πιο δύσκολα με",
-    "sidebar": {
-      "journal": "Ημερολόγιο",
-      "notes": "Σημειώσεις"
-    }
+    "worst-with": "Νιώθετε πιο δύσκολα με"
   },
   "dawarich": {
     "route": {

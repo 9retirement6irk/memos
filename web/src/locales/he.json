@@ -784,7 +784,9 @@
       "theme-aero-system": "Aero · סנכרון עם המערכת",
       "theme-aero-light": "Aero · בהיר",
       "theme-aero-dark": "Aero · כהה",
-      "theme-aero-paper": "Aero · נייר"
+      "theme-aero-paper": "Aero · נייר",
+      "sidebar-spaces-title": "מרחבים בסרגל הצד",
+      "sidebar-spaces-description": "בחרו אילו מרחבים יוצגו בסרגל הצד. הבחירה נשמרת בדפדפן זה."
     },
     "editor": {
       "label": "עורך",
@@ -1719,11 +1721,7 @@
     "mood-trend": "איך הרגשתם",
     "mood-trend-description": "מצב הרוח היומי שלכם בשמונת השבועות האחרונים",
     "best-with": "הכי טוב עם",
-    "worst-with": "הכי קשה עם",
-    "sidebar": {
-      "journal": "יומן",
-      "notes": "פתקים"
-    }
+    "worst-with": "הכי קשה עם"
   },
   "dawarich": {
     "route": {

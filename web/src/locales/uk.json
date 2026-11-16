@@ -637,7 +637,9 @@
       "theme-aero-system": "Aero · Як у системі",
       "theme-aero-light": "Aero · Світла",
       "theme-aero-dark": "Aero · Темна",
-      "theme-aero-paper": "Aero · Папір"
+      "theme-aero-paper": "Aero · Папір",
+      "sidebar-spaces-title": "Простори на бічній панелі",
+      "sidebar-spaces-description": "Виберіть, які простори показувати на бічній панелі. Вибір зберігається в цьому браузері."
     },
     "editor": {
       "label": "Редактор",
@@ -1721,11 +1723,7 @@
     "mood-trend": "Як ви почувалися",
     "mood-trend-description": "Ваш щоденний настрій за останні вісім тижнів",
     "best-with": "Найкраще з",
-    "worst-with": "Найважче з",
-    "sidebar": {
-      "journal": "Щоденник",
-      "notes": "Нотатки"
-    }
+    "worst-with": "Найважче з"
   },
   "dawarich": {
     "route": {

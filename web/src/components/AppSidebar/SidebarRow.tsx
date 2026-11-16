@@ -88,13 +88,15 @@ export const sidebarRowStateAttributes = (state: SidebarRowState) => ({
 interface Props {
   state?: SidebarRowState;
   icon?: LucideIcon;
+  /** A mark that is not a Lucide icon (a Space's own icon or emoji), in the same leading slot. */
+  leading?: ReactNode;
   label: ReactNode;
   count?: number;
   onClick?: () => void;
   trailing?: ReactNode;
 }
 
-const SidebarRow = ({ state = "idle", icon: Icon, label, count, onClick, trailing }: Props) => (
+const SidebarRow = ({ state = "idle", icon: Icon, leading, label, count, onClick, trailing }: Props) => (
   <button
     type="button"
     onClick={onClick}
@@ -103,6 +105,11 @@ const SidebarRow = ({ state = "idle", icon: Icon, label, count, onClick, trailin
     className={cn(SIDEBAR_ROW_CLASSES, sidebarRowStateClasses(state))}
   >
     {Icon && <SidebarRowIconSlot icon={Icon} />}
+    {!Icon && leading && (
+      <span className={SIDEBAR_ROW_SLOT_CLASSES} aria-hidden="true">
+        {leading}
+      </span>
+    )}
     <span data-sidebar-label className="min-w-0 flex-1 truncate text-start">
       {label}
     </span>

@@ -558,7 +558,9 @@
       "theme-aero-system": "Aero · مطابقة النظام",
       "theme-aero-light": "Aero · فاتح",
       "theme-aero-dark": "Aero · داكن",
-      "theme-aero-paper": "Aero · ورقي"
+      "theme-aero-paper": "Aero · ورقي",
+      "sidebar-spaces-title": "المساحات في الشريط الجانبي",
+      "sidebar-spaces-description": "اختر المساحات التي تظهر في الشريط الجانبي. يُحفظ هذا الاختيار في هذا المتصفح."
     },
     "editor": {
       "label": "المحرر",
@@ -1723,11 +1725,7 @@
     "mood-trend": "كيف شعرت",
     "mood-trend-description": "مزاجك اليومي خلال الأسابيع الثمانية الأخيرة",
     "best-with": "أفضل شعور مع",
-    "worst-with": "أصعب شعور مع",
-    "sidebar": {
-      "journal": "اليوميات",
-      "notes": "الملاحظات"
-    }
+    "worst-with": "أصعب شعور مع"
   },
   "dawarich": {
     "route": {

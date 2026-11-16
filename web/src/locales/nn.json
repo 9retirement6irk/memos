@@ -988,7 +988,9 @@
       "theme-aero-system": "Aero · Følg systemet",
       "theme-aero-light": "Aero · Lyst",
       "theme-aero-dark": "Aero · Mørkt",
-      "theme-aero-paper": "Aero · Papir"
+      "theme-aero-paper": "Aero · Papir",
+      "sidebar-spaces-title": "Rom i sidepanelet",
+      "sidebar-spaces-description": "Vel kva rom som blir viste i sidepanelet. Valet blir lagra i denne nettlesaren."
     },
     "editor": {
       "label": "Redigering",
@@ -1719,11 +1721,7 @@
     "mood-trend": "Korleis du har hatt det",
     "mood-trend-description": "Det daglege humøret ditt dei siste åtte vekene",
     "best-with": "Kjennest best med",
-    "worst-with": "Kjennest tyngst med",
-    "sidebar": {
-      "journal": "Dagbok",
-      "notes": "Notat"
-    }
+    "worst-with": "Kjennest tyngst med"
   },
   "dawarich": {
     "route": {

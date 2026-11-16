@@ -753,7 +753,9 @@
       "theme-aero-system": "Aero · Pagal sistemą",
       "theme-aero-light": "Aero · Šviesi",
       "theme-aero-dark": "Aero · Tamsi",
-      "theme-aero-paper": "Aero · Popierius"
+      "theme-aero-paper": "Aero · Popierius",
+      "sidebar-spaces-title": "Erdvės šoninėje juostoje",
+      "sidebar-spaces-description": "Pasirinkite, kurios erdvės rodomos šoninėje juostoje. Pasirinkimas saugomas šioje naršyklėje."
     },
     "editor": {
       "label": "Redaktorius",
@@ -1721,11 +1723,7 @@
     "mood-trend": "Kaip jauteisi",
     "mood-trend-description": "Tavo dienos nuotaika per paskutines aštuonias savaites",
     "best-with": "Geriausiai jautiesi su",
-    "worst-with": "Sunkiausiai jautiesi su",
-    "sidebar": {
-      "journal": "Dienoraštis",
-      "notes": "Užrašai"
-    }
+    "worst-with": "Sunkiausiai jautiesi su"
   },
   "dawarich": {
     "route": {

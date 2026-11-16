@@ -10,13 +10,17 @@ export interface DevicePreferences {
   linkPreview: boolean;
   /** Double-clicking an editable memo opens it in the editor. */
   doubleClickEdit: boolean;
+  /** Spaces (resource names) left out of the sidebar's Spaces list. A new Space is listed until switched off. */
+  hiddenSidebarSpaces: string[];
 }
 
 export const DEVICE_PREFERENCES_KEY = "memos-device-preferences";
 
-const DEFAULT_DEVICE_PREFERENCES: DevicePreferences = { linkPreview: true, doubleClickEdit: false };
+const DEFAULT_DEVICE_PREFERENCES: DevicePreferences = { linkPreview: true, doubleClickEdit: false, hiddenSidebarSpaces: [] };
 
 const readBoolean = (value: unknown, fallback: boolean) => (typeof value === "boolean" ? value : fallback);
+const readStrings = (value: unknown): string[] =>
+  Array.isArray(value) ? value.filter((item): item is string => typeof item === "string") : [];
 
 const parse = (raw: string | null): DevicePreferences => {
   if (raw === null) return DEFAULT_DEVICE_PREFERENCES;
@@ -25,6 +29,7 @@ const parse = (raw: string | null): DevicePreferences => {
     return {
       linkPreview: readBoolean(data.linkPreview, DEFAULT_DEVICE_PREFERENCES.linkPreview),
       doubleClickEdit: readBoolean(data.doubleClickEdit, DEFAULT_DEVICE_PREFERENCES.doubleClickEdit),
+      hiddenSidebarSpaces: readStrings(data.hiddenSidebarSpaces),
     };
   } catch (error) {
     console.warn("Failed to load device preferences from localStorage:", error);

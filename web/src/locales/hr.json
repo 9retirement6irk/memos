@@ -636,7 +636,9 @@
       "theme-aero-system": "Aero · Prema sustavu",
       "theme-aero-light": "Aero · Svijetla",
       "theme-aero-dark": "Aero · Tamna",
-      "theme-aero-paper": "Aero · Papir"
+      "theme-aero-paper": "Aero · Papir",
+      "sidebar-spaces-title": "Prostori u bočnoj traci",
+      "sidebar-spaces-description": "Odaberite koji se prostori prikazuju u bočnoj traci. Odabir se sprema u ovom pregledniku."
     },
     "editor": {
       "label": "Uređivač",
@@ -1720,11 +1722,7 @@
     "mood-trend": "Kako si se osjećao",
     "mood-trend-description": "Tvoje dnevno raspoloženje u posljednjih osam tjedana",
     "best-with": "Najbolje se osjećaš uz",
-    "worst-with": "Najteže se osjećaš uz",
-    "sidebar": {
-      "journal": "Dnevnik",
-      "notes": "Bilješke"
-    }
+    "worst-with": "Najteže se osjećaš uz"
   },
   "dawarich": {
     "route": {
