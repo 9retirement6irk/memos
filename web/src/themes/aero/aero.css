@@ -707,7 +707,12 @@
   & .mu-button-primary:hover:not(:disabled, [data-disabled]) {
     background-image: var(--aero-blue-button-hover);
   }
+  /* @usememos/ui no longer fades a disabled button (it recolors it); a Vista button greys out. */
+  & .mu-button[data-disabled]:not([data-loading]) {
+    opacity: 0.45;
+  }
   & .mu-button-primary:is(:disabled, [data-disabled]) {
+    color: #fff;
     filter: grayscale(0.7) opacity(0.7);
     box-shadow:
       inset 0 0 0 1px rgba(255, 255, 255, 0.35),
