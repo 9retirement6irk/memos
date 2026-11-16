@@ -1750,5 +1750,21 @@
       "add": "Şəkil əlavə et",
       "preview": "Marşrut şəklinin önizləməsi"
     }
+  },
+  "text-extraction": {
+    "read-text": "Mətni oxu",
+    "read-text-name": "{{name}} içindəki mətni oxu",
+    "text-from": "{{name}} faylından mətn",
+    "preparing": "Fayl hazırlanır…",
+    "reading": "Mətn oxunur…",
+    "text": "Mətn",
+    "no-text": "Heç bir mətn tapılmadı.",
+    "truncated": "Mətn tam oxunmaq üçün çox uzun idi, ona görə sonu çatışmır.",
+    "read-locally": "Bu PDF-in öz mətni var, ona görə heç yerə göndərilmədən burada oxundu.",
+    "too-many-pages": "Bu faylda bir dəfəyə oxumaq üçün çox səhifə var (hədd {{count}}).",
+    "failed": "Mətni oxumaq mümkün olmadı.",
+    "add-to-memo": "Qeydə əlavə et",
+    "added": "Mətn qeydə əlavə edildi.",
+    "add-failed": "Mətni qeydə əlavə etmək mümkün olmadı."
   }
 }

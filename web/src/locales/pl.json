@@ -1752,5 +1752,21 @@
       "add": "Dodaj obraz",
       "preview": "Podgląd obrazu trasy"
     }
+  },
+  "text-extraction": {
+    "read-text": "Odczytaj tekst",
+    "read-text-name": "Odczytaj tekst z {{name}}",
+    "text-from": "Tekst z {{name}}",
+    "preparing": "Przygotowywanie pliku…",
+    "reading": "Odczytywanie tekstu…",
+    "text": "Tekst",
+    "no-text": "Nie znaleziono tekstu.",
+    "truncated": "Tekst był zbyt długi, by odczytać go w całości, więc brakuje jego końca.",
+    "read-locally": "Ten PDF ma własny tekst, więc został odczytany tutaj, bez wysyłania go dokądkolwiek.",
+    "too-many-pages": "Ten plik ma zbyt wiele stron, by odczytać je naraz (limit wynosi {{count}}).",
+    "failed": "Nie udało się odczytać tekstu.",
+    "add-to-memo": "Dodaj do notatki",
+    "added": "Tekst został dodany do notatki.",
+    "add-failed": "Nie udało się dodać tekstu do notatki."
   }
 }

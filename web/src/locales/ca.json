@@ -1751,5 +1751,21 @@
       "add": "Afegeix la imatge",
       "preview": "Previsualització de la imatge del recorregut"
     }
+  },
+  "text-extraction": {
+    "read-text": "Llegeix el text",
+    "read-text-name": "Llegeix el text de {{name}}",
+    "text-from": "Text de {{name}}",
+    "preparing": "S'està preparant el fitxer…",
+    "reading": "S'està llegint el text…",
+    "text": "Text",
+    "no-text": "No s'ha trobat cap text.",
+    "truncated": "El text era massa llarg per llegir-lo sencer, i en falta el final.",
+    "read-locally": "Aquest PDF té text propi, així que s'ha llegit aquí sense enviar-lo enlloc.",
+    "too-many-pages": "Aquest fitxer té massa pàgines per llegir-les d'un cop (el límit és {{count}}).",
+    "failed": "No s'ha pogut llegir el text.",
+    "add-to-memo": "Afegeix al memo",
+    "added": "El text s'ha afegit al memo.",
+    "add-failed": "No s'ha pogut afegir el text al memo."
   }
 }

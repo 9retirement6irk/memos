@@ -1750,5 +1750,21 @@
       "add": "Bild hinzufügen",
       "preview": "Vorschau des Routenbilds"
     }
+  },
+  "text-extraction": {
+    "read-text": "Text lesen",
+    "read-text-name": "Text in {{name}} lesen",
+    "text-from": "Text aus {{name}}",
+    "preparing": "Datei wird vorbereitet…",
+    "reading": "Text wird gelesen…",
+    "text": "Text",
+    "no-text": "Es wurde kein Text gefunden.",
+    "truncated": "Der Text war zu lang, um ihn ganz zu lesen, daher fehlt sein Ende.",
+    "read-locally": "Diese PDF hat eigenen Text und wurde deshalb hier gelesen, ohne irgendwohin gesendet zu werden.",
+    "too-many-pages": "Diese Datei hat zu viele Seiten, um sie auf einmal zu lesen (die Grenze ist {{count}}).",
+    "failed": "Der Text konnte nicht gelesen werden.",
+    "add-to-memo": "Zur Notiz hinzufügen",
+    "added": "Der Text wurde der Notiz hinzugefügt.",
+    "add-failed": "Der Text konnte der Notiz nicht hinzugefügt werden."
   }
 }

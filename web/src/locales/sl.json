@@ -1752,5 +1752,21 @@
       "add": "Dodaj sliko",
       "preview": "Predogled slike poti"
     }
+  },
+  "text-extraction": {
+    "read-text": "Preberi besedilo",
+    "read-text-name": "Preberi besedilo v {{name}}",
+    "text-from": "Besedilo iz {{name}}",
+    "preparing": "Pripravljanje datoteke…",
+    "reading": "Branje besedila…",
+    "text": "Besedilo",
+    "no-text": "Besedila ni bilo mogoče najti.",
+    "truncated": "Besedilo je bilo predolgo, da bi ga prebrali v celoti, zato mu manjka konec.",
+    "read-locally": "Ta PDF ima lastno besedilo, zato je bil prebran tukaj, ne da bi ga kamor koli poslali.",
+    "too-many-pages": "Ta datoteka ima preveč strani, da bi jih prebrali naenkrat (omejitev je {{count}}).",
+    "failed": "Besedila ni bilo mogoče prebrati.",
+    "add-to-memo": "Dodaj v beležko",
+    "added": "Besedilo je bilo dodano v beležko.",
+    "add-failed": "Besedila ni bilo mogoče dodati v beležko."
   }
 }

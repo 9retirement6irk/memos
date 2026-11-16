@@ -1,9 +1,10 @@
 import { Button, Dialog } from "@usememos/ui";
-import { ChevronLeft, ChevronRight, InfoIcon, PaletteIcon, RotateCcw, X, ZoomIn, ZoomOut } from "lucide-react";
+import { ChevronLeft, ChevronRight, InfoIcon, PaletteIcon, RotateCcw, ScanTextIcon, X, ZoomIn, ZoomOut } from "lucide-react";
 import React, { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { DrawingViewer, isDrawingFilename } from "@/components/DrawingSheet";
 import MediaMetadataDetails from "@/components/MediaMetadataDetails";
 import MotionPhotoPreview from "@/components/MotionPhotoPreview";
+import { useReadText } from "@/components/TextExtraction";
 import useMediaQuery from "@/hooks/useMediaQuery";
 import { cn } from "@/lib/utils";
 import type { Attachment } from "@/types/proto/api/attachment_service_pb";
@@ -113,6 +114,14 @@ function PreviewImageDialog({ open, onOpenChange, imgUrls = [], items, initialIn
             (attachment.name === currentItem.id || getAttachmentUrl(attachment) === currentItem.sourceUrl),
         )
       : undefined;
+  // The file shown, for Read text: any image of the memo stored here, drawings included.
+  const currentAttachment =
+    drawingContext && currentItem?.kind === "image"
+      ? drawingContext.memo.attachments.find(
+          (attachment) => attachment.name === currentItem.id || getAttachmentUrl(attachment) === currentItem.sourceUrl,
+        )
+      : undefined;
+  const readText = useReadText(currentAttachment, { memoName: drawingContext?.memo.name, canEdit: Boolean(drawingContext?.canEdit) });
   const hasMultiple = itemCount > 1;
   const isImagePreview = currentItem?.kind === "image";
   const canGoPrevious = safeIndex > 0;
@@ -365,6 +374,11 @@ function PreviewImageDialog({ open, onOpenChange, imgUrls = [], items, initialIn
               </div>
 
               <div className="flex shrink-0 items-center gap-1.5" data-theme="dark">
+                {readText.available && (
+                  <Button icon={<ScanTextIcon />} onClick={readText.open}>
+                    {t("text-extraction.read-text")}
+                  </Button>
+                )}
                 {annotationSource && (
                   <Button icon={<PaletteIcon />} onClick={() => setAnnotation(annotationSource)}>
                     {t("editor.drawing.annotate")}
@@ -527,6 +541,7 @@ function PreviewImageDialog({ open, onOpenChange, imgUrls = [], items, initialIn
           {showDetails && <MediaMetadataDetails id="attachment-media-details" item={currentItem} onClose={() => setShowDetails(false)} />}
         </div>
       </Dialog.Popup>
+      {open && readText.dialog}
       {open && annotation && drawingContext && (
         <Suspense fallback={null}>
           <DrawingViewer

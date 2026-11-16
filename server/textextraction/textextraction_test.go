@@ -40,28 +40,34 @@ func fakeClaude(t *testing.T) *httptest.Server {
 }
 
 type testEnv struct {
-	mux   *http.ServeMux
-	store *store.Store
-	admin string
-	user  string
+	mux     *http.ServeMux
+	store   *store.Store
+	service *Service
+	admin   string
+	user    string
+	adminID int32
+	userID  int32
 }
 
 func newTestEnv(ctx context.Context, t *testing.T, claude *httptest.Server) *testEnv {
 	t.Helper()
 	testStore := teststore.NewTestingStore(ctx, t)
 	t.Cleanup(func() { testStore.Close() })
-	token := func(username string, role store.Role) string {
+	token := func(username string, role store.Role) (string, int32) {
 		user, err := testStore.CreateUser(ctx, &store.User{Username: username, Role: role, Email: username + "@example.com", PasswordHash: "hash"})
 		require.NoError(t, err)
 		token, _, err := auth.GenerateAccessTokenV2(user.ID, user.Username, string(user.Role), string(user.RowStatus), user.PasswordHash, []byte(testSecret))
 		require.NoError(t, err)
-		return token
+		return token, user.ID
 	}
 	service := NewService(testStore, testSecret)
 	service.HTTPClient = claude.Client()
 	mux := http.NewServeMux()
 	service.RegisterRoutes(mux)
-	return &testEnv{mux: mux, store: testStore, admin: token("admin", store.RoleAdmin), user: token("will", store.RoleUser)}
+	env := &testEnv{mux: mux, store: testStore, service: service}
+	env.admin, env.adminID = token("admin", store.RoleAdmin)
+	env.user, env.userID = token("will", store.RoleUser)
+	return env
 }
 
 func (e *testEnv) do(method, path, body, token string) *httptest.ResponseRecorder {

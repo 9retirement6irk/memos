@@ -1,8 +1,15 @@
-// Package textextraction serves /api/text-extraction: the instance's Claude
-// connection and its choice of AI for reading the text out of images,
-// drawings and PDFs. Only admins can see or change it. The Claude API key
-// stays on the server: responses carry only whether it is set and a masked
-// hint.
+// Package textextraction serves /api/text-extraction: reading the text out of
+// images, drawings and PDFs with Claude or Gemini, and the settings for it.
+//
+// The settings are the instance's Claude connection and its choice of AI.
+// Only admins can see or change them. The Claude API key stays on the server:
+// responses carry only whether it is set and a masked hint.
+//
+// Any signed-in user can ask for the text in an attachment they can read
+// (POST /extract). The browser prepares the pictures: it scales images down,
+// reads a PDF's own text layer itself and renders only its scanned pages.
+// Each user may ask 30 times an hour, since every call is paid for with the
+// instance's key.
 //
 // The settings live in the fork's own system_setting row
 // (store.ForkSettingTextExtraction), which stock Memos ignores, not in stock's
@@ -15,11 +22,13 @@ import (
 	"io"
 	"net/http"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/pkg/errors"
 
 	"github.com/usememos/memos/internal/httphandler"
+	"github.com/usememos/memos/internal/ratelimit"
 	"github.com/usememos/memos/internal/safehttp"
 	storepb "github.com/usememos/memos/proto/gen/store"
 	"github.com/usememos/memos/provider/ai/anthropic"
@@ -90,9 +99,13 @@ type ChoiceRequest struct {
 type Service struct {
 	Store         *store.Store
 	authenticator *auth.Authenticator
-	// HTTPClient calls Claude; nil uses a client that refuses private
-	// addresses. Tests replace it to reach a fake server on loopback.
+	// HTTPClient calls Claude and Gemini; nil uses a client that refuses
+	// private addresses. Tests replace it to reach a fake server on loopback.
 	HTTPClient *http.Client
+	// Limiter counts each user's extractions; nil makes an in-memory one on
+	// first use.
+	Limiter     ratelimit.Limiter
+	limiterOnce sync.Once
 }
 
 // NewService returns the service for the store and the instance secret.
@@ -106,6 +119,8 @@ func (s *Service) RegisterRoutes(mux *http.ServeMux) {
 	mux.Handle("PUT /api/text-extraction/settings", httphandler.Func(s.putChoice))
 	mux.Handle("PUT /api/text-extraction/claude", httphandler.Func(s.putClaude))
 	mux.Handle("DELETE /api/text-extraction/claude", httphandler.Func(s.deleteClaude))
+	mux.Handle("GET /api/text-extraction/status", httphandler.Func(s.getStatus))
+	mux.Handle("POST /api/text-extraction/extract", httphandler.Func(s.extract))
 }
 
 var (
@@ -285,6 +300,12 @@ func (s *Service) httpClient() *http.Client {
 
 // claudeError says what went wrong talking to Claude, never with the key.
 func claudeError(err error) error {
+	// These carry Anthropic's own explanation, such as which model is unknown.
+	for _, detailed := range []error{anthropic.ErrBadRequest, anthropic.ErrRefused} {
+		if errors.Is(err, detailed) {
+			return &httphandler.Error{Code: http.StatusBadGateway, Message: err.Error() + ".", Cause: err}
+		}
+	}
 	for _, known := range []error{anthropic.ErrUnauthorized, anthropic.ErrForbidden, anthropic.ErrNotFound, anthropic.ErrRateLimited, anthropic.ErrOverloaded} {
 		if errors.Is(err, known) {
 			return &httphandler.Error{Code: http.StatusBadGateway, Message: known.Error() + ".", Cause: err}

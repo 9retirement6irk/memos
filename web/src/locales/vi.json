@@ -1750,5 +1750,21 @@
       "add": "Thêm ảnh",
       "preview": "Xem trước ảnh lộ trình"
     }
+  },
+  "text-extraction": {
+    "read-text": "Đọc văn bản",
+    "read-text-name": "Đọc văn bản trong {{name}}",
+    "text-from": "Văn bản từ {{name}}",
+    "preparing": "Đang chuẩn bị tệp…",
+    "reading": "Đang đọc văn bản…",
+    "text": "Văn bản",
+    "no-text": "Không tìm thấy văn bản nào.",
+    "truncated": "Văn bản quá dài để đọc hết, nên phần cuối bị thiếu.",
+    "read-locally": "PDF này có văn bản riêng, nên đã được đọc ngay tại đây mà không gửi đi đâu cả.",
+    "too-many-pages": "Tệp này có quá nhiều trang để đọc cùng lúc (giới hạn là {{count}}).",
+    "failed": "Không thể đọc văn bản.",
+    "add-to-memo": "Thêm vào ghi chú",
+    "added": "Đã thêm văn bản vào ghi chú.",
+    "add-failed": "Không thể thêm văn bản vào ghi chú."
   }
 }

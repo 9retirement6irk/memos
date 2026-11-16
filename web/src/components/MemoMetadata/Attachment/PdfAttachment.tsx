@@ -1,7 +1,8 @@
 import { Button, buttonClasses, Skeleton } from "@usememos/ui";
-import { ChevronLeftIcon, ChevronRightIcon, DownloadIcon, ExternalLinkIcon, FileTextIcon } from "lucide-react";
+import { ChevronLeftIcon, ChevronRightIcon, DownloadIcon, ExternalLinkIcon, FileTextIcon, ScanTextIcon } from "lucide-react";
 import type { PDFDocumentProxy } from "pdfjs-dist";
 import { useEffect, useRef, useState } from "react";
+import { useReadText } from "@/components/TextExtraction";
 import { cn } from "@/lib/utils";
 import type { Attachment } from "@/types/proto/api/attachment_service_pb";
 import { getAttachmentUrl } from "@/utils/attachment";
@@ -112,8 +113,16 @@ const usePageRender = (
  * memo (up to a readable size), with the page count and controls underneath. It falls back to
  * the file row when the PDF can't be opened (damaged, encrypted, or not a PDF after all).
  */
-const PdfAttachment = ({ attachment }: { attachment: Attachment }) => {
+interface PdfAttachmentProps {
+  attachment: Attachment;
+  /** The memo the PDF belongs to; with `canEdit`, text read from it can be added to the memo. */
+  memoName?: string;
+  canEdit?: boolean;
+}
+
+const PdfAttachment = ({ attachment, memoName, canEdit = false }: PdfAttachmentProps) => {
   const t = useTranslate();
+  const readText = useReadText(attachment, { memoName, canEdit });
   const url = getAttachmentUrl(attachment);
   const figureRef = useRef<HTMLElement>(null);
   const frameRef = useRef<HTMLDivElement>(null);
@@ -177,6 +186,16 @@ const PdfAttachment = ({ attachment }: { attachment: Attachment }) => {
             />
           </>
         )}
+        {readText.available && (
+          <Button
+            variant="ghost"
+            size="xs"
+            icon={<ScanTextIcon />}
+            title={t("text-extraction.read-text")}
+            aria-label={t("text-extraction.read-text-name", { name: attachment.filename })}
+            onClick={readText.open}
+          />
+        )}
         <a
           href={url}
           target="_blank"
@@ -197,6 +216,7 @@ const PdfAttachment = ({ attachment }: { attachment: Attachment }) => {
           <DownloadIcon className="mu-icon-sm" />
         </a>
       </figcaption>
+      {readText.dialog}
     </figure>
   );
 };

@@ -1752,5 +1752,21 @@
       "add": "Pridať obrázok",
       "preview": "Náhľad obrázka trasy"
     }
+  },
+  "text-extraction": {
+    "read-text": "Prečítať text",
+    "read-text-name": "Prečítať text v {{name}}",
+    "text-from": "Text z {{name}}",
+    "preparing": "Pripravuje sa súbor…",
+    "reading": "Číta sa text…",
+    "text": "Text",
+    "no-text": "Nenašiel sa žiadny text.",
+    "truncated": "Text bol príliš dlhý na prečítanie celý, preto chýba jeho koniec.",
+    "read-locally": "Toto PDF má vlastný text, takže bolo prečítané tu bez odoslania kamkoľvek.",
+    "too-many-pages": "Tento súbor má priveľa strán na prečítanie naraz (limit je {{count}}).",
+    "failed": "Text sa nepodarilo prečítať.",
+    "add-to-memo": "Pridať do mema",
+    "added": "Text bol pridaný do mema.",
+    "add-failed": "Text sa nepodarilo pridať do mema."
   }
 }

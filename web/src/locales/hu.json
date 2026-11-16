@@ -1750,5 +1750,21 @@
       "add": "Kép hozzáadása",
       "preview": "Az útvonalkép előnézete"
     }
+  },
+  "text-extraction": {
+    "read-text": "Szöveg kiolvasása",
+    "read-text-name": "A(z) {{name}} szövegének kiolvasása",
+    "text-from": "Szöveg innen: {{name}}",
+    "preparing": "A fájl előkészítése…",
+    "reading": "A szöveg kiolvasása…",
+    "text": "Szöveg",
+    "no-text": "Nem található szöveg.",
+    "truncated": "A szöveg túl hosszú volt ahhoz, hogy teljesen kiolvassuk, ezért hiányzik a vége.",
+    "read-locally": "Ennek a PDF-nek saját szövege van, ezért itt olvastuk ki, sehová sem küldtük el.",
+    "too-many-pages": "Ennek a fájlnak túl sok oldala van ahhoz, hogy egyszerre kiolvassuk (a korlát {{count}}).",
+    "failed": "A szöveget nem sikerült kiolvasni.",
+    "add-to-memo": "Hozzáadás a jegyzethez",
+    "added": "A szöveg bekerült a jegyzetbe.",
+    "add-failed": "A szöveget nem sikerült a jegyzethez adni."
   }
 }

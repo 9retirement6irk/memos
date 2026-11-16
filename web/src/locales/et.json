@@ -1750,5 +1750,21 @@
       "add": "Lisa pilt",
       "preview": "Marsruudipildi eelvaade"
     }
+  },
+  "text-extraction": {
+    "read-text": "Loe tekst",
+    "read-text-name": "Loe faili {{name}} tekst",
+    "text-from": "Tekst failist {{name}}",
+    "preparing": "Faili ettevalmistamine…",
+    "reading": "Teksti lugemine…",
+    "text": "Tekst",
+    "no-text": "Teksti ei leitud.",
+    "truncated": "Tekst oli tervikuna lugemiseks liiga pikk, seega selle lõpp puudub.",
+    "read-locally": "Sellel PDF-il on oma tekst, seega loeti see siin ilma kuhugi saatmata.",
+    "too-many-pages": "Selles failis on korraga lugemiseks liiga palju lehekülgi (piir on {{count}}).",
+    "failed": "Teksti ei õnnestunud lugeda.",
+    "add-to-memo": "Lisa memosse",
+    "added": "Tekst lisati memosse.",
+    "add-failed": "Teksti ei õnnestunud memosse lisada."
   }
 }

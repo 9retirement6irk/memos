@@ -1752,5 +1752,21 @@
       "add": "Pridėti vaizdą",
       "preview": "Maršruto vaizdo peržiūra"
     }
+  },
+  "text-extraction": {
+    "read-text": "Skaityti tekstą",
+    "read-text-name": "Skaityti tekstą iš {{name}}",
+    "text-from": "Tekstas iš {{name}}",
+    "preparing": "Ruošiamas failas…",
+    "reading": "Skaitomas tekstas…",
+    "text": "Tekstas",
+    "no-text": "Teksto nerasta.",
+    "truncated": "Tekstas buvo per ilgas perskaityti visą, todėl trūksta jo pabaigos.",
+    "read-locally": "Šis PDF turi savo tekstą, todėl jis perskaitytas čia, niekur nesiunčiant.",
+    "too-many-pages": "Šiame faile per daug puslapių, kad būtų galima perskaityti iškart (riba – {{count}}).",
+    "failed": "Teksto perskaityti nepavyko.",
+    "add-to-memo": "Pridėti prie atmintinės",
+    "added": "Tekstas pridėtas prie atmintinės.",
+    "add-failed": "Teksto pridėti prie atmintinės nepavyko."
   }
 }

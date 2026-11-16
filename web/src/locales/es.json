@@ -1751,5 +1751,21 @@
       "add": "Añadir imagen",
       "preview": "Vista previa de la imagen de la ruta"
     }
+  },
+  "text-extraction": {
+    "read-text": "Leer texto",
+    "read-text-name": "Leer el texto de {{name}}",
+    "text-from": "Texto de {{name}}",
+    "preparing": "Preparando el archivo…",
+    "reading": "Leyendo el texto…",
+    "text": "Texto",
+    "no-text": "No se encontró texto.",
+    "truncated": "El texto era demasiado largo para leerlo entero, así que falta el final.",
+    "read-locally": "Este PDF tiene texto propio, así que se leyó aquí sin enviarlo a ninguna parte.",
+    "too-many-pages": "Este archivo tiene demasiadas páginas para leerlas de una vez (el límite es {{count}}).",
+    "failed": "No se pudo leer el texto.",
+    "add-to-memo": "Añadir al memo",
+    "added": "El texto se añadió al memo.",
+    "add-failed": "No se pudo añadir el texto al memo."
   }
 }

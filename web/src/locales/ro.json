@@ -1751,5 +1751,21 @@
       "add": "Adaugă imaginea",
       "preview": "Previzualizarea imaginii traseului"
     }
+  },
+  "text-extraction": {
+    "read-text": "Citește textul",
+    "read-text-name": "Citește textul din {{name}}",
+    "text-from": "Text din {{name}}",
+    "preparing": "Se pregătește fișierul…",
+    "reading": "Se citește textul…",
+    "text": "Text",
+    "no-text": "Nu s-a găsit niciun text.",
+    "truncated": "Textul a fost prea lung pentru a fi citit integral, așa că lipsește finalul.",
+    "read-locally": "Acest PDF are propriul text, așa că a fost citit aici, fără a fi trimis nicăieri.",
+    "too-many-pages": "Acest fișier are prea multe pagini pentru a fi citit dintr-odată (limita este {{count}}).",
+    "failed": "Textul nu a putut fi citit.",
+    "add-to-memo": "Adaugă la notă",
+    "added": "Textul a fost adăugat la notă.",
+    "add-failed": "Textul nu a putut fi adăugat la notă."
   }
 }

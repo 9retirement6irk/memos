@@ -1750,5 +1750,21 @@
       "add": "Görsel ekle",
       "preview": "Rota görselinin önizlemesi"
     }
+  },
+  "text-extraction": {
+    "read-text": "Metni oku",
+    "read-text-name": "{{name}} içindeki metni oku",
+    "text-from": "{{name}} dosyasından metin",
+    "preparing": "Dosya hazırlanıyor…",
+    "reading": "Metin okunuyor…",
+    "text": "Metin",
+    "no-text": "Metin bulunamadı.",
+    "truncated": "Metin tamamen okunamayacak kadar uzundu, bu yüzden sonu eksik.",
+    "read-locally": "Bu PDF'nin kendi metni var, bu yüzden hiçbir yere gönderilmeden burada okundu.",
+    "too-many-pages": "Bu dosyada bir seferde okunamayacak kadar çok sayfa var (sınır {{count}}).",
+    "failed": "Metin okunamadı.",
+    "add-to-memo": "Nota ekle",
+    "added": "Metin nota eklendi.",
+    "add-failed": "Metin nota eklenemedi."
   }
 }

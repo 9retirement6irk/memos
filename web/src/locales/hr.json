@@ -1751,5 +1751,21 @@
       "add": "Dodaj sliku",
       "preview": "Pregled slike rute"
     }
+  },
+  "text-extraction": {
+    "read-text": "Pročitaj tekst",
+    "read-text-name": "Pročitaj tekst u {{name}}",
+    "text-from": "Tekst iz {{name}}",
+    "preparing": "Priprema datoteke…",
+    "reading": "Čitanje teksta…",
+    "text": "Tekst",
+    "no-text": "Nije pronađen nikakav tekst.",
+    "truncated": "Tekst je bio predug da bi se pročitao cijeli, pa mu nedostaje kraj.",
+    "read-locally": "Ovaj PDF ima vlastiti tekst, pa je pročitan ovdje bez slanja bilo kamo.",
+    "too-many-pages": "Ova datoteka ima previše stranica da bi se pročitala odjednom (ograničenje je {{count}}).",
+    "failed": "Tekst nije bilo moguće pročitati.",
+    "add-to-memo": "Dodaj u memo",
+    "added": "Tekst je dodan u memo.",
+    "add-failed": "Tekst nije bilo moguće dodati u memo."
   }
 }

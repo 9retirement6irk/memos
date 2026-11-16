@@ -1750,5 +1750,21 @@
       "add": "Tambahkan gambar",
       "preview": "Pratinjau gambar rute"
     }
+  },
+  "text-extraction": {
+    "read-text": "Baca teks",
+    "read-text-name": "Baca teks di {{name}}",
+    "text-from": "Teks dari {{name}}",
+    "preparing": "Menyiapkan berkas…",
+    "reading": "Membaca teks…",
+    "text": "Teks",
+    "no-text": "Tidak ada teks yang ditemukan.",
+    "truncated": "Teks terlalu panjang untuk dibaca seluruhnya, jadi bagian akhirnya hilang.",
+    "read-locally": "PDF ini punya teks sendiri, jadi dibaca di sini tanpa dikirim ke mana pun.",
+    "too-many-pages": "Berkas ini punya terlalu banyak halaman untuk dibaca sekaligus (batasnya {{count}}).",
+    "failed": "Teks tidak dapat dibaca.",
+    "add-to-memo": "Tambahkan ke memo",
+    "added": "Teks ditambahkan ke memo.",
+    "add-failed": "Teks tidak dapat ditambahkan ke memo."
   }
 }
