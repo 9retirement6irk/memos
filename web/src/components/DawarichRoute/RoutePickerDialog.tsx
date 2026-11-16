@@ -184,28 +184,31 @@ const RoutePickerDialog = ({ open, onOpenChange, day, onPick }: Props) => {
             <p className="mu-body text-mu-text-secondary">{t("dawarich.route.empty")}</p>
           ) : (
             <div className="grid gap-4 sm:grid-cols-[minmax(0,14rem)_1fr]">
-              <Fieldset.Root render={<RadioGroup value={choice} onValueChange={(value) => setChoice(String(value))} />}>
-                <Fieldset.Legend>{t("dawarich.route.which")}</Fieldset.Legend>
-                <div className="flex max-h-72 flex-col gap-1 overflow-y-auto">
-                  <Field.Item>
-                    <Field.Label>
-                      <Radio value={WHOLE_DAY} /> {t("dawarich.route.whole-day")}
-                    </Field.Label>
-                  </Field.Item>
-                  {tracks.map((track) => {
-                    const ModeIcon = (track.mode && MODE_ICONS[track.mode]) || RouteIcon;
-                    return (
-                      <Field.Item key={track.id}>
-                        <Field.Label className="flex items-center gap-1.5">
-                          <Radio value={String(track.id)} />
-                          <ModeIcon aria-hidden="true" className="mu-icon-sm shrink-0 text-mu-text-secondary" />
-                          <span className="mu-body">{trackLabel(track)}</span>
-                        </Field.Label>
-                      </Field.Item>
-                    );
-                  })}
-                </div>
-              </Fieldset.Root>
+              {/* A radio group is one field: Field.Item reads the Field.Root around the group. */}
+              <Field.Root>
+                <Fieldset.Root render={<RadioGroup value={choice} onValueChange={(value) => setChoice(String(value))} />}>
+                  <Fieldset.Legend>{t("dawarich.route.which")}</Fieldset.Legend>
+                  <div className="flex max-h-72 flex-col gap-1 overflow-y-auto">
+                    <Field.Item>
+                      <Field.Label>
+                        <Radio value={WHOLE_DAY} /> {t("dawarich.route.whole-day")}
+                      </Field.Label>
+                    </Field.Item>
+                    {tracks.map((track) => {
+                      const ModeIcon = (track.mode && MODE_ICONS[track.mode]) || RouteIcon;
+                      return (
+                        <Field.Item key={track.id}>
+                          <Field.Label className="flex items-center gap-1.5">
+                            <Radio value={String(track.id)} />
+                            <ModeIcon aria-hidden="true" className="mu-icon-sm shrink-0 text-mu-text-secondary" />
+                            <span className="mu-body">{trackLabel(track)}</span>
+                          </Field.Label>
+                        </Field.Item>
+                      );
+                    })}
+                  </div>
+                </Fieldset.Root>
+              </Field.Root>
               <div className="relative flex aspect-[8/5] items-center justify-center overflow-hidden rounded-mu-md bg-mu-well">
                 {preview ? (
                   <img src={preview.url} alt={t("dawarich.route.preview")} className="size-full object-cover" data-route-preview />
