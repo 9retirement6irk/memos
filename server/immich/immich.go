@@ -16,6 +16,7 @@ import (
 
 	"github.com/usememos/memos/internal/httphandler"
 	immichclient "github.com/usememos/memos/internal/immich"
+	"github.com/usememos/memos/internal/safehttp"
 	"github.com/usememos/memos/server/auth"
 	"github.com/usememos/memos/store"
 )
@@ -56,7 +57,8 @@ type ConnectionResponse struct {
 	URL        string `json:"url"`
 }
 
-// ConnectionRequest updates the connection. An empty APIKey keeps the saved one.
+// ConnectionRequest updates the connection. An empty APIKey keeps the saved
+// one, as long as URL is still the server it was saved for.
 type ConnectionRequest struct {
 	URL    string `json:"url"`
 	APIKey string `json:"apiKey"`
@@ -148,13 +150,17 @@ func (s *Service) putConnection(w http.ResponseWriter, r *http.Request) error {
 
 	apiKey := strings.TrimSpace(request.APIKey)
 	if apiKey == "" {
-		// Changing only the address keeps the key already saved.
+		// An empty key keeps the one already saved, but only for the server
+		// it was saved for: it is never sent to another address.
 		saved, err := s.Store.GetImmichConnection(r.Context(), user.ID)
 		if err != nil {
 			return &httphandler.Error{Code: http.StatusInternalServerError, Message: "failed to read the Immich connection", Cause: err}
 		}
 		if saved == nil {
 			return &httphandler.Error{Code: http.StatusBadRequest, Message: "an API key is required"}
+		}
+		if !safehttp.SameServer(saved.URL, baseURL) {
+			return &httphandler.Error{Code: http.StatusBadRequest, Message: "enter the API key again to use a different server address"}
 		}
 		apiKey = saved.APIKey
 	}

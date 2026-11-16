@@ -21,6 +21,7 @@ import (
 
 	"github.com/usememos/memos/internal/homeassistant"
 	"github.com/usememos/memos/internal/httphandler"
+	"github.com/usememos/memos/internal/safehttp"
 	"github.com/usememos/memos/server/auth"
 	"github.com/usememos/memos/store"
 )
@@ -183,7 +184,8 @@ type ReminderResponse struct {
 	StreakWarning    bool   `json:"streakWarning"`
 }
 
-// ReminderRequest saves the reminder. An empty Token keeps the saved one.
+// ReminderRequest saves the reminder. An empty Token keeps the saved one, as
+// long as URL is still the Home Assistant it was saved for.
 type ReminderRequest struct {
 	Enabled          bool   `json:"enabled"`
 	URL              string `json:"url"`
@@ -239,6 +241,10 @@ func (s *Service) getReminder(w http.ResponseWriter, r *http.Request) error {
 func badRequest(message string) error {
 	return &httphandler.Error{Code: http.StatusBadRequest, Message: message}
 }
+
+// errTokenForOtherAddress refuses to reuse the saved token for another
+// address: it is never sent to a server other than the one it was saved for.
+var errTokenForOtherAddress = badRequest("enter the access token again to use a different Home Assistant address")
 
 // validate checks the request and returns the reminder to save.
 func (request *ReminderRequest) validate() (*Reminder, error) {
@@ -299,6 +305,9 @@ func (s *Service) putReminder(w http.ResponseWriter, r *http.Request) error {
 		if saved == nil || saved.Token == "" {
 			return badRequest("enter a Home Assistant access token")
 		}
+		if !safehttp.SameServer(saved.URL, reminder.URL) {
+			return errTokenForOtherAddress
+		}
 		reminder.Token = saved.Token
 	}
 	if saved != nil {
@@ -331,7 +340,8 @@ func (s *Service) deleteReminder(w http.ResponseWriter, r *http.Request) error {
 }
 
 // NotifiersRequest names a Home Assistant to list notifiers from. An empty
-// Token uses the saved one.
+// Token uses the saved one, as long as URL is the Home Assistant it was saved
+// for.
 type NotifiersRequest struct {
 	URL   string `json:"url"`
 	Token string `json:"token"`
@@ -360,6 +370,9 @@ func (s *Service) listNotifiers(w http.ResponseWriter, r *http.Request) error {
 		}
 		if saved == nil {
 			return badRequest("enter a Home Assistant access token")
+		}
+		if !safehttp.SameServer(saved.URL, request.URL) {
+			return errTokenForOtherAddress
 		}
 		token = saved.Token
 	}

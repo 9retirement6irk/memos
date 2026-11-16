@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"strings"
+	"sync/atomic"
 	"testing"
 	"time"
 
@@ -191,4 +192,40 @@ func TestThinKeepsEndsAndLimit(t *testing.T) {
 	require.InDelta(t, 0, thinned[0].Latitude, 0)
 	require.InDelta(t, 4999, thinned[1499].Latitude, 0)
 	require.Len(t, thin(points[:10], 1500), 10)
+}
+
+// otherServer is a server the saved key was never meant for; it counts the
+// requests it gets.
+func otherServer(t *testing.T) (*httptest.Server, *atomic.Int32) {
+	t.Helper()
+	requests := &atomic.Int32{}
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		requests.Add(1)
+		w.WriteHeader(http.StatusUnauthorized)
+	}))
+	t.Cleanup(server.Close)
+	return server, requests
+}
+
+func TestSavedKeyStaysWithItsServer(t *testing.T) {
+	t.Parallel()
+	ctx := context.Background()
+	server := fakeDawarich(t)
+	defer server.Close()
+	env := newTestEnv(ctx, t, server)
+	other, requests := otherServer(t)
+
+	response := env.request(http.MethodPut, "/api/dawarich/connection", `{"url":"`+server.URL+`","apiKey":"good-key"}`, true)
+	require.Equal(t, http.StatusOK, response.Code, response.Body.String())
+
+	// Another address without a key is refused before anything is sent there.
+	response = env.request(http.MethodPut, "/api/dawarich/connection", `{"url":"`+other.URL+`","apiKey":""}`, true)
+	require.Equal(t, http.StatusBadRequest, response.Code)
+	require.Contains(t, response.Body.String(), "enter the API key again")
+	require.Zero(t, requests.Load())
+	saved := &Connection{}
+	found, err := env.store.GetUserRecord(ctx, store.UserRecordDawarichConnection, env.user.ID, saved)
+	require.NoError(t, err)
+	require.True(t, found)
+	require.Equal(t, server.URL, saved.URL)
 }
