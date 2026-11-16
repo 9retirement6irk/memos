@@ -169,7 +169,7 @@ const InsertMenu = (props: InsertMenuProps) => {
 
   return (
     <>
-      <Menu.Root modal={false} size="sm">
+      <Menu.Root modal={false} size="md">
         <Tooltip.Root>
           <Tooltip.Trigger
             render={

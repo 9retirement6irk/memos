@@ -505,7 +505,9 @@
     "layout-list-description": "Vienas skaitymo pločio stulpelis",
     "on-this-memo": "Šiame priminime",
     "parent-memo": "Pagrindinis priminimas",
-    "view-options": "Peržiūros parinktys"
+    "view-options": "Peržiūros parinktys",
+    "add-reaction": "Pridėti reakciją",
+    "remove-reaction": "Pašalinti reakciją"
   },
   "message": {
     "archived-successfully": "Sėkmingai suarchyvuota",
@@ -672,25 +674,13 @@
       "delete-warning-description": "ŠIS VEIKSMAS YRA NEGRĮŽTAMAS",
       "label": "narys",
       "list-title": "Narių sąrašas",
-      "member-column": "narys",
       "restore-success": "{{username}} sėkmingai atkurtas",
-      "summary-column": "Santrauka",
       "user": "Vartotojas",
       "no-members-found": "Narių nerasta",
       "export-memos": "Eksportuoti užrašus",
       "username-password-required": "Vartotojo vardas ir slaptažodis negali būti tušti",
       "create-success": "Vartotojas sukurtas",
       "update-success": "Vartotojas atnaujintas"
-    },
-    "memo": {
-      "add-reaction": "Pridėti reakciją",
-      "configured-reactions": "Sukonfigūruotos reakcijos",
-      "label": "Atmintinė",
-      "reaction-placeholder": "pvz. 👍",
-      "reactions-description": "Apibrėžkite reakcijos parinktis, kurias vartotojai gali pritaikyti atmintinėms.",
-      "remove-reaction": "Pašalinti reakciją",
-      "reactions": "Reactions",
-      "reactions-required": "Reactions sąrašas negali būti tuščias"
     },
     "my-account": {
       "label": "Mano paskyra"
@@ -907,7 +897,6 @@
       "client-id": "Kliento ID",
       "client-secret": "Kliento paslaptis",
       "client-secret-optional-description": "Palikite tuščią, kad esamo kliento paslaptis liktų nepakitusi.",
-      "configuration": "Konfigūracija",
       "configuration-summary-description": "Parodykite esminius dalykus, kurie padeda identifikuoti ir tikrinti teikėją, neatskleidžiant visos konfigūracijos.",
       "confirm-delete": "Ar tikrai norite ištrinti `{{name}}` SSO konfigūraciją? ŠIS VEIKSMAS YRA NEGRĮŽTAMAS",
       "create-sso": "Sukurkite SSO",
@@ -936,7 +925,6 @@
       "not-linked-description": "Jokia išorinė tapatybė dar nesusieta. Galite prisijungti prie šio teikėjo, kad prisijungtumėte prie jo vėliau.",
       "oauth-configuration": "OAuth konfigūracija",
       "oauth-configuration-description": "Įveskite OAuth kliento kredencialus ir teikėjo galinius taškus, naudojamus prisijungiant.",
-      "provider": "Teikėjas",
       "provider-id": "Teikėjo ID",
       "provider-id-description": "Tik mažosios raidės, skaičiai ir brūkšneliai. Ši reikšmė tampa teikėjo ištekliaus pavadinimo dalimi.",
       "provider-uid": "UID",
@@ -1084,7 +1072,6 @@
       },
       "no-webhooks-found": "Žiniatinklio kabliukų nerasta.",
       "title": "Webhooks",
-      "url": "URL",
       "label": "Webhooks"
     },
     "tags": {

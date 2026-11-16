@@ -169,7 +169,9 @@ export const JournalSuggestions = ({ journal, onAttachFiles }: { journal: Journa
               className="flex flex-col gap-1.5 rounded-mu-md border border-mu-line bg-mu-surface p-2"
               data-chosen={chosen ? "" : undefined}
             >
-              <span className="mu-caption text-mu-ink-muted">{describeWhen(suggestion, t("journal.yesterday"), t("journal.today"))}</span>
+              <span className="mu-caption text-mu-text-secondary">
+                {describeWhen(suggestion, t("journal.yesterday"), t("journal.today"))}
+              </span>
               <span className="mu-label flex items-center gap-1.5">
                 <ImagesIcon className="mu-icon-sm" aria-hidden="true" />
                 {suggestion.city

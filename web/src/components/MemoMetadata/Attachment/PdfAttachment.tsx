@@ -140,7 +140,7 @@ const PdfAttachment = ({ attachment }: { attachment: Attachment }) => {
       <div
         ref={frameRef}
         data-pdf-page
-        className="relative w-full overflow-hidden rounded-mu-md border border-mu-line bg-white shadow-mu-raised"
+        className="relative w-full overflow-hidden rounded-mu-md border border-mu-line bg-white"
         style={{ aspectRatio }}
       >
         <canvas
@@ -152,11 +152,11 @@ const PdfAttachment = ({ attachment }: { attachment: Attachment }) => {
         {!rendered && <Skeleton className="absolute inset-0 rounded-none" />}
       </div>
       <figcaption className="mu-compact flex min-w-0 items-center gap-1">
-        <FileTextIcon aria-hidden="true" className="mu-icon-sm shrink-0 text-mu-ink-muted" />
-        <span className="min-w-0 flex-1 truncate mu-caption text-mu-ink" title={attachment.filename}>
+        <FileTextIcon aria-hidden="true" className="mu-icon-sm shrink-0 text-mu-text-secondary" />
+        <span className="min-w-0 flex-1 truncate mu-caption text-mu-text" title={attachment.filename}>
           {attachment.filename}
         </span>
-        {pageLabel && <span className="shrink-0 mu-caption tabular-nums text-mu-ink-muted">{pageLabel}</span>}
+        {pageLabel && <span className="shrink-0 mu-caption tabular-nums text-mu-text-secondary">{pageLabel}</span>}
         {pageCount > 1 && (
           <>
             <Button

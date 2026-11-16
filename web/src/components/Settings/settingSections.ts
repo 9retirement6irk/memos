@@ -10,7 +10,6 @@ import {
   ImagesIcon,
   KeyIcon,
   KeyRoundIcon,
-  LibraryIcon,
   type LucideIcon,
   MailIcon,
   NotebookPenIcon,
@@ -33,7 +32,6 @@ import InstanceSection from "@/components/Settings/InstanceSection";
 import JournalSection from "@/components/Settings/JournalSection";
 import MemberSection from "@/components/Settings/MemberSection";
 import MemoExportSection from "@/components/Settings/MemoExportSection";
-import MemoRelatedSettings from "@/components/Settings/MemoRelatedSettings";
 import MyAccountSection from "@/components/Settings/MyAccountSection";
 import NotificationSection from "@/components/Settings/NotificationSection";
 import PreferencesSection from "@/components/Settings/PreferencesSection";
@@ -59,7 +57,6 @@ export type SettingSectionKey =
   | "journal"
   | "member"
   | "system"
-  | "memo"
   | "storage"
   | "usage-limits"
   | "notification"
@@ -157,13 +154,6 @@ export const SETTINGS_SECTIONS: SettingSectionDefinition[] = [
     labelKey: "setting.system.label",
     icon: Settings2Icon,
     component: InstanceSection,
-  },
-  {
-    key: "memo",
-    scope: "admin",
-    labelKey: "setting.memo.label",
-    icon: LibraryIcon,
-    component: MemoRelatedSettings,
   },
   {
     key: "tags",

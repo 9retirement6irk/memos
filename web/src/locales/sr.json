@@ -504,7 +504,9 @@
     "layout-list-description": "Једна колона ширине читања",
     "on-this-memo": "На овој поруци",
     "parent-memo": "Надређена порука",
-    "view-options": "Опције приказа"
+    "view-options": "Опције приказа",
+    "add-reaction": "Додајте реакцију",
+    "remove-reaction": "Уклоните реакцију"
   },
   "message": {
     "archived-successfully": "Архивирано је успешно",
@@ -671,25 +673,13 @@
       "delete-warning-description": "ОВА АКЦИЈА ЈЕ НЕПОВРАТНА",
       "label": "Члан",
       "list-title": "Списак чланова",
-      "member-column": "Члан",
       "restore-success": "{{username}} је успешно враћен",
-      "summary-column": "Резиме",
       "user": "Корисник",
       "no-members-found": "Није пронађен ниједан члан",
       "export-memos": "Извези белешке",
       "username-password-required": "Корисничко име и лозинка не могу бити празни",
       "create-success": "Корисник је направљен",
       "update-success": "Корисник је ажуриран"
-    },
-    "memo": {
-      "add-reaction": "Додајте реакцију",
-      "configured-reactions": "Конфигурисане реакције",
-      "label": "Мемо",
-      "reaction-placeholder": "нпр. 👍",
-      "reactions-description": "Дефинишите опције реакције које корисници могу применити на белешке.",
-      "remove-reaction": "Уклоните реакцију",
-      "reactions": "Reactионс",
-      "reactions-required": "Листа Reactионс не сме бити празна"
     },
     "my-account": {
       "label": "Мој налог"
@@ -906,7 +896,6 @@
       "client-id": "ИД клијента",
       "client-secret": "Тајна клијента",
       "client-secret-optional-description": "Оставите празно да би постојећа тајна клијента остала непромењена.",
-      "configuration": "Конфигурација",
       "configuration-summary-description": "Прикажите основне ствари које помажу у идентификацији и ревизији добављача без излагања потпуне конфигурације на линији.",
       "confirm-delete": "Да ли сте сигурни да желите да избришете `{{name}}` SSO конфигурацију? ОВА АКЦИЈА ЈЕ НЕПОВРАТНА",
       "create-sso": "Креирајте SSO",
@@ -935,7 +924,6 @@
       "not-linked-description": "Ниједан спољни идентитет још увек није повезан. Можете да повежете овог провајдера да бисте се касније пријавили са њим.",
       "oauth-configuration": "OAuth конфигурација",
       "oauth-configuration-description": "Попуните акредитиве клијента OAuth и крајње тачке добављача које се користе током пријављивања.",
-      "provider": "Провајдер",
       "provider-id": "ИД провајдера",
       "provider-id-description": "Само мала слова, бројеви и цртице. Ова вредност постаје део имена ресурса добављача.",
       "provider-uid": "UID",
@@ -1083,7 +1071,6 @@
       },
       "no-webhooks-found": "Није пронађен ниједан веб-хук.",
       "title": "КСК0Кс",
-      "url": "URL",
       "label": "КСК0Кс"
     },
     "tags": {

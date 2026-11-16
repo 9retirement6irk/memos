@@ -460,7 +460,9 @@
       "uncheck-all": "انتخاب همه وظایف را بردارید",
       "updated": "وظایف به‌روزرسانی شدند"
     },
-    "view-options": "گزینه‌های مشاهده"
+    "view-options": "گزینه‌های مشاهده",
+    "add-reaction": "افزودن واکنش",
+    "remove-reaction": "حذف واکنش"
   },
   "message": {
     "archived-successfully": "با موفقیت آرشیو شد",
@@ -510,9 +512,7 @@
       "list-title": "لیست اعضا",
       "no-members-found": "هیچ عضوی پیدا نشد",
       "archived": "آرشیو شده",
-      "member-column": "عضو",
       "active": "فعال",
-      "summary-column": "خلاصه",
       "export-memos": "خروجی گرفتن از یادداشت‌ها",
       "username-password-required": "نام کاربری و رمز عبور نمی‌توانند خالی باشند",
       "create-success": "کاربر ایجاد شد",
@@ -715,7 +715,6 @@
       "basic-settings": "تنظیمات اولیه",
       "basic-settings-description": "قبل از پر کردن جزئیات OAuth، هویت ارائه‌دهنده، نام نمایشی و قوانین شناسه اختیاری را تنظیم کنید.",
       "client-secret-optional-description": "برای حفظ حریم خصوصی کلاینت موجود، آن را خالی بگذارید.",
-      "configuration": "پیکربندی",
       "configuration-summary-description": "موارد ضروری را که به شناسایی و ممیزی یک ارائه‌دهنده بدون افشای کل پیکربندی درون‌خطی کمک می‌کنند، نمایش دهید.",
       "create-sso-description": "یک ارائه‌دهنده هویت جدید برای ورود یکپارچه تحت مدیریت مدیر ایجاد کنید.",
       "endpoints": "نقاط پایانی",
@@ -737,7 +736,6 @@
       "not-linked-description": "هنوز هیچ هویت خارجی پیوند داده نشده است. می‌توانید این ارائه‌دهنده را برای ورود به سیستم بعداً متصل کنید. پیکربندی",
       "oauth-configuration": "OAuth",
       "oauth-configuration-description": "اطلاعات احراز هویت کلاینت OAuth و نقاط پایانی ارائه‌دهنده مورد استفاده در هنگام ورود به سیستم را وارد کنید.",
-      "provider": "ارائه‌دهنده",
       "provider-id": "شناسه ارائه‌دهنده",
       "provider-id-description": "فقط حروف کوچک، اعداد و خط فاصله. این مقدار بخشی از نام منبع ارائه‌دهنده می‌شود.",
       "redirect-url-description": "این URL پاسخ به تماس را با ارائه‌دهنده هویت خود ثبت کنید تا جریان کد مجوز بتواند تکمیل شود.",
@@ -926,16 +924,6 @@
       "disallow-user-registration-description": "از ایجاد حساب کاربری توسط کاربران جدید از صفحه ثبت‌نام جلوگیری کنید.",
       "week-start-day-description": "اولین روزی که در نماهای تقویم مانند نشان داده می‌شود را کنترل می‌کند."
     },
-    "memo": {
-      "reactions": "واکنش‌ها",
-      "label": "یادداشت",
-      "reactions-required": "لیست واکنش ها نباید خالی باشد",
-      "add-reaction": "افزودن واکنش",
-      "configured-reactions": "واکنش‌های پیکربندی شده",
-      "reaction-placeholder": "مثلاً 👍",
-      "reactions-description": "گزینه‌های واکنشی را که کاربران می‌توانند برای یادداشت‌ها اعمال کنند، تعریف کنید.",
-      "remove-reaction": "حذف واکنش"
-    },
     "webhook": {
       "create-dialog": {
         "an-easy-to-remember-name": "نامی آسان برای به خاطر سپردن",
@@ -961,7 +949,6 @@
       },
       "no-webhooks-found": "وب‌هوکی یافت نشد.",
       "title": "وب‌هوک‌ها",
-      "url": "آدرس",
       "label": "وب‌هوک‌ها"
     },
     "tags": {

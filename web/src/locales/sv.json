@@ -465,7 +465,9 @@
     "layout-list-description": "En enda kolumn med läsbredd",
     "on-this-memo": "På detta PM",
     "parent-memo": "Överordnat PM",
-    "view-options": "Visningsalternativ"
+    "view-options": "Visningsalternativ",
+    "add-reaction": "Lägg till reaktion",
+    "remove-reaction": "Ta bort reaktionen"
   },
   "message": {
     "archived-successfully": "Arkiverad framgångsrikt",
@@ -592,22 +594,10 @@
       "no-members-found": "Inga medlemmar hittades",
       "active": "Aktiv",
       "archived": "Arkiverad",
-      "member-column": "Medlem",
-      "summary-column": "Sammanfattning",
       "export-memos": "Exportera anteckningar",
       "username-password-required": "Användarnamn och lösenord får inte vara tomma",
       "create-success": "Användaren har skapats",
       "update-success": "Användaren har uppdaterats"
-    },
-    "memo": {
-      "label": "Anteckning",
-      "reactions": "Reaktioner",
-      "reactions-required": "Reaktionslistan får inte vara tom",
-      "add-reaction": "Lägg till reaktion",
-      "configured-reactions": "Konfigurerade reaktioner",
-      "reaction-placeholder": "till exempel 👍",
-      "reactions-description": "Definiera reaktionsalternativen som användare kan tillämpa på anteckningar.",
-      "remove-reaction": "Ta bort reaktionen"
     },
     "my-account": {
       "label": "Mitt konto"
@@ -805,7 +795,6 @@
       "basic-settings": "Grundinställningar",
       "basic-settings-description": "Ställ in leverantörens identitet, visningsnamn och valfria identifierare innan du fyller i OAuth-informationen.",
       "client-secret-optional-description": "Lämna tomt för att behålla den befintliga klientens hemlighet oförändrad.",
-      "configuration": "Konfiguration",
       "configuration-summary-description": "Visa det väsentliga som hjälper till att identifiera och granska en leverantör utan att exponera hela konfigurationen inline.",
       "create-sso-description": "Skapa en ny identitetsleverantör för administratörshanterad enkel inloggning.",
       "endpoints": "Slutpunkter",
@@ -827,7 +816,6 @@
       "not-linked-description": "Ingen extern identitet är länkad ännu. Du kan ansluta den här leverantören för att logga in med den senare.",
       "oauth-configuration": "OAuth-konfiguration",
       "oauth-configuration-description": "Fyll i OAuth-klientens autentiseringsuppgifter och leverantörens slutpunkter som används under inloggningen.",
-      "provider": "Leverantör",
       "provider-id": "Leverantörs-ID",
       "provider-id-description": "Endast små bokstäver, siffror och bindestreck. Detta värde blir en del av leverantörens resursnamn.",
       "provider-uid": "UID",
@@ -966,7 +954,6 @@
       },
       "no-webhooks-found": "Inga webhooks hittades.",
       "title": "Webhooks",
-      "url": "URL",
       "label": "Webhooks"
     },
     "tags": {

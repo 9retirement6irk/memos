@@ -1,4 +1,4 @@
-import { Button, Field, Form, Input } from "@usememos/ui";
+import { Button, Field, Input } from "@usememos/ui";
 import { useEffect, useState } from "react";
 import { useDawarichConnection, useUpdateDawarichConnection } from "@/hooks/useDawarichQueries";
 import { showErrorToast } from "@/lib/toast";
@@ -62,7 +62,7 @@ const DawarichSection = () => {
         </SettingListItem>
       </SettingList>
 
-      <Form.Root bordered onSubmit={handleSubmit} aria-label={t("setting.dawarich.label")}>
+      <form className="grid gap-4 rounded-mu-lg border border-mu-line p-4" onSubmit={handleSubmit} aria-label={t("setting.dawarich.label")}>
         <Field.Root name="url" invalid={Boolean(error)}>
           <Field.Label>{t("setting.immich.server-url")}</Field.Label>
           <Input
@@ -90,12 +90,12 @@ const DawarichSection = () => {
           />
           <Field.Description>{t("setting.dawarich.api-key-help")}</Field.Description>
         </Field.Root>
-        <Form.Footer>
+        <div className="flex flex-wrap items-center justify-end gap-2">
           <Button variant="primary" type="submit" loading={save.isPending}>
             {configured ? t("common.save") : t("setting.immich.connect")}
           </Button>
-        </Form.Footer>
-      </Form.Root>
+        </div>
+      </form>
     </SettingSection>
   );
 };

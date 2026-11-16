@@ -1,4 +1,4 @@
-import { Button, Checkbox, Field, Form, Input, Select, Switch } from "@usememos/ui";
+import { Button, Checkbox, Field, Input, Select, Switch } from "@usememos/ui";
 import { PlusIcon, RefreshCwIcon, XIcon } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { ActivityIconView } from "@/components/Journal/ActivityIconView";
@@ -171,8 +171,8 @@ const ReminderForm = ({ space }: { space: string }) => {
 
   return (
     <SettingGroup title={t("journal.settings.reminder-title")} description={t("journal.settings.reminder-description")} showSeparator>
-      <Form.Root
-        bordered
+      <form
+        className="grid gap-4 rounded-mu-lg border border-mu-line p-4"
         aria-label={t("journal.settings.reminder-title")}
         onSubmit={(event) => {
           event.preventDefault();
@@ -300,7 +300,7 @@ const ReminderForm = ({ space }: { space: string }) => {
             />
           </div>
         </Field.Root>
-        <Form.Footer>
+        <div className="flex flex-wrap items-center justify-end gap-2">
           {configured && (
             <>
               <Button
@@ -332,8 +332,8 @@ const ReminderForm = ({ space }: { space: string }) => {
           <Button variant="primary" type="submit" loading={save.isPending} disabled={!form.notifier || form.days.length === 0}>
             {t("common.save")}
           </Button>
-        </Form.Footer>
-      </Form.Root>
+        </div>
+      </form>
     </SettingGroup>
   );
 };
@@ -536,7 +536,7 @@ const JournalSection = () => {
             <span className="flex items-center gap-1.5">
               <ActivityIconView icon={settings.activities[index]?.icon ?? "star"} className="mu-icon-sm" />
               {label}
-              <span className={cn("mu-caption text-mu-ink-muted")}>
+              <span className={cn("mu-caption text-mu-text-secondary")}>
                 #{normalizePrefix(settings.activityTagPrefix)}
                 {settings.activities[index]?.id}
               </span>

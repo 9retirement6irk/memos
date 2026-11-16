@@ -521,7 +521,7 @@ const DrawingSheet = ({ mode, pages: initialPages, initialPage, onDone, onClose 
       </Tooltip.Root>
       <Popover.Popup side={isWide ? "bottom" : "top"} aria-label={t("editor.drawing.style")}>
         <div className="flex flex-col gap-2">
-          <span className="mu-label-sm text-mu-ink-muted">{t("editor.drawing.color")}</span>
+          <span className="mu-label-sm text-mu-text-secondary">{t("editor.drawing.color")}</span>
           <div
             role="group"
             aria-label={t("editor.drawing.color")}
@@ -548,7 +548,7 @@ const DrawingSheet = ({ mode, pages: initialPages, initialPage, onDone, onClose 
           </div>
         </div>
         <div className="flex flex-col gap-2">
-          <span className="mu-label-sm text-mu-ink-muted">{t("editor.drawing.width")}</span>
+          <span className="mu-label-sm text-mu-text-secondary">{t("editor.drawing.width")}</span>
           <ToggleGroup
             fullWidth
             aria-label={t("editor.drawing.width")}
@@ -808,7 +808,7 @@ const DrawingSheet = ({ mode, pages: initialPages, initialPage, onDone, onClose 
             )}
             {activeState?.status === "failed" && activePage && (
               <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
-                <span className="mu-body text-mu-ink-muted">{t("editor.drawing.open-failed")}</span>
+                <span className="mu-body text-mu-text-secondary">{t("editor.drawing.open-failed")}</span>
                 <Button variant="neutral" size={size} onClick={() => loadPage(activePage)}>
                   {t("common.retry")}
                 </Button>
