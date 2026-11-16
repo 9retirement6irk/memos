@@ -77,19 +77,33 @@ export const paintBounds = (data: Uint8ClampedArray, width: number, height: numb
   return maxX < 0 ? null : { x: minX, y: minY, width: maxX - minX + 1, height: maxY - minY + 1 };
 };
 
-/** Cuts a box into a grid of tiles no larger than `maxSide` on either side. */
-export const planTiles = (box: Box, maxSide: number): Box[] => {
-  const side = Math.max(1, Math.floor(maxSide));
+/**
+ * Cuts a box into tiles no larger than `maxSide` a side, in rows from the top left. Each tile
+ * reaches `overlap` px into the tiles to its right and below (never past the box), so the
+ * tiles drawn after it cover its edge. Tiles that only meet edge to edge show a thin line
+ * where they meet: the drawing softens each picture's edges on screen, and wherever an edge
+ * falls between screen pixels both edges are part see-through. The overlap is inside
+ * `maxSide`.
+ */
+export const planTiles = (box: Box, maxSide: number, overlap = 0): Box[] => {
+  const side = Math.max(1, Math.floor(maxSide) - Math.max(0, overlap));
   const columns = Math.ceil(box.width / side);
   const rows = Math.ceil(box.height / side);
   const tileWidth = Math.ceil(box.width / columns);
   const tileHeight = Math.ceil(box.height / rows);
+  const right = box.x + box.width;
+  const bottom = box.y + box.height;
   const tiles: Box[] = [];
   for (let row = 0; row < rows; row++) {
     for (let column = 0; column < columns; column++) {
       const x = box.x + column * tileWidth;
       const y = box.y + row * tileHeight;
-      tiles.push({ x, y, width: Math.min(tileWidth, box.x + box.width - x), height: Math.min(tileHeight, box.y + box.height - y) });
+      tiles.push({
+        x,
+        y,
+        width: Math.min(tileWidth + overlap, right - x),
+        height: Math.min(tileHeight + overlap, bottom - y),
+      });
     }
   }
   return tiles;
