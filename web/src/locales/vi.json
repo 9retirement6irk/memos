@@ -230,6 +230,8 @@
       "kidpix-cut-free": "Hình tự do",
       "kidpix-cut-polygon": "Đa giác",
       "kidpix-cutter": "Khuôn cắt {{number}}",
+      "kidpix-rotate": "Xoay",
+      "kidpix-texture": "Kết cấu {{number}}",
       "pages": "Trang",
       "page": "Trang {{number}}",
       "add-page": "Thêm trang",

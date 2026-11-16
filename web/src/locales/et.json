@@ -266,6 +266,8 @@
       "kidpix-cut-free": "Vabakuju",
       "kidpix-cut-polygon": "Hulknurk",
       "kidpix-cutter": "Vorm {{number}}",
+      "kidpix-rotate": "Pööra",
+      "kidpix-texture": "Tekstuur {{number}}",
       "pages": "Leheküljed",
       "page": "Lehekülg {{number}}",
       "add-page": "Lisa lehekülg",

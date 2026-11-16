@@ -266,6 +266,8 @@
       "kidpix-cut-free": "Слободан облик",
       "kidpix-cut-polygon": "Многоугао",
       "kidpix-cutter": "Модла {{number}}",
+      "kidpix-rotate": "Ротирај",
+      "kidpix-texture": "Текстура {{number}}",
       "pages": "Странице",
       "page": "Страница {{number}}",
       "add-page": "Додај страницу",

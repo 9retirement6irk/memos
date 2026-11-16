@@ -228,6 +228,8 @@
       "kidpix-cut-free": "Довільна форма",
       "kidpix-cut-polygon": "Багатокутник",
       "kidpix-cutter": "Формочка {{number}}",
+      "kidpix-rotate": "Повернути",
+      "kidpix-texture": "Текстура {{number}}",
       "pages": "Сторінки",
       "page": "Сторінка {{number}}",
       "add-page": "Додати сторінку",

@@ -230,6 +230,8 @@
       "kidpix-cut-free": "รูปทรงอิสระ",
       "kidpix-cut-polygon": "รูปหลายเหลี่ยม",
       "kidpix-cutter": "แม่พิมพ์ตัด {{number}}",
+      "kidpix-rotate": "หมุน",
+      "kidpix-texture": "พื้นผิว {{number}}",
       "pages": "หน้า",
       "page": "หน้า {{number}}",
       "add-page": "เพิ่มหน้า",

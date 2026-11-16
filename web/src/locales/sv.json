@@ -228,6 +228,8 @@
       "kidpix-cut-free": "Fri form",
       "kidpix-cut-polygon": "Polygon",
       "kidpix-cutter": "Utstickare {{number}}",
+      "kidpix-rotate": "Rotera",
+      "kidpix-texture": "Textur {{number}}",
       "pages": "Sidor",
       "page": "Sida {{number}}",
       "add-page": "Lägg till sida",

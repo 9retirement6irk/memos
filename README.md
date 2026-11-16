@@ -99,6 +99,9 @@ Connect [Dawarich](https://dawarich.app) in **Settings → Dawarich**, again per
   - scissors: cut out part of the picture freehand, as a polygon, oval or rectangle, or with one of ten
     cookie cutters, then move it, throw it away, or duplicate and paste it
   - stickers you can move, resize and flip before they become part of the picture
+  - rubber stamps in three sizes, and the Stamp Editor to change one a pixel at a time
+  - Kid Pix's color picker with its Eye Dropper, and twenty paper textures for chalk, crayon and marker
+  - the question-mark help, narrated, and the Idea Machine's 572 picture starters
   - your own pictures, from the device or from Immich, placed the same way and painted over
   - text in any of Kid Pix's 22 fonts, with size, bold, italic, underline and alignment, and Read Aloud
   - over 2,000 rubber stamps, over 900 stickers and 180 backgrounds

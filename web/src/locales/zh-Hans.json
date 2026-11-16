@@ -292,6 +292,8 @@
       "kidpix-cut-free": "自由形状",
       "kidpix-cut-polygon": "多边形",
       "kidpix-cutter": "模具 {{number}}",
+      "kidpix-rotate": "旋转",
+      "kidpix-texture": "纹理 {{number}}",
       "pages": "页面",
       "page": "第 {{number}} 页",
       "add-page": "添加页面",

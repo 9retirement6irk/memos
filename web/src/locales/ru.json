@@ -228,6 +228,8 @@
       "kidpix-cut-free": "Произвольная форма",
       "kidpix-cut-polygon": "Многоугольник",
       "kidpix-cutter": "Формочка {{number}}",
+      "kidpix-rotate": "Повернуть",
+      "kidpix-texture": "Текстура {{number}}",
       "pages": "Страницы",
       "page": "Страница {{number}}",
       "add-page": "Добавить страницу",

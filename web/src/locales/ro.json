@@ -266,6 +266,8 @@
       "kidpix-cut-free": "Formă liberă",
       "kidpix-cut-polygon": "Poligon",
       "kidpix-cutter": "Formă de decupat {{number}}",
+      "kidpix-rotate": "Rotește",
+      "kidpix-texture": "Textură {{number}}",
       "pages": "Pagini",
       "page": "Pagina {{number}}",
       "add-page": "Adăugați o pagină",

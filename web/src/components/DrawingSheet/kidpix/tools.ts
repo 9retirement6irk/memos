@@ -207,6 +207,10 @@ export const SOLID_COUNT = 42;
 export const BRUSH_KINDS = ["Paint Brush", "Spray Can"] as const;
 /** The Grab tool's two kinds, by the names the disc gives them: the hand moves the paint, the scissors cut it. */
 export const GRAB_KINDS = ["Grab Tool", "Cut Tool"] as const;
+/** The Mixer's two kinds: one changes the whole picture at a click, the other only where it is dragged. */
+export const MIXER_KINDS = ["Mega-Mixer", "Mini-Mixer"] as const;
+/** The Eraser's two kinds: one rubs out where it is dragged, the other clears the whole picture. */
+export const ERASER_KINDS = ["Little Eraser", "Big Eraser"] as const;
 /** The scissors' three buttons, by Kid Pix's names. Art: assets/cut-buttons.png, a row each. */
 export const CUT_BUTTONS = ["Trash Can", "Duplicate", "Paste"] as const;
 
@@ -304,50 +308,6 @@ export const WAND_EFFECTS: readonly MixEffect[] = [
   "mosaic",
 ];
 
-/** The Kid Pix palette: 40 colors, the first row the classic bright ones. */
-export const PALETTE: readonly string[] = [
-  "#000000",
-  "#ffffff",
-  "#808080",
-  "#c0c0c0",
-  "#ff0000",
-  "#ff8000",
-  "#ffff00",
-  "#80ff00",
-  "#00c000",
-  "#00ff80",
-  "#00ffff",
-  "#0080ff",
-  "#0000ff",
-  "#8000ff",
-  "#ff00ff",
-  "#ff0080",
-  "#800000",
-  "#804000",
-  "#808000",
-  "#408000",
-  "#006000",
-  "#008060",
-  "#008080",
-  "#004080",
-  "#000080",
-  "#400080",
-  "#800080",
-  "#800040",
-  "#ffc0c0",
-  "#ffe0c0",
-  "#ffffc0",
-  "#c0ffc0",
-  "#c0ffff",
-  "#c0e0ff",
-  "#c0c0ff",
-  "#ffc0ff",
-  "#8b5a2b",
-  "#d2a679",
-  "#f4c2a1",
-  "#ffd700",
-];
-
 /** The Kid Pix fonts shipped in assets, as declared in kidpix.css. */
 export const FONTS: readonly { family: string; name: string }[] = [
   { family: "KidPixCatchup", name: "Catchup" },
@@ -393,3 +353,39 @@ export const textFont = (style: TextStyle, scale = 1) =>
   `${style.italic ? "italic " : ""}${style.bold ? "bold " : ""}${style.size * scale}px ${style.family}`;
 
 export const TEXT_SIZE = 48;
+
+/**
+ * Kid Pix's cursor for what is in hand, by its place in `KIDPIX_CURSORS`: the Pencil's four
+ * kinds, then the other tools. The Text tool keeps the browser's text cursor.
+ */
+export const PENCIL_CURSORS = [2, 0, 1, 5] as const;
+export const TOOL_CURSORS = {
+  brush: 15,
+  sprayCan: 17,
+  bucket: 7,
+  megaMixer: 12,
+  miniMixer: 10,
+  littleEraser: 3,
+  bigEraser: 4,
+  stamp: 24,
+  hand: 9,
+  holding: 8,
+  scissors: 13,
+  dropper: 6,
+  help: 22,
+} as const;
+
+/**
+ * A rubber stamp's three sizes (px a side): the 32 px bitmap as it is, twice and three times
+ * over. The middle one is what the mode has always stamped; the other two are not measured.
+ */
+export const STAMP_SIZES = [32, 64, 96] as const;
+/** The Stamp Editor's buttons that Kid Pix names; the rest use the sheet's own strings. */
+export const STAMP_EDITOR_NAMES = {
+  title: "Stamp Editor",
+  open: "Edit Stamp",
+  pencil: "Pencil",
+  bucket: "Fill Bucket",
+  firecracker: "Firecracker",
+  restore: "Restore Original",
+} as const;

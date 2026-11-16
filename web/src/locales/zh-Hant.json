@@ -322,6 +322,8 @@
       "kidpix-cut-free": "自由形狀",
       "kidpix-cut-polygon": "多邊形",
       "kidpix-cutter": "模具 {{number}}",
+      "kidpix-rotate": "旋轉",
+      "kidpix-texture": "紋理 {{number}}",
       "pages": "頁面",
       "page": "第 {{number}} 頁",
       "add-page": "新增頁面",

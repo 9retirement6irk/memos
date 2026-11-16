@@ -230,6 +230,8 @@
       "kidpix-cut-free": "フリーフォーム",
       "kidpix-cut-polygon": "多角形",
       "kidpix-cutter": "型抜き {{number}}",
+      "kidpix-rotate": "回転",
+      "kidpix-texture": "テクスチャ {{number}}",
       "pages": "ページ",
       "page": "{{number}} ページ",
       "add-page": "ページを追加",

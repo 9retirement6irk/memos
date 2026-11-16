@@ -111,6 +111,7 @@ describe("CutTool", () => {
         engine={() => engine as unknown as KidPixEngine}
         audio={() => null}
         play={play}
+        cursors={["crosshair", "move", "move"]}
         onPress={() => undefined}
       />,
     );

@@ -230,6 +230,8 @@
       "kidpix-cut-free": "Bentuk bebas",
       "kidpix-cut-polygon": "Poligon",
       "kidpix-cutter": "Cetakan {{number}}",
+      "kidpix-rotate": "Putar",
+      "kidpix-texture": "Tekstur {{number}}",
       "pages": "Halaman",
       "page": "Halaman {{number}}",
       "add-page": "Tambah halaman",

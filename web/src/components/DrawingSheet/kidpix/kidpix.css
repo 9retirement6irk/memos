@@ -345,30 +345,42 @@
   background-size: 100% 100%;
 }
 
-.kidpix-palette {
+/* Kid Pix's color picker: its panel, the grid of colors on it, and the Eye Dropper under the grid. */
+.kidpix-picker {
   position: absolute;
-  z-index: 2;
-  display: grid;
-  grid-template-columns: repeat(10, 26px);
-  gap: 4px;
-  padding: 10px;
-  border-radius: 16px;
-  background: #ffffff;
-  box-shadow:
-    0 0 0 4px #57c600,
-    0 0 0 7px #2c8a00,
-    0 8px 20px rgb(0 0 0 / 35%);
+  z-index: 3;
+  background-image: url("./assets/picker.png");
+  background-repeat: no-repeat;
+  filter: drop-shadow(0 6px 10px rgb(0 0 0 / 35%));
 }
-.kidpix-palette > button {
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 20%);
+.kidpix-picker > div,
+.kidpix-picker > button {
+  position: absolute;
 }
-.kidpix-palette > button[aria-pressed="true"] {
-  box-shadow:
-    0 0 0 3px #ffffff,
-    0 0 0 5px #1b3f86;
+.kidpix-picker > .kidpix-picker-grid,
+.kidpix-picker > .kidpix-sprite-button {
+  background-image: url("./assets/picker.png");
+  background-repeat: no-repeat;
+}
+.kidpix-picker-grid > button {
+  position: absolute;
+  box-sizing: border-box;
+  border: 1px solid transparent;
+  background: transparent;
+  cursor: pointer;
+}
+.kidpix-picker-grid > button:hover,
+.kidpix-picker-grid > button[aria-pressed="true"] {
+  border-color: #fff;
+  box-shadow: 0 0 0 1px #000;
+  z-index: 1;
+}
+/* The Eye Dropper in hand: the next press on the paper takes the color there. */
+.kidpix-dropping {
+  position: absolute;
+  left: 0;
+  top: 0;
+  touch-action: none;
 }
 
 /* ---- the full chrome: the tube down the left, the tray along the bottom ---- */
@@ -719,7 +731,7 @@
 .kidpix-read select {
   max-width: 180px;
 }
-.kidpix:not([data-compact]) > .kidpix-palette {
+.kidpix:not([data-compact]) > .kidpix-picker {
   left: 14px;
   bottom: 140px;
 }
@@ -830,14 +842,9 @@
   background-position: 0 -3px;
   background-size: auto 52px;
 }
-.kidpix[data-compact] > .kidpix-palette {
+.kidpix[data-compact] > .kidpix-picker {
   left: 8px;
   bottom: calc(220px + env(safe-area-inset-bottom));
-  grid-template-columns: repeat(8, 32px);
-}
-.kidpix[data-compact] > .kidpix-palette > button {
-  width: 32px;
-  height: 32px;
 }
 
 /* ---- moments ---- */
@@ -915,9 +922,6 @@
   overflow: hidden;
   cursor: crosshair;
   touch-action: none;
-}
-.kidpix-cut[data-over="piece"] {
-  cursor: move;
 }
 .kidpix-cut-piece,
 .kidpix-cut-cutter {
@@ -1007,4 +1011,259 @@
 }
 .kidpix-handle[data-corner="sw"]::before {
   content: "↕";
+}
+
+/* The Stamp Editor: Kid Pix's own window over the paper, its parts placed as the disc places them. */
+.kidpix-stamp-editor-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgb(0 0 0 / 25%);
+}
+.kidpix-stamp-editor {
+  position: relative;
+  flex-shrink: 0;
+  outline: none;
+}
+.kidpix-stamp-editor-canvas {
+  position: absolute;
+  background: #fff;
+  image-rendering: pixelated;
+  touch-action: none;
+  cursor: crosshair;
+}
+.kidpix-stamp-editor-button,
+.kidpix-stamp-editor-palette {
+  position: absolute;
+  padding: 0;
+  border: 1px solid transparent;
+  background-color: transparent;
+  box-sizing: content-box;
+  margin: -1px;
+  cursor: pointer;
+}
+.kidpix-stamp-editor-button > span {
+  position: absolute;
+  pointer-events: none;
+}
+/* The color in hand shows in the strip at the head of the grid. */
+.kidpix-stamp-editor-palette > span {
+  position: absolute;
+  left: 36px;
+  top: 5px;
+  width: 55px;
+  height: 8px;
+  pointer-events: none;
+}
+
+/* The stamp tray's first panel: the category, and the way into the Stamp Editor. */
+.kidpix-stamp-tools {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+}
+.kidpix-edit-stamp {
+  height: 24px;
+  padding: 0 8px;
+  border: 1px solid #2a1a8a;
+  border-radius: 12px;
+  background: #1a0a6a;
+  color: #7dff5a;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.kidpix-edit-stamp:hover {
+  background: #00e020;
+  color: #1a0a6a;
+}
+
+/* Paper Texture: a button under the color picker, and the twenty textures beside it. */
+.kidpix-picker > .kidpix-texture-button {
+  bottom: 0;
+  height: 22px;
+  padding: 0 10px;
+  border: 1px solid #2a1a8a;
+  border-radius: 11px;
+  background: #1a0a6a;
+  color: #7dff5a;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.kidpix-picker > .kidpix-textures {
+  bottom: 28px;
+  display: grid;
+  grid-template-columns: repeat(7, 36px);
+  gap: 3px;
+  padding: 6px;
+  border-radius: 10px;
+  background: #1a0a6a;
+  box-shadow: 0 0 0 3px #c9c2ff;
+}
+.kidpix-textures > button {
+  width: 36px;
+  height: 36px;
+  border: 1px solid transparent;
+  background-color: #fff;
+  cursor: pointer;
+}
+.kidpix-textures > button[aria-pressed="true"] {
+  border-color: #7dff5a;
+  box-shadow: 0 0 0 2px #7dff5a;
+}
+
+/* The Idea Machine: a folder of picture starters to choose from. */
+.kidpix-ideas {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  width: min(560px, calc(100% - 16px));
+  max-height: calc(100% - 32px);
+  padding: 10px;
+  border: 4px solid #c9c2ff;
+  border-radius: 18px;
+  background: #1a0a6a;
+  color: #fff;
+  outline: none;
+}
+.kidpix-ideas > header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 8px;
+}
+.kidpix-ideas > header > strong {
+  flex: 1;
+  color: #7dff5a;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.kidpix-ideas > header > select,
+.kidpix-ideas > header > button {
+  height: 28px;
+  padding: 0 8px;
+  border: 1px solid #c9c2ff;
+  border-radius: 8px;
+  background: #fff;
+  color: #1a0a6a;
+  font: inherit;
+}
+.kidpix-ideas > [role="group"] {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+  gap: 8px;
+  overflow-y: auto;
+}
+.kidpix-ideas > [role="group"] > button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 11px;
+  line-height: 1.2;
+  cursor: pointer;
+}
+.kidpix-ideas > [role="group"] > button:hover {
+  border-color: #7dff5a;
+}
+.kidpix-ideas > [role="group"] > button > span {
+  background-color: #fff;
+}
+
+/* The tube's cap: the Idea Machine and the question mark. */
+.kidpix-cap {
+  position: absolute;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  background: transparent;
+  color: #fff;
+  font:
+    700 22px / 1 system-ui,
+    sans-serif;
+  text-shadow: 0 1px 2px #003;
+  cursor: pointer;
+}
+.kidpix-cap[aria-pressed="true"] {
+  background: #ffe24a;
+  color: #1a0a6a;
+  text-shadow: none;
+}
+.kidpix-cap > svg {
+  width: 20px;
+  height: 20px;
+}
+.kidpix-tube > .kidpix-cap[data-cap="ideas"] {
+  left: 4px;
+  top: -66px;
+}
+.kidpix-tube > .kidpix-cap[data-cap="help"] {
+  left: 66px;
+  top: -56px;
+}
+.kidpix-strip > .kidpix-cap {
+  position: static;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  background: #1463d8;
+}
+
+/* Help: what was clicked, in Kid Pix's words, read aloud. */
+.kidpix-help {
+  box-sizing: border-box;
+  width: min(380px, calc(100% - 16px));
+  padding: 14px;
+  border: 4px solid #c9c2ff;
+  border-radius: 18px;
+  background: #1a0a6a;
+  color: #fff;
+  font-size: 15px;
+  line-height: 1.4;
+  outline: none;
+}
+.kidpix-help > div {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 12px;
+}
+.kidpix-help button {
+  height: 26px;
+  padding: 0 14px;
+  border: 1px solid #2a1a8a;
+  border-radius: 13px;
+  background: #00e020;
+  color: #1a0a6a;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.kidpix[data-helping] * {
+  cursor: var(--kp-help-cursor, help) !important;
 }

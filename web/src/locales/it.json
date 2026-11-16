@@ -228,6 +228,8 @@
       "kidpix-cut-free": "Forma libera",
       "kidpix-cut-polygon": "Poligono",
       "kidpix-cutter": "Stampino {{number}}",
+      "kidpix-rotate": "Ruota",
+      "kidpix-texture": "Texture {{number}}",
       "pages": "Pagine",
       "page": "Pagina {{number}}",
       "add-page": "Aggiungi pagina",

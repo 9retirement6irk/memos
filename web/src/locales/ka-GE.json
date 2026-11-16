@@ -228,6 +228,8 @@
       "kidpix-cut-free": "თავისუფალი ფორმა",
       "kidpix-cut-polygon": "მრავალკუთხედი",
       "kidpix-cutter": "ფორმა {{number}}",
+      "kidpix-rotate": "შებრუნება",
+      "kidpix-texture": "ტექსტურა {{number}}",
       "pages": "გვერდები",
       "page": "გვერდი {{number}}",
       "add-page": "გვერდის დამატება",

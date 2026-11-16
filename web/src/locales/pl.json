@@ -243,6 +243,8 @@
       "kidpix-cut-free": "Dowolny kształt",
       "kidpix-cut-polygon": "Wielokąt",
       "kidpix-cutter": "Foremka {{number}}",
+      "kidpix-rotate": "Obróć",
+      "kidpix-texture": "Tekstura {{number}}",
       "pages": "Strony",
       "page": "Strona {{number}}",
       "add-page": "Dodaj stronę",

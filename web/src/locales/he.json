@@ -314,6 +314,8 @@
       "kidpix-cut-free": "צורה חופשית",
       "kidpix-cut-polygon": "מצולע",
       "kidpix-cutter": "חותכן {{number}}",
+      "kidpix-rotate": "סיבוב",
+      "kidpix-texture": "מרקם {{number}}",
       "pages": "עמודים",
       "page": "עמוד {{number}}",
       "add-page": "הוספת עמוד",
