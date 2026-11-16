@@ -124,3 +124,11 @@ describe("the disc's tables", () => {
     expect(new Set(KIDPIX_IDEAS.map((folder) => folder.topic)).size).toBe(9);
   });
 });
+
+describe("the letter stamps' spoken names", () => {
+  it("has a clip for each digit and mark after the alphabet", async () => {
+    const { KIDPIX_SOUND_SPRITE } = await import("@/components/DrawingSheet/kidpix/data");
+    const sprite = KIDPIX_SOUND_SPRITE as Record<string, readonly number[]>;
+    for (let clip = 22026; clip <= 22050; clip++) expect(sprite[`stamp${clip}`]?.[1]).toBeGreaterThan(0);
+  });
+});

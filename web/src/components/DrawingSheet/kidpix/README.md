@@ -149,8 +149,8 @@ Checked against the original running under Wine.
 - The text tray: font (all 22 of the disc's), size, bold, italic, underline and alignment
   (`assets/textui.png`), and Read Aloud (`assets/read.png`) with the browser's voices, where it
   has speech. Text is typed in a box that grows with it; Enter starts a new line, and a press on
-  the paper or a change of tool presses it into the paint. Kid Pix keeps text boxes editable until
-  Flatten; here a box is flattened when it is left.
+  the paper or a change of tool leaves the box loose on the picture, to be opened again, until it
+  is flattened (see "Shapes, buckets and stickers").
 
 ## The tray's tool kinds
 
@@ -236,14 +236,28 @@ also cannot be resized, and text and stickers already pressed in are paint like 
 - The Fill Buckets are three kinds, as in Kid Pix. Solid lays the color in hand through one of 42
   one-color patterns (`assets/solid-tiles.png`; the first is plain). The pattern is how much color
   lands on each pixel, so a second color can go over a first. Blend and Pattern bring their own colors.
+  A Blend follows the pointer for as long as the button is held, running off one edge of its area
+  and back in at the other; how far the original slides it was not measured.
+- The ABC brush writes the tray's Edit ABC Text, a letter a step.
+- The letter stamps are 56: the alphabet, the digits and fifteen marks, each saying its name when
+  chosen (the names past Z are matched to the stamps by their order on the disc, not by ear), then
+  CH, LL, Ñ, ¿ and ¡ from the disc's Spanish alphabet, which have no English name.
 - A sticker goes down in a frame: drag inside to move it, a round corner to resize it, the square
   corners to flip it left to right or top to bottom; the arrow keys nudge it, Delete removes it.
-  It becomes paint on the next press on the paper, a change of tool, or when the mode ends. Kid Pix
-  keeps every sticker loose until Flatten; here only the last one is.
+  As in Kid Pix, every sticker stays loose over the paint until it is flattened: a press on the
+  paper or a change of tool only lets it out of its frame, and the hand or the Stickers tool picks
+  any of them up again. Flatten Stickers in the tray, Enter on the one in the frame, or leaving the
+  mode makes them paint. Import Sticker brings in a picture of one's own at its own size.
+- A text box left is loose in the same way, and the Text tool opens it again to be typed on, in
+  the font, size, style and color it had; the hand moves it, and in its frame it can be sized,
+  flipped or deleted. Sizing stretches the letters; Kid Pix re-wraps them instead. The box checks
+  spelling as the browser does.
 
 - Pictures: the sheet's Insert image button stays in the mode's top bar (from this device, or from
-  Immich when it is connected), and a pasted picture counts too. A picture lands in the sticker's
-  frame, at most 70% of the paper, and becomes paint the same way; this is Kid Pix's Add Graphic.
+  Immich when it is connected), and a pasted picture counts too. This is Kid Pix's Add Graphic, and
+  asks its four fits: stretched to the paper, grown or shrunk to cover it, centered at its own size,
+  or repeated to fill it. The picture then lies loose in the sticker's frame. Import Background is
+  not built: set the picture down and paint over it.
   The sheet hands the files to the layer's `addPictures`.
 
 Not built: animations and recorded sounds (a saved drawing is a still PNG and cannot hold
