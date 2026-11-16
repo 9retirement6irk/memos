@@ -140,7 +140,7 @@ const MoodTrend = ({ days, now, label }: { days: Map<string, DayMoods>; now: Dat
       <polyline
         points={points.map((p) => `${p.x},${p.y}`).join(" ")}
         fill="none"
-        className="stroke-mu-ink-muted"
+        className="stroke-mu-text-secondary"
         strokeWidth="1.5"
         strokeLinejoin="round"
       />
@@ -237,7 +237,7 @@ export const JournalPanel = () => {
       <section aria-label={t("journal.on-this-day")} className="flex flex-col gap-1.5">
         <h3 className="mu-label">{t("journal.on-this-day")}</h3>
         {earlier.length === 0 ? (
-          <p className="mu-caption text-mu-ink-muted">{t("journal.on-this-day-empty")}</p>
+          <p className="mu-caption text-mu-text-secondary">{t("journal.on-this-day-empty")}</p>
         ) : (
           earlier
             .sort((a, b) => entryDate(b).getTime() - entryDate(a).getTime())
@@ -254,7 +254,7 @@ export const JournalPanel = () => {
                 >
                   {mood && <MoodFace valence={mood} size={18} />}
                   <span className="flex min-w-0 flex-col">
-                    <span className="mu-caption text-mu-ink-muted">{t("journal.years-ago", { count: years })}</span>
+                    <span className="mu-caption text-mu-text-secondary">{t("journal.years-ago", { count: years })}</span>
                     <span className="mu-body line-clamp-2">{snippet(memo.content)}</span>
                   </span>
                 </Link>
@@ -267,7 +267,7 @@ export const JournalPanel = () => {
         <h3 className="mu-label">{t("journal.mood-month")}</h3>
         <div className="grid grid-cols-7 gap-1" role="presentation">
           {weekdays.map((weekday, i) => (
-            <span key={`w${i}`} className="mu-caption text-center text-mu-ink-muted" aria-hidden="true">
+            <span key={`w${i}`} className="mu-caption text-center text-mu-text-secondary" aria-hidden="true">
               {weekday}
             </span>
           ))}
@@ -305,7 +305,7 @@ export const JournalPanel = () => {
             );
           })}
         </div>
-        <div className="mu-caption flex items-center gap-2 text-mu-ink-muted">
+        <div className="mu-caption flex items-center gap-2 text-mu-text-secondary">
           <span>{t("journal.valence.unpleasant")}</span>
           <span
             className="h-2 flex-1 rounded-full border border-mu-line"
@@ -316,8 +316,8 @@ export const JournalPanel = () => {
           />
           <span>{t("journal.valence.pleasant")}</span>
         </div>
-        <span className="mu-caption flex items-center gap-1.5 text-mu-ink-muted">
-          <span className="size-1.5 rounded-full bg-mu-ink-muted" aria-hidden="true" />
+        <span className="mu-caption flex items-center gap-1.5 text-mu-text-secondary">
+          <span className="size-1.5 rounded-full bg-mu-text-secondary" aria-hidden="true" />
           {t("journal.mood-check-ins")}
         </span>
       </section>

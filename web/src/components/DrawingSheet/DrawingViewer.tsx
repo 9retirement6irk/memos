@@ -233,7 +233,7 @@ const DrawingViewer = ({ attachment: initialAttachment, memo, canEdit, onClose, 
             />
           ) : activeView?.status === "failed" ? (
             <div className="absolute inset-0 flex items-center justify-center">
-              <span className="mu-body text-mu-ink-muted">{t("editor.drawing.open-failed")}</span>
+              <span className="mu-body text-mu-text-secondary">{t("editor.drawing.open-failed")}</span>
             </div>
           ) : (
             <div className="absolute inset-0 flex items-center justify-center">
@@ -245,7 +245,7 @@ const DrawingViewer = ({ attachment: initialAttachment, memo, canEdit, onClose, 
                 Not a Dialog.Title, whose heading type is 16px; the popup's aria-label names the dialog. */}
             <FloatingBar className={isWide ? "pr-2" : "pr-3"}>
               <IconAction size={size} label={t("common.close")} icon={<XIcon />} onClick={onClose} />
-              <span className={cn("truncate text-mu-ink", isWide ? "mu-label-sm" : "mu-label")}>{title}</span>
+              <span className={cn("truncate text-mu-text", isWide ? "mu-label-sm" : "mu-label")}>{title}</span>
             </FloatingBar>
             <FloatingBar className={isWide ? undefined : "gap-3"}>
               <IconAction
@@ -255,7 +255,7 @@ const DrawingViewer = ({ attachment: initialAttachment, memo, canEdit, onClose, 
                 onClick={() => canvasRef.current?.zoomToFit()}
               />
               {canEdit && (
-                // Flat inside the bar: the bar is the one raised surface.
+                // Flat inside the bar: the bar is the one bordered surface.
                 <Button variant="ghost" size={size} icon={<PencilLineIcon />} disabled={!scene} onClick={() => setIsEditing(true)}>
                   {t("common.edit")}
                 </Button>

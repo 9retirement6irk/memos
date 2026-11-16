@@ -75,7 +75,7 @@ export const StateOfMindPicker = ({ value, onChange, defaultKind, hiddenImpacts 
         </span>
         <div className="flex min-w-0 flex-1 flex-col gap-1.5">
           <div className="flex items-center justify-between gap-2">
-            <span className={cn("mu-body font-medium", !value.valence && "text-mu-ink-muted")} aria-live="polite">
+            <span className={cn("mu-body font-medium", !value.valence && "text-mu-text-secondary")} aria-live="polite">
               {value.valence ? t(`journal.valence.${value.valence}` as never) : t("journal.mind.unset")}
             </span>
             {value.valence && (
@@ -107,7 +107,7 @@ export const StateOfMindPicker = ({ value, onChange, defaultKind, hiddenImpacts 
             )}
             style={{ background: TRACK, "--thumb": value.valence ? moodColor(value.valence) : "#ffffff" } as React.CSSProperties}
           />
-          <div className="mu-caption flex justify-between text-mu-ink-muted" aria-hidden="true">
+          <div className="mu-caption flex justify-between text-mu-text-secondary" aria-hidden="true">
             <span>{t("journal.valence.very-unpleasant")}</span>
             <span>{t("journal.valence.very-pleasant")}</span>
           </div>

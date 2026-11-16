@@ -567,7 +567,9 @@
       "public-description": "Hamıya görünür",
       "space": "Üzvlər",
       "space-description": "{{space}} daxilində hamı"
-    }
+    },
+    "add-reaction": "Reaksiya əlavə et",
+    "remove-reaction": "Reaksiyanı çıxar"
   },
   "message": {
     "archived-successfully": "Uğurla arxivləndi",
@@ -748,25 +750,13 @@
       "delete-warning-description": "BU ƏMƏLİYYAT GERİ QAYTARILA BİLMƏZ",
       "label": "Üzv",
       "list-title": "Üzv siyahısı",
-      "member-column": "Üzv",
       "restore-success": "{{username}} uğurla bərpa edildi",
-      "summary-column": "Xülasə",
       "user": "İstifadəçi",
       "no-members-found": "Üzv tapılmadı",
       "export-memos": "Qeydləri ixrac et",
       "username-password-required": "İstifadəçi adı və parol boş ola bilməz",
       "create-success": "İstifadəçi yaradıldı",
       "update-success": "İstifadəçi yeniləndi"
-    },
-    "memo": {
-      "add-reaction": "Reaksiya əlavə et",
-      "configured-reactions": "Təyin edilmiş reaksiyalar",
-      "label": "Qeyd",
-      "reaction-placeholder": "məs. 👍",
-      "reactions-description": "İstifadəçilərin qeydlərə tətbiq edə biləcəyi reaksiya variantlarını təyin edin.",
-      "remove-reaction": "Reaksiyanı çıxar",
-      "reactions": "Reaksiyalar",
-      "reactions-required": "Reaksiyalar siyahısı boş ola bilməz"
     },
     "memo-export": {
       "description": "Qeydlərinizi və qoşmalarınızı tək bir ZIP faylı ilə Memos nüsxələri arasında köçürün.",
@@ -1106,7 +1096,6 @@
       "client-id": "Client ID",
       "client-secret": "Client secret",
       "client-secret-optional-description": "Mövcud client secret dəyişməz qalsın deyə boş buraxın.",
-      "configuration": "Konfiqurasiya",
       "configuration-summary-description": "Tam konfiqurasiyanı sətir içində açmadan provayderi tanımağa və yoxlamağa kömək edən əsas məlumatları göstərir.",
       "confirm-delete": "`{{name}}` SSO konfiqurasiyasını silmək istədiyinizə əminsiniz? BU ƏMƏLİYYAT GERİ QAYTARILA BİLMƏZ",
       "create-sso": "SSO yarat",
@@ -1135,7 +1124,6 @@
       "not-linked-description": "Hələ heç bir xarici kimlik bağlanmayıb. Sonradan onunla daxil olmaq üçün bu provayderi qoşa bilərsiniz.",
       "oauth-configuration": "OAuth konfiqurasiyası",
       "oauth-configuration-description": "Giriş zamanı istifadə olunan OAuth müştəri məlumatlarını və provayder endpoint-lərini doldurun.",
-      "provider": "Provayder",
       "provider-id": "Provayder ID-si",
       "provider-id-description": "Yalnız kiçik hərflər, rəqəmlər və defislər. Bu dəyər provayder resursunun adının bir hissəsinə çevrilir.",
       "provider-uid": "UID",
@@ -1283,7 +1271,6 @@
       },
       "no-webhooks-found": "Webhook tapılmadı.",
       "title": "Webhook-lar",
-      "url": "URL",
       "label": "Webhook-lar"
     },
     "tags": {

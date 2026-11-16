@@ -465,7 +465,9 @@
     "layout-list-description": "Egyetlen olvasási szélességű oszlop",
     "on-this-memo": "Ezen a feljegyzésen",
     "parent-memo": "Szülő feljegyzés",
-    "view-options": "Megtekintési beállítások"
+    "view-options": "Megtekintési beállítások",
+    "add-reaction": "Adja hozzá a reakciót",
+    "remove-reaction": "Távolítsa el a reakciót"
   },
   "message": {
     "archived-successfully": "Sikeres archiválás",
@@ -592,22 +594,10 @@
       "no-members-found": "Nem találhatók tagok",
       "active": "Aktív",
       "archived": "Archivált",
-      "member-column": "Tag",
-      "summary-column": "Összegzés",
       "export-memos": "Jegyzetek exportálása",
       "username-password-required": "A felhasználónév és a jelszó nem lehet üres",
       "create-success": "Felhasználó létrehozva",
       "update-success": "Felhasználó frissítve"
-    },
-    "memo": {
-      "label": "Jegyzet",
-      "reactions": "Reakciók",
-      "reactions-required": "A reakciólista nem lehet üres",
-      "add-reaction": "Adja hozzá a reakciót",
-      "configured-reactions": "Konfigurált reakciók",
-      "reaction-placeholder": "például 👍",
-      "reactions-description": "Határozza meg azokat a reakciólehetőségeket, amelyeket a felhasználók a jegyzetekre alkalmazhatnak.",
-      "remove-reaction": "Távolítsa el a reakciót"
     },
     "my-account": {
       "label": "Fiókom"
@@ -805,7 +795,6 @@
       "basic-settings": "Alapbeállítások",
       "basic-settings-description": "Az OAuth adatok kitöltése előtt állítsa be a szolgáltató azonosítóját, a megjelenített nevet és az opcionális azonosító szabályokat.",
       "client-secret-optional-description": "Hagyja üresen, hogy a meglévő ügyfél titkossága változatlan maradjon.",
-      "configuration": "Konfiguráció",
       "configuration-summary-description": "Mutassa meg azokat a lényeges dolgokat, amelyek segítenek azonosítani és ellenőrizni a szolgáltatót anélkül, hogy a teljes konfigurációt soron belül felfedné.",
       "create-sso-description": "Hozzon létre egy új identitásszolgáltatót a rendszergazda által kezelt egyszeri bejelentkezéshez.",
       "endpoints": "Végpontok",
@@ -827,7 +816,6 @@
       "not-linked-description": "Még nincs külső személyazonosság összekapcsolva. Csatlakoztathatja ezt a szolgáltatót, hogy később bejelentkezhessen vele.",
       "oauth-configuration": "OAuth konfiguráció",
       "oauth-configuration-description": "Töltse ki az OAuth ügyfél hitelesítő adatait és a bejelentkezés során használt szolgáltatói végpontokat.",
-      "provider": "Szolgáltató",
       "provider-id": "Szolgáltató azonosítója",
       "provider-id-description": "Csak kisbetűk, számok és kötőjelek. Ez az érték a szolgáltatói erőforrás nevének részévé válik.",
       "provider-uid": "UID",
@@ -966,7 +954,6 @@
       },
       "no-webhooks-found": "Nincs webhook.",
       "title": "Webhooks",
-      "url": "URL",
       "label": "Webhooks"
     },
     "tags": {

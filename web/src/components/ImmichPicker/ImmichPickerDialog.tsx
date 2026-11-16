@@ -82,7 +82,7 @@ const ImmichPickerDialog = ({ open, onOpenChange, onPick, size = "original" }: P
 
         {!connectionLoading && !connected ? (
           <div className="flex flex-col items-start gap-3">
-            <p className="mu-body text-mu-ink-muted">{t("immich.not-connected")}</p>
+            <p className="mu-body text-mu-text-secondary">{t("immich.not-connected")}</p>
             <Link to="/setting#immich" onClick={() => onOpenChange(false)} className="mu-link mu-body">
               {t("common.settings")}
             </Link>
@@ -121,7 +121,7 @@ const ImmichPickerDialog = ({ open, onOpenChange, onPick, size = "original" }: P
               ) : photos.isError ? (
                 <p className="mu-body text-mu-danger">{photos.error.message}</p>
               ) : photoList.length === 0 ? (
-                <p className="mu-body text-mu-ink-muted">{t("immich.empty")}</p>
+                <p className="mu-body text-mu-text-secondary">{t("immich.empty")}</p>
               ) : (
                 <ul className="grid grid-cols-3 gap-1.5 sm:grid-cols-5" aria-label={t("immich.title")}>
                   {photoList.map((photo) => {

@@ -567,7 +567,9 @@
       "public-description": "Synleg for alle",
       "space": "Medlemer",
       "space-description": "Alle i {{space}}"
-    }
+    },
+    "add-reaction": "Legg til reaksjon",
+    "remove-reaction": "Fjern reaksjon"
   },
   "message": {
     "archived-successfully": "Arkivert",
@@ -748,25 +750,13 @@
       "delete-warning-description": "DENNE HANDLINGA KAN IKKJE GJERAST OM",
       "label": "Medlem",
       "list-title": "Medlemsliste",
-      "member-column": "Medlem",
       "no-members-found": "Ingen medlemer funne",
       "restore-success": "{{username}} er gjenoppretta",
-      "summary-column": "Samandrag",
       "user": "Brukar",
       "export-memos": "Eksporter notat",
       "username-password-required": "Brukarnamn og passord kan ikkje vere tomme",
       "create-success": "Brukaren er oppretta",
       "update-success": "Brukaren er oppdatert"
-    },
-    "memo": {
-      "add-reaction": "Legg til reaksjon",
-      "configured-reactions": "Oppsette reaksjonar",
-      "label": "Notat",
-      "reaction-placeholder": "t.d. 👍",
-      "reactions": "Reaksjonar",
-      "reactions-description": "Fastset kva reaksjonar brukarane kan leggje til på notat.",
-      "reactions-required": "Reaksjonslista kan ikkje vera tom",
-      "remove-reaction": "Fjern reaksjon"
     },
     "memo-export": {
       "description": "Flytt notata og vedlegga dine mellom Memos-instansar med éi ZIP-fil.",
@@ -1124,7 +1114,6 @@
       "client-id": "Klient-ID",
       "client-secret": "Klientløyndom",
       "client-secret-optional-description": "Lat feltet stå tomt for å halda på den noverande klientløyndomen.",
-      "configuration": "Oppsett",
       "configuration-summary-description": "Vis dei viktigaste opplysningane for å kjenne att og kontrollere ein tilbydar, utan å vise heile oppsettet direkte.",
       "confirm-delete": "Er du viss på at du vil slette SSO-oppsettet `{{name}}`? DENNE HANDLINGA KAN IKKJE GJERAST OM",
       "create-sso": "Opprett SSO",
@@ -1153,7 +1142,6 @@
       "not-linked-description": "Ingen ekstern identitet er knytt til kontoen din enno. Du kan knyte til denne tilbydaren for å logge inn med han seinare.",
       "oauth-configuration": "OAuth-oppsett",
       "oauth-configuration-description": "Fyll ut OAuth-klientlegitimasjonen og endepunkta til tilbydaren som vert nytta ved innlogging.",
-      "provider": "Tilbydar",
       "provider-id": "Tilbydar-ID",
       "provider-id-description": "Berre små bokstavar, tal og bindestrekar. Denne verdien vert ein del av ressursnamnet til tilbydaren.",
       "provider-uid": "UID",
@@ -1318,8 +1306,7 @@
       },
       "label": "Vevkrokar",
       "no-webhooks-found": "Ingen vevkrokar funne.",
-      "title": "Vevkrokar",
-      "url": "Adresse"
+      "title": "Vevkrokar"
     },
     "immich": {
       "label": "Immich",

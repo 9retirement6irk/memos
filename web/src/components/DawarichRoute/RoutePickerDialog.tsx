@@ -181,7 +181,7 @@ const RoutePickerDialog = ({ open, onOpenChange, day, onPick }: Props) => {
           ) : failure ? (
             <p className="mu-body text-mu-danger">{failure.message}</p>
           ) : empty ? (
-            <p className="mu-body text-mu-ink-muted">{t("dawarich.route.empty")}</p>
+            <p className="mu-body text-mu-text-secondary">{t("dawarich.route.empty")}</p>
           ) : (
             <div className="grid gap-4 sm:grid-cols-[minmax(0,14rem)_1fr]">
               <Fieldset.Root render={<RadioGroup value={choice} onValueChange={(value) => setChoice(String(value))} />}>
@@ -198,7 +198,7 @@ const RoutePickerDialog = ({ open, onOpenChange, day, onPick }: Props) => {
                       <Field.Item key={track.id}>
                         <Field.Label className="flex items-center gap-1.5">
                           <Radio value={String(track.id)} />
-                          <ModeIcon aria-hidden="true" className="mu-icon-sm shrink-0 text-mu-ink-muted" />
+                          <ModeIcon aria-hidden="true" className="mu-icon-sm shrink-0 text-mu-text-secondary" />
                           <span className="mu-body">{trackLabel(track)}</span>
                         </Field.Label>
                       </Field.Item>

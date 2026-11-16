@@ -1,5 +1,5 @@
 /*
- * Aero Paper: the Aero glass on a warm amber Aurora, with cream panes. Sets all 32 names in
+ * Aero Paper: the Aero glass on a warm amber Aurora, with cream panes. Sets all 29 colors in
  * `themeTokens`; tests/app-themes.test.ts checks that and the contrast of every text pair.
  */
 [data-theme="aero-paper"] {
@@ -8,14 +8,16 @@
   --mu-surface: #fffaf0;
   --mu-well: #ece2cf;
   --mu-hover: #f7e8cd;
+  --mu-selected: #ecd3a0;
   --mu-key: #f8f0e0;
   --mu-key-hover: #fbe9c9;
-  --mu-key-sheen: rgba(255, 255, 255, 0.7);
   --mu-edge: #bfa98a;
+  --mu-control-edge: #8a7558;
   --mu-line: #e3d5bd;
   --mu-overlay: rgba(40, 28, 18, 0.35);
-  --mu-ink: #2b2418;
-  --mu-ink-muted: #6b5a44;
+  --mu-text: #2b2418;
+  --mu-text-secondary: #6b5a44;
+  --mu-text-disabled: var(--mu-text-secondary);
   --mu-primary: #9a5b1e;
   --mu-primary-hover: #87501a;
   --mu-on-primary: #fffaf0;
@@ -31,9 +33,4 @@
   --mu-on-danger: #ffffff;
   --mu-focus: #b9853f;
   --mu-focus-edge: #b9853f;
-  --mu-shadow-track: inset 0 1px 2px hsl(30 30% 15% / 0.14);
-  --mu-shadow-key: 0 1px 2px hsl(30 40% 20% / 0.25), inset 0 0 0 1px rgba(255, 255, 255, 0.7);
-  --mu-shadow-raised: inset 0 0 0 1px rgba(255, 255, 255, 0.7), 0 0 0 1px #8a7558, 0 1px 1px hsl(30 30% 15% / 0.1);
-  --mu-shadow-pressed: inset 0 1px 3px hsl(30 40% 20% / 0.35), 0 0 0 1px #7a4a10;
-  --mu-shadow-pop: 2px 3px 6px hsl(30 30% 15% / 0.35), 0 0 0 1px #a8916f;
 }

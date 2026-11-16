@@ -251,7 +251,7 @@
     backdrop-filter: none;
     color: var(--aero-glass-ink);
     text-shadow: var(--aero-glass-ink-glow);
-    --mu-ink: var(--aero-glass-ink);
+    --mu-text: var(--aero-glass-ink);
   }
 
   /* ---------- 3. Sidebar: frosted Aero glass ------------------------------ */
@@ -269,8 +269,8 @@
     box-shadow: var(--aero-glass-shadow);
     color: var(--aero-on-glass);
     text-shadow: var(--aero-on-glass-shadow);
-    --mu-ink: var(--aero-on-glass);
-    --mu-ink-muted: var(--aero-on-glass-muted);
+    --mu-text: var(--aero-on-glass);
+    --mu-text-secondary: var(--aero-on-glass-muted);
     --mu-line: rgba(255, 255, 255, 0.35);
     --mu-hover: rgba(255, 255, 255, 0.18);
     --mu-primary: #ffffff;
@@ -317,8 +317,8 @@
     box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.8);
     color: var(--aero-select-ink);
     text-shadow: none;
-    --mu-ink: var(--aero-select-ink);
-    --mu-ink-muted: var(--aero-select-ink);
+    --mu-text: var(--aero-select-ink);
+    --mu-text-secondary: var(--aero-select-ink);
     --mu-primary: var(--aero-select-ink);
   }
   /* A checked filter keeps the selection but drops the package's side mark. */
@@ -340,8 +340,8 @@
       0 1px 3px rgba(0, 30, 80, 0.25);
     padding: 6px;
     text-shadow: none;
-    --mu-ink: var(--aero-pane-ink);
-    --mu-ink-muted: var(--aero-pane-ink-muted);
+    --mu-text: var(--aero-pane-ink);
+    --mu-text-secondary: var(--aero-pane-ink-muted);
     --mu-hover: rgba(60, 127, 177, 0.12);
     --mu-primary: var(--aero-pane-primary);
   }
@@ -474,7 +474,7 @@
   }
   /* On the glass, page-level text (empty states, the end of a list) reads light. */
   & [data-app-window]:is([data-page="home"], [data-page="explore"], [data-page="archived"], [data-page="memo"]) {
-    --mu-ink-muted: var(--aero-on-glass-muted);
+    --mu-text-secondary: var(--aero-on-glass-muted);
     color: var(--aero-on-glass);
   }
 
@@ -487,8 +487,8 @@
       inset 0 1px 0 rgba(255, 255, 255, 0.6),
       0 1px 3px rgba(0, 30, 80, 0.25);
     color: var(--aero-pane-ink);
-    --mu-ink: var(--aero-pane-ink);
-    --mu-ink-muted: var(--aero-pane-ink-muted);
+    --mu-text: var(--aero-pane-ink);
+    --mu-text-secondary: var(--aero-pane-ink-muted);
   }
   & [data-memo-editor] .memo-editor-scroller {
     background: var(--aero-field);
@@ -514,8 +514,8 @@
     color: #1e1e1e;
     color-scheme: light;
     /* The note is paper in every variant: its text reads dark. */
-    --mu-ink: #1e1e1e;
-    --mu-ink-muted: var(--note-ink);
+    --mu-text: #1e1e1e;
+    --mu-text-secondary: var(--note-ink);
     --mu-surface: var(--note-bottom);
     --mu-line: rgba(0, 0, 0, 0.15);
     --mu-hover: rgba(0, 0, 0, 0.06);
@@ -767,7 +767,7 @@
   & :is(.mu-menu-item, .mu-select-item, .mu-combobox-item):is([data-highlighted]) {
     background: var(--aero-select);
     border-color: var(--aero-menu-hover-edge);
-    color: var(--mu-ink);
+    color: var(--mu-text);
   }
   & .mu-popover-popup {
     border-radius: 6px;
@@ -810,7 +810,7 @@
 
   /* Toasts: a notification-area balloon with the Vista message icons. */
   & .mu-toast {
-    color: var(--mu-ink);
+    color: var(--mu-text);
     border-radius: 6px;
     background: linear-gradient(180deg, var(--mu-surface) 0%, var(--mu-surface) 55%, var(--mu-canvas) 100%);
     box-shadow:
@@ -998,8 +998,8 @@
     border-radius: 7px 7px 0 0;
     background: var(--aero-gadget);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55);
-    --mu-ink: var(--aero-gadget-ink);
-    --mu-ink-muted: var(--aero-gadget-ink);
+    --mu-text: var(--aero-gadget-ink);
+    --mu-text-secondary: var(--aero-gadget-ink);
     --mu-hover: rgba(255, 255, 255, 0.22);
     color: var(--aero-gadget-ink);
     text-shadow: 0 1px 2px rgba(110, 40, 0, 0.6);
@@ -1062,7 +1062,7 @@
   /* Today: the red box around the date. */
   & [data-app-window][data-page="calendar"] [data-calendar-date][data-today] > span:first-child > span {
     background: transparent;
-    color: var(--mu-ink);
+    color: var(--mu-text);
     border: 1px solid #c0392b;
     border-radius: 0;
   }

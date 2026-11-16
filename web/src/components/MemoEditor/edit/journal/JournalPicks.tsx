@@ -47,7 +47,7 @@ export const JournalPicks = ({ journal }: { journal: JournalSession }) => {
       {settings.showPrompt && (
         <div className="flex flex-wrap items-center gap-2">
           <span className="mu-label">{t("journal.prompt-label")}</span>
-          <span className="mu-body min-w-0 flex-1 text-mu-ink-muted">{t(`journal.prompt.p${draft.prompt}` as never)}</span>
+          <span className="mu-body min-w-0 flex-1 text-mu-text-secondary">{t(`journal.prompt.p${draft.prompt}` as never)}</span>
           <Button variant="ghost" size="xs" icon={<ShuffleIcon />} onClick={() => update({ prompt: (draft.prompt % PROMPT_COUNT) + 1 })}>
             {t("journal.prompt-another")}
           </Button>
@@ -75,7 +75,7 @@ export const JournalGoals = ({ journal }: { journal: JournalSession }) => {
                 update({ goalsDone: checked ? [...draft.goalsDone, goal] : draft.goalsDone.filter((label) => label !== goal) })
               }
             />
-            <span className={cn(done && "text-mu-ink-muted line-through")}>{goal}</span>
+            <span className={cn(done && "text-mu-text-secondary line-through")}>{goal}</span>
           </label>
         );
       })}

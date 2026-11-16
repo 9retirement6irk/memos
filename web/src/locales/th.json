@@ -460,7 +460,9 @@
       "uncheck-all": "ยกเลิกการเลือกงานทั้งหมด",
       "updated": "อัปเดตงานแล้ว"
     },
-    "view-options": "ตัวเลือกการดู"
+    "view-options": "ตัวเลือกการดู",
+    "add-reaction": "เพิ่มปฏิกิริยา",
+    "remove-reaction": "ลบการตอบสนอง"
   },
   "message": {
     "archived-successfully": "เก็บถาวรเรียบร้อยแล้ว",
@@ -510,9 +512,7 @@
       "list-title": "รายชื่อสมาชิก",
       "no-members-found": "ไม่พบสมาชิก",
       "archived": "เก็บถาวรแล้ว",
-      "member-column": "สมาชิก",
       "active": "ใช้งานอยู่",
-      "summary-column": "สรุป",
       "export-memos": "ส่งออกบันทึก",
       "username-password-required": "ชื่อผู้ใช้และรหัสผ่านต้องไม่ว่างเปล่า",
       "create-success": "สร้างผู้ใช้แล้ว",
@@ -715,7 +715,6 @@
       "basic-settings": "การตั้งค่าพื้นฐาน",
       "basic-settings-description": "ตั้งค่าข้อมูลประจำตัวผู้ให้บริการ ชื่อที่แสดง และกฎตัวระบุเพิ่มเติมก่อนกรอกรายละเอียด OAuth",
       "client-secret-optional-description": "เว้นว่างไว้เพื่อคงรหัสลับไคลเอ็นต์ที่มีอยู่ไว้",
-      "configuration": "การกำหนดค่า",
       "configuration-summary-description": "แสดงข้อมูลสำคัญที่ช่วยระบุและตรวจสอบผู้ให้บริการโดยไม่ต้องแสดงการกำหนดค่าทั้งหมดแบบอินไลน์",
       "create-sso-description": "สร้างผู้ให้บริการข้อมูลประจำตัวใหม่สำหรับการลงชื่อเข้าใช้ครั้งเดียวที่จัดการโดยผู้ดูแลระบบ",
       "endpoints": "จุดเชื่อมต่อ",
@@ -737,7 +736,6 @@
       "not-linked-description": "ยังไม่มีการเชื่อมโยงข้อมูลประจำตัวภายนอก คุณสามารถเชื่อมต่อผู้ให้บริการนี้เพื่อเข้าสู่ระบบในภายหลังได้",
       "oauth-configuration": "การกำหนดค่า OAuth",
       "oauth-configuration-description": "กรอกข้อมูลประจำตัวไคลเอ็นต์ OAuth และปลายทางของผู้ให้บริการที่ใช้ระหว่างการลงชื่อเข้าใช้",
-      "provider": "ผู้ให้บริการ",
       "provider-id": "รหัสผู้ให้บริการ",
       "provider-id-description": "ใช้เฉพาะตัวอักษรพิมพ์เล็ก ตัวเลข และเครื่องหมายขีดกลางเท่านั้น ค่านี้จะกลายเป็นส่วนหนึ่งของชื่อทรัพยากรผู้ให้บริการ",
       "redirect-url-description": "ลงทะเบียน URL การเรียกกลับนี้กับผู้ให้บริการข้อมูลประจำตัวของคุณ เพื่อให้กระบวนการรหัสการอนุญาตเสร็จสมบูรณ์",
@@ -926,16 +924,6 @@
       "disallow-user-registration-description": "ป้องกันไม่ให้ผู้ใช้ใหม่สร้างบัญชีจากหน้าลงทะเบียน",
       "week-start-day-description": "ควบคุมวันแรกที่แสดงในมุมมองแบบปฏิทิน"
     },
-    "memo": {
-      "reactions": "ปฏิกิริยา",
-      "label": "บันทึก",
-      "reactions-required": "รายการความรู้สึกต้องไม่ว่��งเปล่า",
-      "add-reaction": "เพิ่มปฏิกิริยา",
-      "configured-reactions": "ปฏิกิริยาที่กำหนดค่าไว้",
-      "reaction-placeholder": "เช่น 👍",
-      "reactions-description": "กำหนดตัวเลือกการตอบสนองที่ผู้ใช้สามารถใช้กับบันทึกช่วยจำ",
-      "remove-reaction": "ลบการตอบสนอง"
-    },
     "webhook": {
       "create-dialog": {
         "an-easy-to-remember-name": "ชื่อที่จำง่าย",
@@ -961,7 +949,6 @@
       },
       "no-webhooks-found": "ไม่พบ webhook",
       "title": "Webhook",
-      "url": "URL",
       "label": "Webhook"
     },
     "tags": {

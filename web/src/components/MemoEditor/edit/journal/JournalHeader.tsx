@@ -242,13 +242,13 @@ export const JournalHeader = ({ journal }: { journal: JournalSession }) => {
     <div className="flex w-full flex-wrap items-center gap-1.5" data-journal-header="">
       <LocationMenu journal={journal} moment={moment} />
       {draft.weather && (
-        <span className="mu-caption flex items-center gap-1 text-mu-ink-muted">
+        <span className="mu-caption flex items-center gap-1 text-mu-text-secondary">
           <SunIcon className="mu-icon-sm" aria-hidden="true" />
           {draft.weather.temperature}°{draft.weather.unit === "fahrenheit" ? "F" : "C"},{" "}
           {t(`journal.weather.${draft.weather.kind}` as never)}
         </span>
       )}
-      {draft.momentNote && <span className="mu-caption text-mu-ink-muted">{draft.momentNote}</span>}
+      {draft.momentNote && <span className="mu-caption text-mu-text-secondary">{draft.momentNote}</span>}
       <span className="ms-auto">
         <ModeBadge journal={journal} />
       </span>

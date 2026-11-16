@@ -33,7 +33,7 @@ export function MemoDisplaySettingsContent() {
   return (
     <div className="flex flex-col gap-3">
       <ToggleGroup
-        size="sm"
+        size="md"
         fullWidth
         aria-label={t("memo.layout")}
         value={[String(maxColumns)]}
@@ -60,7 +60,7 @@ export function MemoDisplaySettingsContent() {
       </ToggleGroup>
 
       {/* Selects, not segmented rows: the two labels of a pair don't fit side by side in every language. */}
-      <Field.Root orientation="horizontal" size="sm">
+      <Field.Root orientation="horizontal" size="md">
         <Field.Label>{t("memo.order-by")}</Field.Label>
         <Select.Root
           items={timeBasisOptions}
@@ -76,7 +76,7 @@ export function MemoDisplaySettingsContent() {
           </Select.Popup>
         </Select.Root>
       </Field.Root>
-      <Field.Root orientation="horizontal" size="sm">
+      <Field.Root orientation="horizontal" size="md">
         <Field.Label>{t("memo.direction")}</Field.Label>
         <Select.Root
           items={sortOrderOptions}
@@ -95,7 +95,7 @@ export function MemoDisplaySettingsContent() {
 
       <Separator />
 
-      <Field.Root orientation="horizontal" size="sm">
+      <Field.Root orientation="horizontal" size="md">
         <Field.Label>{t("memo.compact-mode")}</Field.Label>
         {/* Wraps inside the width the controls set, so the hint never widens the popup. */}
         {compactLocked && <Field.Description className="w-0 min-w-full">{t("memo.grid-compact-hint")}</Field.Description>}

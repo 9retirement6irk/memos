@@ -466,7 +466,9 @@
     "layout-list-description": "Uma única coluna com uma largura de leitura",
     "on-this-memo": "Neste memorando",
     "parent-memo": "Memorando pai",
-    "view-options": "Opções de visualização"
+    "view-options": "Opções de visualização",
+    "add-reaction": "Adicionar reação",
+    "remove-reaction": "Remover reação"
   },
   "message": {
     "archived-successfully": "Arquivado com sucesso",
@@ -593,22 +595,10 @@
       "no-members-found": "Nenhum membro encontrado",
       "active": "Ativa",
       "archived": "Arquivada",
-      "member-column": "Membro",
-      "summary-column": "Resumo",
       "export-memos": "Exportar memos",
       "username-password-required": "O nome de utilizador e a palavra-passe não podem estar vazios",
       "create-success": "Utilizador criado",
       "update-success": "Utilizador atualizado"
-    },
-    "memo": {
-      "label": "Memo",
-      "reactions": "Reações",
-      "reactions-required": "A lista de reações não deve estar vazia",
-      "add-reaction": "Adicionar reação",
-      "configured-reactions": "Reações configuradas",
-      "reaction-placeholder": "por exemplo 👍",
-      "reactions-description": "Defina as opções de reação que os usuários podem aplicar aos memorandos.",
-      "remove-reaction": "Remover reação"
     },
     "my-account": {
       "label": "A Minha Conta"
@@ -806,7 +796,6 @@
       "basic-settings": "Configurações básicas",
       "basic-settings-description": "Defina a identidade do provedor, o nome de exibição e as regras de identificador opcional antes de preencher os detalhes do OAuth.",
       "client-secret-optional-description": "Deixe em branco para manter o segredo do cliente existente inalterado.",
-      "configuration": "Configuração",
       "configuration-summary-description": "Mostre os fundamentos que ajudam a identificar e auditar um provedor sem expor toda a configuração in-line.",
       "create-sso-description": "Crie um novo provedor de identidade para logon único gerenciado pelo administrador.",
       "endpoints": "Pontos finais",
@@ -828,7 +817,6 @@
       "not-linked-description": "Nenhuma identidade externa está vinculada ainda. Você pode conectar este provedor para fazer login mais tarde.",
       "oauth-configuration": "Configuração OAuth",
       "oauth-configuration-description": "Preencha as credenciais do cliente OAuth e os pontos finais do fornecedor utilizados durante o login.",
-      "provider": "Provedor",
       "provider-id": "ID do provedor",
       "provider-id-description": "Apenas letras minúsculas, números e hifens. Esse valor passa a fazer parte do nome do recurso do provedor.",
       "provider-uid": "UID",
@@ -967,7 +955,6 @@
       },
       "no-webhooks-found": "Nenhum webhook encontrado.",
       "title": "Webhooks",
-      "url": "URL",
       "label": "Webhooks"
     },
     "tags": {
