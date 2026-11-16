@@ -844,9 +844,34 @@
   background-position: 0 -3px;
   background-size: auto 52px;
 }
-.kidpix[data-compact] > .kidpix-picker {
-  left: 8px;
-  bottom: calc(220px + env(safe-area-inset-bottom));
+/* On a phone the picker is centered over the whole sheet; the place itself lets presses through. */
+.kidpix-picker-place {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  /* Clear of the sheet's own buttons above, with room for Paper Texture below. */
+  padding: 56px 0 30px;
+  pointer-events: none;
+}
+.kidpix-picker-place > .kidpix-picker {
+  position: relative;
+  pointer-events: auto;
+}
+/* Its Paper Texture button goes under the panel, and the textures over it, five to a row. */
+.kidpix-picker-place .kidpix-picker > .kidpix-texture-button {
+  left: 50% !important;
+  top: calc(100% + 4px);
+  bottom: auto;
+  translate: -50% 0;
+}
+.kidpix-picker-place .kidpix-picker > .kidpix-textures {
+  left: 50% !important;
+  top: 50%;
+  bottom: auto;
+  translate: -50% -50%;
+  grid-template-columns: repeat(5, 36px);
 }
 
 /* ---- moments ---- */
