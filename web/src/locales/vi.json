@@ -554,7 +554,9 @@
       "theme-aero-system": "Aero · Theo hệ thống",
       "theme-aero-light": "Aero · Sáng",
       "theme-aero-dark": "Aero · Tối",
-      "theme-aero-paper": "Aero · Giấy"
+      "theme-aero-paper": "Aero · Giấy",
+      "sidebar-spaces-title": "Không gian trên thanh bên",
+      "sidebar-spaces-description": "Chọn không gian nào hiển thị trên thanh bên. Lựa chọn được lưu trong trình duyệt này."
     },
     "editor": {
       "label": "Trình chỉnh sửa",
@@ -1719,11 +1721,7 @@
     "mood-trend": "Bạn đã cảm thấy thế nào",
     "mood-trend-description": "Tâm trạng hằng ngày của bạn trong tám tuần qua",
     "best-with": "Thấy tốt nhất khi có",
-    "worst-with": "Thấy khó khăn nhất khi có",
-    "sidebar": {
-      "journal": "Nhật ký",
-      "notes": "Ghi chú"
-    }
+    "worst-with": "Thấy khó khăn nhất khi có"
   },
   "dawarich": {
     "route": {

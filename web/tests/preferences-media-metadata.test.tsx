@@ -20,6 +20,8 @@ vi.mock("@/contexts/AuthContext", () => ({
   }),
 }));
 
+const spaces = vi.hoisted(() => ({ list: [] as { name: string; title: string }[] }));
+vi.mock("@/contexts/SpaceContext", () => ({ useSpaceContext: () => ({ spaces: spaces.list }) }));
 vi.mock("@/hooks/useUserQueries", () => ({
   useUpdateUserGeneralSetting: () => ({ mutate: mocks.mutate, isPending: false }),
 }));
@@ -61,10 +63,44 @@ describe("PreferencesSection", () => {
     fireEvent.click(screen.getByRole("switch", { name: "memo.link-preview" }));
     fireEvent.click(screen.getByRole("switch", { name: "setting.preference.double-click-edit" }));
 
-    expect(JSON.parse(localStorage.getItem(DEVICE_PREFERENCES_KEY) ?? "null")).toEqual({ linkPreview: false, doubleClickEdit: true });
+    expect(JSON.parse(localStorage.getItem(DEVICE_PREFERENCES_KEY) ?? "null")).toEqual({
+      linkPreview: false,
+      doubleClickEdit: true,
+      hiddenSidebarSpaces: [],
+    });
     expect(mocks.mutate).not.toHaveBeenCalled();
 
     act(() => updateDevicePreferences({ linkPreview: true }));
     expect(screen.getByRole("switch", { name: "memo.link-preview" })).toBeChecked();
+  });
+
+  it("chooses which Spaces the sidebar lists, in this browser", () => {
+    spaces.list = [
+      { name: "spaces/journal", title: "Journal" },
+      { name: "spaces/homelab", title: "Homelab" },
+    ];
+    try {
+      render(<PreferencesSection />);
+      expect(screen.getByText("setting.preference.sidebar-spaces-title")).toBeInTheDocument();
+      const journal = screen.getByRole("switch", { name: "Journal" });
+      // Every Space is listed until it is switched off.
+      expect(journal).toBeChecked();
+      expect(screen.getByRole("switch", { name: "Homelab" })).toBeChecked();
+
+      fireEvent.click(journal);
+      expect(JSON.parse(localStorage.getItem(DEVICE_PREFERENCES_KEY) ?? "null").hiddenSidebarSpaces).toEqual(["spaces/journal"]);
+      expect(screen.getByRole("switch", { name: "Journal" })).not.toBeChecked();
+
+      fireEvent.click(screen.getByRole("switch", { name: "Journal" }));
+      expect(JSON.parse(localStorage.getItem(DEVICE_PREFERENCES_KEY) ?? "null").hiddenSidebarSpaces).toEqual([]);
+      expect(mocks.mutate).not.toHaveBeenCalled();
+    } finally {
+      spaces.list = [];
+    }
+  });
+
+  it("shows no Spaces group to someone with no Spaces", () => {
+    render(<PreferencesSection />);
+    expect(screen.queryByText("setting.preference.sidebar-spaces-title")).not.toBeInTheDocument();
   });
 });

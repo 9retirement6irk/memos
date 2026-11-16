@@ -2,8 +2,10 @@ import { create } from "@bufbuild/protobuf";
 import { Select, Switch } from "@usememos/ui";
 import { useMemo } from "react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useSpaceContext } from "@/contexts/SpaceContext";
 import { updateDevicePreferences, useDevicePreferences } from "@/hooks/useDevicePreferences";
 import { useUpdateUserGeneralSetting } from "@/hooks/useUserQueries";
+import { extractSpaceUidFromName } from "@/lib/space-display";
 import { UserSetting_GeneralSetting, UserSetting_GeneralSettingSchema } from "@/types/proto/api/user_service_pb";
 import { loadLocale, useTranslate } from "@/utils/i18n";
 import { convertVisibilityFromString, DEFAULT_VISIBILITY_OPTIONS } from "@/utils/memo";
@@ -20,6 +22,13 @@ const PreferencesSection = () => {
   const { currentUser, userGeneralSetting: generalSetting, refetchSettings } = useAuth();
   const { mutate: updateUserGeneralSetting, isPending: isUpdatingGeneralSetting } = useUpdateUserGeneralSetting(currentUser?.name);
   const devicePreferences = useDevicePreferences();
+  const { spaces } = useSpaceContext();
+
+  // Stored as the Spaces left out, so a Space created later is listed until it is switched off.
+  const showSpaceInSidebar = (space: string, shown: boolean) => {
+    const hidden = devicePreferences.hiddenSidebarSpaces.filter((name) => name !== space);
+    updateDevicePreferences({ hiddenSidebarSpaces: shown ? hidden : [...hidden, space] });
+  };
 
   const handleLocaleSelectChange = (locale: Locale) => {
     // Apply locale immediately for instant UI feedback and persist to localStorage
@@ -175,6 +184,29 @@ const PreferencesSection = () => {
           </SettingListItem>
         </SettingList>
       </SettingGroup>
+
+      {spaces.length > 0 && (
+        <SettingGroup
+          title={t("setting.preference.sidebar-spaces-title")}
+          description={t("setting.preference.sidebar-spaces-description")}
+          showSeparator
+        >
+          <SettingList>
+            {spaces.map((space) => {
+              const label = space.title || extractSpaceUidFromName(space.name);
+              return (
+                <SettingListItem key={space.name} label={label}>
+                  <Switch
+                    aria-label={label}
+                    checked={!devicePreferences.hiddenSidebarSpaces.includes(space.name)}
+                    onCheckedChange={(shown) => showSpaceInSidebar(space.name, shown)}
+                  />
+                </SettingListItem>
+              );
+            })}
+          </SettingList>
+        </SettingGroup>
+      )}
     </SettingSection>
   );
 };

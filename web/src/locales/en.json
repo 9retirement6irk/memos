@@ -952,7 +952,9 @@
       "theme-aero-system": "Aero · Sync with system",
       "theme-aero-light": "Aero · Light",
       "theme-aero-dark": "Aero · Dark",
-      "theme-aero-paper": "Aero · Paper"
+      "theme-aero-paper": "Aero · Paper",
+      "sidebar-spaces-title": "Spaces in the sidebar",
+      "sidebar-spaces-description": "Choose which Spaces are listed in the sidebar. Kept in this browser."
     },
     "editor": {
       "label": "Editor",
@@ -1719,11 +1721,7 @@
     "mood-trend": "How you've felt",
     "mood-trend-description": "Your daily mood over the last eight weeks",
     "best-with": "Feels best with",
-    "worst-with": "Feels hardest with",
-    "sidebar": {
-      "journal": "Journal",
-      "notes": "Notes"
-    }
+    "worst-with": "Feels hardest with"
   },
   "dawarich": {
     "route": {

@@ -803,7 +803,9 @@
       "theme-aero-system": "Aero · Sistemle eşitle",
       "theme-aero-light": "Aero · Açık",
       "theme-aero-dark": "Aero · Koyu",
-      "theme-aero-paper": "Aero · Kâğıt"
+      "theme-aero-paper": "Aero · Kâğıt",
+      "sidebar-spaces-title": "Kenar çubuğundaki alanlar",
+      "sidebar-spaces-description": "Kenar çubuğunda hangi alanların listeleneceğini seçin. Seçim bu tarayıcıda saklanır."
     },
     "editor": {
       "label": "Düzenleyici",
@@ -1719,11 +1721,7 @@
     "mood-trend": "Nasıl hissettin",
     "mood-trend-description": "Son sekiz haftadaki günlük ruh hâlin",
     "best-with": "En iyi hissettiren",
-    "worst-with": "En zor hissettiren",
-    "sidebar": {
-      "journal": "Günlük",
-      "notes": "Notlar"
-    }
+    "worst-with": "En zor hissettiren"
   },
   "dawarich": {
     "route": {

@@ -753,7 +753,9 @@
       "theme-aero-system": "Aero · Podľa systému",
       "theme-aero-light": "Aero · Svetlá",
       "theme-aero-dark": "Aero · Tmavá",
-      "theme-aero-paper": "Aero · Papier"
+      "theme-aero-paper": "Aero · Papier",
+      "sidebar-spaces-title": "Priestory v bočnom paneli",
+      "sidebar-spaces-description": "Vyberte, ktoré priestory sa zobrazia v bočnom paneli. Voľba sa ukladá v tomto prehliadači."
     },
     "editor": {
       "label": "Editor",
@@ -1721,11 +1723,7 @@
     "mood-trend": "Ako si sa cítil",
     "mood-trend-description": "Tvoja denná nálada za posledných osem týždňov",
     "best-with": "Najlepšie sa cítiš s",
-    "worst-with": "Najhoršie sa cítiš s",
-    "sidebar": {
-      "journal": "Denník",
-      "notes": "Poznámky"
-    }
+    "worst-with": "Najhoršie sa cítiš s"
   },
   "dawarich": {
     "route": {

@@ -751,7 +751,9 @@
       "theme-aero-system": "Aero · Järjestelmän mukaan",
       "theme-aero-light": "Aero · Vaalea",
       "theme-aero-dark": "Aero · Tumma",
-      "theme-aero-paper": "Aero · Paperi"
+      "theme-aero-paper": "Aero · Paperi",
+      "sidebar-spaces-title": "Tilat sivupalkissa",
+      "sidebar-spaces-description": "Valitse, mitkä tilat näkyvät sivupalkissa. Valinta tallennetaan tähän selaimeen."
     },
     "editor": {
       "label": "Editori",
@@ -1719,11 +1721,7 @@
     "mood-trend": "Miltä sinusta on tuntunut",
     "mood-trend-description": "Päivittäinen mielialasi viimeisten kahdeksan viikon ajalta",
     "best-with": "Tuntuu parhaalta, kun mukana on",
-    "worst-with": "Tuntuu raskaimmalta, kun mukana on",
-    "sidebar": {
-      "journal": "Päiväkirja",
-      "notes": "Muistiinpanot"
-    }
+    "worst-with": "Tuntuu raskaimmalta, kun mukana on"
   },
   "dawarich": {
     "route": {

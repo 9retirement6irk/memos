@@ -635,7 +635,9 @@
       "theme-aero-system": "Aero · Följ systemet",
       "theme-aero-light": "Aero · Ljust",
       "theme-aero-dark": "Aero · Mörkt",
-      "theme-aero-paper": "Aero · Papper"
+      "theme-aero-paper": "Aero · Papper",
+      "sidebar-spaces-title": "Utrymmen i sidofältet",
+      "sidebar-spaces-description": "Välj vilka utrymmen som visas i sidofältet. Valet sparas i den här webbläsaren."
     },
     "editor": {
       "label": "Redigerare",
@@ -1719,11 +1721,7 @@
     "mood-trend": "Hur du har mått",
     "mood-trend-description": "Ditt dagliga humör de senaste åtta veckorna",
     "best-with": "Känns bäst med",
-    "worst-with": "Känns tyngst med",
-    "sidebar": {
-      "journal": "Dagbok",
-      "notes": "Anteckningar"
-    }
+    "worst-with": "Känns tyngst med"
   },
   "dawarich": {
     "route": {

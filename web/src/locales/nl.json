@@ -635,7 +635,9 @@
       "theme-aero-system": "Aero · Systeem volgen",
       "theme-aero-light": "Aero · Licht",
       "theme-aero-dark": "Aero · Donker",
-      "theme-aero-paper": "Aero · Papier"
+      "theme-aero-paper": "Aero · Papier",
+      "sidebar-spaces-title": "Ruimtes in de zijbalk",
+      "sidebar-spaces-description": "Kies welke ruimtes in de zijbalk staan. De keuze wordt in deze browser bewaard."
     },
     "editor": {
       "label": "Editor",
@@ -1719,11 +1721,7 @@
     "mood-trend": "Hoe je je voelde",
     "mood-trend-description": "Je dagelijkse stemming van de laatste acht weken",
     "best-with": "Voelt het best met",
-    "worst-with": "Voelt het zwaarst met",
-    "sidebar": {
-      "journal": "Dagboek",
-      "notes": "Notities"
-    }
+    "worst-with": "Voelt het zwaarst met"
   },
   "dawarich": {
     "route": {

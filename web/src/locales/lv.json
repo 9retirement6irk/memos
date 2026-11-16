@@ -752,7 +752,9 @@
       "theme-aero-system": "Aero · Sinhronizēt ar sistēmu",
       "theme-aero-light": "Aero · Gaišs",
       "theme-aero-dark": "Aero · Tumšs",
-      "theme-aero-paper": "Aero · Papīrs"
+      "theme-aero-paper": "Aero · Papīrs",
+      "sidebar-spaces-title": "Telpas sānjoslā",
+      "sidebar-spaces-description": "Izvēlieties, kuras telpas rādīt sānjoslā. Izvēle tiek saglabāta šajā pārlūkā."
     },
     "editor": {
       "label": "Redaktors",
@@ -1720,11 +1722,7 @@
     "mood-trend": "Kā tu juties",
     "mood-trend-description": "Tavs dienas noskaņojums pēdējās astoņās nedēļās",
     "best-with": "Vislabāk jūties ar",
-    "worst-with": "Visgrūtāk jūties ar",
-    "sidebar": {
-      "journal": "Dienasgrāmata",
-      "notes": "Piezīmes"
-    }
+    "worst-with": "Visgrūtāk jūties ar"
   },
   "dawarich": {
     "route": {

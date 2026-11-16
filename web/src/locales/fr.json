@@ -636,7 +636,9 @@
       "theme-aero-system": "Aero · Suivre le système",
       "theme-aero-light": "Aero · Clair",
       "theme-aero-dark": "Aero · Sombre",
-      "theme-aero-paper": "Aero · Papier"
+      "theme-aero-paper": "Aero · Papier",
+      "sidebar-spaces-title": "Espaces dans la barre latérale",
+      "sidebar-spaces-description": "Choisissez les espaces affichés dans la barre latérale. Ce choix est conservé dans ce navigateur."
     },
     "editor": {
       "label": "Éditeur",
@@ -1720,11 +1722,7 @@
     "mood-trend": "Comment vous vous êtes senti",
     "mood-trend-description": "Votre humeur quotidienne des huit dernières semaines",
     "best-with": "Se sent le mieux avec",
-    "worst-with": "Se sent le plus difficile avec",
-    "sidebar": {
-      "journal": "Journal",
-      "notes": "Notes"
-    }
+    "worst-with": "Se sent le plus difficile avec"
   },
   "dawarich": {
     "route": {

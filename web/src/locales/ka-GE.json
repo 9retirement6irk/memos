@@ -635,7 +635,9 @@
       "theme-aero-system": "Aero · სისტემასთან სინქრონიზაცია",
       "theme-aero-light": "Aero · ღია",
       "theme-aero-dark": "Aero · მუქი",
-      "theme-aero-paper": "Aero · ქაღალდი"
+      "theme-aero-paper": "Aero · ქაღალდი",
+      "sidebar-spaces-title": "სივრცეები გვერდით პანელში",
+      "sidebar-spaces-description": "აირჩიეთ, რომელი სივრცეები გამოჩნდეს გვერდით პანელში. არჩევანი ამ ბრაუზერში ინახება."
     },
     "editor": {
       "label": "რედაქტორი",
@@ -1719,11 +1721,7 @@
     "mood-trend": "როგორ გრძნობდით თავს",
     "mood-trend-description": "თქვენი დღიური განწყობა ბოლო რვა კვირის განმავლობაში",
     "best-with": "ყველაზე კარგად გრძნობთ თავს",
-    "worst-with": "ყველაზე რთულად გრძნობთ თავს",
-    "sidebar": {
-      "journal": "დღიური",
-      "notes": "ჩანაწერები"
-    }
+    "worst-with": "ყველაზე რთულად გრძნობთ თავს"
   },
   "dawarich": {
     "route": {

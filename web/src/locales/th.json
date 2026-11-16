@@ -554,7 +554,9 @@
       "theme-aero-system": "Aero · ตามระบบ",
       "theme-aero-light": "Aero · สว่าง",
       "theme-aero-dark": "Aero · มืด",
-      "theme-aero-paper": "Aero · กระดาษ"
+      "theme-aero-paper": "Aero · กระดาษ",
+      "sidebar-spaces-title": "พื้นที่ในแถบด้านข้าง",
+      "sidebar-spaces-description": "เลือกพื้นที่ที่จะแสดงในแถบด้านข้าง ตัวเลือกนี้เก็บไว้ในเบราว์เซอร์นี้"
     },
     "editor": {
       "label": "โปรแกรมแก้ไข",
@@ -1719,11 +1721,7 @@
     "mood-trend": "ความรู้สึกของคุณ",
     "mood-trend-description": "อารมณ์รายวันของคุณในแปดสัปดาห์ที่ผ่านมา",
     "best-with": "รู้สึกดีที่สุดเมื่อมี",
-    "worst-with": "รู้สึกยากที่สุดเมื่อมี",
-    "sidebar": {
-      "journal": "บันทึกประจำวัน",
-      "notes": "บันทึก"
-    }
+    "worst-with": "รู้สึกยากที่สุดเมื่อมี"
   },
   "dawarich": {
     "route": {

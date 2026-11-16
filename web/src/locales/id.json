@@ -554,7 +554,9 @@
       "theme-aero-system": "Aero · Ikuti sistem",
       "theme-aero-light": "Aero · Terang",
       "theme-aero-dark": "Aero · Gelap",
-      "theme-aero-paper": "Aero · Kertas"
+      "theme-aero-paper": "Aero · Kertas",
+      "sidebar-spaces-title": "Ruang di bilah sisi",
+      "sidebar-spaces-description": "Pilih ruang mana yang ditampilkan di bilah sisi. Pilihan ini disimpan di browser ini."
     },
     "editor": {
       "label": "Editor",
@@ -1719,11 +1721,7 @@
     "mood-trend": "Perasaanmu selama ini",
     "mood-trend-description": "Suasana hati harianmu selama delapan minggu terakhir",
     "best-with": "Terasa paling baik dengan",
-    "worst-with": "Terasa paling berat dengan",
-    "sidebar": {
-      "journal": "Jurnal",
-      "notes": "Catatan"
-    }
+    "worst-with": "Terasa paling berat dengan"
   },
   "dawarich": {
     "route": {

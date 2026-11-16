@@ -952,7 +952,9 @@
       "theme-aero-system": "Aero · Sistemlə sinxronlaşdır",
       "theme-aero-light": "Aero · Açıq",
       "theme-aero-dark": "Aero · Tünd",
-      "theme-aero-paper": "Aero · Kağız"
+      "theme-aero-paper": "Aero · Kağız",
+      "sidebar-spaces-title": "Yan paneldəki sahələr",
+      "sidebar-spaces-description": "Yan paneldə hansı sahələrin göstəriləcəyini seçin. Seçim bu brauzerdə saxlanılır."
     },
     "editor": {
       "label": "Redaktor",
@@ -1719,11 +1721,7 @@
     "mood-trend": "Necə hiss etdin",
     "mood-trend-description": "Son səkkiz həftədə gündəlik əhvalın",
     "best-with": "Ən yaxşı hiss etdirən",
-    "worst-with": "Ən çətin hiss etdirən",
-    "sidebar": {
-      "journal": "Gündəlik",
-      "notes": "Qeydlər"
-    }
+    "worst-with": "Ən çətin hiss etdirən"
   },
   "dawarich": {
     "route": {
