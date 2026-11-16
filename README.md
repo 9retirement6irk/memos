@@ -96,6 +96,8 @@ Connect [Dawarich](https://dawarich.app) in **Settings → Dawarich**, again per
   - the Pencil's shapes: straight line, curve, rectangle, oval and polygon, empty or filled
   - three Fill Buckets: Solid (the color in hand, plain or through a one-color pattern), Blend and
     Pattern
+  - scissors: cut out part of the picture freehand, as a polygon, oval or rectangle, or with one of ten
+    cookie cutters, then move it, throw it away, or duplicate and paste it
   - stickers you can move, resize and flip before they become part of the picture
   - your own pictures, from the device or from Immich, placed the same way and painted over
   - text in any of Kid Pix's 22 fonts, with size, bold, italic, underline and alignment, and Read Aloud

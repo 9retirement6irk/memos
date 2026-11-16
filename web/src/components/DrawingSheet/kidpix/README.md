@@ -163,6 +163,34 @@ where the color in hand shows through. A frame's place comes from the script's p
 the frame's registration point (`REGS`, indexed one past the frame). The brush panel's middle
 mold is Sound Art's microphone, which is not built.
 
+The Moving Van's tray has Kid Pix's Grab pair in the same panel (scripts 18128 to 18133): the hand,
+which moves all the paint as before, and the scissors.
+
+## The scissors
+
+Kid Pix's cut tool (`CutTool.tsx`, `cut.ts`), built from the original running side by side:
+
+- The tray holds fourteen shapes, with the disc's icons (`CutRgns.MHK`, `assets/cut-options.png`).
+  Four are drawn: free-form (let go, it closes with a straight line to where it began), polygon (a
+  press a corner, closed on the first), oval and rectangle. Ten are cookie cutters, which follow
+  the pointer and cut their own shape, at its own size, with one click. A cutter is a region on
+  the disc (`MRGN`: a list of rectangles); `assets/cut-shapes.png` holds the ten as masks and
+  `cutters.ts` (generated) where each is.
+- What is marked shows in fine slanted lines, as in Kid Pix, not a moving border. Dragged, the
+  paint in it comes off the paper and follows the pointer, floating over the picture; a press
+  anywhere else, another shape or a change of tool sticks it down.
+- The three buttons are the tray's own (`assets/cut-buttons.png`): the Trash Can throws away
+  what is marked or in hand, Duplicate remembers it, and Paste drops a copy in the middle of the
+  paper, ready to move, as often as it is clicked.
+- Undo Guy puts a piece in hand back where it was cut from. Once stuck down, a move is one step.
+- The drawing sounds are the tools' own from `KP.cfg` (111 to 114); a shape marked plays 7428, a
+  piece picked up 7429 and let go 7430.
+
+Unlike Kid Pix, a piece carries only paint: the original's picture is one opaque sheet, so its
+pieces take the white around the paint with them and leave a white hole. Here the paper, a
+background and the drawing under the paint stay where they are, as with the Little Eraser. A piece
+also cannot be resized, and text and stickers already pressed in are paint like the rest.
+
 ## Shapes, buckets and stickers
 
 - The Pencil's tray holds its sizes, then nine shapes (`PENCIL_SHAPES`, Kid Pix's modifier tools

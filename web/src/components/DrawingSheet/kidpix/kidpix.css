@@ -251,6 +251,9 @@
 .kidpix-icon[data-sheet="spray"] {
   background-image: url("./assets/spray.png");
 }
+.kidpix-icon[data-sheet="cut"] {
+  background-image: url("./assets/cut-options.png");
+}
 .kidpix-icon[data-sheet="mixers"] {
   background-image: url("./assets/mixers.png");
 }
@@ -646,6 +649,26 @@
   height: 34px;
   background-image: url("./assets/modes.png");
 }
+/* The scissors' Trash Can, Duplicate and Paste, one under the other as in Kid Pix's tray. */
+.kidpix-cut-buttons {
+  display: flex;
+  flex-shrink: 0;
+  flex-direction: column;
+  align-items: center;
+  width: 40px;
+}
+.kidpix-cut-buttons > button {
+  width: 38px;
+  height: 33px;
+  background-image: url("./assets/cut-buttons.png");
+}
+.kidpix-cut-buttons > button:not(:first-child) {
+  width: 29px;
+  height: 25px;
+}
+.kidpix-cut-buttons > button:active {
+  background-position: var(--kp-chosen);
+}
 .kidpix-text-tools {
   display: flex;
   flex-direction: column;
@@ -774,6 +797,9 @@
 .kidpix-panel .kidpix-modes {
   zoom: 0.7;
 }
+.kidpix-panel .kidpix-cut-buttons {
+  zoom: 0.8;
+}
 .kidpix-panel .kidpix-text-tools {
   padding: 0 4px;
 }
@@ -880,6 +906,57 @@
   width: 100%;
   height: 100%;
   pointer-events: none;
+}
+/* The scissors work on a sheet over the paint: the shape being drawn, and the piece marked or in hand. */
+.kidpix-cut {
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow: hidden;
+  cursor: crosshair;
+  touch-action: none;
+}
+.kidpix-cut[data-over="piece"] {
+  cursor: move;
+}
+.kidpix-cut-piece,
+.kidpix-cut-cutter {
+  position: absolute;
+  pointer-events: none;
+}
+.kidpix-cut-piece > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  -webkit-user-drag: none;
+}
+/* Kid Pix marks what is cut with fine slanted lines, not a moving border. */
+.kidpix-cut-hatch {
+  display: block;
+  background: repeating-linear-gradient(45deg, rgb(0 0 0 / 55%) 0 1px, transparent 1px 4px);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+}
+.kidpix-cut-piece > .kidpix-cut-hatch {
+  position: absolute;
+  inset: 0;
+}
+.kidpix-cut-outline {
+  position: absolute;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+  fill: none;
+  stroke: #000;
+  stroke-width: 1;
+}
+.kidpix-cut-outline[data-kind="polygon"] {
+  stroke-width: 2;
+}
+.kidpix-cut-outline .kidpix-cut-band {
+  stroke-width: 1;
 }
 .kidpix-handle {
   position: absolute;
