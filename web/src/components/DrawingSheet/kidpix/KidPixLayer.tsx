@@ -18,6 +18,8 @@ import solidTilesUrl from "./assets/solid-tiles.png";
 import soundsUrl from "./assets/sounds.m4a";
 import { KidPixAudio } from "./audio";
 import type { Point } from "./brushes";
+import CutTool, { type CutToolHandle } from "./CutTool";
+import { CUT_GESTURES, CUT_OPTION_COUNT } from "./cut";
 import { KIDPIX_TOOL_SOUNDS } from "./data";
 import { KidPixEngine, type KidPixImages, type KidPixPicture, type KidPixTile } from "./engine";
 import "./kidpix.css";
@@ -29,8 +31,10 @@ import {
   BRUSH_COUNT,
   BRUSH_KINDS,
   BUCKET_KINDS,
+  CUT_BUTTONS,
   ERASER_TIPS,
   FONTS,
+  GRAB_KINDS,
   GRADIENT_COUNT,
   type KidPixTool,
   MIXER_COUNT,
@@ -100,6 +104,10 @@ export interface KidPixLayerProps {
     sizes: readonly [string, string, string];
     /** The Little Eraser's round and square tips. */
     eraserTips: readonly [string, string];
+    /** The scissors' shapes that Kid Pix leaves unnamed: free-form, polygon, and a cookie cutter by its number. */
+    cutFree: string;
+    cutPolygon: string;
+    cutter: (number: number) => string;
     font: string;
     fontSize: string;
     bold: string;
@@ -147,6 +155,9 @@ const ALIGNS = ["left", "center", "right"] as const;
 const OPTION_CELL = 52;
 const SIZES_ROOM = 73;
 const MODES_ROOM = 60;
+/** The scissors' Trash Can, Duplicate and Paste buttons: their cells in assets/cut-buttons.png, and the room they take. */
+const CUT_BUTTON_CELL = [38, 33] as const;
+const CUT_BUTTONS_ROOM = 46;
 /** The text box's padding and border, in CSS px, so its letters sit where they will be painted. */
 const TEXT_PAD = 5;
 
@@ -389,6 +400,8 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
   const [pencilShape, setPencilShape] = useState(0);
   // The Fill Bucket in hand (solid, blend, pattern) and the fill each one last used.
   const [bucketKind, setBucketKind] = useState(0);
+  const [grabKind, setGrabKind] = useState(0);
+  const cutRef = useRef<CutToolHandle>(null);
   const [bucketChoice, setBucketChoice] = useState<readonly number[]>([0, 0, 0]);
   const [floating, setFloating] = useState<FloatingSticker | null>(null);
   // The brush zone's kind (0 the paint brush, 1 the Spray Can) and the picture set in the can.
@@ -598,10 +611,15 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
 
   useImperativeHandle(ref, () => ({
     addPictures,
-    hasPaint: () => Boolean(floatingRef.current) || Boolean(typing && draft.trim()) || Boolean(engineRef.current?.hasPaint()),
+    hasPaint: () =>
+      Boolean(floatingRef.current) ||
+      Boolean(cutRef.current?.holding()) ||
+      Boolean(typing && draft.trim()) ||
+      Boolean(engineRef.current?.hasPaint()),
     takeTiles: (maxSide) => {
       commitText();
       flattenSticker();
+      cutRef.current?.settle();
       return engineRef.current?.takeTiles(maxSide) ?? Promise.resolve([]);
     },
   }));
@@ -678,6 +696,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
   const settle = () => {
     commitText();
     flattenSticker();
+    cutRef.current?.settle();
     engineRef.current?.settle();
   };
 
@@ -944,7 +963,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
     commitText();
     // A sticker still in its frame is the last thing done: taking it back lifts it off again.
     if (floatingRef.current) float(null);
-    else engineRef.current?.undo();
+    else if (!cutRef.current?.undo()) engineRef.current?.undo();
     const line = UNDO_GUY_LINES[Math.floor(Math.random() * UNDO_GUY_LINES.length)];
     play(line.clip);
     const length = (muted ? 0.6 : (audioRef.current?.duration(line.clip) ?? 0.6)) * 1000;
@@ -1010,6 +1029,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
     if (timersRef.current.boom !== undefined) return;
     commitText();
     float(null);
+    cutRef.current?.drop();
     engineRef.current?.settle();
     window.clearInterval(timersRef.current.fuse);
     play("easel1027");
@@ -1040,6 +1060,13 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
     labels.noBackground,
     labels.eraserTips,
   );
+  // The scissors' shapes: four to draw, then the cookie cutters.
+  const cutting = tool === "move" && grabKind === 1;
+  if (cutting) {
+    const names = [labels.cutFree, labels.cutPolygon, labels.eraserTips[0], labels.eraserTips[1]];
+    for (let index = 0; index < CUT_OPTION_COUNT; index++)
+      options.push(sprite("cut", index, CUT_OPTION_COUNT, index, names[index] ?? labels.cutter(index - CUT_GESTURES.length + 1)));
+  }
 
   const toolButtons = TUBE_TOOLS.map((item) => {
     const selected = item.key === tool;
@@ -1194,8 +1221,8 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
   const hasSizes = tool === "pencil" || (tool === "wacky" && !spraying) || wanding || rubbing;
   const modes = tool === "wacky" ? (spraying ? "spray" : "brush") : null;
   const modeValue = spraying ? sprayMode : brushMode;
-  const optionsKey = [tool, modes, modeValue, bucketKind, toolCategory].join("/");
-  const room = optionsWidth - (hasSizes ? SIZES_ROOM : 0) - (modes ? MODES_ROOM : 0);
+  const optionsKey = [tool, modes, modeValue, bucketKind, grabKind, toolCategory].join("/");
+  const room = optionsWidth - (hasSizes ? SIZES_ROOM : 0) - (modes ? MODES_ROOM : 0) - (cutting ? CUT_BUTTONS_ROOM : 0);
   const perPage = compact || optionsWidth === 0 ? Math.max(1, options.length) : Math.max(1, Math.floor(room / OPTION_CELL));
   const pages = Math.max(1, Math.ceil(options.length / perPage));
   const chosenAt = Math.max(
@@ -1262,6 +1289,31 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
           onClick={() => chooseMode(index)}
         />
       ))}
+    </div>
+  );
+
+  // The scissors' three buttons, one under the other: they act on the part of the picture marked or in hand.
+  const cutActions = [() => cutRef.current?.trash(), () => cutRef.current?.duplicate(), () => cutRef.current?.paste()];
+  const cutControl = cutting && (
+    <div role="group" aria-label={GRAB_KINDS[1]} className="kidpix-cut-buttons">
+      {CUT_BUTTONS.map((name, row) => {
+        const at = (state: number) => `-${state * CUT_BUTTON_CELL[0]}px -${row * CUT_BUTTON_CELL[1]}px`;
+        return (
+          <button
+            key={name}
+            type="button"
+            className="kidpix-sprite-button mu-focus"
+            aria-label={name}
+            title={name}
+            style={states(at(0), at(1), at(2))}
+            onClick={() => {
+              audioRef.current?.wake();
+              cutActions[row]();
+              play("easel1029");
+            }}
+          />
+        );
+      })}
     </div>
   );
 
@@ -1366,6 +1418,7 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
     <div ref={optionsRef} role="group" aria-label={current.name} className="kidpix-options">
       {sizesControl}
       {modesControl}
+      {cutControl}
       {readControls}
       {shownOptions.map((option) => (
         <button
@@ -1456,6 +1509,10 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
     if (index === 1) spraySheet(spraySet);
     optionsRef.current?.scrollTo({ left: 0 });
   };
+  const chooseKindWith = (set: (index: number) => void) => (index: number) => {
+    set(index);
+    optionsRef.current?.scrollTo({ left: 0 });
+  };
   const chooseBucketKind = (index: number) => {
     setBucketKind(index);
     optionsRef.current?.scrollTo({ left: 0 });
@@ -1467,7 +1524,9 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
         ? kindButtons("brush", BRUSH_KINDS, brushKind, chooseBrushKind)
         : tool === "paint"
           ? kindButtons("bucket", BUCKET_KINDS, bucketKind, chooseBucketKind)
-          : null;
+          : tool === "move"
+            ? kindButtons("grab", GRAB_KINDS, grabKind, chooseKindWith(setGrabKind))
+            : null;
   const toolPanel = pencilKinds || textControls || categorySelect;
 
   const colorButton = (
@@ -1535,6 +1594,21 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
       />
 
       {stickerFrame}
+      <CutTool
+        ref={cutRef}
+        active={cutting}
+        option={chosen.move}
+        width={width}
+        height={height}
+        zoom={view.zoom}
+        engine={() => engineRef.current}
+        audio={() => audioRef.current}
+        play={play}
+        onPress={() => {
+          audioRef.current?.wake();
+          setPaletteOpen(false);
+        }}
+      />
 
       {typing && (
         <textarea

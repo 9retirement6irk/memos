@@ -822,6 +822,34 @@ export class KidPixEngine {
     ctx.restore();
   }
 
+  // ---- the scissors ---------------------------------------------------------------------
+
+  /**
+   * The paint under a cut shape, as a picture of the shape's own size. `mask` is the shape in
+   * alpha, its corner at (x, y). Cut, the paint leaves the paper (one undo step); copied, it stays.
+   */
+  lift(mask: HTMLCanvasElement, x: number, y: number, cut: boolean): HTMLCanvasElement {
+    this.settle();
+    const { canvas, ctx } = scratch(mask.width, mask.height);
+    ctx.drawImage(this.canvas, -x, -y);
+    ctx.globalCompositeOperation = "destination-in";
+    ctx.drawImage(mask, 0, 0);
+    if (cut) {
+      this.remember();
+      this.ctx.save();
+      this.ctx.globalCompositeOperation = "destination-out";
+      this.ctx.drawImage(mask, x, y);
+      this.ctx.restore();
+    }
+    return canvas;
+  }
+
+  /** Sticks a cut piece back onto the paint. A pasted copy is a step of its own for Undo Guy. */
+  stick(piece: HTMLCanvasElement, x: number, y: number, pasted: boolean) {
+    if (pasted) this.remember();
+    this.ctx.drawImage(piece, Math.round(x), Math.round(y));
+  }
+
   /** Sets typed text on the paint, its middle line at `at`. */
   /**
    * Presses a text box into the paint: its lines one under the other from `at`, the box's

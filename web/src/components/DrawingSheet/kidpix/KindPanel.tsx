@@ -5,6 +5,9 @@ import brushPanel from "./assets/kinds-brush-panel.png";
 import bucketArt from "./assets/kinds-bucket.png";
 import bucketMask from "./assets/kinds-bucket-mask.png";
 import bucketPanel from "./assets/kinds-bucket-panel.png";
+import grabArt from "./assets/kinds-grab.png";
+import grabMask from "./assets/kinds-grab-mask.png";
+import grabPanel from "./assets/kinds-grab-panel.png";
 import pencilArt from "./assets/kinds-pencil.png";
 import pencilMask from "./assets/kinds-pencil-mask.png";
 import pencilPanel from "./assets/kinds-pencil-panel.png";
@@ -16,6 +19,7 @@ const SHEETS: Record<KindArt, { art: string; mask: string; panel: string }> = {
   pencil: { art: pencilArt, mask: pencilMask, panel: pencilPanel },
   brush: { art: brushArt, mask: brushMask, panel: brushPanel },
   bucket: { art: bucketArt, mask: bucketMask, panel: bucketPanel },
+  grab: { art: grabArt, mask: grabMask, panel: grabPanel },
 };
 
 /** Kid Pix steps its tray animations about nine times a second. */

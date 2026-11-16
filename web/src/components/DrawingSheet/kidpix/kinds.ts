@@ -1,4 +1,4 @@
-// Generated from the tray button scripts in the disc's TP.MHK (18060 to 18089). Do not edit.
+// Generated from the tray button scripts in the disc's TP.MHK (18060 to 18089, and 18128 to 18133 for the Grab tool). Do not edit.
 
 /** A frame of a tool kind: where it is in the group's sheet (x, y, width, height) and where it goes on the panel (x, y). */
 export type KindCell = readonly [number, number, number, number, number, number];
@@ -20,7 +20,7 @@ export interface KindGroup {
   kinds: readonly KindScripts[];
 }
 
-export const KIDPIX_KINDS: Readonly<Record<"pencil" | "brush" | "bucket", KindGroup>> = {
+export const KIDPIX_KINDS: Readonly<Record<"pencil" | "brush" | "bucket" | "grab", KindGroup>> = {
   pencil: {
     panel: [203, 88],
     sheet: [718, 397],
@@ -259,6 +259,64 @@ export const KIDPIX_KINDS: Readonly<Record<"pencil" | "brush" | "bucket", KindGr
         pickUp: [46, 47, 48, 49, 50, 51],
         wiggle: [52, 53, 52, 54],
         sounds: ["tp18025", "tp18026", "tp18027"],
+      },
+    ],
+  },
+  grab: {
+    panel: [203, 87],
+    sheet: [709, 377],
+    cells: [
+      [0, 0, 71, 73, 12, -3],
+      [72, 0, 72, 74, 9, -3],
+      [145, 0, 74, 72, 1, 1],
+      [220, 0, 74, 70, -3, 5],
+      [295, 0, 75, 76, -2, 5],
+      [371, 0, 67, 63, 16, 17],
+      [439, 0, 67, 66, 18, 14],
+      [507, 0, 66, 71, 20, 9],
+      [574, 0, 68, 70, 18, 13],
+      [643, 0, 66, 69, 20, 12],
+      [0, 77, 69, 60, 16, 16],
+      [70, 77, 67, 52, 6, 19],
+      [138, 77, 68, 52, 0, 21],
+      [207, 77, 73, 63, -7, 21],
+      [281, 77, 74, 67, -12, 18],
+      [356, 77, 72, 75, 3, -3],
+      [429, 77, 71, 73, 10, -3],
+      [501, 77, 70, 74, 10, -3],
+      [572, 77, 66, 70, 19, 14],
+      [639, 77, 66, 70, 19, 15],
+      [0, 153, 67, 68, 18, 15],
+      [68, 153, 66, 68, 19, 15],
+      [135, 153, 66, 70, 19, 14],
+      [202, 153, 66, 70, 19, 13],
+      [269, 153, 84, 81, 107, -3],
+      [354, 153, 92, 74, 100, 6],
+      [447, 153, 88, 72, 103, 10],
+      [536, 153, 84, 77, 107, 5],
+      [621, 153, 83, 62, 106, 14],
+      [0, 235, 84, 64, 105, 14],
+      [85, 235, 83, 68, 106, 11],
+      [169, 235, 91, 75, 99, 7],
+      [261, 235, 92, 73, 104, 3],
+      [354, 235, 92, 64, 104, 7],
+      [447, 235, 85, 75, 106, 1],
+      [533, 235, 82, 69, 107, 10],
+      [616, 235, 83, 67, 105, 11],
+      [0, 311, 83, 66, 106, 12],
+    ],
+    kinds: [
+      {
+        putDown: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+        pickUp: [9, 10, 11, 12, 13, 14, 15, 16, 17],
+        wiggle: [18, 19, 20, 21, 22, 23, 8],
+        sounds: ["tp18040", "tp18041", "tp18042"],
+      },
+      {
+        putDown: [24, 25, 26, 27, 28, 29, 30],
+        pickUp: [29, 28, 27, 26, 31, 32, 33, 34, 24, 34],
+        wiggle: [35, 36, 29, 28, 37],
+        sounds: ["tp18043", "tp18044", "tp18045"],
       },
     ],
   },

@@ -205,6 +205,10 @@ export const BUCKET_KINDS = ["Solid Fill Bucket", "Blend Fill Bucket", "Pattern 
 export const SOLID_COUNT = 42;
 
 export const BRUSH_KINDS = ["Paint Brush", "Spray Can"] as const;
+/** The Grab tool's two kinds, by the names the disc gives them: the hand moves the paint, the scissors cut it. */
+export const GRAB_KINDS = ["Grab Tool", "Cut Tool"] as const;
+/** The scissors' three buttons, by Kid Pix's names. Art: assets/cut-buttons.png, a row each. */
+export const CUT_BUTTONS = ["Trash Can", "Duplicate", "Paste"] as const;
 
 /**
  * How wide each of the Pencil's kinds draws at Kid Pix's three sizes, in drawing px, measured
