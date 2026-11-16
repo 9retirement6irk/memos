@@ -8,7 +8,9 @@
 package anthropic
 
 import (
+	"bytes"
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"io"
 	"net/http"
@@ -41,7 +43,35 @@ var (
 	ErrRateLimited = errors.New("the API key is being rate limited by Anthropic; try again shortly")
 	// ErrOverloaded means Anthropic is busy.
 	ErrOverloaded = errors.New("the Claude API is overloaded; try again shortly")
+	// ErrBadRequest means Anthropic refused the request itself, for example an
+	// image it can't read or a model name it doesn't know. Its own message,
+	// wrapped around this error, says which.
+	ErrBadRequest = errors.New("the Claude API refused the request")
+	// ErrRefused means Claude declined to answer.
+	ErrRefused = errors.New("the model declined to read this file")
 )
+
+// Image is one picture to send: PNG, JPEG, GIF or WebP bytes.
+type Image struct {
+	MediaType string
+	Data      []byte
+}
+
+// TextRequest asks Claude to read the text in some images.
+type TextRequest struct {
+	Model        string
+	Instructions string
+	Images       []Image
+	// MaxTokens bounds the answer; zero means 8192.
+	MaxTokens int
+}
+
+// TextResult is Claude's answer.
+type TextResult struct {
+	Text string
+	// Truncated means the answer reached MaxTokens before it ended.
+	Truncated bool
+}
 
 // Client calls one Anthropic endpoint with one API key.
 type Client struct {
@@ -113,6 +143,73 @@ func (c *Client) Check(ctx context.Context) error {
 	return nil
 }
 
+// ReadText sends the images, then the instructions, in one user message and
+// returns the text of Claude's answer.
+func (c *Client) ReadText(ctx context.Context, request TextRequest) (*TextResult, error) {
+	if strings.TrimSpace(request.Model) == "" {
+		return nil, errors.New("a model is required")
+	}
+	if len(request.Images) == 0 {
+		return nil, errors.New("at least one image is required")
+	}
+	maxTokens := request.MaxTokens
+	if maxTokens <= 0 {
+		maxTokens = 8192
+	}
+	content := make([]map[string]any, 0, len(request.Images)+1)
+	for _, image := range request.Images {
+		content = append(content, map[string]any{
+			"type": "image",
+			"source": map[string]string{
+				"type":       "base64",
+				"media_type": image.MediaType,
+				"data":       base64.StdEncoding.EncodeToString(image.Data),
+			},
+		})
+	}
+	content = append(content, map[string]any{"type": "text", "text": request.Instructions})
+	body, err := json.Marshal(map[string]any{
+		"model":      strings.TrimSpace(request.Model),
+		"max_tokens": maxTokens,
+		"messages":   []map[string]any{{"role": "user", "content": content}},
+	})
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to encode the request")
+	}
+	httpRequest, err := c.newRequest(ctx, http.MethodPost, "/v1/messages", bytes.NewReader(body))
+	if err != nil {
+		return nil, err
+	}
+	response, err := c.http.Do(httpRequest)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to reach the Claude API")
+	}
+	defer response.Body.Close()
+	if response.StatusCode != http.StatusOK {
+		return nil, statusError(response)
+	}
+	var message struct {
+		Content []struct {
+			Type string `json:"type"`
+			Text string `json:"text"`
+		} `json:"content"`
+		StopReason string `json:"stop_reason"`
+	}
+	if err := json.NewDecoder(io.LimitReader(response.Body, 8<<20)).Decode(&message); err != nil {
+		return nil, errors.Wrap(ErrNotFound, "the answer was not a Claude message")
+	}
+	if message.StopReason == "refusal" {
+		return nil, ErrRefused
+	}
+	var text strings.Builder
+	for _, block := range message.Content {
+		if block.Type == "text" {
+			text.WriteString(block.Text)
+		}
+	}
+	return &TextResult{Text: strings.TrimSpace(text.String()), Truncated: message.StopReason == "max_tokens"}, nil
+}
+
 func (c *Client) newRequest(ctx context.Context, method, path string, body io.Reader) (*http.Request, error) {
 	request, err := http.NewRequestWithContext(ctx, method, c.endpoint+path, body)
 	if err != nil {
@@ -140,6 +237,8 @@ func statusError(response *http.Response) error {
 	message := strings.TrimSpace(payload.Error.Message)
 	var base error
 	switch response.StatusCode {
+	case http.StatusBadRequest, http.StatusRequestEntityTooLarge:
+		base = ErrBadRequest
 	case http.StatusUnauthorized:
 		base = ErrUnauthorized
 	case http.StatusForbidden:

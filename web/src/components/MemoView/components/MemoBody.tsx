@@ -108,7 +108,12 @@ const MemoBody: React.FC<MemoBodyProps> = ({ compact, showCreator }) => {
               drawings={{ memo, canEdit: !readonly && canManageMemo(memo, currentUser) }}
             />
             {pdfs.map((attachment) => (
-              <PdfAttachment key={attachment.name} attachment={attachment} />
+              <PdfAttachment
+                key={attachment.name}
+                attachment={attachment}
+                memoName={memo.name}
+                canEdit={!readonly && canManageMemo(memo, currentUser)}
+              />
             ))}
             <MemoMetadataRows
               audio={audio}

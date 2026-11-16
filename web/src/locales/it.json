@@ -1751,5 +1751,21 @@
       "add": "Aggiungi immagine",
       "preview": "Anteprima dell’immagine del percorso"
     }
+  },
+  "text-extraction": {
+    "read-text": "Leggi il testo",
+    "read-text-name": "Leggi il testo di {{name}}",
+    "text-from": "Testo da {{name}}",
+    "preparing": "Preparazione del file…",
+    "reading": "Lettura del testo…",
+    "text": "Testo",
+    "no-text": "Nessun testo trovato.",
+    "truncated": "Il testo era troppo lungo per leggerlo tutto, quindi ne manca la fine.",
+    "read-locally": "Questo PDF ha un testo proprio, quindi è stato letto qui senza essere inviato altrove.",
+    "too-many-pages": "Questo file ha troppe pagine per leggerle tutte insieme (il limite è {{count}}).",
+    "failed": "Impossibile leggere il testo.",
+    "add-to-memo": "Aggiungi al memo",
+    "added": "Il testo è stato aggiunto al memo.",
+    "add-failed": "Impossibile aggiungere il testo al memo."
   }
 }

@@ -1750,5 +1750,21 @@
       "add": "加入圖片",
       "preview": "路線圖片預覽"
     }
+  },
+  "text-extraction": {
+    "read-text": "讀取文字",
+    "read-text-name": "讀取 {{name}} 中的文字",
+    "text-from": "來自 {{name}} 的文字",
+    "preparing": "正在準備檔案…",
+    "reading": "正在讀取文字…",
+    "text": "文字",
+    "no-text": "找不到文字。",
+    "truncated": "文字太長，無法完整讀取，因此缺少結尾部分。",
+    "read-locally": "此 PDF 自帶文字，因此直接在這裡讀取，沒有傳送到任何地方。",
+    "too-many-pages": "此檔案頁數過多，無法一次讀取（上限為 {{count}}）。",
+    "failed": "無法讀取文字。",
+    "add-to-memo": "新增至備忘錄",
+    "added": "文字已新增至備忘錄。",
+    "add-failed": "無法將文字新增至備忘錄。"
   }
 }

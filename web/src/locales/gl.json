@@ -1750,5 +1750,21 @@
       "add": "Engadir imaxe",
       "preview": "Vista previa da imaxe da ruta"
     }
+  },
+  "text-extraction": {
+    "read-text": "Ler o texto",
+    "read-text-name": "Ler o texto de {{name}}",
+    "text-from": "Texto de {{name}}",
+    "preparing": "Preparando o ficheiro…",
+    "reading": "Lendo o texto…",
+    "text": "Texto",
+    "no-text": "Non se atopou texto.",
+    "truncated": "O texto era longo de máis para lelo enteiro, así que falta o final.",
+    "read-locally": "Este PDF ten texto propio, así que se leu aquí sen envialo a ningures.",
+    "too-many-pages": "Este ficheiro ten demasiadas páxinas para lelas dunha vez (o límite é {{count}}).",
+    "failed": "Non se puido ler o texto.",
+    "add-to-memo": "Engadir ao memo",
+    "added": "O texto engadiuse ao memo.",
+    "add-failed": "Non se puido engadir o texto ao memo."
   }
 }

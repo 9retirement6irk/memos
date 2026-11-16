@@ -1750,5 +1750,21 @@
       "add": "Add image",
       "preview": "Preview of the route image"
     }
+  },
+  "text-extraction": {
+    "read-text": "Read text",
+    "read-text-name": "Read the text in {{name}}",
+    "text-from": "Text from {{name}}",
+    "preparing": "Preparing the file…",
+    "reading": "Reading the text…",
+    "text": "Text",
+    "no-text": "No text was found.",
+    "truncated": "The text was too long to read in full, so its end is missing.",
+    "read-locally": "This PDF has its own text, so it was read here without being sent anywhere.",
+    "too-many-pages": "This file has too many pages to read at once (the limit is {{count}}).",
+    "failed": "The text couldn't be read.",
+    "add-to-memo": "Add to memo",
+    "added": "The text was added to the memo.",
+    "add-failed": "The text couldn't be added to the memo."
   }
 }

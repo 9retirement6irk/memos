@@ -1154,7 +1154,7 @@
     --vi-hide: 0;
     opacity: 1;
   }
-  & svg.lucide:is(.lucide-file-code, .lucide-scroll-text) {
+  & svg.lucide:is(.lucide-file-code, .lucide-scroll-text, .lucide-scan-text) {
     --vi: url("./icons/notepad_2.png");
     --vi-hide: 0;
     opacity: 1;

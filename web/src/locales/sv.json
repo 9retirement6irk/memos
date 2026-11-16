@@ -1750,5 +1750,21 @@
       "add": "Lägg till bild",
       "preview": "Förhandsvisning av ruttbilden"
     }
+  },
+  "text-extraction": {
+    "read-text": "Läs text",
+    "read-text-name": "Läs texten i {{name}}",
+    "text-from": "Text från {{name}}",
+    "preparing": "Förbereder filen…",
+    "reading": "Läser texten…",
+    "text": "Text",
+    "no-text": "Ingen text hittades.",
+    "truncated": "Texten var för lång för att läsas i sin helhet, så slutet saknas.",
+    "read-locally": "Den här PDF-filen har egen text, så den lästes här utan att skickas någonstans.",
+    "too-many-pages": "Den här filen har för många sidor för att läsas på en gång (gränsen är {{count}}).",
+    "failed": "Texten kunde inte läsas.",
+    "add-to-memo": "Lägg till i anteckningen",
+    "added": "Texten lades till i anteckningen.",
+    "add-failed": "Texten kunde inte läggas till i anteckningen."
   }
 }

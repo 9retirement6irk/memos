@@ -1753,5 +1753,21 @@
       "add": "Přidat obrázek",
       "preview": "Náhled obrázku trasy"
     }
+  },
+  "text-extraction": {
+    "read-text": "Přečíst text",
+    "read-text-name": "Přečíst text v {{name}}",
+    "text-from": "Text z {{name}}",
+    "preparing": "Připravuje se soubor…",
+    "reading": "Čte se text…",
+    "text": "Text",
+    "no-text": "Nebyl nalezen žádný text.",
+    "truncated": "Text byl příliš dlouhý na přečtení celý, proto chybí jeho konec.",
+    "read-locally": "Toto PDF má vlastní text, takže bylo přečteno zde, aniž by se kamkoli odeslalo.",
+    "too-many-pages": "Tento soubor má příliš mnoho stránek na přečtení najednou (limit je {{count}}).",
+    "failed": "Text se nepodařilo přečíst.",
+    "add-to-memo": "Přidat do poznámky",
+    "added": "Text byl přidán do poznámky.",
+    "add-failed": "Text se nepodařilo přidat do poznámky."
   }
 }

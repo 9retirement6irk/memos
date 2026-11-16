@@ -116,12 +116,26 @@ Each page is still an ordinary `.canvas.png` attachment, so stock Memos shows ev
 A PDF attached to a memo shows in the memo, one page at a time, with page turning, open and
 download. PDFs load only when they scroll into view.
 
+### Reading text from files
+
+**Read text** pulls the text out of an image, a drawing or a PDF, handwriting included, using
+Claude or Gemini. It's in the image viewer, the drawing viewer and under a PDF in a memo. You
+can edit the text, copy it, or **Add to memo**, which adds it to the end of the memo as a
+collapsed "Text from …" section that stock Memos shows too.
+
+- **Setup:** an admin connects Claude with an Anthropic API key, or picks one of the Gemini
+  providers already in Settings → AI, under **Text extraction**. It's off until then.
+- **What's sent:** only what's needed. Images are scaled down first. A PDF's own text is read in
+  your browser, and only its scanned pages are sent; a PDF with text on every page is never sent.
+- **Limits:** 20 scanned pages at a time, and 30 reads an hour for each user, since each one is
+  paid for with the instance's key.
+
 ## Your data stays stock Memos
 
 The fork never changes the database schema. Its extras are kept where stock Memos ignores them:
 
-- **Settings and connections:** each user's settings and connections are stored as rows in
-  Memos' existing settings table.
+- **Settings and connections:** each user's settings and connections, and the fork's own
+  instance settings such as text extraction, are stored as rows in Memos' existing settings table.
 - **Content:** ordinary memos, tags and attachments.
 - **Some display choices:** kept in your browser.
 
@@ -161,8 +175,9 @@ The fork's extras reach outside your server only when you use them:
 | [Open-Meteo](https://open-meteo.com) | Weather in a journal entry | The entry's place and hour, from your browser |
 | [Nominatim](https://nominatim.openstreetmap.org) (OpenStreetMap) | Searching for, or naming, a place | The search text or coordinates, from your browser |
 | OpenStreetMap tiles | Route maps with the map turned on | The map area shown, from your browser |
+| Anthropic (Claude) or Google (Gemini), whichever an admin chose | Read text | The picture of an image, drawing or scanned PDF page, from the Memos server with the instance's key |
 
-Addresses you enter for Immich, Dawarich and Home Assistant are checked before the server
+Addresses you enter for Immich, Dawarich, Home Assistant and Claude are checked before the server
 connects. Loopback, link-local and cloud metadata addresses are refused, and redirects are
 followed only on the same host.
 

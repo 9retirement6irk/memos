@@ -1750,5 +1750,21 @@
       "add": "添加图片",
       "preview": "路线图片预览"
     }
+  },
+  "text-extraction": {
+    "read-text": "读取文字",
+    "read-text-name": "读取 {{name}} 中的文字",
+    "text-from": "来自 {{name}} 的文字",
+    "preparing": "正在准备文件…",
+    "reading": "正在读取文字…",
+    "text": "文字",
+    "no-text": "未找到文字。",
+    "truncated": "文字太长，无法完整读取，因此缺少结尾部分。",
+    "read-locally": "此 PDF 自带文字，因此直接在这里读取，没有发送到任何地方。",
+    "too-many-pages": "此文件页数过多，无法一次读取（上限为 {{count}}）。",
+    "failed": "无法读取文字。",
+    "add-to-memo": "添加到备忘录",
+    "added": "文字已添加到备忘录。",
+    "add-failed": "无法将文字添加到备忘录。"
   }
 }

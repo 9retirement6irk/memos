@@ -1,9 +1,10 @@
 import type { CanvasHandle } from "@usememos/canvas";
 import { Canvas } from "@usememos/canvas/react";
 import { Button, Dialog, Spinner, Tooltip } from "@usememos/ui";
-import { PaletteIcon, XIcon } from "lucide-react";
+import { PaletteIcon, ScanTextIcon, XIcon } from "lucide-react";
 import { type ReactElement, useEffect, useEffectEvent, useRef, useState } from "react";
 import { uploadService } from "@/components/MemoEditor/edit/services/uploadService";
+import { useReadText } from "@/components/TextExtraction";
 import { memoServiceClient } from "@/connect";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import useMediaQuery from "@/hooks/useMediaQuery";
@@ -102,6 +103,7 @@ const DrawingViewer = ({ attachment: initialAttachment, memo, canEdit, annotate 
       : [initialAttachment, ...listed];
   const active = pages.find((item) => item.name === activeName) ?? initialAttachment;
   const activeView = views[active.name];
+  const readText = useReadText(active, { memoName: memo.name, canEdit });
 
   const loadPage = useEffectEvent((attachment: Attachment) => {
     if (loads.current.has(attachment.name)) return;
@@ -328,12 +330,18 @@ const DrawingViewer = ({ attachment: initialAttachment, memo, canEdit, annotate 
               <IconAction size={size} label={t("common.close")} icon={<XIcon />} onClick={onClose} />
               <span className={cn("truncate text-mu-text", isWide ? "mu-label-sm" : "mu-label")}>{title}</span>
             </FloatingBar>
-            {canEdit && (
+            {(canEdit || readText.available) && (
               <FloatingBar>
+                {/* The page on screen, as the picture it is saved as. */}
+                {readText.available && (
+                  <IconAction size={size} label={t("text-extraction.read-text")} icon={<ScanTextIcon />} onClick={readText.open} />
+                )}
                 {/* Flat inside the bar: the bar is the one bordered surface. */}
-                <Button variant="ghost" size={size} icon={<PaletteIcon />} disabled={!scene} onClick={() => setIsEditing(true)}>
-                  {t("common.edit")}
-                </Button>
+                {canEdit && (
+                  <Button variant="ghost" size={size} icon={<PaletteIcon />} disabled={!scene} onClick={() => setIsEditing(true)}>
+                    {t("common.edit")}
+                  </Button>
+                )}
               </FloatingBar>
             )}
           </FloatingRow>
@@ -364,6 +372,7 @@ const DrawingViewer = ({ attachment: initialAttachment, memo, canEdit, annotate 
           )}
         </div>
       </DrawingDialogPopup>
+      {readText.dialog}
     </Dialog.Root>
   );
 };

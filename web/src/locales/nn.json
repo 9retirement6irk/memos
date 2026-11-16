@@ -1750,5 +1750,21 @@
       "add": "Legg til bilete",
       "preview": "Førehandsvising av rutebiletet"
     }
+  },
+  "text-extraction": {
+    "read-text": "Les tekst",
+    "read-text-name": "Les teksten i {{name}}",
+    "text-from": "Tekst frå {{name}}",
+    "preparing": "Gjer klar fila…",
+    "reading": "Les teksten…",
+    "text": "Tekst",
+    "no-text": "Fann ingen tekst.",
+    "truncated": "Teksten var for lang til å bli lesen heilt, så slutten manglar.",
+    "read-locally": "Denne PDF-en har sin eigen tekst, så han vart lesen her utan å bli send nokon stad.",
+    "too-many-pages": "Denne fila har for mange sider til å bli lesen på ein gong (grensa er {{count}}).",
+    "failed": "Teksten kunne ikkje lesast.",
+    "add-to-memo": "Legg til i notatet",
+    "added": "Teksten vart lagd til i notatet.",
+    "add-failed": "Teksten kunne ikkje leggjast til i notatet."
   }
 }

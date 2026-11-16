@@ -1750,5 +1750,21 @@
       "add": "Lisää kuva",
       "preview": "Reittikuvan esikatselu"
     }
+  },
+  "text-extraction": {
+    "read-text": "Lue teksti",
+    "read-text-name": "Lue tiedoston {{name}} teksti",
+    "text-from": "Teksti tiedostosta {{name}}",
+    "preparing": "Valmistellaan tiedostoa…",
+    "reading": "Luetaan tekstiä…",
+    "text": "Teksti",
+    "no-text": "Tekstiä ei löytynyt.",
+    "truncated": "Teksti oli liian pitkä luettavaksi kokonaan, joten sen loppu puuttuu.",
+    "read-locally": "Tässä PDF-tiedostossa on oma teksti, joten se luettiin täällä lähettämättä sitä minnekään.",
+    "too-many-pages": "Tiedostossa on liian monta sivua luettavaksi kerralla (raja on {{count}}).",
+    "failed": "Tekstiä ei voitu lukea.",
+    "add-to-memo": "Lisää muistiinpanoon",
+    "added": "Teksti lisättiin muistiinpanoon.",
+    "add-failed": "Tekstiä ei voitu lisätä muistiinpanoon."
   }
 }

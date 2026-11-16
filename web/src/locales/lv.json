@@ -1751,5 +1751,21 @@
       "add": "Pievienot attēlu",
       "preview": "Maršruta attēla priekšskatījums"
     }
+  },
+  "text-extraction": {
+    "read-text": "Nolasīt tekstu",
+    "read-text-name": "Nolasīt tekstu no {{name}}",
+    "text-from": "Teksts no {{name}}",
+    "preparing": "Sagatavo failu…",
+    "reading": "Nolasa tekstu…",
+    "text": "Teksts",
+    "no-text": "Teksts netika atrasts.",
+    "truncated": "Teksts bija pārāk garš, lai to nolasītu pilnībā, tāpēc trūkst tā beigu.",
+    "read-locally": "Šim PDF ir savs teksts, tāpēc tas tika nolasīts šeit, nekur to nesūtot.",
+    "too-many-pages": "Šajā failā ir pārāk daudz lappušu, lai tās nolasītu uzreiz (ierobežojums ir {{count}}).",
+    "failed": "Tekstu neizdevās nolasīt.",
+    "add-to-memo": "Pievienot piezīmei",
+    "added": "Teksts tika pievienots piezīmei.",
+    "add-failed": "Tekstu neizdevās pievienot piezīmei."
   }
 }

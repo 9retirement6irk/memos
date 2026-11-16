@@ -1750,5 +1750,21 @@
       "add": "Afbeelding toevoegen",
       "preview": "Voorbeeld van de routeafbeelding"
     }
+  },
+  "text-extraction": {
+    "read-text": "Tekst lezen",
+    "read-text-name": "De tekst in {{name}} lezen",
+    "text-from": "Tekst uit {{name}}",
+    "preparing": "Bestand voorbereiden…",
+    "reading": "Tekst lezen…",
+    "text": "Tekst",
+    "no-text": "Er is geen tekst gevonden.",
+    "truncated": "De tekst was te lang om helemaal te lezen, dus het einde ontbreekt.",
+    "read-locally": "Deze pdf heeft eigen tekst en is daarom hier gelezen, zonder hem ergens heen te sturen.",
+    "too-many-pages": "Dit bestand heeft te veel pagina's om in één keer te lezen (de grens is {{count}}).",
+    "failed": "De tekst kon niet worden gelezen.",
+    "add-to-memo": "Toevoegen aan memo",
+    "added": "De tekst is aan de memo toegevoegd.",
+    "add-failed": "De tekst kon niet aan de memo worden toegevoegd."
   }
 }
