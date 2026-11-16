@@ -129,8 +129,12 @@ when it is first shown.
   - 3D shapes (`Cyclic.MHK`, 15 sets, up to 40 pictures each) land centered and hiss with clip 7200
     for as long as the can is held; a single tap is silent.
   - Moving paint (`Anims.MHK`, 20 sets) plays an animation for each drop and leaves its last frame.
-    Here only that last frame is drawn, where the animation would have carried it, with the
-    animation's own clip (`<set>.m4a`). The animations themselves are not played.
+    Here it does the same, over the paint, with the animation's own clip (`<set>.m4a`): every
+    other step of the disc's scripts is shipped, each shown for two steps' time (about a fifth of a
+    second), and with reduced motion the drop lands at once. Starting another stroke, Undo Guy or
+    leaving the mode brings drops still moving to rest first.
+  - The Wacky brushes do not move once the button is let go: each of the 25 was drawn on the
+    original and watched for five seconds, and none changed.
   - The set names are ours; the disc has none.
 
 ## The tray, laid out as Kid Pix lays it out
@@ -210,8 +214,8 @@ also cannot be resized, and text and stickers already pressed in are paint like 
   when chosen). The Chalk, the Crayon and the Marker show it: once a stroke or shape is finished,
   what it laid is kept where the texture is light and thinned where it is dark (`grainPixels`).
   The original shows the texture while the stroke is being drawn; here it appears on letting go.
-- **Stamp sizes and the Stamp Editor.** Stamps take the size control: 32, 64 or 96 px (the middle
-  is what the mode always stamped; the other two are not measured). Edit Stamp opens Kid Pix's
+- **Stamp sizes and the Stamp Editor.** Stamps take the size control: 32, 64 or 128 px, the
+  bitmap once, twice and four times over, as measured on the original. Edit Stamp opens Kid Pix's
   Stamp Editor on the stamp in hand (`StampEditor.tsx`; window, buttons, grid and clips from
   `StampEd.MHK`, laid out by `stampEditor.ts`, generated): Pencil, Fill Bucket, Undo (one step, and
   back again), Firecracker, Flip, Rotate, Restore Original, Cancel, OK. An edited stamp is used for

@@ -56,7 +56,7 @@ describe("the Stamp Editor's tools", () => {
       expect(button.states).toHaveLength(3);
       expect(button.clip).toMatch(/^stamped140\d\d$/);
     }
-    expect(STAMP_SIZES).toEqual([32, 64, 96]);
+    expect(STAMP_SIZES).toEqual([32, 64, 128]);
   });
 });
 

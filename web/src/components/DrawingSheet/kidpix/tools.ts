@@ -376,10 +376,10 @@ export const TOOL_CURSORS = {
 } as const;
 
 /**
- * A rubber stamp's three sizes (px a side): the 32 px bitmap as it is, twice and three times
- * over. The middle one is what the mode has always stamped; the other two are not measured.
+ * A rubber stamp's three sizes (px a side): the 32 px bitmap as it is, twice and four times
+ * over. Measured on the original: one stamp shows 34 x 44 px at the middle size and 68 x 88 at the large.
  */
-export const STAMP_SIZES = [32, 64, 96] as const;
+export const STAMP_SIZES = [32, 64, 128] as const;
 /** The Stamp Editor's buttons that Kid Pix names; the rest use the sheet's own strings. */
 export const STAMP_EDITOR_NAMES = {
   title: "Stamp Editor",
