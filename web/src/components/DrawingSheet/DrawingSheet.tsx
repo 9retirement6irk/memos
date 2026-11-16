@@ -419,6 +419,7 @@ const DrawingSheet = ({ mode, pages: initialPages, initialPage, commitLabel, onD
     if (!canvas || !layer || !kidPix) return;
     const maxSide = Math.max(64, Math.min(KIDPIX_TILE_LIMIT, Math.floor((0.8 * Math.min(kidPix.width, kidPix.height)) / kidPix.zoom)));
     const ids: string[] = [];
+    // In the layer's order: each tile overlaps the ones before it, and must be drawn over them.
     for (const tile of await layer.takeTiles(maxSide)) {
       const id = await canvas.insertImage(tile.blob, {
         at: [tile.x + tile.width / 2 - kidPix.scrollX, tile.y + tile.height / 2 - kidPix.scrollY],

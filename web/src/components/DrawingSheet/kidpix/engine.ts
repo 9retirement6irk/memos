@@ -174,6 +174,12 @@ const rgb = (hex: string): [number, number, number] => {
  * paints here; when the session ends the sheet lifts the paint off as picture tiles and adds
  * them to the drawing (see `takeTiles`).
  */
+/**
+ * Layer px each paint tile reaches into the next. Drawing px, as the layer is: enough to cover a
+ * softened edge at the drawing's lowest zoom.
+ */
+const TILE_OVERLAP = 6;
+
 export class KidPixEngine {
   color = "#ff0080";
   private readonly ctx: CanvasRenderingContext2D;
@@ -910,7 +916,8 @@ export class KidPixEngine {
       : paintBounds(this.ctx.getImageData(0, 0, this.width, this.height).data, this.width, this.height);
     if (!bounds) return [];
     const tiles: KidPixTile[] = [];
-    for (const box of planTiles(bounds, maxSide)) {
+    // Tiles added later overlap the ones before them, so no line shows where they meet (see planTiles).
+    for (const box of planTiles(bounds, maxSide, TILE_OVERLAP)) {
       const { canvas, ctx } = scratch(box.width, box.height);
       if (this.background) ctx.drawImage(this.options.backgroundCanvas, -box.x, -box.y);
       ctx.drawImage(this.canvas, -box.x, -box.y);

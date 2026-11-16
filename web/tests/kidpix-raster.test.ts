@@ -62,6 +62,24 @@ describe("Kid Pix pixel work", () => {
     expect(planTiles({ x: 0, y: 0, width: 100, height: 50 }, 1440)).toEqual([{ x: 0, y: 0, width: 100, height: 50 }]);
   });
 
+  it("overlaps each tile with the ones after it, so no line shows where they meet", () => {
+    const box = { x: 10, y: 20, width: 1600, height: 1000 };
+    const tiles = planTiles(box, 825, 6);
+    // Still within the limit with the overlap included.
+    expect(tiles.every((tile) => tile.width <= 825 && tile.height <= 825)).toBe(true);
+    const [topLeft, topRight, bottomLeft, bottomRight] = tiles;
+    expect(tiles).toHaveLength(4);
+    // The first tile reaches 6 px into its right and lower neighbours.
+    expect(topLeft.x + topLeft.width).toBe(topRight.x + 6);
+    expect(topLeft.y + topLeft.height).toBe(bottomLeft.y + 6);
+    // Tiles on the far edges stop at the box, and together still cover all of it.
+    expect(bottomRight.x + bottomRight.width).toBe(box.x + box.width);
+    expect(bottomRight.y + bottomRight.height).toBe(box.y + box.height);
+    expect(topRight.x + topRight.width).toBe(box.x + box.width);
+    // A box that fits in one tile is one tile, unchanged.
+    expect(planTiles({ x: 0, y: 0, width: 100, height: 50 }, 1440, 6)).toEqual([{ x: 0, y: 0, width: 100, height: 50 }]);
+  });
+
   it("mixes in place and keeps the picture opaque", () => {
     const data = picture(4, 4, (x, y) => x === 0 && y === 0);
     mixPixels(data, 4, 4, "invert");
