@@ -36,6 +36,8 @@ export interface JournalView {
   maxColumns: 0 | 1 | 2 | 3;
   orderByTimeAsc: boolean;
   compactMode: boolean;
+  /** The memo list uses the whole width of the page instead of a reading column. */
+  fullWidth: boolean;
   timeBasis: "create_time" | "update_time";
 }
 
@@ -44,6 +46,7 @@ export const DEFAULT_JOURNAL_VIEW: JournalView = {
   maxColumns: 1,
   orderByTimeAsc: false,
   compactMode: false,
+  fullWidth: false,
   timeBasis: "create_time",
 };
 

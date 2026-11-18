@@ -48,6 +48,8 @@
     "back-to-sign-in": "返回登录",
     "callback-failed-title": "无法完成登录",
     "continue-with": "使用 {{provider}} 继续",
+    "redirecting-to-provider": "正在跳转至 {{provider}}…",
+    "signing-in": "正在登录…",
     "create-admin-account": "创建管理员账号",
     "create-your-account": "创建您的账户",
     "hide-password": "隐藏密码",
@@ -215,6 +217,9 @@
     "new-memo": "新建备忘录",
     "no-changes-detected": "未检测到更改",
     "save": "保存",
+    "saving": "正在保存…",
+    "updating": "正在更新…",
+    "commenting": "正在发送评论…",
     "validation": {
       "cannot-save": "无法保存",
       "content-required": "需要填写正文或添加附件",
@@ -332,7 +337,6 @@
     "comment": "评论",
     "footnotes": "脚注",
     "back-to-reference": "返回引用处",
-    "saved": "已保存",
     "blocks": {
       "task": "任务",
       "quote": "引用",
@@ -445,7 +449,7 @@
     },
     "compact-mode": "紧凑模式",
     "connections": "关联",
-    "grid-compact-hint": "网格布局始终使用紧凑卡片。",
+    "grid-compact-hint": "收起较长的备忘录。网格布局始终启用此选项。",
     "layout": "布局",
     "layout-auto": "自动",
     "layout-auto-description": "根据屏幕宽度显示尽可能多的列",
@@ -513,7 +517,9 @@
     "parent-unavailable-description": "它可能已被删除，或者您可能已失去访问权限。",
     "moved": "备忘录已移动",
     "add-reaction": "添加表态",
-    "remove-reaction": "移除表态"
+    "remove-reaction": "移除表态",
+    "full-width": "全宽显示",
+    "full-width-hint": "使用备忘录时间线的全部宽度。"
   },
   "message": {
     "archived-successfully": "归档成功",

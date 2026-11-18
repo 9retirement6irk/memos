@@ -33,6 +33,8 @@
     "admin-sign-in": "Logowanie administratora",
     "back-to-sign-in": "Powrót do logowania",
     "continue-with": "Kontynuuj z {{provider}}",
+    "redirecting-to-provider": "Przekierowywanie do {{provider}}…",
+    "signing-in": "Logowanie…",
     "create-admin-account": "Utwórz konto administratora",
     "setup-description": "Utwórz konto administratora dla tej instancji.",
     "setup-title": "Skonfiguruj swoją instancję",
@@ -265,6 +267,9 @@
     },
     "no-changes-detected": "Brak wykrytych zmian",
     "save": "Zapisz",
+    "saving": "Zapisywanie…",
+    "updating": "Aktualizowanie…",
+    "commenting": "Wysyłanie komentarza…",
     "audio-recorder": {
       "attachment-label": "Nagrywanie dźwięku",
       "attachment-label-with-time": "Nagranie dźwięku {{time}}",
@@ -285,7 +290,6 @@
     "footnotes": "Przypisy",
     "back-to-reference": "Wróć do odniesienia",
     "new-memo": "Nowa notatka",
-    "saved": "Zapisano",
     "validation": {
       "cannot-save": "Nie można zapisać",
       "content-required": "Wymagana treść, załącznik lub plik",
@@ -472,7 +476,7 @@
     "moved": "Notatka przeniesiona",
     "back-to": "Powrót do {{source}}",
     "connections": "Połączenia",
-    "grid-compact-hint": "Układy siatki zawsze korzystają z kart kompaktowych.",
+    "grid-compact-hint": "Zwijaj dłuższe notatki. Zawsze włączone w układzie siatki.",
     "layout": "Układ",
     "layout-auto": "Automatycznie",
     "layout-auto-description": "Tyle kolumn, ile mieści się na ekranie",
@@ -484,7 +488,9 @@
     "parent-memo": "Notatka nadrzędna",
     "view-options": "Opcje widoku",
     "add-reaction": "Dodaj reakcję",
-    "remove-reaction": "Usuń reakcję"
+    "remove-reaction": "Usuń reakcję",
+    "full-width": "Pełna szerokość",
+    "full-width-hint": "Używaj całej szerokości osi czasu notatek."
   },
   "message": {
     "archived-successfully": "Zarchiwizowano pomyślnie",

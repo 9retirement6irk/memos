@@ -33,6 +33,8 @@
     "admin-sign-in": "Administratorlogin",
     "back-to-sign-in": "Tilbage til login",
     "continue-with": "Fortsæt med {{provider}}",
+    "redirecting-to-provider": "Omdirigerer til {{provider}}…",
+    "signing-in": "Logger ind…",
     "create-admin-account": "Opret administratorkonto",
     "setup-description": "Opret administratorkontoen for denne instans.",
     "setup-title": "Konfigurer din instans",
@@ -288,6 +290,9 @@
     },
     "no-changes-detected": "Ingen ændringer registreret",
     "save": "Spare",
+    "saving": "Gemmer…",
+    "updating": "Opdaterer…",
+    "commenting": "Sender kommentar…",
     "audio-recorder": {
       "attachment-label": "Lydoptagelse",
       "attachment-label-with-time": "Lydoptagelse {{time}}",
@@ -323,7 +328,6 @@
     "footnotes": "Fodnoter",
     "back-to-reference": "Tilbage til referencen",
     "new-memo": "Nyt notat",
-    "saved": "Gemt",
     "validation": {
       "cannot-save": "Kan ikke gemmes",
       "content-required": "Indhold, vedhæftet fil eller fil kræves",
@@ -508,7 +512,7 @@
     "moved": "Notat flyttet",
     "back-to": "Tilbage til {{source}}",
     "connections": "Forbindelser",
-    "grid-compact-hint": "Gitterlayout bruger altid kompakte kort.",
+    "grid-compact-hint": "Fold længere memoer sammen. Altid aktiveret i gitterlayout.",
     "layout": "Layout",
     "layout-auto": "Auto",
     "layout-auto-description": "Så mange kolonner som der er plads til på skærmen",
@@ -520,7 +524,9 @@
     "parent-memo": "Overordnet notat",
     "view-options": "Visningsmuligheder",
     "add-reaction": "Tilføj reaktion",
-    "remove-reaction": "Fjern reaktion"
+    "remove-reaction": "Fjern reaktion",
+    "full-width": "Fuld bredde",
+    "full-width-hint": "Brug hele bredden af memoernes tidslinje."
   },
   "message": {
     "archived-successfully": "Arkiveret",

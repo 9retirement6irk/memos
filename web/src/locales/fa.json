@@ -33,6 +33,8 @@
     "admin-sign-in": "ورود مدیر",
     "back-to-sign-in": "بازگشت به ورود",
     "continue-with": "ادامه با {{provider}}",
+    "redirecting-to-provider": "در حال انتقال به {{provider}}…",
+    "signing-in": "در حال ورود…",
     "create-admin-account": "ایجاد حساب کاربری ادمین",
     "setup-description": "ایجاد حساب کاربری ادمین برای این نمونه.",
     "setup-title": "راه‌اندازی نمونه شما",
@@ -163,6 +165,9 @@
     "markdown-mode": "حالت Markdown",
     "no-changes-detected": "تغییری شناسایی نشد",
     "save": "ذخیره",
+    "saving": "در حال ذخیره…",
+    "updating": "در حال به‌روزرسانی…",
+    "commenting": "در حال ارسال نظر…",
     "insert-menu": {
       "add-location": "اضافه کردن مکان",
       "link-memo": "پیوند یادداشت",
@@ -285,7 +290,6 @@
     "footnotes": "پانویس‌ها",
     "back-to-reference": "بازگشت به مرجع",
     "new-memo": "یادداشت جدید",
-    "saved": "ذخیره شد",
     "validation": {
       "cannot-save": "نمی‌توانم ذخیره کنم",
       "content-required": "محتوا، پیوست یا فایل مورد نیاز است",
@@ -458,7 +462,7 @@
     "back-to": "بازگشت به {{source}}",
     "count-memos-updated-in-date": "{{count}} {{memos}} به‌روزرسانی شده در {{date}}",
     "connections": "اتصالات",
-    "grid-compact-hint": "طرح‌بندی‌های شبکه‌ای همیشه از کارت‌های فشرده استفاده می‌کنند.",
+    "grid-compact-hint": "یادداشت‌های طولانی را جمع کنید. در طرح‌بندی‌های شبکه‌ای همیشه فعال است.",
     "layout": "طرح‌بندی",
     "layout-auto": "خودکار",
     "layout-auto-description": "به تعداد ستون‌هایی که صفحه نمایش را پر می‌کنند",
@@ -477,7 +481,9 @@
     },
     "view-options": "گزینه‌های مشاهده",
     "add-reaction": "افزودن واکنش",
-    "remove-reaction": "حذف واکنش"
+    "remove-reaction": "حذف واکنش",
+    "full-width": "تمام عرض",
+    "full-width-hint": "از تمام عرض خط زمانی یادداشت‌ها استفاده کنید."
   },
   "message": {
     "archived-successfully": "با موفقیت آرشیو شد",

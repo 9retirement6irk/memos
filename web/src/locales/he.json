@@ -25,6 +25,8 @@
     "back-to-sign-in": "חזרה להתחברות",
     "callback-failed-title": "לא ניתן היה להשלים את הכניסה",
     "continue-with": "המשיכו עם {{provider}}",
+    "redirecting-to-provider": "מתבצעת הפניה אל {{provider}}…",
+    "signing-in": "מתבצעת התחברות…",
     "create-admin-account": "צור חשבון מנהל",
     "create-your-account": "צרו את החשבון שלכם",
     "hide-password": "הסתרת הסיסמה",
@@ -336,6 +338,9 @@
     },
     "no-changes-detected": "לא זוהו שינויים",
     "save": "שמור",
+    "saving": "מתבצעת שמירה…",
+    "updating": "מתבצע עדכון…",
+    "commenting": "מתבצעת שליחת תגובה…",
     "validation": {
       "cannot-save": "לא ניתן לשמור",
       "content-required": "נדרש תוכן, קובץ מצורף או קובץ",
@@ -367,7 +372,6 @@
     "footnotes": "הערות שוליים",
     "back-to-reference": "חזרה להפניה",
     "new-memo": "תזכיר חדש",
-    "saved": "נשמר",
     "blocks": {
       "task": "משימה",
       "quote": "ציטוט",
@@ -484,7 +488,7 @@
       "remove": "הסרת מסנן"
     },
     "compact-mode": "מצב קומפקטי",
-    "grid-compact-hint": "פריסות רשת משתמשות תמיד בכרטיסים קומפקטיים.",
+    "grid-compact-hint": "כיווץ פתקים ארוכים. תמיד מופעל בפריסות רשת.",
     "layout": "פריסה",
     "layout-auto": "אוטומטי",
     "layout-auto-description": "מספר העמודות המרבי שמתאים למסך",
@@ -553,7 +557,9 @@
     "on-this-memo": "על תזכיר זה",
     "parent-memo": "תזכיר אב",
     "add-reaction": "הוסף תגובה",
-    "remove-reaction": "הסר תגובה"
+    "remove-reaction": "הסר תגובה",
+    "full-width": "רוחב מלא",
+    "full-width-hint": "שימוש בכל הרוחב של ציר הזמן של הפתקים."
   },
   "message": {
     "archived-successfully": "הועבר לארכיון בהצלחה",

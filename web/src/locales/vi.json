@@ -33,6 +33,8 @@
     "admin-sign-in": "Đăng nhập quản trị viên",
     "back-to-sign-in": "Quay lại trang đăng nhập",
     "continue-with": "Tiếp tục với {{provider}}",
+    "redirecting-to-provider": "Đang chuyển hướng đến {{provider}}…",
+    "signing-in": "Đang đăng nhập…",
     "create-admin-account": "Tạo tài khoản quản trị viên",
     "setup-description": "Tạo tài khoản quản trị viên cho phiên bản này.",
     "setup-title": "Thiết lập phiên bản của bạn",
@@ -163,6 +165,9 @@
     "markdown-mode": "Chế độ Markdown",
     "no-changes-detected": "Không phát hiện thay đổi",
     "save": "Lưu",
+    "saving": "Đang lưu…",
+    "updating": "Đang cập nhật…",
+    "commenting": "Đang gửi bình luận…",
     "insert-menu": {
       "add-location": "Thêm vị trí",
       "link-memo": "Liên kết bản ghi nhớ",
@@ -285,7 +290,6 @@
     "footnotes": "Chú thích",
     "back-to-reference": "Quay lại tham chiếu",
     "new-memo": "Ghi chú mới",
-    "saved": "Đã lưu",
     "validation": {
       "cannot-save": "Không thể lưu",
       "content-required": "Cần nội dung, tệp đính kèm hoặc tệp tin",
@@ -458,7 +462,7 @@
     "back-to": "Quay lại {{source}}",
     "count-memos-updated-in-date": "{{count}} {{memos}} được cập nhật vào {{date}}",
     "connections": "Kết nối",
-    "grid-compact-hint": "Bố cục lưới luôn sử dụng thẻ nhỏ gọn.",
+    "grid-compact-hint": "Thu gọn các ghi chú dài. Luôn bật trong bố cục dạng lưới.",
     "layout": "Bố cục",
     "layout-auto": "Tự động",
     "layout-auto-description": "Số cột tùy ý cho vừa màn hình",
@@ -477,7 +481,9 @@
     },
     "view-options": "Tùy chọn xem",
     "add-reaction": "Thêm biểu tượng cảm xúc",
-    "remove-reaction": "Xóa phản ứng"
+    "remove-reaction": "Xóa phản ứng",
+    "full-width": "Toàn bộ chiều rộng",
+    "full-width-hint": "Sử dụng toàn bộ chiều rộng của dòng thời gian ghi chú."
   },
   "message": {
     "archived-successfully": "Lưu trữ thành công",

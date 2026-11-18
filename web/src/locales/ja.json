@@ -25,6 +25,8 @@
     "back-to-sign-in": "サインインに戻る",
     "callback-failed-title": "サインインを完了できませんでした",
     "continue-with": "{{provider}}で続行",
+    "redirecting-to-provider": "{{provider}} に移動しています…",
+    "signing-in": "ログインしています…",
     "create-admin-account": "管理者アカウントを作成",
     "create-your-account": "アカウントを作成",
     "hide-password": "パスワードを隠す",
@@ -163,6 +165,9 @@
     "markdown-mode": "Markdown モード",
     "no-changes-detected": "変更はありません",
     "save": "保存",
+    "saving": "保存しています…",
+    "updating": "更新しています…",
+    "commenting": "コメントを送信しています…",
     "insert-menu": {
       "add-location": "場所を追加",
       "link-memo": "リンクメモ",
@@ -285,7 +290,6 @@
     "footnotes": "脚注",
     "back-to-reference": "参照箇所に戻る",
     "new-memo": "新しいメモ",
-    "saved": "保存済み",
     "validation": {
       "cannot-save": "保存できません",
       "content-required": "コンテンツ、添付ファイル、またはファイルが必要です",
@@ -412,7 +416,7 @@
       "remove": "フィルターを削除"
     },
     "compact-mode": "コンパクト表示",
-    "grid-compact-hint": "グリッドレイアウトでは常にコンパクトなカードで表示されます。",
+    "grid-compact-hint": "長いメモを折りたたみます。グリッドレイアウトでは常に有効です。",
     "layout": "レイアウト",
     "layout-auto": "自動",
     "layout-auto-description": "画面に収まる分だけ列を表示",
@@ -482,7 +486,9 @@
     "on-this-memo": "このメモについて",
     "parent-memo": "親メモ",
     "add-reaction": "リアクションを追加",
-    "remove-reaction": "反応を取り除く"
+    "remove-reaction": "反応を取り除く",
+    "full-width": "全幅表示",
+    "full-width-hint": "メモのタイムラインを幅いっぱいに表示します。"
   },
   "message": {
     "archived-successfully": "アーカイブが完了しました",

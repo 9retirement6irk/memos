@@ -26,10 +26,6 @@ export interface EditorState {
       /** HEIC photos are being converted to JPEG before they join the memo. */
       converting: boolean;
     };
-    /** Save landed and the editor is about to close; the toolbar shows a brief
-     *  confirmation instead of the commit verb. Only hosts that unmount after
-     *  saving set it; the in-place composer resets immediately. */
-    justSaved: boolean;
   };
   timestamps: {
     createTime?: Date;
@@ -61,7 +57,6 @@ export type EditorAction =
   | { type: "SET_PENDING_INLINE_IMAGE_INSERTIONS"; payload: number }
   | { type: "SET_TIMESTAMPS"; payload: Partial<EditorState["timestamps"]> }
   | { type: "SET_RECORDER_BUSY"; payload: boolean }
-  | { type: "SET_JUST_SAVED"; payload: boolean }
   | { type: "ACCEPT_SUGGESTION"; payload: string }
   | { type: "SET_DRAWING_SAVE_ERROR"; payload: EditorState["drawingSaveError"] }
   | { type: "SET_DRAWING_MEMO_UPDATE"; payload: boolean }
@@ -86,7 +81,6 @@ const defaultState: EditorState = {
       transcribing: false,
       converting: false,
     },
-    justSaved: false,
   },
   timestamps: {
     createTime: undefined,

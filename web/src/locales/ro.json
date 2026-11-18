@@ -33,6 +33,8 @@
     "admin-sign-in": "Conectare administrator",
     "back-to-sign-in": "Înapoi la conectare",
     "continue-with": "Continuați cu {{provider}}",
+    "redirecting-to-provider": "Redirecționare către {{provider}}…",
+    "signing-in": "Autentificare…",
     "create-admin-account": "Creați cont de administrator",
     "setup-description": "Creați contul de administrator pentru această instanță.",
     "setup-title": "Configurați instanța",
@@ -288,6 +290,9 @@
     },
     "no-changes-detected": "Nu au fost detectate modificări",
     "save": "Salva",
+    "saving": "Se salvează…",
+    "updating": "Se actualizează…",
+    "commenting": "Se trimite comentariul…",
     "audio-recorder": {
       "attachment-label": "Înregistrare audio",
       "attachment-label-with-time": "Înregistrare audio {{time}}",
@@ -323,7 +328,6 @@
     "footnotes": "Note de subsol",
     "back-to-reference": "Înapoi la referință",
     "new-memo": "Memo nou",
-    "saved": "Salvat",
     "validation": {
       "cannot-save": "Nu se poate salva",
       "content-required": "Este necesar conținut, atașament sau fișier",
@@ -509,7 +513,7 @@
     "moved": "Nota mutată",
     "back-to": "Înapoi la {{source}}",
     "connections": "Conexiuni",
-    "grid-compact-hint": "Aspectele de tip grilă utilizează întotdeauna carduri compacte.",
+    "grid-compact-hint": "Restrânge notele lungi. Mereu activat în aspectele de tip grilă.",
     "layout": "Aspect",
     "layout-auto": "Automat",
     "layout-auto-description": "Atâtea coloane câte se potrivesc pe ecran",
@@ -521,7 +525,9 @@
     "parent-memo": "Notă părinte",
     "view-options": "Opțiuni de vizualizare",
     "add-reaction": "Adăugați reacția",
-    "remove-reaction": "Îndepărtați reacția"
+    "remove-reaction": "Îndepărtați reacția",
+    "full-width": "Lățime completă",
+    "full-width-hint": "Folosește întreaga lățime a cronologiei notelor."
   },
   "message": {
     "archived-successfully": "Arhivat cu succes",

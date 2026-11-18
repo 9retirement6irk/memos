@@ -33,6 +33,8 @@
     "admin-sign-in": "Prihlásenie správcu",
     "back-to-sign-in": "Späť na prihlásenie",
     "continue-with": "Pokračovať s {{provider}}",
+    "redirecting-to-provider": "Presmerovanie na {{provider}}…",
+    "signing-in": "Prihlasovanie…",
     "create-admin-account": "Vytvoriť administrátorský účet",
     "setup-description": "Vytvoriť administrátorský účet pre túto inštanciu.",
     "setup-title": "Nastavte si inštanciu",
@@ -288,6 +290,9 @@
     },
     "no-changes-detected": "Nezistili sa žiadne zmeny",
     "save": "Uložiť",
+    "saving": "Ukladanie…",
+    "updating": "Aktualizácia…",
+    "commenting": "Odosielanie komentára…",
     "audio-recorder": {
       "attachment-label": "Zvukový záznam",
       "attachment-label-with-time": "Záznam zvuku {{time}}",
@@ -323,7 +328,6 @@
     "footnotes": "Poznámky pod čiarou",
     "back-to-reference": "Späť na odkaz",
     "new-memo": "Nová poznámka",
-    "saved": "Uložené",
     "validation": {
       "cannot-save": "Nedá sa uložiť",
       "content-required": "Vyžaduje sa obsah, príloha alebo súbor",
@@ -510,7 +514,7 @@
     "moved": "Poznámka presunutá",
     "back-to": "Späť na {{source}}",
     "connections": "Pripojenia",
-    "grid-compact-hint": "Mriežkové rozloženia vždy používajú kompaktné karty.",
+    "grid-compact-hint": "Zbaliť dlhšie poznámky. Pri rozložení do mriežky je vždy zapnuté.",
     "layout": "Rozloženie",
     "layout-auto": "Automaticky",
     "layout-auto-description": "Toľko stĺpcov, koľko sa zmestí na obrazovku",
@@ -522,7 +526,9 @@
     "parent-memo": "Nadradená poznámka",
     "view-options": "Možnosti zobrazenia",
     "add-reaction": "Pridajte reakciu",
-    "remove-reaction": "Odstráňte reakciu"
+    "remove-reaction": "Odstráňte reakciu",
+    "full-width": "Plná šírka",
+    "full-width-hint": "Využiť celú šírku časovej osi poznámok."
   },
   "message": {
     "archived-successfully": "Úspešne archivované",

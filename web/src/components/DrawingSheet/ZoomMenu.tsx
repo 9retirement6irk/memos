@@ -68,7 +68,7 @@ export const ZoomMenu = ({
     onZoomed();
   };
   return (
-    <Menu.Root size="md" open={open} onOpenChange={onOpenChange}>
+    <Menu.Root open={open} onOpenChange={onOpenChange}>
       <Menu.Trigger
         render={
           <Button

@@ -33,6 +33,8 @@
     "admin-sign-in": "Administraatori sisselogimine",
     "back-to-sign-in": "Tagasi sisselogimiseks",
     "continue-with": "Jätka {{provider}}-ga",
+    "redirecting-to-provider": "Suunamine teenusesse {{provider}}…",
+    "signing-in": "Sisselogimine…",
     "create-admin-account": "Loo administraatori konto",
     "setup-description": "Loo selle eksemplari jaoks administraatori konto.",
     "setup-title": "Seadistage oma eksemplar",
@@ -288,6 +290,9 @@
     },
     "no-changes-detected": "Muudatusi ei tuvastatud",
     "save": "Salvesta",
+    "saving": "Salvestamine…",
+    "updating": "Uuendamine…",
+    "commenting": "Kommentaari saatmine…",
     "audio-recorder": {
       "attachment-label": "Helisalvestus",
       "attachment-label-with-time": "Helisalvestus {{time}}",
@@ -323,7 +328,6 @@
     "footnotes": "Allmärkused",
     "back-to-reference": "Tagasi viite juurde",
     "new-memo": "Uus memo",
-    "saved": "Salvestatud",
     "validation": {
       "cannot-save": "Ei saa salvestada",
       "content-required": "Vaja on sisu, manust või faili",
@@ -508,7 +512,7 @@
     "moved": "Memo teisaldatud",
     "back-to": "Tagasi {{source}} juurde",
     "connections": "Ühendused",
-    "grid-compact-hint": "Ruudustikupaigutused kasutavad alati kompaktseid kaarte.",
+    "grid-compact-hint": "Ahenda pikemad memod. Ruudustikupaigutustes alati sisse lülitatud.",
     "layout": "Paigutus",
     "layout-auto": "Automaatne",
     "layout-auto-description": "Nii palju veerge kui ekraanile mahub",
@@ -520,7 +524,9 @@
     "parent-memo": "Ülemmemo",
     "view-options": "Vaate valikud",
     "add-reaction": "Lisa reaktsioon",
-    "remove-reaction": "Eemaldage reaktsioon"
+    "remove-reaction": "Eemaldage reaktsioon",
+    "full-width": "Täislaius",
+    "full-width-hint": "Kasuta memode ajajoone kogu laiust."
   },
   "message": {
     "archived-successfully": "Arhiveerimine õnnestus",

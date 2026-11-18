@@ -33,6 +33,8 @@
     "admin-sign-in": "เข้าสู่ระบบผู้ดูแลระบบ",
     "back-to-sign-in": "กลับไปที่หน้าเข้าสู่ระบบ",
     "continue-with": "ดำเนินการต่อด้วย {{provider}}",
+    "redirecting-to-provider": "กำลังเปลี่ยนเส้นทางไปยัง {{provider}}…",
+    "signing-in": "กำลังเข้าสู่ระบบ…",
     "create-admin-account": "สร้างบัญชีผู้ดูแลระบบ",
     "setup-description": "สร้างบัญชีผู้ดูแลระบบสำหรับอินสแตนซ์นี้",
     "setup-title": "ตั้งค่าอินสแตนซ์ของคุณ",
@@ -163,6 +165,9 @@
     "markdown-mode": "โหมด Markdown",
     "no-changes-detected": "ไม่มีการเปลี่ยนแปลง",
     "save": "บันทึก",
+    "saving": "กำลังบันทึก…",
+    "updating": "กำลังอัปเดต…",
+    "commenting": "กำลังส่งความคิดเห็น…",
     "insert-menu": {
       "add-location": "เพิ่มสถานที่",
       "link-memo": "บันทึกการเชื่อมโยง",
@@ -285,7 +290,6 @@
     "footnotes": "เชิงอรรถ",
     "back-to-reference": "กลับไปยังการอ้างอิง",
     "new-memo": "บันทึกใหม่",
-    "saved": "บันทึกแล้ว",
     "validation": {
       "cannot-save": "ไม่สามารถบันทึกได้",
       "content-required": "ต้องมีเนื้อหา ไฟล์แนบ หรือไฟล์",
@@ -458,7 +462,7 @@
     "back-to": "กลับไปที่ {{source}}",
     "count-memos-updated-in-date": "{{count}} {{memos}} อัปเดตเมื่อ {{date}}",
     "connections": "การเชื่อมต่อ",
-    "grid-compact-hint": "รูปแบบตารางจะใช้การ์ดแบบกะทัดรัดเสมอ",
+    "grid-compact-hint": "ย่อบันทึกช่วยจำที่ยาว เปิดใช้งานเสมอในรูปแบบตาราง",
     "layout": "รูปแบบการจัดวาง",
     "layout-auto": "อัตโนมัติ",
     "layout-auto-description": "จำนวนคอลัมน์มากที่สุดเท่าที่จะพอดีกับหน้าจอ",
@@ -477,7 +481,9 @@
     },
     "view-options": "ตัวเลือกการดู",
     "add-reaction": "เพิ่มปฏิกิริยา",
-    "remove-reaction": "ลบการตอบสนอง"
+    "remove-reaction": "ลบการตอบสนอง",
+    "full-width": "เต็มความกว้าง",
+    "full-width-hint": "ใช้ความกว้างทั้งหมดของไทม์ไลน์บันทึกช่วยจำ"
   },
   "message": {
     "archived-successfully": "เก็บถาวรเรียบร้อยแล้ว",

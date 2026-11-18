@@ -7,6 +7,7 @@ const mocks = vi.hoisted(() => ({
   user: { username: "demo" } as { username: string } | undefined,
   signOut: vi.fn(),
   title: "",
+  fullWidth: false,
 }));
 
 vi.mock("@/hooks/useCurrentUser", () => ({ default: () => mocks.user }));
@@ -14,7 +15,7 @@ vi.mock("@/hooks/useSignOut", () => ({ useSignOut: () => mocks.signOut }));
 vi.mock("@/contexts/InstanceContext", () => ({
   useInstance: () => ({ generalSetting: { customProfile: { title: mocks.title } } }),
 }));
-vi.mock("@/contexts/ViewContext", () => ({ useView: () => ({ maxColumns: 1 }) }));
+vi.mock("@/contexts/ViewContext", () => ({ useView: () => ({ maxColumns: 1, fullWidth: mocks.fullWidth }) }));
 vi.mock("@/utils/i18n", () => ({ useTranslate: () => (key: string) => key }));
 
 const setTheme = (appearance: string) => document.documentElement.setAttribute("data-theme", appearance);
@@ -33,6 +34,7 @@ describe("AppWindow", () => {
     setTheme("aero-light");
     mocks.user = { username: "demo" };
     mocks.title = "";
+    mocks.fullWidth = false;
     mocks.signOut.mockClear();
   });
 
@@ -66,6 +68,17 @@ describe("AppWindow", () => {
     mocks.user = undefined;
     renderAt("/explore");
     expect(screen.queryByRole("button", { name: "common.sign-out" })).toBeNull();
+  });
+
+  it("fills the page when the view's Full width is on", () => {
+    mocks.fullWidth = true;
+    const { container } = renderAt("/");
+    expect(container.querySelector<HTMLElement>("[data-app-window]")?.style.maxWidth).toBe("none");
+  });
+
+  it("keeps its usual width otherwise", () => {
+    const { container } = renderAt("/");
+    expect(container.querySelector<HTMLElement>("[data-app-window]")?.style.maxWidth).toBe("");
   });
 
   it("leaves the map unframed", () => {
