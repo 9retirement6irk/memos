@@ -16,9 +16,6 @@ import { useEditorContext } from "../state";
 import { renameUploadedKeys } from "../utils/attachmentOrder";
 import { restampDefaultCreateTime } from "../utils/deriveDefaultCreateTime";
 
-/** How long a closing host shows "Saved" before it unmounts the editor. */
-const SAVED_CONFIRMATION_MS = 900;
-
 interface UseMemoSaveOptions {
   memoName?: string;
   parentMemoName?: string;
@@ -61,12 +58,10 @@ export function useMemoSave({
 
   return useCallback(async () => {
     const draft = getState();
+    if (draft.ui.isLoading.saving) return;
     const state = transformContent
       ? { ...draft, content: transformContent(draft.content, draft.timestamps.createTime ?? new Date()) }
       : draft;
-    // A repeated shortcut during the saved confirmation is not an error worth
-    // a toast; the save already landed and the host is closing.
-    if (state.ui.justSaved) return;
     const { valid, reason, detail } = validationService.canSave(state);
     if (!valid) {
       showErrorToast(reason ? t(reason, detail ? { url: detail } : undefined) : t("editor.validation.cannot-save"));
@@ -146,15 +141,6 @@ export function useMemoSave({
         toast.add({ title: t("memo.moved"), type: "success" });
       }
 
-      // Hosts that close after saving (edit, comment) hold a brief "Saved"
-      // confirmation on the toolbar while the caches refresh underneath. The
-      // in-place composer clears immediately, so it shows nothing.
-      if (memoName || parentMemoName) {
-        dispatch(actions.setLoading("saving", false));
-        dispatch(actions.setJustSaved(true));
-        await new Promise((resolve) => setTimeout(resolve, SAVED_CONFIRMATION_MS));
-      }
-
       dispatch(actions.reset());
       onSaved?.();
       if (!memoName && defaultVisibility) {
@@ -197,7 +183,6 @@ export function useMemoSave({
       });
     } finally {
       dispatch(actions.setLoading("saving", false));
-      dispatch(actions.setJustSaved(false));
     }
   }, [
     actions,

@@ -33,6 +33,8 @@
     "admin-sign-in": "Вход для администратора",
     "back-to-sign-in": "Назад ко входу",
     "continue-with": "Продолжить через {{provider}}",
+    "redirecting-to-provider": "Перенаправление в {{provider}}…",
+    "signing-in": "Вход…",
     "create-admin-account": "Создать учётную запись администратора",
     "setup-description": "Создайте учётную запись администратора этого сервера.",
     "setup-title": "Настройка сервера",
@@ -250,6 +252,9 @@
     },
     "no-changes-detected": "Изменений не обнаружено",
     "save": "Сохранить",
+    "saving": "Сохранение…",
+    "updating": "Обновление…",
+    "commenting": "Отправка комментария…",
     "audio-recorder": {
       "attachment-label": "Аудиозапись",
       "attachment-label-with-time": "Аудиозапись {{time}}",
@@ -296,7 +301,6 @@
     "footnotes": "Примечания",
     "back-to-reference": "Назад к ссылке",
     "new-memo": "Новая заметка",
-    "saved": "Сохранено",
     "blocks": {
       "task": "Задача",
       "quote": "Цитата",
@@ -464,7 +468,7 @@
       "uncheck-all": "Снимите галочки со всех задач",
       "updated": "Задачи обновлены"
     },
-    "grid-compact-hint": "В макетах с сеткой всегда используются компактные карточки.",
+    "grid-compact-hint": "Сворачивать длинные заметки. Всегда включено при отображении сеткой.",
     "layout": "Макет",
     "layout-auto": "Автоматически",
     "layout-auto-description": "Столько столбцов, сколько помещается на экране",
@@ -484,7 +488,9 @@
     "on-this-memo": "К этой заметке",
     "parent-memo": "Родительская заметка",
     "add-reaction": "Добавить реакцию",
-    "remove-reaction": "Удалить реакцию"
+    "remove-reaction": "Удалить реакцию",
+    "full-width": "Во всю ширину",
+    "full-width-hint": "Использовать всю ширину хронологии заметок."
   },
   "message": {
     "archived-successfully": "Перемещено в архив",

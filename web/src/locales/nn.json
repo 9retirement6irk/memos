@@ -91,6 +91,8 @@
     "back-to-sign-in": "Attende til innlogging",
     "callback-failed-title": "Kunne ikkje fullføre innlogginga",
     "continue-with": "Hald fram med {{provider}}",
+    "redirecting-to-provider": "Vidaresender til {{provider}}…",
+    "signing-in": "Loggar inn…",
     "create-admin-account": "Opprett administratorkonto",
     "create-your-account": "Opprett kontoen din",
     "hide-password": "Skjul passord",
@@ -360,7 +362,9 @@
     "new-memo": "Nytt notat",
     "no-changes-detected": "Ingen endringar funne",
     "save": "Lagre",
-    "saved": "Lagra",
+    "saving": "Lagrar…",
+    "updating": "Oppdaterer…",
+    "commenting": "Sender kommentar…",
     "suggestions": "Framlegg",
     "validation": {
       "cannot-save": "Kan ikkje lagre",
@@ -516,7 +520,7 @@
       "has-task-list": "Har gjeremålsliste",
       "remove": "Fjern filteret"
     },
-    "grid-compact-hint": "Rutenett nyttar alltid kompakte kort.",
+    "grid-compact-hint": "Fald saman lange notat. Alltid aktivert i rutenettoppsett.",
     "layout": "Oppsett",
     "layout-auto": "Automatisk",
     "layout-auto-description": "Så mange kolonnar som skjermen har plass til",
@@ -584,7 +588,9 @@
       "space-description": "Alle i {{space}}"
     },
     "add-reaction": "Legg til reaksjon",
-    "remove-reaction": "Fjern reaksjon"
+    "remove-reaction": "Fjern reaksjon",
+    "full-width": "Full breidd",
+    "full-width-hint": "Bruk heile breidda på tidslina for notata."
   },
   "message": {
     "archived-successfully": "Arkivert",

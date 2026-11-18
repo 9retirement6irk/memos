@@ -25,6 +25,8 @@
     "back-to-sign-in": "返回登入",
     "callback-failed-title": "無法完成登入",
     "continue-with": "使用 {{provider}} 繼續",
+    "redirecting-to-provider": "正在跳轉至 {{provider}}…",
+    "signing-in": "正在登入…",
     "create-admin-account": "建立管理員帳號",
     "create-your-account": "建立您的帳號",
     "hide-password": "隱藏密碼",
@@ -345,6 +347,9 @@
     "new-memo": "新增備忘錄",
     "no-changes-detected": "未發現變更",
     "save": "儲存",
+    "saving": "正在儲存…",
+    "updating": "正在更新…",
+    "commenting": "正在傳送評論…",
     "validation": {
       "cannot-save": "無法儲存",
       "content-required": "需要填寫正文或新增附件",
@@ -375,7 +380,6 @@
     "comment": "評論",
     "footnotes": "腳註",
     "back-to-reference": "返回引用處",
-    "saved": "已儲存",
     "blocks": {
       "task": "任務",
       "quote": "引用",
@@ -492,7 +496,7 @@
       "remove": "移除篩選條件"
     },
     "compact-mode": "精簡模式",
-    "grid-compact-hint": "網格版面一律使用精簡卡片。",
+    "grid-compact-hint": "摺疊較長的備忘錄。網格版面一律啟用此選項。",
     "layout": "版面配置",
     "layout-auto": "自動",
     "layout-auto-description": "依螢幕寬度顯示最多可容納的欄數",
@@ -561,7 +565,9 @@
     "on-this-memo": "在此備忘錄中",
     "parent-memo": "原始備忘錄",
     "add-reaction": "新增表情回應",
-    "remove-reaction": "移除表情回應"
+    "remove-reaction": "移除表情回應",
+    "full-width": "全寬顯示",
+    "full-width-hint": "使用備忘錄時間軸的完整寬度。"
   },
   "message": {
     "archived-successfully": "封存成功",

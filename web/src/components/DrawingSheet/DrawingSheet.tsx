@@ -657,7 +657,7 @@ const DrawingSheet = ({ mode, pages: initialPages, initialPage, commitLabel, onD
   );
   const imageControl = immichAvailable ? (
     // With Immich connected, the picture comes from this device or from there.
-    <Menu.Root modal={false} size={size ?? "md"}>
+    <Menu.Root modal={false}>
       <Tooltip.Root>
         <Tooltip.Trigger
           render={

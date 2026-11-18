@@ -33,6 +33,8 @@
     "admin-sign-in": "Вход като администратор",
     "back-to-sign-in": "Обратно към влизане",
     "continue-with": "Продължете с {{provider}}",
+    "redirecting-to-provider": "Пренасочване към {{provider}}…",
+    "signing-in": "Влизане…",
     "create-admin-account": "Създаване на администраторски акаунт",
     "setup-description": "Създаване на администраторски акаунт за този екземпляр.",
     "setup-title": "Настройване на вашия екземпляр",
@@ -288,6 +290,9 @@
     },
     "no-changes-detected": "Не са открити промени",
     "save": "Запазване",
+    "saving": "Запазване…",
+    "updating": "Обновяване…",
+    "commenting": "Изпращане на коментар…",
     "audio-recorder": {
       "attachment-label": "Аудио запис",
       "attachment-label-with-time": "Аудио запис {{time}}",
@@ -323,7 +328,6 @@
     "footnotes": "Бележки под линия",
     "back-to-reference": "Назад към препратката",
     "new-memo": "Нова бележка",
-    "saved": "Запазена",
     "validation": {
       "cannot-save": "Не може да се запази",
       "content-required": "Необходимо е съдържание, прикачен файл или файл",
@@ -508,7 +512,7 @@
     "moved": "Бележката е преместена",
     "back-to": "Обратно към {{source}}",
     "connections": "Връзки",
-    "grid-compact-hint": "Мрежовите оформления винаги използват компактни карти.",
+    "grid-compact-hint": "Свиване на по-дългите бележки. Винаги е включено при мрежови оформления.",
     "layout": "Оформление",
     "layout-auto": "Автоматично",
     "layout-auto-description": "Толкова колони, колкото се побират на екрана",
@@ -520,7 +524,9 @@
     "parent-memo": "Родителска бележка",
     "view-options": "Опции за преглед",
     "add-reaction": "Добавете реакция",
-    "remove-reaction": "Премахнете реакцията"
+    "remove-reaction": "Премахнете реакцията",
+    "full-width": "Пълна ширина",
+    "full-width-hint": "Използване на цялата ширина на хронологията на бележките."
   },
   "message": {
     "archived-successfully": "Архивиран успешно",

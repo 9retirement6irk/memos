@@ -8,12 +8,15 @@ const saved = { timeBasis: "update_time", orderByTimeAsc: true, maxColumns: 3, c
 const defaults = { timeBasis: "create_time", orderByTimeAsc: false, maxColumns: 1, compactMode: false };
 
 function Probe() {
-  const { timeBasis, orderByTimeAsc, maxColumns, compactMode, setMaxColumns } = useView();
+  const { timeBasis, orderByTimeAsc, maxColumns, compactMode, setMaxColumns, setFullWidth } = useView();
   return (
     <>
       <output>{JSON.stringify({ timeBasis, orderByTimeAsc, maxColumns, compactMode })}</output>
       <button type="button" onClick={() => setMaxColumns(2)}>
         two columns
+      </button>
+      <button type="button" onClick={() => setFullWidth(true)}>
+        full width
       </button>
     </>
   );
@@ -83,12 +86,15 @@ describe("Timeline display settings scope", () => {
   it("gives the journal Space its own view and leaves Home's alone", async () => {
     const journal = { timeBasis: "create_time", orderByTimeAsc: true, maxColumns: 1, compactMode: false } as const;
     const update = vi.fn();
-    const router = renderRoute("/spaces/journal", { space: "spaces/journal", state: journal, update });
+    const router = renderRoute("/spaces/journal", { space: "spaces/journal", state: { ...journal, fullWidth: false }, update });
     expect(settings()).toEqual(journal);
 
     // Changing the view there changes the journal's view, not the one saved for Home.
     await act(async () => screen.getByRole("button", { name: "two columns" }).click());
     expect(update).toHaveBeenCalledWith({ maxColumns: 2 });
+    // Full width, upstream's newer setting, belongs to the journal's view too.
+    await act(async () => screen.getByRole("button", { name: "full width" }).click());
+    expect(update).toHaveBeenCalledWith({ fullWidth: true });
     expect(JSON.parse(localStorage.getItem(storageKey) ?? "{}")).toEqual(saved);
 
     await act(() => router.navigate("/"));

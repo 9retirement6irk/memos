@@ -24,9 +24,10 @@ export const packedGridWidth = (available: number, maxColumns: number): number =
 /**
  * With the multi-column memo grid, sizes the window to the packed columns so no empty glass
  * shows beside them. The width comes from the room around the window, not from the window
- * itself, so it grows back when the page gets wider.
+ * itself, so it grows back when the page gets wider. With the view's Full width on, the window
+ * fills the page instead, as the list inside it does.
  */
-const useHugGrid = (windowRef: React.RefObject<HTMLDivElement | null>, maxColumns: number) => {
+const useHugGrid = (windowRef: React.RefObject<HTMLDivElement | null>, maxColumns: number, fullWidth: boolean) => {
   useLayoutEffect(() => {
     const win = windowRef.current;
     const room = win?.parentElement;
@@ -35,6 +36,10 @@ const useHugGrid = (windowRef: React.RefObject<HTMLDivElement | null>, maxColumn
     let frame = 0;
     const fit = () => {
       frame = 0;
+      if (fullWidth) {
+        win.style.maxWidth = "none";
+        return;
+      }
       const grid = win.querySelector<HTMLElement>("[data-column-grid]");
       if (!grid) {
         win.style.removeProperty("max-width");
@@ -62,7 +67,7 @@ const useHugGrid = (windowRef: React.RefObject<HTMLDivElement | null>, maxColumn
       mutationObserver.disconnect();
       win.style.removeProperty("max-width");
     };
-  }, [windowRef, maxColumns]);
+  }, [windowRef, maxColumns, fullWidth]);
 };
 
 interface FrameProps {
@@ -76,9 +81,9 @@ const AeroWindowFrame = ({ children, page }: FrameProps) => {
   const currentUser = useCurrentUser();
   const signOut = useSignOut();
   const { generalSetting } = useInstance();
-  const { maxColumns } = useView();
+  const { maxColumns, fullWidth } = useView();
   const windowRef = useRef<HTMLDivElement>(null);
-  useHugGrid(windowRef, maxColumns);
+  useHugGrid(windowRef, maxColumns, fullWidth);
   const title = generalSetting.customProfile?.title || "Memos";
 
   return (

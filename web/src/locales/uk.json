@@ -33,6 +33,8 @@
     "admin-sign-in": "Вхід адміністратора",
     "back-to-sign-in": "Повернутися до входу",
     "continue-with": "Продовжити з {{provider}}",
+    "redirecting-to-provider": "Перенаправлення до {{provider}}…",
+    "signing-in": "Вхід…",
     "create-admin-account": "Створити обліковий запис адміністратора",
     "setup-description": "Створити обліковий запис адміністратора для цього екземпляра.",
     "setup-title": "Налаштувати екземпляр",
@@ -250,6 +252,9 @@
     },
     "no-changes-detected": "Змін не виявлено",
     "save": "Зберегти",
+    "saving": "Збереження…",
+    "updating": "Оновлення…",
+    "commenting": "Надсилання коментаря…",
     "audio-recorder": {
       "attachment-label": "Аудіозапис",
       "attachment-label-with-time": "Аудіозапис {{time}}",
@@ -285,7 +290,6 @@
     "footnotes": "Примітки",
     "back-to-reference": "Назад до посилання",
     "new-memo": "Нова нотатка",
-    "saved": "Збережено",
     "validation": {
       "cannot-save": "Не вдається зберегти",
       "content-required": "Потрібен контент, вкладення або файл",
@@ -472,7 +476,7 @@
     "moved": "Нотатку переміщено",
     "back-to": "Назад до {{source}}",
     "connections": "З'єднання",
-    "grid-compact-hint": "Макети сітки завжди використовують компактні картки.",
+    "grid-compact-hint": "Згортати довгі нотатки. Завжди ввімкнено в сіткових макетах.",
     "layout": "Макет",
     "layout-auto": "Авто",
     "layout-auto-description": "Стільки стовпців, скільки поміщається на екран",
@@ -484,7 +488,9 @@
     "parent-memo": "Батьківська нотатка",
     "view-options": "Параметри перегляду",
     "add-reaction": "Додайте реакцію",
-    "remove-reaction": "Видалити реакцію"
+    "remove-reaction": "Видалити реакцію",
+    "full-width": "На всю ширину",
+    "full-width-hint": "Використовувати всю ширину хронології нотаток."
   },
   "message": {
     "archived-successfully": "Архівовано успішно",

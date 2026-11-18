@@ -33,6 +33,8 @@
     "admin-sign-in": "Пријава администратора",
     "back-to-sign-in": "Назад на пријаву",
     "continue-with": "Наставите са {{provider}}",
+    "redirecting-to-provider": "Преусмеравање на {{provider}}…",
+    "signing-in": "Пријављивање…",
     "create-admin-account": "Креирајте администраторски налог",
     "setup-description": "Креирајте администраторски налог за ову инстанцу.",
     "setup-title": "Подесите своју инстанцу",
@@ -288,6 +290,9 @@
     },
     "no-changes-detected": "Нису откривене промене",
     "save": "Сачувај",
+    "saving": "Чување…",
+    "updating": "Ажурирање…",
+    "commenting": "Слање коментара…",
     "audio-recorder": {
       "attachment-label": "Аудио снимак",
       "attachment-label-with-time": "Аудио запис {{time}}",
@@ -323,7 +328,6 @@
     "footnotes": "Фусноте",
     "back-to-reference": "Назад на референцу",
     "new-memo": "Нова белешка",
-    "saved": "Сачувано",
     "validation": {
       "cannot-save": "Не могу да сачувам",
       "content-required": "Потребан је садржај, прилог или датотека",
@@ -509,7 +513,7 @@
     "moved": "Белешка је премештена",
     "back-to": "Назад на {{source}}",
     "connections": "Везе",
-    "grid-compact-hint": "Распореди мреже увек користе компактне картице.",
+    "grid-compact-hint": "Скупи дуже мемое. Увек омогућено у мрежним распоредима.",
     "layout": "Распоред",
     "layout-auto": "Аутоматски",
     "layout-auto-description": "Колико год колона стане на екран",
@@ -521,7 +525,9 @@
     "parent-memo": "Надређена порука",
     "view-options": "Опције приказа",
     "add-reaction": "Додајте реакцију",
-    "remove-reaction": "Уклоните реакцију"
+    "remove-reaction": "Уклоните реакцију",
+    "full-width": "Пуна ширина",
+    "full-width-hint": "Користи целу ширину временске линије мемоа."
   },
   "message": {
     "archived-successfully": "Архивирано је успешно",
