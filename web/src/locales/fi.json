@@ -543,7 +543,8 @@
     "succeed-copy-link": "Linkin kopioiminen onnistui.",
     "update-succeed": "Päivitys onnistui",
     "not-signed-in": "Et ole kirjautunut sisään.",
-    "invalid-datetime": "Virheellinen päivämäärä ja aika. Käytä muotoa 2023-12-31 23:59:59."
+    "invalid-datetime": "Virheellinen päivämäärä ja aika. Käytä muotoa 2023-12-31 23:59:59.",
+    "request-failed": "Pyyntö epäonnistui (HTTP {{status}}) ilman Memosin selitystä. Memosin edessä oleva välityspalvelin tai ingress on ehkä hylännyt sen."
   },
   "reference": {
     "no-memos-found": "Muistioita ei löytynyt",

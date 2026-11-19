@@ -500,7 +500,8 @@
     "succeed-copy-link": "Tautan berhasil disalin.",
     "update-succeed": "Pembaruan berhasil",
     "not-signed-in": "Anda belum masuk.",
-    "invalid-datetime": "Tanggal dan waktu tidak valid. Gunakan format 2023-12-31 23:59:59."
+    "invalid-datetime": "Tanggal dan waktu tidak valid. Gunakan format 2023-12-31 23:59:59.",
+    "request-failed": "Permintaan gagal (HTTP {{status}}) tanpa penjelasan dari Memos. Mungkin proxy atau ingress di depan Memos menolaknya."
   },
   "reference": {
     "no-memos-found": "Tidak ada memo yang ditemukan",

@@ -1,4 +1,5 @@
 import { getRequestToken } from "@/connect";
+import { responseErrorMessage } from "@/lib/responseError";
 
 /** What the server shares about the user's Immich connection: never the API key. */
 export interface ImmichConnection {
@@ -47,16 +48,7 @@ const request = async (path: string, init: RequestInit = {}): Promise<Response> 
   const headers = new Headers(init.headers);
   if (token) headers.set("Authorization", `Bearer ${token}`);
   const response = await fetch(`${BASE}${path}`, { ...init, headers, credentials: "same-origin" });
-  if (!response.ok) {
-    let message = response.statusText;
-    try {
-      const body = (await response.json()) as { message?: string };
-      if (body.message) message = body.message;
-    } catch {
-      // Not a JSON error envelope: keep the status text.
-    }
-    throw new ImmichError(message, response.status);
-  }
+  if (!response.ok) throw new ImmichError(await responseErrorMessage(response), response.status);
   return response;
 };
 

@@ -545,7 +545,8 @@
     "succeed-copy-link": "Nuoroda sėkmingai nukopijuota.",
     "update-succeed": "Atnaujinimas pavyko",
     "not-signed-in": "Jūs neprisijungę.",
-    "invalid-datetime": "Neteisinga data ir laikas. Naudokite formatą 2023-12-31 23:59:59."
+    "invalid-datetime": "Neteisinga data ir laikas. Naudokite formatą 2023-12-31 23:59:59.",
+    "request-failed": "Užklausa nepavyko (HTTP {{status}}), Memos nepateikė paaiškinimo. Galbūt ją atmetė prieš Memos esantis tarpinis serveris ar ingress."
   },
   "reference": {
     "no-memos-found": "Nerasta jokių atmintinių",

@@ -504,7 +504,8 @@
     "succeed-copy-link": "تم نسخ الرابط بنجاح.",
     "update-succeed": "تم التحديث بنجاح",
     "not-signed-in": "لم تسجّل الدخول.",
-    "invalid-datetime": "التاريخ والوقت غير صالحين. استخدم التنسيق 2023-12-31 23:59:59."
+    "invalid-datetime": "التاريخ والوقت غير صالحين. استخدم التنسيق 2023-12-31 23:59:59.",
+    "request-failed": "فشل الطلب (HTTP {{status}}) دون توضيح من Memos. ربما رفضه وكيل أو ingress أمام Memos."
   },
   "reference": {
     "no-memos-found": "لم يتم العثور على مذكرات",

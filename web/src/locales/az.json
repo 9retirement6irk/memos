@@ -607,7 +607,8 @@
     "succeed-copy-link": "Keçid uğurla kopyalandı.",
     "update-succeed": "Yeniləmə uğurlu oldu",
     "not-signed-in": "Daxil olmamısınız.",
-    "invalid-datetime": "Tarix və vaxt etibarsızdır. 2023-12-31 23:59:59 formatından istifadə edin."
+    "invalid-datetime": "Tarix və vaxt etibarsızdır. 2023-12-31 23:59:59 formatından istifadə edin.",
+    "request-failed": "Sorğu uğursuz oldu (HTTP {{status}}), Memos heç bir izahat vermədi. Memos-dan öndəki proksi və ya ingress onu rədd etmiş ola bilər."
   },
   "reference": {
     "no-memos-found": "Qeyd tapılmadı",

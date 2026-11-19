@@ -507,7 +507,8 @@
     "succeed-copy-link": "Odkaz byl úspěšně zkopírován.",
     "update-succeed": "Aktualizace proběhla úspěšně",
     "not-signed-in": "Nejste přihlášeni.",
-    "invalid-datetime": "Neplatné datum a čas. Použijte formát 2023-12-31 23:59:59."
+    "invalid-datetime": "Neplatné datum a čas. Použijte formát 2023-12-31 23:59:59.",
+    "request-failed": "Požadavek selhal (HTTP {{status}}) bez vysvětlení od Memos. Možná ho odmítla proxy nebo ingress před Memos."
   },
   "reference": {
     "no-memos-found": "Žádné poznámky nenalezeny",

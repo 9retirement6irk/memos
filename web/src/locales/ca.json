@@ -506,7 +506,8 @@
     "succeed-copy-link": "Enllaç copiat correctament.",
     "update-succeed": "Actualització correcta",
     "not-signed-in": "No has iniciat la sessió.",
-    "invalid-datetime": "Data i hora no vàlides. Fes servir el format 2023-12-31 23:59:59."
+    "invalid-datetime": "Data i hora no vàlides. Fes servir el format 2023-12-31 23:59:59.",
+    "request-failed": "La sol·licitud ha fallat (HTTP {{status}}) sense cap explicació de Memos. Potser un proxy o ingress davant de Memos l'ha rebutjada."
   },
   "reference": {
     "no-memos-found": "No s'han trobat notes",

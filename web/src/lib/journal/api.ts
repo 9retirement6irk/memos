@@ -1,4 +1,5 @@
 import { getRequestToken } from "@/connect";
+import { responseErrorMessage } from "@/lib/responseError";
 
 /** A failed call to one of the server's journal routes, with the server's message (already written for people). */
 export class JournalApiError extends Error {
@@ -18,16 +19,7 @@ export const apiRequest = async (path: string, init: RequestInit = {}): Promise<
   if (token) headers.set("Authorization", `Bearer ${token}`);
   if (init.body && !headers.has("Content-Type")) headers.set("Content-Type", "application/json");
   const response = await fetch(path, { ...init, headers, credentials: "same-origin" });
-  if (!response.ok) {
-    let message = response.statusText;
-    try {
-      const body = (await response.json()) as { message?: string };
-      if (body.message) message = body.message;
-    } catch {
-      // Not a JSON error envelope: keep the status text.
-    }
-    throw new JournalApiError(message, response.status);
-  }
+  if (!response.ok) throw new JournalApiError(await responseErrorMessage(response), response.status);
   return response;
 };
 

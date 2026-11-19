@@ -505,7 +505,8 @@
     "succeed-copy-link": "Link erfolgreich kopiert",
     "update-succeed": "Update erfolgreich",
     "not-signed-in": "Sie sind nicht angemeldet.",
-    "invalid-datetime": "Ungültiges Datum und ungültige Uhrzeit. Verwenden Sie das Format 2023-12-31 23:59:59."
+    "invalid-datetime": "Ungültiges Datum und ungültige Uhrzeit. Verwenden Sie das Format 2023-12-31 23:59:59.",
+    "request-failed": "Die Anfrage ist fehlgeschlagen (HTTP {{status}}), ohne Erklärung von Memos. Vielleicht hat ein Proxy oder Ingress vor Memos sie abgelehnt."
   },
   "reference": {
     "no-memos-found": "Keine Notizen gefunden",

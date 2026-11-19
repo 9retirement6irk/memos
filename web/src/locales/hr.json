@@ -506,7 +506,8 @@
     "succeed-copy-link": "Link je uspješno kopiran.",
     "update-succeed": "Ažuriranje uspješno",
     "not-signed-in": "Niste prijavljeni.",
-    "invalid-datetime": "Neispravan datum i vrijeme. Koristite format 2023-12-31 23:59:59."
+    "invalid-datetime": "Neispravan datum i vrijeme. Koristite format 2023-12-31 23:59:59.",
+    "request-failed": "Zahtjev nije uspio (HTTP {{status}}) bez objašnjenja od Memosa. Možda ga je odbio proxy ili ingress ispred Memosa."
   },
   "reference": {
     "no-memos-found": "Nema pronađenih memoa",

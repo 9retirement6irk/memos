@@ -576,7 +576,8 @@
     "succeed-copy-link": "הקישור הועתק בהצלחה.",
     "update-succeed": "העדכון הצליח",
     "not-signed-in": "אינכם מחוברים.",
-    "invalid-datetime": "תאריך ושעה לא תקינים. השתמשו בתבנית 2023-12-31 23:59:59."
+    "invalid-datetime": "תאריך ושעה לא תקינים. השתמשו בתבנית 2023-12-31 23:59:59.",
+    "request-failed": "הבקשה נכשלה (HTTP {{status}}) בלי הסבר מ-Memos. ייתכן ששרת proxy או ingress שלפני Memos דחה אותה."
   },
   "reference": {
     "no-memos-found": "לא נמצאו פתקים",
