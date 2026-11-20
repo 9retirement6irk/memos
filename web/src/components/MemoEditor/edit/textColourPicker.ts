@@ -29,6 +29,15 @@ const toolbarOf = (editor: Editor): HTMLElement | null => {
   return toolbar instanceof HTMLElement ? toolbar : null;
 };
 
+/** Which side of the selection the toolbar opened on: the editor's own record of it, or where it sits. */
+const toolbarSide = (editor: Editor, toolbar: HTMLElement, doc: Document): "above" | "below" => {
+  const side = (editor as unknown as { toolbar?: { popup?: { side?: unknown } } }).toolbar?.popup?.side;
+  if (side === "above" || side === "below") return side;
+  const selection = doc.getSelection();
+  const range = selection?.rangeCount ? selection.getRangeAt(0).getBoundingClientRect() : null;
+  return range && toolbar.getBoundingClientRect().top < range.top ? "above" : "below";
+};
+
 /** The button's icon, made like the toolbar's own: a Vista picture slot under Aero, else a Lucide-style SVG. */
 const iconLike = (toolbar: HTMLElement): Element | null => {
   const model = toolbar.querySelector(".mbe-tool-bold .mbe-icon, .mbe-tool .mbe-icon");
@@ -129,15 +138,39 @@ export const textColourPicker = (labels: TextColourLabels): Extension => ({
     row("highlight", labels.highlight, labels.noHighlight, HIGHLIGHT_COLOURS);
 
     const place = () => {
-      // Beside the toolbar, on the side away from the selected text, as the editor's own menus open.
-      const box = toolbar.getBoundingClientRect();
-      const range = doc.getSelection()?.rangeCount ? doc.getSelection()?.getRangeAt(0).getBoundingClientRect() : null;
-      const above = range ? box.top < range.top : false;
+      // As the editor places its own toolbar menus (Text style, List): from the button, on the toolbar's
+      // side away from the selection, flipped to the other side when it doesn't fit, kept in the viewport.
+      const view = doc.defaultView;
+      const viewport = view?.visualViewport
+        ? {
+            left: view.visualViewport.offsetLeft,
+            top: view.visualViewport.offsetTop,
+            width: view.visualViewport.width,
+            height: view.visualViewport.height,
+          }
+        : {
+            left: 0,
+            top: 0,
+            width: view?.innerWidth ?? doc.documentElement.clientWidth,
+            height: view?.innerHeight ?? doc.documentElement.clientHeight,
+          };
       const anchor = button.getBoundingClientRect();
+      const gap = 4;
       const width = panel.offsetWidth;
-      const left = Math.max(8, Math.min(anchor.left, doc.documentElement.clientWidth - width - 8));
-      panel.style.left = `${Math.round(left)}px`;
-      panel.style.top = above ? `${Math.round(box.top - panel.offsetHeight - 4)}px` : `${Math.round(box.bottom + 4)}px`;
+      const height = panel.offsetHeight;
+      const below = viewport.top + viewport.height - 8 - (anchor.bottom + gap);
+      const above = anchor.top - gap - 8 - viewport.top;
+      let side = toolbarSide(editor, toolbar, doc);
+      if (side === "below" && height > below && above > below) side = "above";
+      else if (side === "above" && height > above && below > above) side = "below";
+      const top = side === "below" ? anchor.bottom + gap : anchor.top - height - gap;
+      const left = Math.max(viewport.left + 8, Math.min(anchor.left, viewport.left + viewport.width - width - 8));
+      // Fixed position is relative to the panel's containing block, which a transformed dialog can move.
+      panel.style.left = "0px";
+      panel.style.top = "0px";
+      const origin = panel.getBoundingClientRect();
+      panel.style.left = `${Math.round(left - origin.left)}px`;
+      panel.style.top = `${Math.round(top - origin.top)}px`;
     };
 
     const onOutside = (event: PointerEvent) => {
