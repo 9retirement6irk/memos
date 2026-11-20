@@ -22,6 +22,12 @@ describe("raw HTML sanitization", () => {
     expect(html).not.toMatch(/position:fixed/);
   });
 
+  it("keeps GZreader's colour spans (data attributes, no style)", () => {
+    const html = renderHtml('<p>a <span data-gz-color="red">red</span> and <span data-gz-mark="yellow">marked</span></p>');
+    expect(html).toContain('<span data-gz-color="red">red</span>');
+    expect(html).toContain('<span data-gz-mark="yellow">marked</span>');
+  });
+
   it("strips scripts and event handlers", () => {
     const html = renderHtml(
       '<div onclick="alert(1)">a<script>alert(2)</script><img src="https://img.example/a.png" onerror="alert(3)"></div>',

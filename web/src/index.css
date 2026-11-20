@@ -9,6 +9,7 @@
 @import "./themes/aero-dark.css";
 @import "./themes/aero-paper.css";
 @import "./themes/aero/aero.css";
+@import "./gz-colours.css";
 
 /*
  * Rich text in the memo editor: everything outside its source mode, which shows the
