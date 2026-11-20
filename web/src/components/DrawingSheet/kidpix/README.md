@@ -118,6 +118,13 @@ when it is first shown.
   pixels. White joined to a stamp's edge is made transparent.
 - Stickers: 935 pictures, kept as the disc's own Flash movies and drawn by `swf.ts`, so a
   category of 20 is about 100 kB. Four that use text or bitmaps are left out.
+- Stickers as PNG, for apps that can't read Flash (GZreader's drawing screen on a Kindle fetches
+  them from this server): `web/public/kidpix/sticker-png/<slug>/<n>.png`, each sticker drawn by
+  `swf.ts` at twice its frame's size on a clear ground, in 256 colours (7.8 MB in all), and
+  `index.json` listing the categories and stickers with each frame's size. Made by
+  `node scripts/render-kidpix-stickers.mjs` (headless Chromium; `--check` compares with what's
+  there); `tests/kidpix-sticker-png.test.ts` checks they match the library. Run it again when a
+  sticker or `swf.ts`'s drawing changes.
 - Backgrounds: 180 pictures at 600 x 452, re-encoded from 70 MB to 7 MB. A background sits
   behind the paint with the drawing copied over it, and becomes part of the picture the mode
   adds to the drawing.
