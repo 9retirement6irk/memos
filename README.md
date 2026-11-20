@@ -99,6 +99,7 @@ Connect [Dawarich](https://dawarich.app) in **Settings → Dawarich**, again per
   - scissors: cut out part of the picture freehand, as a polygon, oval or rectangle, or with one of ten
     cookie cutters, then move it, throw it away, or duplicate and paste it
   - stickers and text boxes that stay loose, to move, resize, flip or retype, until you flatten them
+    or paint: paint goes on top of them
   - rubber stamps in three sizes, and the Stamp Editor to change one a pixel at a time
   - Kid Pix's color picker with its Eye Dropper, and twenty paper textures for chalk, crayon and marker
   - the question-mark help, narrated, and the Idea Machine's 572 picture starters

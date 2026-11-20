@@ -201,6 +201,15 @@ export const textMeasure = (style: TextStyle) => {
 interface Snapshot {
   paint: ImageData;
   background: HTMLImageElement | null;
+  /** The loose pictures a stick-down pressed into the paint: undoing it gives them back to be loose. */
+  lifted?: readonly LoosePicture[];
+}
+
+/** A sticker, text box or added picture lying loose over the paint, as the layer keeps it. */
+export interface LoosePicture extends Box {
+  picture: KidPixPicture;
+  flipX: boolean;
+  flipY: boolean;
 }
 
 const HISTORY_STEPS = 12;
@@ -328,10 +337,10 @@ export class KidPixEngine {
   }
 
   /** Saves the layer before a change, as one undo step. */
-  private remember() {
+  private remember(lifted?: readonly LoosePicture[]) {
     this.landDrops();
     this.settle();
-    this.undoStack.push(this.snapshot());
+    this.undoStack.push({ ...this.snapshot(), lifted });
     if (this.undoStack.length > HISTORY_STEPS) this.undoStack.shift();
     this.redoStack.length = 0;
   }
@@ -355,12 +364,17 @@ export class KidPixEngine {
     return true;
   }
 
+  /** What the last undo took back out of the paint when it undid a stick-down, to be loose again. */
+  undoneLifted: readonly LoosePicture[] | undefined;
+
   undo() {
+    this.undoneLifted = undefined;
     this.landDrops();
     // Taking back a half-made shape is the undo.
     if (this.settle()) return true;
     const previous = this.undoStack.pop();
     if (!previous) return false;
+    this.undoneLifted = previous.lifted;
     this.redoStack.push(this.snapshot());
     this.ctx.putImageData(previous.paint, 0, 0);
     if (previous.background !== this.background) this.showBackground(previous.background);
@@ -1034,6 +1048,20 @@ export class KidPixEngine {
   /** Flattens a sticker, or a picture brought in, into the paint: in `box`, turned over if it was flipped. */
   sticker(picture: KidPixPicture, box: Box, flipX = false, flipY = false) {
     this.remember();
+    this.press(picture, box, flipX, flipY);
+  }
+
+  /**
+   * Sticks loose pictures into the paint, the lowest first, as one undo step. Undoing it hands
+   * them back (`undoneLifted`) to lie loose again, rather than taking them away.
+   */
+  stickDown(items: readonly LoosePicture[]) {
+    if (items.length === 0) return;
+    this.remember(items);
+    for (const item of items) this.press(item.picture, item, item.flipX, item.flipY);
+  }
+
+  private press(picture: KidPixPicture, box: Box, flipX: boolean, flipY: boolean) {
     const ctx = this.ctx;
     ctx.save();
     ctx.translate(box.x + (flipX ? box.width : 0), box.y + (flipY ? box.height : 0));

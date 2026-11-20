@@ -459,6 +459,9 @@ const letterClip = (index: number) =>
 
 /** Kid Pix's names for what the sticker tray and the ABC brush add, and for Add Graphic's four ways to fit a picture. */
 const FLATTEN_STICKERS = "Flatten Stickers";
+
+/** Tools that change the paint itself; pressing the paper with one sticks everything loose down first. */
+const PAINT_TOOLS: ReadonlySet<KidPixTool> = new Set(["pencil", "wacky", "paint", "mixer", "eraser", "stamp"]);
 const IMPORT_STICKER = "Import Sticker";
 const IMPORT_BACKGROUND = "Import Background";
 const EDIT_ABC_TEXT = "Edit ABC Text";
@@ -773,12 +776,20 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
     setLoose([...looseRef.current, { ...sticker }]);
     float({ ...sticker, x: sticker.x + 16, y: sticker.y + 16 });
   };
-  /** Kid Pix's Flatten: every loose sticker and text box becomes paint, the lowest first. */
-  const flattenAll = () => {
+  /**
+   * Paint lands on top of what is already there: before a paint tool touches the paper, the
+   * sticker in the frame and every loose sticker and text box stick into the picture, as one
+   * undo step that gives them back loose. (Kid Pix keeps them floating over the paint until
+   * Flatten; the fork sticks them down so new paint can go over them.)
+   */
+  const stickDown = () => {
     park();
-    for (const item of looseRef.current) engineRef.current?.sticker(item.picture, item, item.flipX, item.flipY);
+    if (looseRef.current.length === 0) return;
+    engineRef.current?.stickDown(looseRef.current);
     setLoose([]);
   };
+  /** Kid Pix's Flatten: every loose sticker and text box becomes paint, the lowest first. */
+  const flattenAll = stickDown;
   /** Takes a loose one back into the frame; the Text tool opens a text box to be typed in again. */
   const pickLoose = (item: FloatingSticker) => {
     commitText();
@@ -1258,7 +1269,8 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
     }
     const at = pointOf(event);
     const option = chosen[tool];
-    if (floatingRef.current) {
+    if (PAINT_TOOLS.has(tool)) stickDown();
+    else if (floatingRef.current) {
       // A press on the paper lets the sticker go, still loose; with the Stickers tool it also puts down the next.
       park();
       if (tool !== "sticker") return;
@@ -1329,7 +1341,11 @@ const KidPixLayer = ({ ref, view, paper, muted, compact, backdropSources, labels
     commitText();
     // A sticker still in its frame is the last thing done: taking it back lifts it off again.
     if (floatingRef.current) float(null);
-    else if (!cutRef.current?.undo()) engineRef.current?.undo();
+    else if (!cutRef.current?.undo()) {
+      const engine = engineRef.current;
+      // Undoing a stick-down lifts the stickers and text boxes off again, loose where they were.
+      if (engine?.undo() && engine.undoneLifted) setLoose([...looseRef.current, ...(engine.undoneLifted as readonly FloatingSticker[])]);
+    }
     const line = UNDO_GUY_LINES[Math.floor(Math.random() * UNDO_GUY_LINES.length)];
     play(line.clip);
     const length = (muted ? 0.6 : (audioRef.current?.duration(line.clip) ?? 0.6)) * 1000;
