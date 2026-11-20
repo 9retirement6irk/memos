@@ -363,6 +363,22 @@
     "heic": {
       "converting": "HEIC-Fotos werden in JPEG umgewandelt ({{count}})…",
       "failed": "HEIC-Fotos, die nicht umgewandelt werden konnten: {{count}}. Sie wurden unverändert angehängt und werden eventuell nur in Safari angezeigt."
+    },
+    "text-colour": {
+      "title": "Textfarbe",
+      "colour": "Farbe",
+      "highlight": "Hervorhebung",
+      "no-colour": "Keine Farbe",
+      "no-highlight": "Keine Hervorhebung",
+      "gray": "Grau",
+      "red": "Rot",
+      "orange": "Orange",
+      "yellow": "Gelb",
+      "green": "Grün",
+      "aqua": "Türkis",
+      "blue": "Blau",
+      "purple": "Violett",
+      "pink": "Rosa"
     }
   },
   "inbox": {

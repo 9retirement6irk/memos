@@ -465,6 +465,22 @@
     "heic": {
       "converting": "Converting HEIC photos to JPEG ({{count}})…",
       "failed": "HEIC photos that couldn't be converted: {{count}}. They were attached as they are and may show only in Safari."
+    },
+    "text-colour": {
+      "title": "Text color",
+      "colour": "Color",
+      "highlight": "Highlight",
+      "no-colour": "No color",
+      "no-highlight": "No highlight",
+      "gray": "Gray",
+      "red": "Red",
+      "orange": "Orange",
+      "yellow": "Yellow",
+      "green": "Green",
+      "aqua": "Teal",
+      "blue": "Blue",
+      "purple": "Violet",
+      "pink": "Pink"
     }
   },
   "inbox": {

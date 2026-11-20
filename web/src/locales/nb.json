@@ -363,6 +363,22 @@
     "heic": {
       "converting": "Konverterer HEIC-bilder til JPEG ({{count}})…",
       "failed": "HEIC-bilder som ikke kunne konverteres: {{count}}. De ble lagt ved som de er og vises kanskje bare i Safari."
+    },
+    "text-colour": {
+      "title": "Tekstfarge",
+      "colour": "Farge",
+      "highlight": "Utheving",
+      "no-colour": "Ingen farge",
+      "no-highlight": "Ingen utheving",
+      "gray": "Grå",
+      "red": "Rød",
+      "orange": "Oransje",
+      "yellow": "Gul",
+      "green": "Grønn",
+      "aqua": "Blågrønn",
+      "blue": "Blå",
+      "purple": "Fiolett",
+      "pink": "Rosa"
     }
   },
   "inbox": {

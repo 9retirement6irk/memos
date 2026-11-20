@@ -401,6 +401,22 @@
     "heic": {
       "converting": "Muunnetaan HEIC-kuvia JPEG-muotoon ({{count}})…",
       "failed": "HEIC-kuvat, joita ei voitu muuntaa: {{count}}. Ne liitettiin sellaisenaan ja saattavat näkyä vain Safarissa."
+    },
+    "text-colour": {
+      "title": "Tekstin väri",
+      "colour": "Väri",
+      "highlight": "Korostus",
+      "no-colour": "Ei väriä",
+      "no-highlight": "Ei korostusta",
+      "gray": "Harmaa",
+      "red": "Punainen",
+      "orange": "Oranssi",
+      "yellow": "Keltainen",
+      "green": "Vihreä",
+      "aqua": "Sinivihreä",
+      "blue": "Sininen",
+      "purple": "Violetti",
+      "pink": "Vaaleanpunainen"
     }
   },
   "inbox": {

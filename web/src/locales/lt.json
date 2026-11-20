@@ -401,6 +401,22 @@
     "heic": {
       "converting": "HEIC nuotraukos konvertuojamos į JPEG ({{count}})…",
       "failed": "HEIC nuotraukos, kurių nepavyko konvertuoti: {{count}}. Jos pridėtos tokios, kokios yra, ir gali būti rodomos tik Safari."
+    },
+    "text-colour": {
+      "title": "Teksto spalva",
+      "colour": "Spalva",
+      "highlight": "Paryškinimas",
+      "no-colour": "Be spalvos",
+      "no-highlight": "Be paryškinimo",
+      "gray": "Pilka",
+      "red": "Raudona",
+      "orange": "Oranžinė",
+      "yellow": "Geltona",
+      "green": "Žalia",
+      "aqua": "Žalsvai mėlyna",
+      "blue": "Mėlyna",
+      "purple": "Violetinė",
+      "pink": "Rožinė"
     }
   },
   "inbox": {

@@ -363,6 +363,22 @@
     "heic": {
       "converting": "HEIC 写真を JPEG に変換しています（{{count}}）…",
       "failed": "変換できなかった HEIC 写真：{{count}}。そのまま添付したため、Safari でしか表示されない場合があります。"
+    },
+    "text-colour": {
+      "title": "文字の色",
+      "colour": "色",
+      "highlight": "マーカー",
+      "no-colour": "色なし",
+      "no-highlight": "マーカーなし",
+      "gray": "グレー",
+      "red": "赤",
+      "orange": "オレンジ",
+      "yellow": "黄",
+      "green": "緑",
+      "aqua": "ティール",
+      "blue": "青",
+      "purple": "紫",
+      "pink": "ピンク"
     }
   },
   "inbox": {

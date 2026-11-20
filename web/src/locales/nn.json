@@ -439,6 +439,22 @@
     "heic": {
       "converting": "Konverterer HEIC-bilete til JPEG ({{count}})…",
       "failed": "HEIC-bilete som ikkje kunne konverterast: {{count}}. Dei vart lagde ved som dei er og blir kanskje berre viste i Safari."
+    },
+    "text-colour": {
+      "title": "Tekstfarge",
+      "colour": "Farge",
+      "highlight": "Utheving",
+      "no-colour": "Ingen farge",
+      "no-highlight": "Inga utheving",
+      "gray": "Grå",
+      "red": "Raud",
+      "orange": "Oransje",
+      "yellow": "Gul",
+      "green": "Grøn",
+      "aqua": "Blågrøn",
+      "blue": "Blå",
+      "purple": "Fiolett",
+      "pink": "Rosa"
     }
   },
   "inbox": {

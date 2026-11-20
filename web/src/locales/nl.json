@@ -363,6 +363,22 @@
     "heic": {
       "converting": "HEIC-foto's worden omgezet naar JPEG ({{count}})…",
       "failed": "HEIC-foto's die niet konden worden omgezet: {{count}}. Ze zijn bijgevoegd zoals ze zijn en worden misschien alleen in Safari getoond."
+    },
+    "text-colour": {
+      "title": "Tekstkleur",
+      "colour": "Kleur",
+      "highlight": "Markering",
+      "no-colour": "Geen kleur",
+      "no-highlight": "Geen markering",
+      "gray": "Grijs",
+      "red": "Rood",
+      "orange": "Oranje",
+      "yellow": "Geel",
+      "green": "Groen",
+      "aqua": "Blauwgroen",
+      "blue": "Blauw",
+      "purple": "Violet",
+      "pink": "Roze"
     }
   },
   "inbox": {

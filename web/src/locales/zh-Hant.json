@@ -442,6 +442,22 @@
     "heic": {
       "converting": "正在將 HEIC 相片轉換為 JPEG（{{count}}）…",
       "failed": "無法轉換的 HEIC 相片：{{count}}。已依原樣附加，可能只能在 Safari 中顯示。"
+    },
+    "text-colour": {
+      "title": "文字顏色",
+      "colour": "顏色",
+      "highlight": "螢光標記",
+      "no-colour": "無顏色",
+      "no-highlight": "無螢光標記",
+      "gray": "灰色",
+      "red": "紅色",
+      "orange": "橙色",
+      "yellow": "黃色",
+      "green": "綠色",
+      "aqua": "青色",
+      "blue": "藍色",
+      "purple": "紫色",
+      "pink": "粉紅色"
     }
   },
   "inbox": {

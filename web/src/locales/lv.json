@@ -401,6 +401,22 @@
     "heic": {
       "converting": "HEIC fotoattēli tiek pārvērsti JPEG formātā ({{count}})…",
       "failed": "HEIC fotoattēli, kurus neizdevās pārvērst: {{count}}. Tie pievienoti tādi, kādi ir, un var būt redzami tikai Safari."
+    },
+    "text-colour": {
+      "title": "Teksta krāsa",
+      "colour": "Krāsa",
+      "highlight": "Izcēlums",
+      "no-colour": "Bez krāsas",
+      "no-highlight": "Bez izcēluma",
+      "gray": "Pelēka",
+      "red": "Sarkana",
+      "orange": "Oranža",
+      "yellow": "Dzeltena",
+      "green": "Zaļa",
+      "aqua": "Zilganzaļa",
+      "blue": "Zila",
+      "purple": "Violeta",
+      "pink": "Rozā"
     }
   },
   "inbox": {

@@ -363,6 +363,22 @@
     "heic": {
       "converting": "HEIC 사진을 JPEG로 변환하는 중({{count}})…",
       "failed": "변환하지 못한 HEIC 사진: {{count}}. 그대로 첨부되었으며 Safari에서만 표시될 수 있습니다."
+    },
+    "text-colour": {
+      "title": "글자 색",
+      "colour": "색상",
+      "highlight": "강조",
+      "no-colour": "색 없음",
+      "no-highlight": "강조 없음",
+      "gray": "회색",
+      "red": "빨간색",
+      "orange": "주황색",
+      "yellow": "노랑",
+      "green": "초록색",
+      "aqua": "청록색",
+      "blue": "파란색",
+      "purple": "보라색",
+      "pink": "분홍"
     }
   },
   "inbox": {

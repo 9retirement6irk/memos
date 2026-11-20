@@ -33,6 +33,7 @@ const dynamicKeyParts: Record<string, readonly string[]> = {
   "attachment-library.tabs.${}": ["audio", "documents", "media"],
   "editor.drawing.color-${}": ["blue", "gray", "green", "ink", "orange", "red", "teal", "violet"],
   "editor.drawing.paper-${}": ["college-ruled", "dot-grid", "graph", "gregg-ruled", "plain", "wide-ruled"],
+  "editor.text-colour.${}": ["aqua", "blue", "gray", "green", "orange", "pink", "purple", "red", "yellow"],
   "journal.activity.${}": ["drawing", "exercise", "family", "friends", "gaming", "music", "reading", "travel", "work"],
   "journal.feeling.${}": [
     "amazed",

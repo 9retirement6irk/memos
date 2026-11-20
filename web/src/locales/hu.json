@@ -363,6 +363,22 @@
     "heic": {
       "converting": "HEIC fotók átalakítása JPEG formátumba ({{count}})…",
       "failed": "Át nem alakítható HEIC fotók: {{count}}. Változatlanul csatoltuk őket, és lehet, hogy csak a Safariban jelennek meg."
+    },
+    "text-colour": {
+      "title": "Szövegszín",
+      "colour": "Szín",
+      "highlight": "Kiemelés",
+      "no-colour": "Nincs szín",
+      "no-highlight": "Nincs kiemelés",
+      "gray": "Szürke",
+      "red": "Piros",
+      "orange": "Narancs",
+      "yellow": "Sárga",
+      "green": "Zöld",
+      "aqua": "Kékeszöld",
+      "blue": "Kék",
+      "purple": "Ibolya",
+      "pink": "Rózsaszín"
     }
   },
   "inbox": {

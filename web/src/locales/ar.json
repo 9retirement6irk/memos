@@ -363,6 +363,22 @@
     "heic": {
       "converting": "جارٍ تحويل صور HEIC إلى JPEG ({{count}})…",
       "failed": "صور HEIC التي تعذّر تحويلها: {{count}}. أُرفقت كما هي وقد لا تظهر إلا في Safari."
+    },
+    "text-colour": {
+      "title": "لون النص",
+      "colour": "اللون",
+      "highlight": "تمييز",
+      "no-colour": "بلا لون",
+      "no-highlight": "بلا تمييز",
+      "gray": "رمادي",
+      "red": "أحمر",
+      "orange": "برتقالي",
+      "yellow": "أصفر",
+      "green": "أخضر",
+      "aqua": "أزرق مخضر",
+      "blue": "أزرق",
+      "purple": "بنفسجي",
+      "pink": "وردي"
     }
   },
   "inbox": {

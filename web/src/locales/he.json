@@ -434,6 +434,22 @@
     "heic": {
       "converting": "ממיר תמונות HEIC ל-JPEG ({{count}})…",
       "failed": "תמונות HEIC שלא ניתן היה להמיר: {{count}}. הן צורפו כמו שהן וייתכן שיוצגו רק ב-Safari."
+    },
+    "text-colour": {
+      "title": "צבע טקסט",
+      "colour": "צבע",
+      "highlight": "הדגשה",
+      "no-colour": "ללא צבע",
+      "no-highlight": "ללא הדגשה",
+      "gray": "אפור",
+      "red": "אדום",
+      "orange": "כתום",
+      "yellow": "צהוב",
+      "green": "ירוק",
+      "aqua": "טורקיז",
+      "blue": "כחול",
+      "purple": "סגול",
+      "pink": "ורוד"
     }
   },
   "inbox": {

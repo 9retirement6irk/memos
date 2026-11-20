@@ -363,6 +363,22 @@
     "heic": {
       "converting": "Fotky HEIC se převádějí na JPEG ({{count}})…",
       "failed": "Fotky HEIC, které se nepodařilo převést: {{count}}. Byly přiloženy tak, jak jsou, a možná se zobrazí jen v Safari."
+    },
+    "text-colour": {
+      "title": "Barva textu",
+      "colour": "Barva",
+      "highlight": "Zvýraznění",
+      "no-colour": "Bez barvy",
+      "no-highlight": "Bez zvýraznění",
+      "gray": "Šedá",
+      "red": "Červená",
+      "orange": "Oranžová",
+      "yellow": "Žlutá",
+      "green": "Zelená",
+      "aqua": "Modrozelená",
+      "blue": "Modrá",
+      "purple": "Fialová",
+      "pink": "Růžová"
     }
   },
   "inbox": {

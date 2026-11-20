@@ -401,6 +401,22 @@
     "heic": {
       "converting": "Se convertesc fotografiile HEIC în JPEG ({{count}})…",
       "failed": "Fotografii HEIC care nu au putut fi convertite: {{count}}. Au fost atașate așa cum sunt și s-ar putea să apară doar în Safari."
+    },
+    "text-colour": {
+      "title": "Culoarea textului",
+      "colour": "Culoare",
+      "highlight": "Evidențiere",
+      "no-colour": "Fără culoare",
+      "no-highlight": "Fără evidențiere",
+      "gray": "Gri",
+      "red": "Roșu",
+      "orange": "Portocaliu",
+      "yellow": "Galben",
+      "green": "Verde",
+      "aqua": "Turcoaz",
+      "blue": "Albastru",
+      "purple": "Violet",
+      "pink": "Roz"
     }
   },
   "inbox": {

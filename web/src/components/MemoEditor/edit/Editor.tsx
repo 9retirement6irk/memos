@@ -12,6 +12,7 @@ import { createController } from "./controller";
 import type { EditorController } from "./types/editorController";
 import "./editor.css";
 import { buildEditorExtensions, type EditorFileOrigin } from "./extensions";
+import { TEXT_COLOURS } from "./textColours";
 
 interface EditorProps {
   className: string;
@@ -76,6 +77,14 @@ const Editor = forwardRef(function Editor(props: EditorProps, ref: React.Forward
         onFiles: (files, origin) => onFilesRef.current(files, origin),
         // Read once, like the rest: the popup keeps the language the composer opened in.
         emojiLabel: t("editor.blocks.emoji"),
+        textColourLabels: {
+          title: t("editor.text-colour.title"),
+          colour: t("editor.text-colour.colour"),
+          highlight: t("editor.text-colour.highlight"),
+          noColour: t("editor.text-colour.no-colour"),
+          noHighlight: t("editor.text-colour.no-highlight"),
+          names: Object.fromEntries(TEXT_COLOURS.map((name) => [name, t(`editor.text-colour.${name}`)])),
+        },
       }),
     [],
   );

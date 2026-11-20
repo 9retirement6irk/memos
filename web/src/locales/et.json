@@ -401,6 +401,22 @@
     "heic": {
       "converting": "HEIC-fotode teisendamine JPEG-iks ({{count}})…",
       "failed": "HEIC-fotod, mida ei õnnestunud teisendada: {{count}}. Need lisati muutmata kujul ja võivad olla nähtavad ainult Safaris."
+    },
+    "text-colour": {
+      "title": "Teksti värv",
+      "colour": "Värv",
+      "highlight": "Esiletõst",
+      "no-colour": "Värvita",
+      "no-highlight": "Esiletõstuta",
+      "gray": "Hall",
+      "red": "Punane",
+      "orange": "Oranž",
+      "yellow": "Kollane",
+      "green": "Roheline",
+      "aqua": "Sinakasroheline",
+      "blue": "Sinine",
+      "purple": "Violetne",
+      "pink": "Roosa"
     }
   },
   "inbox": {
