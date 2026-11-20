@@ -505,7 +505,8 @@
     "succeed-copy-link": "Hivatkozás sikeresen másolva.",
     "update-succeed": "Sikeres frissítés",
     "not-signed-in": "Nem vagy bejelentkezve.",
-    "invalid-datetime": "Érvénytelen dátum és idő. Használd a 2023-12-31 23:59:59 formátumot."
+    "invalid-datetime": "Érvénytelen dátum és idő. Használd a 2023-12-31 23:59:59 formátumot.",
+    "request-failed": "A kérés sikertelen volt (HTTP {{status}}), a Memos nem adott magyarázatot. Lehet, hogy egy Memos előtti proxy vagy ingress utasította el."
   },
   "reference": {
     "no-memos-found": "Nem található jegyzet",

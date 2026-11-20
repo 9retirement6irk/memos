@@ -173,6 +173,10 @@ changes arrive through a daily pull request and reach the image once it's merged
 Memos' own [deployment guide](https://usememos.com/docs/deploy) covers Docker Compose and reverse
 proxies. Use this image in place of `neosmemo/memos`.
 
+**Behind a proxy or ingress:** let through GET, HEAD, POST, PUT, PATCH, DELETE and OPTIONS. Stock
+Memos gets by with GET and POST, but the fork's settings save with PUT and its connections
+disconnect with DELETE. A blocked method shows as an error naming its HTTP status.
+
 ## What it connects to
 
 The fork's extras reach outside your server only when you use them:

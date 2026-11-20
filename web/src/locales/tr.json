@@ -536,7 +536,8 @@
     "succeed-copy-link": "Bağlantı kopyalandı.",
     "update-succeed": "Güncelleme tamamlandı",
     "not-signed-in": "Henüz giriş yapmadın.",
-    "invalid-datetime": "Geçersiz tarih ve saat. Şu biçimi kullan: 2023-12-31 23:59:59."
+    "invalid-datetime": "Geçersiz tarih ve saat. Şu biçimi kullan: 2023-12-31 23:59:59.",
+    "request-failed": "İstek başarısız oldu (HTTP {{status}}) ve Memos bir açıklama vermedi. Memos'un önündeki bir proxy veya ingress isteği reddetmiş olabilir."
   },
   "reference": {
     "no-memos-found": "Not bulunamadı",

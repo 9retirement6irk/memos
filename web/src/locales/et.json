@@ -543,7 +543,8 @@
     "succeed-copy-link": "Link on edukalt kopeeritud.",
     "update-succeed": "Värskendus õnnestus",
     "not-signed-in": "Te pole sisse logitud.",
-    "invalid-datetime": "Vigane kuupäev ja kellaaeg. Kasutage vormingut 2023-12-31 23:59:59."
+    "invalid-datetime": "Vigane kuupäev ja kellaaeg. Kasutage vormingut 2023-12-31 23:59:59.",
+    "request-failed": "Päring ebaõnnestus (HTTP {{status}}) ilma Memose selgituseta. Võib-olla lükkas selle tagasi Memose ees olev puhverserver või ingress."
   },
   "reference": {
     "no-memos-found": "Memosid ei leitud",

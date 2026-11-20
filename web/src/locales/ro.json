@@ -544,7 +544,8 @@
     "succeed-copy-link": "Linkul a fost copiat cu succes.",
     "update-succeed": "Actualizarea a reușit",
     "not-signed-in": "Nu sunteți conectat.",
-    "invalid-datetime": "Dată și oră nevalide. Folosiți formatul 2023-12-31 23:59:59."
+    "invalid-datetime": "Dată și oră nevalide. Folosiți formatul 2023-12-31 23:59:59.",
+    "request-failed": "Cererea a eșuat (HTTP {{status}}) fără vreo explicație de la Memos. Poate un proxy sau ingress din fața Memos a refuzat-o."
   },
   "reference": {
     "no-memos-found": "Nu au fost găsite note",

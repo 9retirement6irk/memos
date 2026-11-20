@@ -584,7 +584,8 @@
     "succeed-copy-link": "複製連結到剪貼簿成功。",
     "update-succeed": "更新成功",
     "not-signed-in": "您尚未登入。",
-    "invalid-datetime": "日期和時間無效。請使用 2023-12-31 23:59:59 格式。"
+    "invalid-datetime": "日期和時間無效。請使用 2023-12-31 23:59:59 格式。",
+    "request-failed": "請求失敗（HTTP {{status}}），Memos 沒有提供說明。可能是 Memos 前面的代理或 Ingress 拒絕了它。"
   },
   "reference": {
     "no-memos-found": "未找到任何備忘錄",

@@ -505,7 +505,8 @@
     "succeed-copy-link": "Link gekopieerd naar klembord.",
     "update-succeed": "Update voltooid",
     "not-signed-in": "Je bent niet ingelogd.",
-    "invalid-datetime": "Ongeldige datum en tijd. Gebruik de notatie 2023-12-31 23:59:59."
+    "invalid-datetime": "Ongeldige datum en tijd. Gebruik de notatie 2023-12-31 23:59:59.",
+    "request-failed": "Het verzoek is mislukt (HTTP {{status}}) zonder uitleg van Memos. Misschien heeft een proxy of ingress vóór Memos het geweigerd."
   },
   "reference": {
     "no-memos-found": "Geen memos gevonden",

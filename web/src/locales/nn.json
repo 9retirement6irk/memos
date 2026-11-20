@@ -607,7 +607,8 @@
     "succeed-copy-link": "Lenkja er kopiert.",
     "update-succeed": "Oppdateringa lukkast",
     "not-signed-in": "Du er ikkje logga inn.",
-    "invalid-datetime": "Ugyldig dato og klokkeslett. Bruk formatet 2023-12-31 23:59:59."
+    "invalid-datetime": "Ugyldig dato og klokkeslett. Bruk formatet 2023-12-31 23:59:59.",
+    "request-failed": "Førespurnaden mislukkast (HTTP {{status}}) utan forklaring frå Memos. Ein proxy eller ingress framfor Memos kan ha avvist han."
   },
   "reference": {
     "no-memos-found": "Ingen notat funne",

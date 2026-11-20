@@ -505,7 +505,8 @@
     "succeed-copy-link": "リンクのコピーに成功しました。",
     "update-succeed": "変更は保存されました",
     "not-signed-in": "サインインしていません。",
-    "invalid-datetime": "日時が無効です。2023-12-31 23:59:59 の形式で入力してください。"
+    "invalid-datetime": "日時が無効です。2023-12-31 23:59:59 の形式で入力してください。",
+    "request-failed": "リクエストが失敗しました（HTTP {{status}}）。Memos からの説明はありません。Memos の前にあるプロキシや Ingress が拒否した可能性があります。"
   },
   "reference": {
     "no-memos-found": "メモが見つかりません",

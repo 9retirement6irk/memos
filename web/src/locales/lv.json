@@ -544,7 +544,8 @@
     "succeed-copy-link": "Saite ir veiksmīgi nokopēta.",
     "update-succeed": "Atjaunināšana izdevās",
     "not-signed-in": "Jūs neesat pierakstījies.",
-    "invalid-datetime": "Nederīgs datums un laiks. Izmantojiet formātu 2023-12-31 23:59:59."
+    "invalid-datetime": "Nederīgs datums un laiks. Izmantojiet formātu 2023-12-31 23:59:59.",
+    "request-failed": "Pieprasījums neizdevās (HTTP {{status}}) bez Memos paskaidrojuma. Iespējams, to noraidīja starpniekserveris vai ingress pirms Memos."
   },
   "reference": {
     "no-memos-found": "Nav atrasta neviena piezīme",

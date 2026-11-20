@@ -500,7 +500,8 @@
     "succeed-copy-link": "Sao chép liên kết thành công.",
     "update-succeed": "Cập nhật thành công",
     "not-signed-in": "Bạn chưa đăng nhập.",
-    "invalid-datetime": "Ngày giờ không hợp lệ. Hãy dùng định dạng 2023-12-31 23:59:59."
+    "invalid-datetime": "Ngày giờ không hợp lệ. Hãy dùng định dạng 2023-12-31 23:59:59.",
+    "request-failed": "Yêu cầu thất bại (HTTP {{status}}) mà Memos không giải thích. Có thể proxy hoặc ingress phía trước Memos đã từ chối nó."
   },
   "reference": {
     "no-memos-found": "Không tìm thấy ghi chú",

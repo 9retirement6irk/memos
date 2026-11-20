@@ -505,7 +505,8 @@
     "succeed-copy-link": "Länk kopierades framgångsrikt.",
     "update-succeed": "Uppdatering lyckades",
     "not-signed-in": "Du är inte inloggad.",
-    "invalid-datetime": "Ogiltigt datum och tid. Använd formatet 2023-12-31 23:59:59."
+    "invalid-datetime": "Ogiltigt datum och tid. Använd formatet 2023-12-31 23:59:59.",
+    "request-failed": "Begäran misslyckades (HTTP {{status}}) utan förklaring från Memos. En proxy eller ingress framför Memos kan ha nekat den."
   },
   "reference": {
     "no-memos-found": "Inga anteckningar hittades",

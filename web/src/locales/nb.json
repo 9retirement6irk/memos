@@ -505,7 +505,8 @@
     "succeed-copy-link": "Link kopiert.",
     "update-succeed": "Oppdatering vellykket",
     "not-signed-in": "Du er ikke logget inn.",
-    "invalid-datetime": "Ugyldig dato og klokkeslett. Bruk formatet 2023-12-31 23:59:59."
+    "invalid-datetime": "Ugyldig dato og klokkeslett. Bruk formatet 2023-12-31 23:59:59.",
+    "request-failed": "Forespørselen mislyktes (HTTP {{status}}) uten forklaring fra Memos. En proxy eller ingress foran Memos kan ha avvist den."
   },
   "reference": {
     "no-memos-found": "Ingen memoer funnet",

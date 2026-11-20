@@ -501,7 +501,8 @@
     "succeed-copy-link": "Link copiado com êxito.",
     "update-succeed": "Atualizado com êxito",
     "not-signed-in": "Você não está conectado.",
-    "invalid-datetime": "Data e hora inválidas. Use o formato 2023-12-31 23:59:59."
+    "invalid-datetime": "Data e hora inválidas. Use o formato 2023-12-31 23:59:59.",
+    "request-failed": "A solicitação falhou (HTTP {{status}}) sem explicação do Memos. Talvez um proxy ou ingress na frente do Memos a tenha recusado."
   },
   "reference": {
     "no-memos-found": "Nenhum memo encontrado",
