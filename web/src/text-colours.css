@@ -1,0 +1,85 @@
+/*
+ * Text colours and highlights in a memo. Markdown has no colour, so an editor that colours
+ * words (GZreader's formatting bar, for one) writes a span with a data attribute, which the
+ * sanitizer keeps (lib/html-sanitize-schema.ts: data-* on span) and nothing else styles:
+ *   <span data-color="red">words</span>          the words' colour
+ *   <span data-highlight="yellow">words</span>   a highlight, a marker's band under the words
+ * Colours: gray, red, orange, yellow, green, aqua, blue, purple, pink; highlights: yellow,
+ * green, blue, pink, orange. Dark themes take lighter shades of the same hues.
+ */
+span[data-color="gray"] {
+  color: #868e96;
+}
+span[data-color="red"] {
+  color: #e03131;
+}
+span[data-color="orange"] {
+  color: #f08c00;
+}
+span[data-color="yellow"] {
+  color: #e0b400;
+}
+span[data-color="green"] {
+  color: #2f9e44;
+}
+span[data-color="aqua"] {
+  color: #0c8599;
+}
+span[data-color="blue"] {
+  color: #1971c2;
+}
+span[data-color="purple"] {
+  color: #7048e8;
+}
+span[data-color="pink"] {
+  color: #d6336c;
+}
+
+:where([data-theme="dark"], [data-theme="aero-dark"]) span[data-color="gray"] {
+  color: #adb5bd;
+}
+:where([data-theme="dark"], [data-theme="aero-dark"]) span[data-color="red"] {
+  color: #ff8787;
+}
+:where([data-theme="dark"], [data-theme="aero-dark"]) span[data-color="orange"] {
+  color: #ffa94d;
+}
+:where([data-theme="dark"], [data-theme="aero-dark"]) span[data-color="yellow"] {
+  color: #ffd43b;
+}
+:where([data-theme="dark"], [data-theme="aero-dark"]) span[data-color="green"] {
+  color: #69db7c;
+}
+:where([data-theme="dark"], [data-theme="aero-dark"]) span[data-color="aqua"] {
+  color: #3bc9db;
+}
+:where([data-theme="dark"], [data-theme="aero-dark"]) span[data-color="blue"] {
+  color: #74c0fc;
+}
+:where([data-theme="dark"], [data-theme="aero-dark"]) span[data-color="purple"] {
+  color: #b197fc;
+}
+:where([data-theme="dark"], [data-theme="aero-dark"]) span[data-color="pink"] {
+  color: #f783ac;
+}
+
+span[data-highlight] {
+  background: linear-gradient(transparent 45%, var(--highlight-color) 45%);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+span[data-highlight="yellow"] {
+  --highlight-color: rgb(255 212 59 / 0.75);
+}
+span[data-highlight="green"] {
+  --highlight-color: rgb(140 233 154 / 0.75);
+}
+span[data-highlight="blue"] {
+  --highlight-color: rgb(116 192 252 / 0.75);
+}
+span[data-highlight="pink"] {
+  --highlight-color: rgb(247 131 172 / 0.75);
+}
+span[data-highlight="orange"] {
+  --highlight-color: rgb(255 169 77 / 0.75);
+}

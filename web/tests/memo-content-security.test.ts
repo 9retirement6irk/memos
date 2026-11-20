@@ -22,10 +22,10 @@ describe("raw HTML sanitization", () => {
     expect(html).not.toMatch(/position:fixed/);
   });
 
-  it("keeps GZreader's colour spans (data attributes, no style)", () => {
-    const html = renderHtml('<p>a <span data-gz-color="red">red</span> and <span data-gz-mark="yellow">marked</span></p>');
-    expect(html).toContain('<span data-gz-color="red">red</span>');
-    expect(html).toContain('<span data-gz-mark="yellow">marked</span>');
+  it("keeps text colour and highlight spans (data attributes, no style)", () => {
+    const html = renderHtml('<p>a <span data-color="red">red</span> and <span data-highlight="yellow">marked</span></p>');
+    expect(html).toContain('<span data-color="red">red</span>');
+    expect(html).toContain('<span data-highlight="yellow">marked</span>');
   });
 
   it("strips scripts and event handlers", () => {
