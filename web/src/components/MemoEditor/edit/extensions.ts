@@ -1,5 +1,6 @@
 import { type Extension, fileHandler, matchToken, type SuggestionAllowContext, scanTags, suggestion } from "@usememos/editor";
 import { emoji } from "@usememos/editor/emoji";
+import { type TextColourLabels, textColourPicker } from "./textColourPicker";
 import type { EditorPosition } from "./types/editorController";
 
 /** The gesture that handed files to the editor: a drop lands at a document position, a paste has none. */
@@ -11,6 +12,8 @@ export interface EditorExtensionsOptions {
   onFiles: (files: File[], origin: EditorFileOrigin) => void;
   /** Accessible name of the emoji popup. */
   emojiLabel: string;
+  /** The formatting toolbar's text colour button and panel; without labels there is none. */
+  textColourLabels?: TextColourLabels;
 }
 
 /**
@@ -52,8 +55,10 @@ export const allowTagSuggestion = ({ excluded, explicit, query, textBefore }: Su
 };
 
 /** What only the composer adds to the memo syntax MemoMarkdown already reads: autocomplete and file handling. */
-export function buildEditorExtensions({ getTags, onFiles, emojiLabel }: EditorExtensionsOptions): Extension[] {
+export function buildEditorExtensions({ getTags, onFiles, emojiLabel, textColourLabels }: EditorExtensionsOptions): Extension[] {
   return [
+    // Text colour and highlight, written as the <span data-color> / <span data-highlight> memos draws.
+    ...(textColourLabels ? [textColourPicker(textColourLabels)] : []),
     // The popup opens exactly where tags are highlighted: the matcher is built
     // from the same scanner as tags(). A pick writes "#work/planning ".
     suggestion({

@@ -465,6 +465,22 @@
     "heic": {
       "converting": "HEIC fotoları JPEG-ə çevrilir ({{count}})…",
       "failed": "Çevrilə bilməyən HEIC fotoları: {{count}}. Olduğu kimi əlavə edildi və yalnız Safari-də görünə bilər."
+    },
+    "text-colour": {
+      "title": "Mətnin rəngi",
+      "colour": "Rəng",
+      "highlight": "Vurğulama",
+      "no-colour": "Rəngsiz",
+      "no-highlight": "Vurğulamasız",
+      "gray": "Boz",
+      "red": "Qırmızı",
+      "orange": "Narıncı",
+      "yellow": "Sarı",
+      "green": "Yaşıl",
+      "aqua": "Firuzəyi",
+      "blue": "Mavi",
+      "purple": "Bənövşəyi",
+      "pink": "Çəhrayı"
     }
   },
   "inbox": {

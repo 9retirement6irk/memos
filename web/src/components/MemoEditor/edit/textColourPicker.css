@@ -1,0 +1,50 @@
+/* The text colour panel beside the formatting toolbar (textColourPicker.ts). Its surface, border and
+   font come from editor.css's rule for the editor's popups, so it matches the toolbar in every theme. */
+.memo-colour-panel {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 6px;
+}
+.memo-colour-row {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.memo-colour-title {
+  min-width: 5.5rem;
+  padding-inline: 4px 8px;
+  font-size: 12px;
+  color: var(--mbe-muted);
+}
+.memo-colour-swatch {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--mbe-text);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.memo-colour-swatch:hover {
+  background: var(--mbe-hover);
+}
+.memo-colour-swatch[aria-pressed="true"] {
+  border-color: var(--mbe-accent);
+}
+.memo-colour-swatch:focus-visible {
+  outline: 2px solid var(--mbe-accent);
+  outline-offset: 1px;
+}
+/* "None": the sample struck through, in the muted colour. */
+.memo-colour-swatch[data-value=""] .memo-colour-sample {
+  color: var(--mbe-muted);
+  text-decoration: line-through;
+}

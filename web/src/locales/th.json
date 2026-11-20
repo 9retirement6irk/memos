@@ -363,6 +363,22 @@
     "heic": {
       "converting": "กำลังแปลงรูป HEIC เป็น JPEG ({{count}})…",
       "failed": "รูป HEIC ที่แปลงไม่ได้: {{count}} แนบไว้ตามเดิมและอาจแสดงได้เฉพาะใน Safari"
+    },
+    "text-colour": {
+      "title": "สีข้อความ",
+      "colour": "สี",
+      "highlight": "ไฮไลต์",
+      "no-colour": "ไม่มีสี",
+      "no-highlight": "ไม่มีไฮไลต์",
+      "gray": "เทา",
+      "red": "แดง",
+      "orange": "ส้ม",
+      "yellow": "เหลือง",
+      "green": "เขียว",
+      "aqua": "เขียวอมฟ้า",
+      "blue": "น้ำเงิน",
+      "purple": "ม่วง",
+      "pink": "ชมพู"
     }
   },
   "inbox": {

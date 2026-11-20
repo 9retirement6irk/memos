@@ -116,6 +116,13 @@ Each page is still an ordinary `.canvas.png` attachment, so stock Memos shows ev
 A PDF attached to a memo shows in the memo, one page at a time, with page turning, open and
 download. PDFs load only when they scroll into view.
 
+### Text colours and highlights
+
+The formatting toolbar has a colour button (after the link button): nine text colours and five
+highlights, or none. They're saved in the memo as `<span data-color="red">…</span>` and
+`<span data-highlight="yellow">…</span>`, the same as GZreader writes. Dark themes show lighter
+shades of the same colours. Stock Memos keeps the spans and shows the words without colour.
+
 ### HEIC photos
 
 Photos from an iPhone or Mac are often HEIC, which only Safari can show. The editor converts

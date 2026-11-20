@@ -363,6 +363,22 @@
     "heic": {
       "converting": "Mengonversi foto HEIC ke JPEG ({{count}})…",
       "failed": "Foto HEIC yang tidak dapat dikonversi: {{count}}. Foto dilampirkan apa adanya dan mungkin hanya tampil di Safari."
+    },
+    "text-colour": {
+      "title": "Warna teks",
+      "colour": "Warna",
+      "highlight": "Sorotan",
+      "no-colour": "Tanpa warna",
+      "no-highlight": "Tanpa sorotan",
+      "gray": "Abu-abu",
+      "red": "Merah",
+      "orange": "Oranye",
+      "yellow": "Kuning",
+      "green": "Hijau",
+      "aqua": "Hijau kebiruan",
+      "blue": "Biru",
+      "purple": "Ungu",
+      "pink": "Merah muda"
     }
   },
   "inbox": {

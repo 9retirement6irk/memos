@@ -363,6 +363,22 @@
     "heic": {
       "converting": "Pretvarjanje fotografij HEIC v JPEG ({{count}})…",
       "failed": "Fotografije HEIC, ki jih ni bilo mogoče pretvoriti: {{count}}. Priložene so takšne, kot so, in so morda vidne samo v Safariju."
+    },
+    "text-colour": {
+      "title": "Barva besedila",
+      "colour": "Barva",
+      "highlight": "Označevanje",
+      "no-colour": "Brez barve",
+      "no-highlight": "Brez označevanja",
+      "gray": "Siva",
+      "red": "Rdeča",
+      "orange": "Oranžna",
+      "yellow": "Rumena",
+      "green": "Zelena",
+      "aqua": "Modrozelena",
+      "blue": "Modra",
+      "purple": "Vijolična",
+      "pink": "Rožnata"
     }
   },
   "inbox": {

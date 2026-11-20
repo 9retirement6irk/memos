@@ -399,6 +399,22 @@
     "heic": {
       "converting": "正在将 HEIC 照片转换为 JPEG（{{count}}）…",
       "failed": "无法转换的 HEIC 照片：{{count}}。已按原样附加，可能只能在 Safari 中显示。"
+    },
+    "text-colour": {
+      "title": "文字颜色",
+      "colour": "颜色",
+      "highlight": "高亮",
+      "no-colour": "无颜色",
+      "no-highlight": "无高亮",
+      "gray": "灰色",
+      "red": "红色",
+      "orange": "橙色",
+      "yellow": "黄色",
+      "green": "绿色",
+      "aqua": "青色",
+      "blue": "蓝色",
+      "purple": "紫色",
+      "pink": "粉色"
     }
   },
   "inbox": {

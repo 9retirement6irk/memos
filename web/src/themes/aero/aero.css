@@ -1423,6 +1423,10 @@
   & .mbe-icon[data-aero-icon="code"] {
     background-image: url("./icons/notepad_2.png");
   }
+  /* The composer's text colour button (MemoEditor/edit/textColourPicker.ts). */
+  & .mbe-icon[data-aero-icon="textColour"] {
+    background-image: url("./icons/mspaint_2.png");
+  }
   /* Space icon picker. */
   & svg.lucide:is(.lucide-briefcase, .lucide-briefcase-business) {
     --vi: url("./icons/netprof_3007.png");

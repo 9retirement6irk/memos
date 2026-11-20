@@ -363,6 +363,22 @@
     "heic": {
       "converting": "S'estan convertint les fotos HEIC a JPEG ({{count}})…",
       "failed": "Fotos HEIC que no s'han pogut convertir: {{count}}. S'han adjuntat tal com són i potser només es veuran a Safari."
+    },
+    "text-colour": {
+      "title": "Color del text",
+      "colour": "Color",
+      "highlight": "Ressaltat",
+      "no-colour": "Sense color",
+      "no-highlight": "Sense ressaltat",
+      "gray": "Gris",
+      "red": "Vermell",
+      "orange": "Taronja",
+      "yellow": "Groc",
+      "green": "Verd",
+      "aqua": "Verd blavós",
+      "blue": "Blau",
+      "purple": "Violeta",
+      "pink": "Rosa"
     }
   },
   "inbox": {

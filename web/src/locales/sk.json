@@ -401,6 +401,22 @@
     "heic": {
       "converting": "Fotky HEIC sa konvertujú na JPEG ({{count}})…",
       "failed": "Fotky HEIC, ktoré sa nepodarilo skonvertovať: {{count}}. Boli priložené tak, ako sú, a možno sa zobrazia len v Safari."
+    },
+    "text-colour": {
+      "title": "Farba textu",
+      "colour": "Farba",
+      "highlight": "Zvýraznenie",
+      "no-colour": "Bez farby",
+      "no-highlight": "Bez zvýraznenia",
+      "gray": "Sivá",
+      "red": "Červená",
+      "orange": "Oranžová",
+      "yellow": "Žltá",
+      "green": "Zelená",
+      "aqua": "Modrozelená",
+      "blue": "Modrá",
+      "purple": "Fialová",
+      "pink": "Ružová"
     }
   },
   "inbox": {

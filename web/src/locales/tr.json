@@ -394,6 +394,22 @@
     "heic": {
       "converting": "HEIC fotoğraflar JPEG'e dönüştürülüyor ({{count}})…",
       "failed": "Dönüştürülemeyen HEIC fotoğraflar: {{count}}. Oldukları gibi eklendiler ve yalnızca Safari'de görünebilirler."
+    },
+    "text-colour": {
+      "title": "Metin rengi",
+      "colour": "Renk",
+      "highlight": "Vurgu",
+      "no-colour": "Renksiz",
+      "no-highlight": "Vurgusuz",
+      "gray": "Gri",
+      "red": "Kırmızı",
+      "orange": "Turuncu",
+      "yellow": "Sarı",
+      "green": "Yeşil",
+      "aqua": "Turkuaz",
+      "blue": "Mavi",
+      "purple": "Mor",
+      "pink": "Pembe"
     }
   },
   "inbox": {

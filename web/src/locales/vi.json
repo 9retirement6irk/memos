@@ -363,6 +363,22 @@
     "heic": {
       "converting": "Đang chuyển ảnh HEIC sang JPEG ({{count}})…",
       "failed": "Ảnh HEIC không chuyển được: {{count}}. Ảnh được đính kèm nguyên trạng và có thể chỉ hiển thị trong Safari."
+    },
+    "text-colour": {
+      "title": "Màu chữ",
+      "colour": "Màu",
+      "highlight": "Tô sáng",
+      "no-colour": "Không màu",
+      "no-highlight": "Không tô sáng",
+      "gray": "Xám",
+      "red": "Đỏ",
+      "orange": "Cam",
+      "yellow": "Vàng",
+      "green": "Lục",
+      "aqua": "Xanh mòng két",
+      "blue": "Lam",
+      "purple": "Tím",
+      "pink": "Hồng"
     }
   },
   "inbox": {

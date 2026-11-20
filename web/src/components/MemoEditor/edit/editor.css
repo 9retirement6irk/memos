@@ -134,7 +134,7 @@
 /* The editor portals its own UI outside the composer. Its menus, toolbars and cards take the
    @usememos/ui popup surface and its tooltips the package's tooltip, so they line up with the
    app's own popups, without changing document typography or package internals. */
-.mbe-ui:is(.mbe-menu, .mbe-toolbar, .mbe-image-toolbar, .mbe-link-card, .mbe-input-popover) {
+.mbe-ui:is(.mbe-menu, .mbe-toolbar, .mbe-image-toolbar, .mbe-link-card, .mbe-input-popover, .memo-colour-panel) {
   border: 1px solid var(--mu-edge);
   border-radius: var(--mu-radius-xl);
   background: var(--mu-surface);
