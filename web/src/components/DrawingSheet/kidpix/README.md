@@ -261,10 +261,13 @@ also cannot be resized, and text and stickers already pressed in are paint like 
   have no name and the marks from the ampersand on are taken three back. Not heard in the original.
 - A sticker goes down in a frame: drag inside to move it, a round corner to resize it, the square
   corners to flip it left to right or top to bottom; the arrow keys nudge it, Delete removes it.
-  As in Kid Pix, every sticker stays loose over the paint until it is flattened: a press on the
-  paper or a change of tool only lets it out of its frame, and the hand or the Stickers tool picks
-  any of them up again. Flatten Stickers in the tray, Enter on the one in the frame, or leaving the
-  mode makes them paint. Import Sticker brings in a picture of one's own at its own size.
+  Every sticker stays loose over the paint, as in Kid Pix: a press on the paper with the Text, Grab
+  or Stickers tool only lets it out of its frame, and the hand or the Stickers tool picks any of
+  them up again. Unlike Kid Pix, paint goes on top: the first press with a paint tool (pencil,
+  brush or spray can, bucket, mixer, eraser, rubber stamp) sticks every loose sticker and text box
+  into the picture, as one undo step that lifts them off loose again. Flatten Stickers in the tray,
+  Enter on the one in the frame, or leaving the mode also makes them paint. Import Sticker brings
+  in a picture of one's own at its own size.
 - A text box left is loose in the same way, and the Text tool opens it again to be typed on, in
   the font, size, style and color it had; the hand moves it, and in its frame it can be flipped or
   made wider or narrower: its words wrap again to the new width and the letters keep their size,
