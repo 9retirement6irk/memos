@@ -1,208 +1,137 @@
-// Renders the Kid Pix stickers (public/kidpix/stickers/<slug>.bin: small Flash movies, see
-// src/components/DrawingSheet/kidpix/swf.ts) to PNG pictures, for apps that can't read Flash:
+// Writes the Kid Pix stickers (public/kidpix/stickers/<slug>.bin: small Flash movies, see
+// src/components/DrawingSheet/kidpix/swf.ts) as SVG pictures, for apps that can't read Flash:
 // GZreader's drawing screen on a Kindle fetches them from this server.
 //
-//   node scripts/render-kidpix-stickers.mjs [--check]
+//   node scripts/render-kidpix-stickers.mjs [--check] [--compare]
 //
-// Writes public/kidpix/sticker-png/<slug>/<n>.png (n from 0, in the library's order), each
-// sticker at twice its frame's size (crisp on a 300 dpi screen) on a transparent ground, and
-// public/kidpix/sticker-png/index.json:
-//   { version, scale, categories: [{ slug, name, items: [{ name, file, width, height }] }] }
-// width and height are the frame's own size in px (what the sticker is at 1x).
-// --check: render, and fail if anything differs from what's there (CI-style).
-// Uses swf.ts itself (types stripped by Node) in a headless Chromium (Playwright).
+// Writes public/kidpix/sticker-svg/<slug>/<n>.svgz (n from 0, in the library's order): each
+// sticker's shapes, gradients and outlines as swf.ts reads them (its `svg()`, what `draw()`
+// paints), at the movie's frame size, on a clear ground, gzipped (an .svgz file: as plain SVG text
+// the 935 stickers are 20 MB, gzipped 5 MB, about the size of the Flash files); and
+// public/kidpix/sticker-svg/index.json:
+//   { version, categories: [{ slug, name, items: [{ name, file, width, height }] }] }
+// width and height are the frame's size in px.
+// --check: fail if anything differs from what's there (each sticker compared unzipped).
+// --compare: also draw each SVG and swf.ts's canvas drawing in headless Chromium (Playwright)
+// and fail if more than 5% of a sticker's pixels differ (a pixel a pixel away counts as the same:
+// anti-aliased edges fall a little differently). The most that differ, 4% of a flag, are the hairline
+// seams the canvas leaves between two shapes that touch, which the SVG doesn't have.
 
 import { createHash } from "node:crypto";
-import { mkdir, readdir, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { stripTypeScriptTypes } from "node:module";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { deflateSync } from "node:zlib";
-import { chromium } from "@playwright/test";
+import { gunzipSync, gzipSync } from "node:zlib";
 
 const WEB = join(dirname(fileURLToPath(import.meta.url)), "..");
 const KIDPIX = join(WEB, "src/components/DrawingSheet/kidpix");
-const OUT = join(WEB, "public/kidpix/sticker-png");
-const SCALE = 2;
+const OUT = join(WEB, "public/kidpix/sticker-svg");
 const check = process.argv.includes("--check");
+const compare = process.argv.includes("--compare");
 
-// ---------------------------------------------------------------- 256-colour PNGs
-// A sticker's anti-aliased edges give it thousands of colours; 256 (an octree over red, green,
-// blue and alpha) look the same and make the files about a quarter of the size of full colour.
-
-const MAX_DEPTH = 5;
-const childIndex = (r, g, b, a, level) => {
-  const shift = 7 - level;
-  return (((r >> shift) & 1) << 3) | (((g >> shift) & 1) << 2) | (((b >> shift) & 1) << 1) | ((a >> shift) & 1);
-};
-
-const palettize = (rgba) => {
-  const root = { children: [], count: 0, r: 0, g: 0, b: 0, a: 0, leaf: false };
-  const levels = Array.from({ length: MAX_DEPTH }, () => []);
-  let leaves = 0;
-  for (let i = 0; i < rgba.length; i += 4) {
-    const r = rgba[i],
-      g = rgba[i + 1],
-      b = rgba[i + 2],
-      a = rgba[i + 3];
-    if (a === 0) continue; // (fully clear: palette entry 0)
-    let node = root;
-    for (let level = 0; level < MAX_DEPTH && !node.leaf; level++) {
-      const k = childIndex(r, g, b, a, level);
-      if (!node.children[k]) {
-        node.children[k] = { children: [], count: 0, r: 0, g: 0, b: 0, a: 0, leaf: level === MAX_DEPTH - 1 };
-        if (node.children[k].leaf) leaves++;
-        else levels[level + 1]?.push(node.children[k]);
-        if (level === 0) levels[0].push(node.children[k]);
-      }
-      node = node.children[k];
-    }
-    node.count++;
-    node.r += r;
-    node.g += g;
-    node.b += b;
-    node.a += a;
-  }
-  // fold the deepest nodes into their parents until 255 colours are left (one more for clear)
-  const fold = (node) => {
-    let n = 0;
-    for (const c of node.children) {
-      if (!c) continue;
-      node.count += c.count;
-      node.r += c.r;
-      node.g += c.g;
-      node.b += c.b;
-      node.a += c.a;
-      n++;
-    }
-    node.children = [];
-    node.leaf = true;
-    return n;
-  };
-  for (let level = MAX_DEPTH - 1; level >= 0 && leaves > 255; level--) {
-    const nodes = levels[level].filter((nd) => !nd.leaf).sort((x, y) => x.count - y.count);
-    for (const nd of nodes) {
-      if (leaves <= 255) break;
-      leaves -= fold(nd) - 1;
-    }
-  }
-  const palette = [[0, 0, 0, 0]];
-  const number = (node) => {
-    if (node.leaf) {
-      node.index = palette.length;
-      const n = Math.max(1, node.count);
-      palette.push([Math.round(node.r / n), Math.round(node.g / n), Math.round(node.b / n), Math.round(node.a / n)]);
-      return;
-    }
-    for (const c of node.children) if (c) number(c);
-  };
-  for (const c of root.children) if (c) number(c);
-  const indexed = new Uint8Array(rgba.length / 4);
-  for (let i = 0, p = 0; i < rgba.length; i += 4, p++) {
-    const a = rgba[i + 3];
-    if (a === 0) continue;
-    let node = root;
-    for (let level = 0; !node.leaf; level++) node = node.children[childIndex(rgba[i], rgba[i + 1], rgba[i + 2], a, level)];
-    indexed[p] = node.index;
-  }
-  return { palette, indexed };
-};
-
-const CRC_TABLE = Array.from({ length: 256 }, (_, n) => {
-  let c = n;
-  for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1;
-  return c >>> 0;
-});
-const crc32 = (buf) => {
-  let c = 0xffffffff;
-  for (const byte of buf) c = CRC_TABLE[(c ^ byte) & 0xff] ^ (c >>> 8);
-  return (c ^ 0xffffffff) >>> 0;
-};
-const chunk = (type, data) => {
-  const head = Buffer.alloc(8);
-  head.writeUInt32BE(data.length, 0);
-  head.write(type, 4, "ascii");
-  const crc = Buffer.alloc(4);
-  crc.writeUInt32BE(crc32(Buffer.concat([head.subarray(4), data])), 0);
-  return Buffer.concat([head, data, crc]);
-};
-
-/** RGBA pixels as an indexed PNG (palette + transparency). */
-const png8 = (rgba, width, height) => {
-  const { palette, indexed } = palettize(rgba);
-  const ihdr = Buffer.alloc(13);
-  ihdr.writeUInt32BE(width, 0);
-  ihdr.writeUInt32BE(height, 4);
-  ihdr[8] = 8; // bit depth
-  ihdr[9] = 3; // indexed colour
-  const rows = Buffer.alloc((width + 1) * height);
-  for (let y = 0; y < height; y++) indexed.subarray(y * width, (y + 1) * width).forEach((v, x) => (rows[y * (width + 1) + 1 + x] = v));
-  return Buffer.concat([
-    Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),
-    chunk("IHDR", ihdr),
-    chunk("PLTE", Buffer.from(palette.flatMap(([r, g, b]) => [r, g, b]))),
-    chunk("tRNS", Buffer.from(palette.map(([, , , a]) => a))),
-    chunk("IDAT", deflateSync(rows, { level: 9 })),
-    chunk("IEND", Buffer.alloc(0)),
-  ]);
-};
-
-// ---------------------------------------------------------------- rendering
-
-// swf.ts and library.ts as plain scripts: their exports become globals of the page
-const asScript = async (file) => {
+// library.ts and swf.ts as plain modules (they import nothing)
+const load = async (file) => {
   const js = stripTypeScriptTypes(await readFile(join(KIDPIX, file), "utf8"), { mode: "transform" });
-  return js.replace(/^export const /gm, "window.").replace(/^export (interface|type) /gm, "$1 ");
+  return import(`data:text/javascript;base64,${Buffer.from(js).toString("base64")}`);
 };
+const { KIDPIX_STICKERS } = await load("library.ts");
+const { readStickers } = await load("swf.ts");
 
-const browser = await chromium.launch();
-const page = await browser.newPage();
-await page.setContent("<!doctype html><title>stickers</title>");
-await page.addScriptTag({ content: await asScript("library.ts") });
-await page.addScriptTag({ content: await asScript("swf.ts") });
-
-const categories = await page.evaluate(() => window.KIDPIX_STICKERS.map((c) => ({ slug: c.slug, name: c.name, items: c.items })));
-const index = { version: 1, scale: SCALE, categories: [] };
-const files = new Map(); // relative path → bytes
-for (const cat of categories) {
+const index = { version: 1, categories: [] };
+const files = new Map(); // relative path → text
+const movies = []; // { file, b64 } for --compare
+for (const cat of KIDPIX_STICKERS) {
   const bytes = await readFile(join(WEB, "public/kidpix/stickers", `${cat.slug}.bin`));
-  const rendered = await page.evaluate(
-    async ({ b64, lengths, scale }) => {
-      const raw = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
-      const pictures = window.readStickers(raw, lengths);
-      const out = [];
-      for (const p of pictures) {
-        const w = Math.max(1, Math.round(p.width)),
-          h = Math.max(1, Math.round(p.height));
-        const canvas = new OffscreenCanvas(w * scale, h * scale);
-        const ctx = canvas.getContext("2d");
-        ctx.scale(scale, scale);
-        p.draw(ctx);
-        const px = ctx.getImageData(0, 0, w * scale, h * scale).data;
-        let str = "";
-        for (let i = 0; i < px.length; i += 0x8000) str += String.fromCharCode(...px.subarray(i, i + 0x8000));
-        out.push({ width: w, height: h, rgba: btoa(str) });
-      }
-      return out;
-    },
-    { b64: bytes.toString("base64"), lengths: cat.items.map((it) => it[1]), scale: SCALE },
+  const pictures = readStickers(
+    bytes,
+    cat.items.map((it) => it[1]),
   );
-  const items = rendered.map((r, n) => {
-    const file = `${cat.slug}/${n}.png`;
-    files.set(file, png8(Buffer.from(r.rgba, "base64"), r.width * SCALE, r.height * SCALE));
-    return { name: cat.items[n][0], file, width: r.width, height: r.height };
+  let offset = 0;
+  const items = pictures.map((picture, n) => {
+    const file = `${cat.slug}/${n}.svgz`;
+    files.set(file, `${picture.svg()}\n`);
+    movies.push({ file, b64: bytes.subarray(offset, offset + cat.items[n][1]).toString("base64") });
+    offset += cat.items[n][1];
+    return { name: cat.items[n][0], file, width: Math.max(1, Math.round(picture.width)), height: Math.max(1, Math.round(picture.height)) };
   });
   index.categories.push({ slug: cat.slug, name: cat.name, items });
 }
-await browser.close();
-files.set("index.json", Buffer.from(`${JSON.stringify(index, null, 1)}\n`));
+files.set("index.json", `${JSON.stringify(index, null, 1)}\n`);
 
-const digest = (b) => createHash("sha256").update(b).digest("hex");
+if (compare) {
+  const { chromium } = await import("@playwright/test");
+  const browser = await chromium.launch();
+  const page = await browser.newPage();
+  await page.setContent("<!doctype html><title>stickers</title>");
+  const swf = stripTypeScriptTypes(await readFile(join(KIDPIX, "swf.ts"), "utf8"), { mode: "transform" });
+  await page.addScriptTag({ content: swf.replace(/^export const /gm, "window.") });
+  let worst = 0;
+  let worstFile = "";
+  for (const { file, b64 } of movies) {
+    const share = await page.evaluate(
+      async ({ b64, svg }) => {
+        const raw = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
+        const p = window.readSwfPicture(raw);
+        const w = Math.max(1, Math.round(p.width)) * 2;
+        const h = Math.max(1, Math.round(p.height)) * 2;
+        const a = new OffscreenCanvas(w, h).getContext("2d");
+        a.scale(2, 2);
+        p.draw(a);
+        const url = URL.createObjectURL(new Blob([svg], { type: "image/svg+xml" }));
+        const img = new Image();
+        img.src = url;
+        await img.decode();
+        const b = new OffscreenCanvas(w, h).getContext("2d");
+        b.drawImage(img, 0, 0, w, h);
+        URL.revokeObjectURL(url);
+        const pa = a.getImageData(0, 0, w, h).data;
+        const pb = b.getImageData(0, 0, w, h).data;
+        // a pixel of the SVG's matches when the canvas has a close one at most a pixel away
+        // (thin outlines' anti-aliased edges fall a little differently)
+        const near = (i, j) =>
+          Math.max(
+            Math.abs(pa[j] - pb[i]),
+            Math.abs(pa[j + 1] - pb[i + 1]),
+            Math.abs(pa[j + 2] - pb[i + 2]),
+            Math.abs(pa[j + 3] - pb[i + 3]),
+          ) <= 64;
+        let off = 0;
+        for (let y = 0; y < h; y++) {
+          for (let x = 0; x < w; x++) {
+            const i = (y * w + x) * 4;
+            let ok = false;
+            for (let dy = -1; dy <= 1 && !ok; dy++) {
+              for (let dx = -1; dx <= 1 && !ok; dx++) {
+                const yy = y + dy;
+                const xx = x + dx;
+                if (yy >= 0 && yy < h && xx >= 0 && xx < w) ok = near(i, (yy * w + xx) * 4);
+              }
+            }
+            if (!ok) off++;
+          }
+        }
+        return off / (w * h);
+      },
+      { b64, svg: files.get(file) },
+    );
+    if (share > worst) {
+      worst = share;
+      worstFile = file;
+    }
+  }
+  await browser.close();
+  console.log(`compared with the canvas drawing: at most ${(worst * 100).toFixed(2)}% of pixels differ (${worstFile})`);
+  if (worst > 0.05) process.exit(1);
+}
+
+const digest = (text) => createHash("sha256").update(text).digest("hex");
 if (check) {
   let bad = 0;
-  for (const [file, data] of files) {
-    const have = await readFile(join(OUT, file)).catch(() => null);
-    if (!have || digest(have) !== digest(data)) {
+  for (const [file, text] of files) {
+    const raw = await readFile(join(OUT, file)).catch(() => null);
+    const have = raw && (file.endsWith(".svgz") ? gunzipSync(raw).toString("utf8") : raw.toString("utf8"));
+    if (have === null || digest(have) !== digest(text)) {
       bad++;
       console.error(`differs: ${file}`);
     }
@@ -211,10 +140,9 @@ if (check) {
   console.log(`${files.size - 1} sticker pictures match`);
 } else {
   await rm(OUT, { recursive: true, force: true });
-  for (const [file, data] of files) {
+  for (const [file, text] of files) {
     await mkdir(dirname(join(OUT, file)), { recursive: true });
-    await writeFile(join(OUT, file), data);
+    await writeFile(join(OUT, file), file.endsWith(".svgz") ? gzipSync(text, { level: 9 }) : text);
   }
-  const n = (await readdir(OUT)).length - 1;
-  console.log(`${files.size - 1} sticker pictures in ${n} categories written to public/kidpix/sticker-png/`);
+  console.log(`${files.size - 1} stickers in ${index.categories.length} categories written to public/kidpix/sticker-svg/`);
 }

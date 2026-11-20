@@ -35,6 +35,8 @@ export interface SwfPicture {
   height: number;
   /** Draws the picture with its frame's top-left corner at the origin. */
   draw: (ctx: CanvasRenderingContext2D) => void;
+  /** The same picture as an SVG document (what `draw` paints, shape for shape), for apps that can't read Flash. */
+  svg: () => string;
   /** How many shapes the frame places; for tests. */
   shapeCount: number;
 }
@@ -308,6 +310,100 @@ const drawShape = (ctx: CanvasRenderingContext2D, shape: PlacedShape) => {
   ctx.restore();
 };
 
+// ---------------------------------------------------------------- as SVG
+
+/** A number for SVG: at most `places` decimals, no trailing zeros, no leading zero ("0.5" → ".5"). */
+const num = (value: number, places = 2) => {
+  let text = value.toFixed(places);
+  if (text.includes(".")) text = text.replace(/\.?0+$/, "");
+  if (text === "-0") return "0";
+  return text.replace(/^(-?)0\./, "$1.");
+};
+const hex = ([r, g, b]: Rgba) => `#${[r, g, b].map((v) => v.toString(16).padStart(2, "0")).join("")}`;
+const svgMatrix = ([a, b, c, d, tx, ty]: Matrix) =>
+  `matrix(${num(a, 5)} ${num(b, 5)} ${num(c, 5)} ${num(d, 5)} ${num(tx / TWIP)} ${num(ty / TWIP)})`;
+
+/**
+ * `text` (a number) after `out`, as short as SVG allows: no space before a minus sign, nor before
+ * ".5" when the number before already has its dot ("1.2.5" is 1.2 then .5).
+ */
+const append = (out: string, text: string) => {
+  const joined = /[\d.]$/.test(out) && !text.startsWith("-") && !(text.startsWith(".") && /\.\d*$/.test(out));
+  return out + (joined ? " " : "") + text;
+};
+
+/** A length in twips as SVG px, to a tenth of a pixel (a twip is a twentieth: too fine to see). */
+const px = (twips: number) => Math.round(twips / 2) / 10;
+
+/**
+ * The path `trace` draws, as SVG path data, to a tenth of a pixel. Moves are relative, each from the
+ * last point as written (so rounding never adds up along a path), and a command letter isn't repeated.
+ */
+const pathData = (edges: readonly Edge[], closed: boolean) => {
+  let out = "";
+  let last = "";
+  let [lastX, lastY] = [Number.NaN, Number.NaN];
+  let [x, y] = [0, 0];
+  const put = (cmd: string, values: number[]) => {
+    if (cmd !== last) out += cmd;
+    for (const v of values) out = append(out, num(v, 1));
+    last = cmd;
+  };
+  // (steps between points already rounded to tenths, worked out in tenths: no float drift)
+  const step = (to: number, from: number) => Math.round((to - from) * 10) / 10;
+  for (const edge of edges) {
+    if (edge[0] !== lastX || edge[1] !== lastY) {
+      if (closed && last) put("z", []);
+      [x, y] = [px(edge[0]), px(edge[1])];
+      put("M", [x, y]);
+    }
+    const [ex, ey] = [px(edge[edge.length - 2]), px(edge[edge.length - 1])];
+    if (edge.length === 4) {
+      put("l", [step(ex, x), step(ey, y)]);
+    } else {
+      put("q", [step(px(edge[2]), x), step(px(edge[3]), y), step(ex, x), step(ey, y)]);
+    }
+    [x, y] = [ex, ey];
+    lastX = edge[edge.length - 2];
+    lastY = edge[edge.length - 1];
+  }
+  if (closed && out) out += "z";
+  return out;
+};
+
+/** What `drawShape` paints, as SVG elements (gradients get ids from `nextId`). */
+const svgShape = (shape: PlacedShape, nextId: () => string, defs: string[]) => {
+  const parts: string[] = [];
+  for (const fill of shape.fills) {
+    const d = fill.outlines.map((outline) => pathData(outline, true)).join("");
+    if (!d) continue;
+    let paint: string;
+    if (fill.paint.kind === "solid") {
+      paint = hex(fill.paint.color);
+    } else {
+      // The gradient is placed by its own matrix inside the shape's (as `drawShape` transforms before creating it).
+      const id = nextId();
+      const stops = fill.paint.stops.map(([offset, color]) => `<stop offset="${num(offset, 4)}" stop-color="${hex(color)}"/>`).join("");
+      const common = `id="${id}" gradientUnits="userSpaceOnUse" gradientTransform="${svgMatrix(fill.paint.matrix)}"`;
+      defs.push(
+        fill.paint.kind === "linear"
+          ? `<linearGradient ${common} x1="${num(-GRADIENT_REACH)}" y1="0" x2="${num(GRADIENT_REACH)}" y2="0">${stops}</linearGradient>`
+          : `<radialGradient ${common} cx="0" cy="0" r="${num(GRADIENT_REACH)}" fx="0" fy="0">${stops}</radialGradient>`,
+      );
+      paint = `url(#${id})`;
+    }
+    parts.push(`<path fill="${paint}" fill-rule="evenodd" d="${d}"/>`);
+  }
+  for (const stroke of shape.strokes) {
+    const d = pathData(stroke.edges, false);
+    if (!d) continue;
+    parts.push(
+      `<path fill="none" stroke="${hex(stroke.color)}" stroke-width="${num(Math.max(1, stroke.width / TWIP))}" stroke-linecap="round" stroke-linejoin="round" d="${d}"/>`,
+    );
+  }
+  return parts.length ? `<g transform="${svgMatrix(shape.matrix)}">${parts.join("")}</g>` : "";
+};
+
 /** Reads one sticker. Throws on a movie that uses anything but plain shapes. */
 export const readSwfPicture = (bytes: Uint8Array): SwfPicture => {
   if (bytes[0] !== 0x46 || bytes[1] !== 0x57 || bytes[2] !== 0x53) throw new Error("Not an uncompressed Flash movie");
@@ -369,6 +465,18 @@ export const readSwfPicture = (bytes: Uint8Array): SwfPicture => {
       ctx.translate(-xMin / TWIP, -yMin / TWIP);
       for (const picture of pictures) drawShape(ctx, picture);
       ctx.restore();
+    },
+    svg: () => {
+      let n = 0;
+      const defs: string[] = [];
+      const body = pictures.map((picture) => svgShape(picture, () => `g${n++}`, defs)).join("");
+      const w = num((xMax - xMin) / TWIP);
+      const h = num((yMax - yMin) / TWIP);
+      return (
+        `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">` +
+        (defs.length ? `<defs>${defs.join("")}</defs>` : "") +
+        `<g transform="translate(${num(-xMin / TWIP)} ${num(-yMin / TWIP)})">${body}</g></svg>`
+      );
     },
   };
 };
