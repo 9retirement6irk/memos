@@ -90,6 +90,8 @@
     "memo": "Notatka",
     "memos": "Notatki",
     "more": "Więcej",
+    "move-down": "Move down",
+    "move-up": "Move up",
     "name": "Nazwa",
     "nickname": "Pseudonim",
     "open": "Otwórz",
@@ -467,6 +469,13 @@
     },
     "show-less": "Pokaż mniej",
     "show-more": "Pokaż więcej",
+    "audience": {
+      "heading": "Kto może to zobaczyć?",
+      "private": "Tylko ja",
+      "space": "Członkowie przestrzeni",
+      "protected": "Zalogowani użytkownicy",
+      "public": "Wszyscy"
+    },
     "visibility": {
       "private": "Prywatne",
       "protected": "Przestrzeń robocza",
@@ -948,8 +957,6 @@
       "label": "Usage limits",
       "memos": "Memos",
       "memos-description": "Includes comments and archived memos.",
-      "move-down": "Move down",
-      "move-up": "Move up",
       "never-applies": "Never applies",
       "never-applies-description": "Every user named here is caught by an earlier entry.",
       "order-note": "Entries are checked from top to bottom. The first entry that names a user is that user's limits; later entries are ignored for them. The last entry applies to everyone else.",

@@ -90,6 +90,8 @@
     "memo": "Beležka",
     "memos": "Beležke",
     "more": "Več",
+    "move-down": "Move down",
+    "move-up": "Move up",
     "name": "Ime",
     "nickname": "Nadimek",
     "open": "Odpri",
@@ -466,6 +468,13 @@
     },
     "show-less": "Prikaži manj",
     "show-more": "Prikaži več",
+    "audience": {
+      "heading": "Kdo lahko to vidi?",
+      "private": "Samo jaz",
+      "space": "Člani prostora",
+      "protected": "Prijavljeni uporabniki",
+      "public": "Vsi"
+    },
     "visibility": {
       "private": "Zasebno",
       "protected": "Za uporabnike",
@@ -948,8 +957,6 @@
       "label": "Usage limits",
       "memos": "Memos",
       "memos-description": "Includes comments and archived memos.",
-      "move-down": "Move down",
-      "move-up": "Move up",
       "never-applies": "Never applies",
       "never-applies-description": "Every user named here is caught by an earlier entry.",
       "order-note": "Entries are checked from top to bottom. The first entry that names a user is that user's limits; later entries are ignored for them. The last entry applies to everyone else.",

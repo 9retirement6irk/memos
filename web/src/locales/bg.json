@@ -129,6 +129,8 @@
     "memo": "Бележка",
     "memos": "Memos",
     "more": "повече",
+    "move-down": "Move down",
+    "move-up": "Move up",
     "name": "Име",
     "nickname": "Псевдоним",
     "open": "Отвори",
@@ -509,6 +511,13 @@
       "check-all": "Проверете всички задачи",
       "uncheck-all": "Премахнете отметката от всички задачи",
       "updated": "Задачите са актуализирани"
+    },
+    "audience": {
+      "heading": "Кой може да вижда?",
+      "private": "Само аз",
+      "space": "Членовете на пространството",
+      "protected": "Влезлите потребители",
+      "public": "Всички"
     },
     "visibility": {
       "private": "Частно",
@@ -1062,8 +1071,6 @@
       "label": "Usage limits",
       "memos": "Memos",
       "memos-description": "Includes comments and archived memos.",
-      "move-down": "Move down",
-      "move-up": "Move up",
       "never-applies": "Never applies",
       "never-applies-description": "Every user named here is caught by an earlier entry.",
       "order-note": "Entries are checked from top to bottom. The first entry that names a user is that user's limits; later entries are ignored for them. The last entry applies to everyone else.",

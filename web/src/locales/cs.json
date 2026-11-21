@@ -90,6 +90,8 @@
     "memo": "Poznámka",
     "memos": "Poznámky",
     "more": "Více",
+    "move-down": "Posunout dolů",
+    "move-up": "Posunout nahoru",
     "name": "Jméno",
     "nickname": "Přezdívka",
     "open": "Otevřít",
@@ -466,6 +468,13 @@
     },
     "show-less": "Zobrazit méně",
     "show-more": "Zobrazit více",
+    "audience": {
+      "heading": "Kdo to uvidí?",
+      "private": "Jen já",
+      "space": "Členové prostoru",
+      "protected": "Přihlášení uživatelé",
+      "public": "Všichni"
+    },
     "visibility": {
       "private": "Soukromá",
       "protected": "Chráněná",
@@ -949,8 +958,6 @@
       "label": "Limity využití",
       "memos": "Poznámky",
       "memos-description": "Včetně komentářů a archivovaných poznámek.",
-      "move-down": "Posunout dolů",
-      "move-up": "Posunout nahoru",
       "never-applies": "Nikdy se nepoužije",
       "never-applies-description": "Na všechny uživatele uvedené zde se už vztahuje některý z předchozích záznamů.",
       "order-note": "Záznamy se procházejí shora dolů. Pro každého uživatele platí první záznam, který ho uvádí; pozdější záznamy se na něj už nepoužijí. Poslední záznam platí pro všechny ostatní.",

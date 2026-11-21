@@ -90,6 +90,8 @@
     "memo": "Memo",
     "memos": "Memos",
     "more": "Više",
+    "move-down": "Move down",
+    "move-up": "Move up",
     "name": "Ime",
     "nickname": "Nadimak",
     "open": "Otvori",
@@ -465,6 +467,13 @@
     },
     "show-less": "Prikaži manje",
     "show-more": "Prikaži više",
+    "audience": {
+      "heading": "Tko ovo može vidjeti?",
+      "private": "Samo ja",
+      "space": "Članovi prostora",
+      "protected": "Prijavljeni korisnici",
+      "public": "Svi"
+    },
     "visibility": {
       "private": "Privatno",
       "protected": "Za članove",
@@ -947,8 +956,6 @@
       "label": "Usage limits",
       "memos": "Memos",
       "memos-description": "Includes comments and archived memos.",
-      "move-down": "Move down",
-      "move-up": "Move up",
       "never-applies": "Never applies",
       "never-applies-description": "Every user named here is caught by an earlier entry.",
       "order-note": "Entries are checked from top to bottom. The first entry that names a user is that user's limits; later entries are ignored for them. The last entry applies to everyone else.",

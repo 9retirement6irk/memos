@@ -90,6 +90,8 @@
     "memo": "Memo",
     "memos": "Memos",
     "more": "Més",
+    "move-down": "Move down",
+    "move-up": "Move up",
     "name": "Nom",
     "nickname": "Sobrenom",
     "open": "Obre",
@@ -465,6 +467,13 @@
     },
     "show-less": "Mostra menys",
     "show-more": "Mostra més",
+    "audience": {
+      "heading": "Qui ho pot veure?",
+      "private": "Només jo",
+      "space": "Membres de l’espai",
+      "protected": "Usuaris amb sessió iniciada",
+      "public": "Tothom"
+    },
     "visibility": {
       "private": "Privat",
       "protected": "Espai de treball",
@@ -947,8 +956,6 @@
       "label": "Usage limits",
       "memos": "Memos",
       "memos-description": "Includes comments and archived memos.",
-      "move-down": "Move down",
-      "move-up": "Move up",
       "never-applies": "Never applies",
       "never-applies-description": "Every user named here is caught by an earlier entry.",
       "order-note": "Entries are checked from top to bottom. The first entry that names a user is that user's limits; later entries are ignored for them. The last entry applies to everyone else.",

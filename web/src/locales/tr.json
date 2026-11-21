@@ -125,6 +125,8 @@
     "memos": "Notlar",
     "month-navigation": "Ay geçişi",
     "more": "Daha fazla",
+    "move-down": "Aşağı taşı",
+    "move-up": "Yukarı taşı",
     "name": "Ad",
     "next-month": "Sonraki ay",
     "nickname": "Görünen ad",
@@ -513,6 +515,13 @@
     "show-less": "Daha az göster",
     "show-more": "Daha fazla göster",
     "view-options": "Görünüm seçenekleri",
+    "audience": {
+      "heading": "Kimler görebilir?",
+      "private": "Yalnızca ben",
+      "space": "Alan üyeleri",
+      "protected": "Oturum açmış kullanıcılar",
+      "public": "Herkes"
+    },
     "visibility": {
       "private": "Gizli",
       "private-description": "Sadece sen",
@@ -1114,8 +1123,6 @@
       "label": "Kullanım sınırları",
       "memos": "Notlar",
       "memos-description": "Yorumlar ve arşivlenmiş notlar dahildir.",
-      "move-down": "Aşağı taşı",
-      "move-up": "Yukarı taşı",
       "never-applies": "Hiç uygulanmaz",
       "never-applies-description": "Burada seçilen kullanıcıların tümü daha üstteki bir kuralın kapsamına giriyor.",
       "order-note": "Kurallar yukarıdan aşağıya sırayla kontrol edilir. Bir kullanıcının adının geçtiği ilk kural geçerli sayılır; sonrakiler onun için yok sayılır. En alttaki kural ise diğer herkesi kapsar.",

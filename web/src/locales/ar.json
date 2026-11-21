@@ -90,6 +90,8 @@
     "memo": "مذكرة",
     "memos": "مذكرات",
     "more": "المزيد",
+    "move-down": "Move down",
+    "move-up": "Move up",
     "name": "الاسم",
     "nickname": "الاسم المستعار",
     "open": "فتح",
@@ -436,6 +438,13 @@
     "order-by": "ترتيب حسب",
     "show-less": "عرض أقل",
     "show-more": "عرض المزيد",
+    "audience": {
+      "heading": "من يمكنه رؤيتها؟",
+      "private": "أنا فقط",
+      "space": "أعضاء المساحة",
+      "protected": "المستخدمون المسجّلون دخولهم",
+      "public": "الجميع"
+    },
     "visibility": {
       "private": "خاص",
       "protected": "محمي",
@@ -869,8 +878,6 @@
       "label": "Usage limits",
       "memos": "Memos",
       "memos-description": "Includes comments and archived memos.",
-      "move-down": "Move down",
-      "move-up": "Move up",
       "never-applies": "Never applies",
       "never-applies-description": "Every user named here is caught by an earlier entry.",
       "order-note": "Entries are checked from top to bottom. The first entry that names a user is that user's limits; later entries are ignored for them. The last entry applies to everyone else.",

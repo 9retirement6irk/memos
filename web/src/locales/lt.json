@@ -129,6 +129,8 @@
     "memo": "Atmintinė",
     "memos": "Memos",
     "more": "Daugiau",
+    "move-down": "Move down",
+    "move-up": "Move up",
     "name": "Vardas",
     "nickname": "Slapyvardis",
     "open": "Atidaryti",
@@ -511,6 +513,13 @@
       "check-all": "Patikrinkite visas užduotis",
       "uncheck-all": "Panaikinkite visų užduočių žymėjimą",
       "updated": "Užduotys atnaujintos"
+    },
+    "audience": {
+      "heading": "Kas gali matyti?",
+      "private": "Tik aš",
+      "space": "Erdvės nariai",
+      "protected": "Prisijungę naudotojai",
+      "public": "Visi"
     },
     "visibility": {
       "private": "Privatus",
@@ -1064,8 +1073,6 @@
       "label": "Usage limits",
       "memos": "Memos",
       "memos-description": "Includes comments and archived memos.",
-      "move-down": "Move down",
-      "move-up": "Move up",
       "never-applies": "Never applies",
       "never-applies-description": "Every user named here is caught by an earlier entry.",
       "order-note": "Entries are checked from top to bottom. The first entry that names a user is that user's limits; later entries are ignored for them. The last entry applies to everyone else.",

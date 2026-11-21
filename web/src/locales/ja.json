@@ -92,6 +92,8 @@
     "memos": "メモ",
     "month-navigation": "月の移動",
     "more": "もっと",
+    "move-down": "Move down",
+    "move-up": "Move up",
     "name": "名前",
     "next-month": "翌月",
     "nickname": "ニックネーム",
@@ -473,6 +475,13 @@
     "show-less": "表示を減らす",
     "show-more": "もっと見る",
     "view-options": "表示オプション",
+    "audience": {
+      "heading": "誰が閲覧できますか？",
+      "private": "自分のみ",
+      "space": "スペースのメンバー",
+      "protected": "ログイン中のユーザー",
+      "public": "すべての人"
+    },
     "visibility": {
       "private": "非公開",
       "private-description": "自分にのみ表示",
@@ -946,8 +955,6 @@
       "label": "Usage limits",
       "memos": "Memos",
       "memos-description": "Includes comments and archived memos.",
-      "move-down": "Move down",
-      "move-up": "Move up",
       "never-applies": "Never applies",
       "never-applies-description": "Every user named here is caught by an earlier entry.",
       "order-note": "Entries are checked from top to bottom. The first entry that names a user is that user's limits; later entries are ignored for them. The last entry applies to everyone else.",

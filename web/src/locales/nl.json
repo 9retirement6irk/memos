@@ -90,6 +90,8 @@
     "memo": "Memo",
     "memos": "Memos",
     "more": "Meer",
+    "move-down": "Move down",
+    "move-up": "Move up",
     "name": "Naam",
     "nickname": "Bijnaam",
     "open": "Openen",
@@ -464,6 +466,13 @@
     },
     "show-less": "Minder tonen",
     "show-more": "Meer tonen",
+    "audience": {
+      "heading": "Wie kan dit zien?",
+      "private": "Alleen ik",
+      "space": "Leden van de ruimte",
+      "protected": "Ingelogde gebruikers",
+      "public": "Iedereen"
+    },
     "visibility": {
       "private": "Privé",
       "protected": "Werkruimte",
@@ -946,8 +955,6 @@
       "label": "Usage limits",
       "memos": "Memos",
       "memos-description": "Includes comments and archived memos.",
-      "move-down": "Move down",
-      "move-up": "Move up",
       "never-applies": "Never applies",
       "never-applies-description": "Every user named here is caught by an earlier entry.",
       "order-note": "Entries are checked from top to bottom. The first entry that names a user is that user's limits; later entries are ignored for them. The last entry applies to everyone else.",

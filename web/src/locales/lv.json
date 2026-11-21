@@ -129,6 +129,8 @@
     "memo": "Piezīme",
     "memos": "Memos",
     "more": "Vairāk",
+    "move-down": "Move down",
+    "move-up": "Move up",
     "name": "Vārds",
     "nickname": "Segvārds",
     "open": "Atvērt",
@@ -510,6 +512,13 @@
       "check-all": "Pārbaudiet visus uzdevumus",
       "uncheck-all": "Noņemiet atzīmi no visiem uzdevumiem",
       "updated": "Uzdevumi atjaunināti"
+    },
+    "audience": {
+      "heading": "Kas to var redzēt?",
+      "private": "Tikai es",
+      "space": "Telpas dalībnieki",
+      "protected": "Lietotāji, kuri ir pieteikušies",
+      "public": "Visi"
     },
     "visibility": {
       "private": "Privāts",
@@ -1063,8 +1072,6 @@
       "label": "Usage limits",
       "memos": "Memos",
       "memos-description": "Includes comments and archived memos.",
-      "move-down": "Move down",
-      "move-up": "Move up",
       "never-applies": "Never applies",
       "never-applies-description": "Every user named here is caught by an earlier entry.",
       "order-note": "Entries are checked from top to bottom. The first entry that names a user is that user's limits; later entries are ignored for them. The last entry applies to everyone else.",

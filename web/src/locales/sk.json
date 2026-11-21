@@ -129,6 +129,8 @@
     "memo": "Memo",
     "memos": "Memos",
     "more": "Viac",
+    "move-down": "Move down",
+    "move-up": "Move up",
     "name": "Meno",
     "nickname": "prezývka",
     "open": "Otvoriť",
@@ -511,6 +513,13 @@
       "check-all": "Skontrolujte všetky úlohy",
       "uncheck-all": "Zrušte začiarknutie všetkých úloh",
       "updated": "Úlohy aktualizované"
+    },
+    "audience": {
+      "heading": "Kto to môže vidieť?",
+      "private": "Iba ja",
+      "space": "Členovia priestoru",
+      "protected": "Prihlásení používatelia",
+      "public": "Všetci"
     },
     "visibility": {
       "private": "Súkromné",
@@ -1064,8 +1073,6 @@
       "label": "Usage limits",
       "memos": "Memos",
       "memos-description": "Includes comments and archived memos.",
-      "move-down": "Move down",
-      "move-up": "Move up",
       "never-applies": "Never applies",
       "never-applies-description": "Every user named here is caught by an earlier entry.",
       "order-note": "Entries are checked from top to bottom. The first entry that names a user is that user's limits; later entries are ignored for them. The last entry applies to everyone else.",

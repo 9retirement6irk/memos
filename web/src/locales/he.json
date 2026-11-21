@@ -164,6 +164,8 @@
     "memos": "פתקים",
     "month-navigation": "ניווט בין חודשים",
     "more": "עוד",
+    "move-down": "Move down",
+    "move-up": "Move up",
     "name": "שם",
     "next-month": "החודש הבא",
     "nickname": "כינוי",
@@ -553,6 +555,13 @@
       "updated": "המשימות עודכנו"
     },
     "view-options": "אפשרויות תצוגה",
+    "audience": {
+      "heading": "מי יכול לראות את זה?",
+      "private": "רק אני",
+      "space": "חברי המרחב",
+      "protected": "משתמשים מחוברים",
+      "public": "כולם"
+    },
     "visibility": {
       "private": "פרטי",
       "private-description": "גלוי רק לכם",
@@ -1095,8 +1104,6 @@
       "label": "Usage limits",
       "memos": "Memos",
       "memos-description": "Includes comments and archived memos.",
-      "move-down": "Move down",
-      "move-up": "Move up",
       "never-applies": "Never applies",
       "never-applies-description": "Every user named here is caught by an earlier entry.",
       "order-note": "Entries are checked from top to bottom. The first entry that names a user is that user's limits; later entries are ignored for them. The last entry applies to everyone else.",
