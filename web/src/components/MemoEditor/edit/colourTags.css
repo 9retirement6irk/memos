@@ -1,0 +1,14 @@
+/* Colour tags in the formatted editor (colourTags.ts). The tags are hidden and the words between them
+   take the colour and highlight from text-colours.css, through the decoration's data attributes. */
+.memo-colour-tag {
+  display: none;
+}
+/* Source mode shows the Markdown as written, tags included. */
+.mbe-source-mode .memo-colour-tag {
+  display: inline;
+}
+/* Rendered HTML already colours its words: the decoration inside it adds nothing. */
+.mbe-view-html .memo-colour-run {
+  color: inherit;
+  background: none;
+}
