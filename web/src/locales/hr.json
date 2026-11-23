@@ -90,6 +90,8 @@
     "memo": "Memo",
     "memos": "Memos",
     "more": "Više",
+    "move-down": "Move down",
+    "move-up": "Move up",
     "name": "Ime",
     "nickname": "Nadimak",
     "open": "Otvori",
@@ -465,6 +467,13 @@
     },
     "show-less": "Prikaži manje",
     "show-more": "Prikaži više",
+    "audience": {
+      "heading": "Tko ovo može vidjeti?",
+      "private": "Samo ja",
+      "space": "Članovi prostora",
+      "protected": "Prijavljeni korisnici",
+      "public": "Svi"
+    },
     "visibility": {
       "private": "Privatno",
       "protected": "Za članove",
@@ -484,9 +493,9 @@
       "updated": "Zadaci ažurirani"
     },
     "new-badge": "Novi",
-    "parent-loading": "Učitavanje izvorne bilješke…",
-    "parent-load-error": "Nije moguće učitati izvornu bilješku.",
-    "parent-unavailable": "Izvorna bilješka nije dostupna",
+    "parent-loading": "Učitavanje nadređenog podsjetnika…",
+    "parent-load-error": "Nije moguće učitati nadređeni podsjetnik.",
+    "parent-unavailable": "Nadređeni podsjetnik nije dostupan",
     "parent-unavailable-description": "Možda je izbrisana ili više nemate pristup.",
     "moved": "Bilješka je premještena",
     "back-to": "Natrag na {{source}}",
@@ -505,7 +514,9 @@
     "add-reaction": "Dodajte reakciju",
     "remove-reaction": "Ukloni reakciju",
     "full-width": "Puna širina",
-    "full-width-hint": "Koristi cijelu širinu vremenske crte memoa."
+    "full-width-hint": "Koristi cijelu širinu vremenske crte memoa.",
+    "include-comments": "Uključi komentare",
+    "include-comments-hint": "Prikaži komentare uz memoe na popisima."
   },
   "message": {
     "archived-successfully": "Uspješno arhivirano",
@@ -947,8 +958,6 @@
       "label": "Usage limits",
       "memos": "Memos",
       "memos-description": "Includes comments and archived memos.",
-      "move-down": "Move down",
-      "move-up": "Move up",
       "never-applies": "Never applies",
       "never-applies-description": "Every user named here is caught by an earlier entry.",
       "order-note": "Entries are checked from top to bottom. The first entry that names a user is that user's limits; later entries are ignored for them. The last entry applies to everyone else.",

@@ -90,6 +90,8 @@
     "memo": "Нотатка",
     "memos": "Нотатки",
     "more": "Більше",
+    "move-down": "Move down",
+    "move-up": "Move up",
     "name": "Назва",
     "nickname": "Нікнейм",
     "open": "Відкрити",
@@ -466,6 +468,13 @@
     },
     "show-less": "Показувати менше",
     "show-more": "Показати більше",
+    "audience": {
+      "heading": "Хто може бачити?",
+      "private": "Лише я",
+      "space": "Учасники простору",
+      "protected": "Користувачі, які ввійшли",
+      "public": "Усі"
+    },
     "visibility": {
       "private": "Приватні",
       "protected": "Робоча область",
@@ -485,9 +494,9 @@
       "updated": "Завдання оновлено"
     },
     "new-badge": "Новий",
-    "parent-loading": "Завантаження оригінальної нотатки…",
-    "parent-load-error": "Не вдалося завантажити оригінальну нотатку.",
-    "parent-unavailable": "Оригінальна нотатка недоступна",
+    "parent-loading": "Завантаження батьківської нотатки…",
+    "parent-load-error": "Не вдалося завантажити батьківську нотатку.",
+    "parent-unavailable": "Батьківська нотатка недоступна",
     "parent-unavailable-description": "Можливо, її було видалено, або ви більше не маєте до неї доступу.",
     "moved": "Нотатку переміщено",
     "back-to": "Назад до {{source}}",
@@ -506,7 +515,9 @@
     "add-reaction": "Додайте реакцію",
     "remove-reaction": "Видалити реакцію",
     "full-width": "На всю ширину",
-    "full-width-hint": "Використовувати всю ширину хронології нотаток."
+    "full-width-hint": "Використовувати всю ширину хронології нотаток.",
+    "include-comments": "Включати коментарі",
+    "include-comments-hint": "Показувати коментарі разом із нотатками у списках."
   },
   "message": {
     "archived-successfully": "Архівовано успішно",
@@ -948,8 +959,6 @@
       "label": "Usage limits",
       "memos": "Memos",
       "memos-description": "Includes comments and archived memos.",
-      "move-down": "Move down",
-      "move-up": "Move up",
       "never-applies": "Never applies",
       "never-applies-description": "Every user named here is caught by an earlier entry.",
       "order-note": "Entries are checked from top to bottom. The first entry that names a user is that user's limits; later entries are ignored for them. The last entry applies to everyone else.",

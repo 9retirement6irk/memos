@@ -129,6 +129,8 @@
     "memo": "Мемо",
     "memos": "Memos",
     "more": "Више",
+    "move-down": "Move down",
+    "move-up": "Move up",
     "name": "Име",
     "nickname": "Надимак",
     "open": "Отвори",
@@ -511,6 +513,13 @@
       "uncheck-all": "Поништите избор свих задатака",
       "updated": "Задаци су ажурирани"
     },
+    "audience": {
+      "heading": "Ко ово може да види?",
+      "private": "Само ја",
+      "space": "Чланови простора",
+      "protected": "Пријављени корисници",
+      "public": "Сви"
+    },
     "visibility": {
       "private": "Приватно",
       "protected": "Заштићено",
@@ -522,9 +531,9 @@
       "space-description": "Сви у {{space}}"
     },
     "new-badge": "Ново",
-    "parent-loading": "Учитавање оригиналне белешке…",
-    "parent-load-error": "Није могуће учитати оригиналну белешку.",
-    "parent-unavailable": "Оригинална белешка није доступна",
+    "parent-loading": "Учитавање надређене поруке…",
+    "parent-load-error": "Није могуће учитати надређену поруку.",
+    "parent-unavailable": "Надређена порука није доступна",
     "parent-unavailable-description": "Можда је обрисана или више немате приступ.",
     "moved": "Белешка је премештена",
     "back-to": "Назад на {{source}}",
@@ -543,7 +552,9 @@
     "add-reaction": "Додајте реакцију",
     "remove-reaction": "Уклоните реакцију",
     "full-width": "Пуна ширина",
-    "full-width-hint": "Користи целу ширину временске линије мемоа."
+    "full-width-hint": "Користи целу ширину временске линије мемоа.",
+    "include-comments": "Укључи коментаре",
+    "include-comments-hint": "Прикажи коментаре уз мемое на листама."
   },
   "message": {
     "archived-successfully": "Архивирано је успешно",
@@ -1063,8 +1074,6 @@
       "label": "Usage limits",
       "memos": "Memos",
       "memos-description": "Includes comments and archived memos.",
-      "move-down": "Move down",
-      "move-up": "Move up",
       "never-applies": "Never applies",
       "never-applies-description": "Every user named here is caught by an earlier entry.",
       "order-note": "Entries are checked from top to bottom. The first entry that names a user is that user's limits; later entries are ignored for them. The last entry applies to everyone else.",

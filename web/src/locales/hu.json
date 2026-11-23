@@ -90,6 +90,8 @@
     "memo": "Jegyzet",
     "memos": "Jegyzetek",
     "more": "Több",
+    "move-down": "Move down",
+    "move-up": "Move up",
     "name": "Név",
     "nickname": "Becenév",
     "open": "Megnyitás",
@@ -464,6 +466,13 @@
     },
     "show-less": "Kevesebb mutatása",
     "show-more": "Több mutatása",
+    "audience": {
+      "heading": "Ki láthatja?",
+      "private": "Csak én",
+      "space": "A tér tagjai",
+      "protected": "Bejelentkezett felhasználók",
+      "public": "Mindenki"
+    },
     "visibility": {
       "private": "Privát",
       "protected": "Munkatér",
@@ -483,9 +492,9 @@
       "updated": "Feladatok frissítve"
     },
     "new-badge": "Új",
-    "parent-loading": "Eredeti feljegyzés betöltése…",
-    "parent-load-error": "Az eredeti feljegyzés nem tölthető be.",
-    "parent-unavailable": "Az eredeti feljegyzés nem érhető el.",
+    "parent-loading": "Szülő feljegyzés betöltése…",
+    "parent-load-error": "A szülő feljegyzés nem tölthető be.",
+    "parent-unavailable": "A szülő feljegyzés nem érhető el.",
     "parent-unavailable-description": "Lehet, hogy törölték, vagy már nincs hozzáférésed.",
     "moved": "Feljegyzés áthelyezve.",
     "back-to": "Vissza a {{source}}-hez",
@@ -504,7 +513,9 @@
     "add-reaction": "Adja hozzá a reakciót",
     "remove-reaction": "Távolítsa el a reakciót",
     "full-width": "Teljes szélesség",
-    "full-width-hint": "A jegyzetek idővonalának teljes szélességét használja."
+    "full-width-hint": "A jegyzetek idővonalának teljes szélességét használja.",
+    "include-comments": "Hozzászólások belefoglalása",
+    "include-comments-hint": "A listákban a hozzászólások a jegyzetekkel együtt jelennek meg."
   },
   "message": {
     "archived-successfully": "Sikeres archiválás",
@@ -946,8 +957,6 @@
       "label": "Usage limits",
       "memos": "Memos",
       "memos-description": "Includes comments and archived memos.",
-      "move-down": "Move down",
-      "move-up": "Move up",
       "never-applies": "Never applies",
       "never-applies-description": "Every user named here is caught by an earlier entry.",
       "order-note": "Entries are checked from top to bottom. The first entry that names a user is that user's limits; later entries are ignored for them. The last entry applies to everyone else.",

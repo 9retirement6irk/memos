@@ -90,6 +90,8 @@
     "memo": "บันทึกช่วยจำ",
     "memos": "บันทึกช่วยจำ",
     "more": "เพิ่มเติม",
+    "move-down": "Move down",
+    "move-up": "Move up",
     "name": "ชื่อ",
     "nickname": "ชื่อเล่น",
     "open": "เปิด",
@@ -432,6 +434,13 @@
     "order-by": "เรียงตาม",
     "show-less": "แสดงน้อยลง",
     "show-more": "แสดงเพิ่มเติม",
+    "audience": {
+      "heading": "ใครดูได้บ้าง",
+      "private": "ฉันเท่านั้น",
+      "space": "สมาชิกของพื้นที่",
+      "protected": "ผู้ใช้ที่ลงชื่อเข้าใช้",
+      "public": "ทุกคน"
+    },
     "visibility": {
       "private": "ส่วนตัว",
       "protected": "พื้นที่ทำงาน",
@@ -470,9 +479,9 @@
       "open-image": "แชร์เป็นรูปภาพ"
     },
     "new-badge": "ใหม่",
-    "parent-loading": "กำลังโหลดบันทึกต้นฉบับ…",
-    "parent-load-error": "ไม่สามารถโหลดบันทึกต้นฉบับได้",
-    "parent-unavailable": "บันทึกต้นฉบับไม่พร้อมใช้งาน",
+    "parent-loading": "กำลังโหลดบันทึกหลัก…",
+    "parent-load-error": "ไม่สามารถโหลดบันทึกหลักได้",
+    "parent-unavailable": "บันทึกหลักไม่พร้อมใช้งาน",
     "parent-unavailable-description": "อาจถูกลบไปแล้วหรือคุณอาจไม่สามารถเข้าถึงได้อีกต่อไป",
     "moved": "ย้ายบันทึกแล้ว",
     "back-to": "กลับไปที่ {{source}}",
@@ -499,7 +508,9 @@
     "add-reaction": "เพิ่มปฏิกิริยา",
     "remove-reaction": "ลบการตอบสนอง",
     "full-width": "เต็มความกว้าง",
-    "full-width-hint": "ใช้ความกว้างทั้งหมดของไทม์ไลน์บันทึกช่วยจำ"
+    "full-width-hint": "ใช้ความกว้างทั้งหมดของไทม์ไลน์บันทึกช่วยจำ",
+    "include-comments": "รวมความคิดเห็น",
+    "include-comments-hint": "แสดงความคิดเห็นร่วมกับบันทึกช่วยจำในรายการ"
   },
   "message": {
     "archived-successfully": "เก็บถาวรเรียบร้อยแล้ว",
@@ -865,8 +876,6 @@
       "label": "Usage limits",
       "memos": "Memos",
       "memos-description": "Includes comments and archived memos.",
-      "move-down": "Move down",
-      "move-up": "Move up",
       "never-applies": "Never applies",
       "never-applies-description": "Every user named here is caught by an earlier entry.",
       "order-note": "Entries are checked from top to bottom. The first entry that names a user is that user's limits; later entries are ignored for them. The last entry applies to everyone else.",

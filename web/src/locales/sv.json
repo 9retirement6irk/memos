@@ -90,6 +90,8 @@
     "memo": "Anteckning",
     "memos": "Anteckningar",
     "more": "Mer",
+    "move-down": "Move down",
+    "move-up": "Move up",
     "name": "Namn",
     "nickname": "Smeknamn",
     "open": "Öppna",
@@ -464,6 +466,13 @@
     },
     "show-less": "Visa mindre",
     "show-more": "Visa mer",
+    "audience": {
+      "heading": "Vem kan se detta?",
+      "private": "Bara jag",
+      "space": "Utrymmets medlemmar",
+      "protected": "Inloggade användare",
+      "public": "Alla"
+    },
     "visibility": {
       "private": "Privat",
       "protected": "Skyddad",
@@ -483,9 +492,9 @@
       "updated": "Uppgifter uppdaterade"
     },
     "new-badge": "Ny",
-    "parent-loading": "Laddar originalmemot…",
-    "parent-load-error": "Kunde inte läsa in originalmemot.",
-    "parent-unavailable": "Originalmemot är inte tillgängligt",
+    "parent-loading": "Laddar överordnat PM…",
+    "parent-load-error": "Kunde inte läsa in överordnat PM.",
+    "parent-unavailable": "Överordnat PM är inte tillgängligt",
     "parent-unavailable-description": "Det kan ha tagits bort eller så har du inte längre åtkomst.",
     "moved": "Memot flyttat",
     "back-to": "Tillbaka till {{source}}",
@@ -504,7 +513,9 @@
     "add-reaction": "Lägg till reaktion",
     "remove-reaction": "Ta bort reaktionen",
     "full-width": "Full bredd",
-    "full-width-hint": "Använd hela bredden på anteckningarnas tidslinje."
+    "full-width-hint": "Använd hela bredden på anteckningarnas tidslinje.",
+    "include-comments": "Inkludera kommentarer",
+    "include-comments-hint": "Visa kommentarer tillsammans med anteckningar i listor."
   },
   "message": {
     "archived-successfully": "Arkiverad framgångsrikt",
@@ -946,8 +957,6 @@
       "label": "Usage limits",
       "memos": "Memos",
       "memos-description": "Includes comments and archived memos.",
-      "move-down": "Move down",
-      "move-up": "Move up",
       "never-applies": "Never applies",
       "never-applies-description": "Every user named here is caught by an earlier entry.",
       "order-note": "Entries are checked from top to bottom. The first entry that names a user is that user's limits; later entries are ignored for them. The last entry applies to everyone else.",

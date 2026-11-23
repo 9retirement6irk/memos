@@ -90,6 +90,8 @@
     "memo": "Memo",
     "memos": "Memo",
     "more": "Lainnya",
+    "move-down": "Move down",
+    "move-up": "Move up",
     "name": "Nama",
     "nickname": "Nama Panggilan",
     "open": "Buka",
@@ -432,6 +434,13 @@
     "order-by": "Urutkan Berdasarkan",
     "show-less": "Tampilkan lebih sedikit",
     "show-more": "Tampilkan lebih banyak",
+    "audience": {
+      "heading": "Siapa yang dapat melihat?",
+      "private": "Hanya saya",
+      "space": "Anggota ruang",
+      "protected": "Pengguna yang sudah masuk",
+      "public": "Semua orang"
+    },
     "visibility": {
       "private": "Pribadi",
       "protected": "Terlindungi",
@@ -470,9 +479,9 @@
       "open-image": "Bagikan sebagai gambar"
     },
     "new-badge": "Baru",
-    "parent-loading": "Memuat memo asli…",
-    "parent-load-error": "Tidak dapat memuat memo asli.",
-    "parent-unavailable": "Memo asli tidak tersedia",
+    "parent-loading": "Memuat memo induk…",
+    "parent-load-error": "Tidak dapat memuat memo induk.",
+    "parent-unavailable": "Memo induk tidak tersedia",
     "parent-unavailable-description": "Memo tersebut mungkin telah dihapus atau Anda mungkin tidak lagi memiliki akses.",
     "moved": "Memo dipindahkan",
     "back-to": "Kembali ke {{source}}",
@@ -499,7 +508,9 @@
     "add-reaction": "Tambahkan reaksi",
     "remove-reaction": "Hapus reaksi",
     "full-width": "Lebar penuh",
-    "full-width-hint": "Gunakan seluruh lebar linimasa memo."
+    "full-width-hint": "Gunakan seluruh lebar linimasa memo.",
+    "include-comments": "Sertakan komentar",
+    "include-comments-hint": "Tampilkan komentar bersama memo dalam daftar."
   },
   "message": {
     "archived-successfully": "Berhasil diarsipkan",
@@ -865,8 +876,6 @@
       "label": "Usage limits",
       "memos": "Memos",
       "memos-description": "Includes comments and archived memos.",
-      "move-down": "Move down",
-      "move-up": "Move up",
       "never-applies": "Never applies",
       "never-applies-description": "Every user named here is caught by an earlier entry.",
       "order-note": "Entries are checked from top to bottom. The first entry that names a user is that user's limits; later entries are ignored for them. The last entry applies to everyone else.",

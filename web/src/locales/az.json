@@ -197,6 +197,8 @@
     "memos": "Qeydlər",
     "month-navigation": "Ay naviqasiyası",
     "more": "Daha çox",
+    "move-down": "Move down",
+    "move-up": "Move up",
     "name": "Ad",
     "next-month": "Növbəti ay",
     "nickname": "Ləqəb",
@@ -511,9 +513,9 @@
     "no-matching-memos": "Uyğun qeyd yoxdur",
     "clear-filters": "Filtrləri təmizlə",
     "pinned": "Sabitlənib",
-    "parent-loading": "İlkin memo yüklənir…",
-    "parent-load-error": "İlkin memonu yükləmək mümkün olmadı.",
-    "parent-unavailable": "İlkin memo əlçatan deyil",
+    "parent-loading": "Ana qeyd yüklənir…",
+    "parent-load-error": "Ana qeydi yükləmək mümkün olmadı.",
+    "parent-unavailable": "Ana qeyd əlçatan deyil",
     "parent-unavailable-description": "Silinmiş ola bilər və ya artıq giriş icazəniz yoxdur.",
     "moved": "Memo köçürüldü",
     "back-to": "{{source}} bölməsinə qayıt",
@@ -593,6 +595,13 @@
       "updated": "Tapşırıqlar yeniləndi"
     },
     "view-options": "Görünüş parametrləri",
+    "audience": {
+      "heading": "Kim görə bilər?",
+      "private": "Yalnız mən",
+      "space": "Məkanın üzvləri",
+      "protected": "Daxil olmuş istifadəçilər",
+      "public": "Hər kəs"
+    },
     "visibility": {
       "private": "Şəxsi",
       "private-description": "Yalnız sizə görünür",
@@ -606,7 +615,9 @@
     "add-reaction": "Reaksiya əlavə et",
     "remove-reaction": "Reaksiyanı çıxar",
     "full-width": "Tam en",
-    "full-width-hint": "Qeydlərin zaman xəttinin bütün enindən istifadə et."
+    "full-width-hint": "Qeydlərin zaman xəttinin bütün enindən istifadə et.",
+    "include-comments": "Şərhləri daxil et",
+    "include-comments-hint": "Siyahılarda şərhləri qeydlərlə birlikdə göstər."
   },
   "message": {
     "archived-successfully": "Uğurla arxivləndi",
@@ -1263,8 +1274,6 @@
       "label": "Usage limits",
       "memos": "Memos",
       "memos-description": "Includes comments and archived memos.",
-      "move-down": "Move down",
-      "move-up": "Move up",
       "never-applies": "Never applies",
       "never-applies-description": "Every user named here is caught by an earlier entry.",
       "order-note": "Entries are checked from top to bottom. The first entry that names a user is that user's limits; later entries are ignored for them. The last entry applies to everyone else.",

@@ -129,6 +129,8 @@
     "memo": "Muistio",
     "memos": "Memos",
     "more": "Lisää",
+    "move-down": "Move down",
+    "move-up": "Move up",
     "name": "Nimi",
     "nickname": "Lempinimi",
     "open": "Avaa",
@@ -510,6 +512,13 @@
       "uncheck-all": "Poista kaikkien tehtävien valinta",
       "updated": "Tehtävät päivitetty"
     },
+    "audience": {
+      "heading": "Kuka näkee tämän?",
+      "private": "Vain minä",
+      "space": "Tilan jäsenet",
+      "protected": "Kirjautuneet käyttäjät",
+      "public": "Kaikki"
+    },
     "visibility": {
       "private": "Yksityinen",
       "protected": "Suojattu",
@@ -521,9 +530,9 @@
       "space-description": "Kaikki tilassa {{space}}"
     },
     "new-badge": "Uusi",
-    "parent-loading": "Ladataan alkuperäistä muistiota…",
-    "parent-load-error": "Alkuperäistä muistiota ei voitu ladata.",
-    "parent-unavailable": "Alkuperäinen muistio ei ole käytettävissä",
+    "parent-loading": "Ladataan ylämuistiota…",
+    "parent-load-error": "Ylämuistiota ei voitu ladata.",
+    "parent-unavailable": "Ylämuistio ei ole käytettävissä",
     "parent-unavailable-description": "Se on ehkä poistettu tai sinulla ei ehkä enää ole siihen pääsyä.",
     "moved": "Muistio siirretty",
     "back-to": "Takaisin kohtaan {{source}}",
@@ -542,7 +551,9 @@
     "add-reaction": "Lisää reaktio",
     "remove-reaction": "Poista reaktio",
     "full-width": "Täysi leveys",
-    "full-width-hint": "Käytä muistioiden aikajanan koko leveyttä."
+    "full-width-hint": "Käytä muistioiden aikajanan koko leveyttä.",
+    "include-comments": "Sisällytä kommentit",
+    "include-comments-hint": "Näytä kommentit muistioiden rinnalla luetteloissa."
   },
   "message": {
     "archived-successfully": "Arkistointi onnistui",
@@ -1062,8 +1073,6 @@
       "label": "Usage limits",
       "memos": "Memos",
       "memos-description": "Includes comments and archived memos.",
-      "move-down": "Move down",
-      "move-up": "Move up",
       "never-applies": "Never applies",
       "never-applies-description": "Every user named here is caught by an earlier entry.",
       "order-note": "Entries are checked from top to bottom. The first entry that names a user is that user's limits; later entries are ignored for them. The last entry applies to everyone else.",

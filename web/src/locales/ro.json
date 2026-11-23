@@ -129,6 +129,8 @@
     "memo": "Notă",
     "memos": "Memos",
     "more": "Mai mult",
+    "move-down": "Move down",
+    "move-up": "Move up",
     "name": "Nume",
     "nickname": "Pseudonim",
     "open": "Deschide",
@@ -511,6 +513,13 @@
       "uncheck-all": "Debifați toate sarcinile",
       "updated": "Sarcini actualizate"
     },
+    "audience": {
+      "heading": "Cine poate vedea?",
+      "private": "Doar eu",
+      "space": "Membrii spațiului",
+      "protected": "Utilizatorii autentificați",
+      "public": "Toată lumea"
+    },
     "visibility": {
       "private": "Privat",
       "protected": "Protejat",
@@ -522,9 +531,9 @@
       "space-description": "Toți din {{space}}"
     },
     "new-badge": "Nou",
-    "parent-loading": "Se încarcă nota originală…",
-    "parent-load-error": "Nu s-a putut încărca nota originală.",
-    "parent-unavailable": "Nota originală nu este disponibilă",
+    "parent-loading": "Se încarcă nota părinte…",
+    "parent-load-error": "Nu s-a putut încărca nota părinte.",
+    "parent-unavailable": "Nota părinte nu este disponibilă",
     "parent-unavailable-description": "Este posibil să fi fost ștersă sau să nu mai ai acces.",
     "moved": "Nota mutată",
     "back-to": "Înapoi la {{source}}",
@@ -543,7 +552,9 @@
     "add-reaction": "Adăugați reacția",
     "remove-reaction": "Îndepărtați reacția",
     "full-width": "Lățime completă",
-    "full-width-hint": "Folosește întreaga lățime a cronologiei notelor."
+    "full-width-hint": "Folosește întreaga lățime a cronologiei notelor.",
+    "include-comments": "Include comentariile",
+    "include-comments-hint": "Afișează comentariile împreună cu notele în liste."
   },
   "message": {
     "archived-successfully": "Arhivat cu succes",
@@ -1063,8 +1074,6 @@
       "label": "Usage limits",
       "memos": "Memos",
       "memos-description": "Includes comments and archived memos.",
-      "move-down": "Move down",
-      "move-up": "Move up",
       "never-applies": "Never applies",
       "never-applies-description": "Every user named here is caught by an earlier entry.",
       "order-note": "Entries are checked from top to bottom. The first entry that names a user is that user's limits; later entries are ignored for them. The last entry applies to everyone else.",

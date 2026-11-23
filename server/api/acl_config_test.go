@@ -33,7 +33,6 @@ func TestPublicMethodsArePublic(t *testing.T) {
 		// Memo Service
 		"/memos.api.MemoService/GetMemo",
 		"/memos.api.MemoService/ListMemos",
-		"/memos.api.MemoService/ListMemoComments",
 		"/memos.api.MemoService/ListMemoAttachments",
 		"/memos.api.MemoService/ListMemoReactions",
 		"/memos.api.MemoService/ListMemoRelations",
@@ -95,6 +94,7 @@ func TestProtectedMethodsRequireAuth(t *testing.T) {
 		"/memos.api.UserService/ListMemoViews",
 		"/memos.api.UserService/UpdateMemoView",
 		"/memos.api.UserService/DeleteMemoView",
+		"/memos.api.UserService/ReorderMemoViews",
 	}
 
 	for _, method := range protectedMethods {
@@ -155,7 +155,6 @@ func TestAuthBootstrapClassification(t *testing.T) {
 	gatedWhilePrivate := []string{
 		"/memos.api.MemoService/ListMemos",
 		"/memos.api.MemoService/GetMemo",
-		"/memos.api.MemoService/ListMemoComments",
 		"/memos.api.MemoService/ListMemoAttachments",
 		"/memos.api.MemoService/ListMemoReactions",
 		"/memos.api.MemoService/ListMemoRelations",

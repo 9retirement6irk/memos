@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { memoServiceClient } from "@/connect";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import { useJournalSettings } from "@/hooks/useJournalQueries";
+import { combineCELFilters, TOP_LEVEL_MEMO_FILTER } from "@/lib/cel-filter";
 import { mindFromTags, moodFromTags, type Valence, valenceFromScore, valenceScore } from "@/lib/journal/mood";
 import type { JournalSettings } from "@/lib/journal/settings";
 import { normalizePrefix } from "@/lib/journal/tags";
@@ -21,12 +22,13 @@ const seconds = (date: Date) => Math.floor(date.getTime() / 1000);
 /** How many days the "how you've felt" line covers. */
 const TREND_DAYS = 56;
 
-/** Memos matching a CEL filter, at most 2000. */
+/** Entries matching a CEL filter, at most 2000. Comments are memos too, so they're left out. */
 const listEntries = async (filter: string): Promise<Memo[]> => {
   const memos: Memo[] = [];
   let pageToken = "";
+  const entries = combineCELFilters(TOP_LEVEL_MEMO_FILTER, filter);
   do {
-    const response = await memoServiceClient.listMemos({ pageSize: 500, pageToken, filter });
+    const response = await memoServiceClient.listMemos({ pageSize: 500, pageToken, filter: entries });
     memos.push(...response.memos);
     pageToken = response.nextPageToken;
   } while (pageToken && memos.length < 2000);

@@ -129,6 +129,8 @@
     "memo": "Σημείωμα",
     "memos": "Memos",
     "more": "Περισσότερο",
+    "move-down": "Move down",
+    "move-up": "Move up",
     "name": "Ονομα",
     "nickname": "Παρατσούκλι",
     "open": "Άνοιγμα",
@@ -510,6 +512,13 @@
       "uncheck-all": "Καταργήστε την επιλογή όλων των εργασιών",
       "updated": "Οι εργασίες ενημερώθηκαν"
     },
+    "audience": {
+      "heading": "Ποιοι μπορούν να το δουν;",
+      "private": "Μόνο εγώ",
+      "space": "Μέλη του χώρου",
+      "protected": "Συνδεδεμένοι χρήστες",
+      "public": "Όλοι"
+    },
     "visibility": {
       "private": "Ιδιωτικός",
       "protected": "Προστατεύεται",
@@ -521,9 +530,9 @@
       "space-description": "Όλοι στο {{space}}"
     },
     "new-badge": "Νέος",
-    "parent-loading": "Φόρτωση αρχικού σημειώματος…",
-    "parent-load-error": "Δεν ήταν δυνατή η φόρτωση του αρχικού σημειώματος.",
-    "parent-unavailable": "Το αρχικό σημειώμα δεν είναι διαθέσιμο",
+    "parent-loading": "Φόρτωση γονικού σημειώματος…",
+    "parent-load-error": "Δεν ήταν δυνατή η φόρτωση του γονικού σημειώματος.",
+    "parent-unavailable": "Το γονικό σημείωμα δεν είναι διαθέσιμο",
     "parent-unavailable-description": "Ενδέχεται να έχει διαγραφεί ή να μην έχετε πλέον πρόσβαση.",
     "moved": "Το σημειώμα μετακινήθηκε",
     "back-to": "Επιστροφή στο {{source}}",
@@ -542,7 +551,9 @@
     "add-reaction": "Προσθέστε την αντίδραση",
     "remove-reaction": "Αφαιρέστε την αντίδραση",
     "full-width": "Πλήρες πλάτος",
-    "full-width-hint": "Χρήση όλου του πλάτους του χρονολογίου σημειωμάτων."
+    "full-width-hint": "Χρήση όλου του πλάτους του χρονολογίου σημειωμάτων.",
+    "include-comments": "Συμπερίληψη σχολίων",
+    "include-comments-hint": "Εμφάνιση σχολίων μαζί με τα σημειώματα στις λίστες."
   },
   "message": {
     "archived-successfully": "Αρχειοθετήθηκε με επιτυχία",
@@ -1062,8 +1073,6 @@
       "label": "Usage limits",
       "memos": "Memos",
       "memos-description": "Includes comments and archived memos.",
-      "move-down": "Move down",
-      "move-up": "Move up",
       "never-applies": "Never applies",
       "never-applies-description": "Every user named here is caught by an earlier entry.",
       "order-note": "Entries are checked from top to bottom. The first entry that names a user is that user's limits; later entries are ignored for them. The last entry applies to everyone else.",

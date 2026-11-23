@@ -129,6 +129,8 @@
     "memo": "Memo",
     "memos": "Memos",
     "more": "Viac",
+    "move-down": "Move down",
+    "move-up": "Move up",
     "name": "Meno",
     "nickname": "prezývka",
     "open": "Otvoriť",
@@ -512,6 +514,13 @@
       "uncheck-all": "Zrušte začiarknutie všetkých úloh",
       "updated": "Úlohy aktualizované"
     },
+    "audience": {
+      "heading": "Kto to môže vidieť?",
+      "private": "Iba ja",
+      "space": "Členovia priestoru",
+      "protected": "Prihlásení používatelia",
+      "public": "Všetci"
+    },
     "visibility": {
       "private": "Súkromné",
       "protected": "Chránené",
@@ -523,9 +532,9 @@
       "space-description": "Všetci v {{space}}"
     },
     "new-badge": "Nové",
-    "parent-loading": "Načítava sa pôvodná poznámka…",
-    "parent-load-error": "Nepodarilo sa načítať pôvodnú poznámku.",
-    "parent-unavailable": "Pôvodná poznámka nie je k dispozícii",
+    "parent-loading": "Načítava sa nadradená poznámka…",
+    "parent-load-error": "Nepodarilo sa načítať nadradenú poznámku.",
+    "parent-unavailable": "Nadradená poznámka nie je k dispozícii",
     "parent-unavailable-description": "Možno bola odstránená alebo k nej už nemáte prístup.",
     "moved": "Poznámka presunutá",
     "back-to": "Späť na {{source}}",
@@ -544,7 +553,9 @@
     "add-reaction": "Pridajte reakciu",
     "remove-reaction": "Odstráňte reakciu",
     "full-width": "Plná šírka",
-    "full-width-hint": "Využiť celú šírku časovej osi poznámok."
+    "full-width-hint": "Využiť celú šírku časovej osi poznámok.",
+    "include-comments": "Zahrnúť komentáre",
+    "include-comments-hint": "Zobraziť komentáre v zoznamoch spolu s poznámkami."
   },
   "message": {
     "archived-successfully": "Úspešne archivované",
@@ -1064,8 +1075,6 @@
       "label": "Usage limits",
       "memos": "Memos",
       "memos-description": "Includes comments and archived memos.",
-      "move-down": "Move down",
-      "move-up": "Move up",
       "never-applies": "Never applies",
       "never-applies-description": "Every user named here is caught by an earlier entry.",
       "order-note": "Entries are checked from top to bottom. The first entry that names a user is that user's limits; later entries are ignored for them. The last entry applies to everyone else.",

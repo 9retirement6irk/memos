@@ -129,6 +129,8 @@
     "memo": "Piezīme",
     "memos": "Memos",
     "more": "Vairāk",
+    "move-down": "Move down",
+    "move-up": "Move up",
     "name": "Vārds",
     "nickname": "Segvārds",
     "open": "Atvērt",
@@ -511,6 +513,13 @@
       "uncheck-all": "Noņemiet atzīmi no visiem uzdevumiem",
       "updated": "Uzdevumi atjaunināti"
     },
+    "audience": {
+      "heading": "Kas to var redzēt?",
+      "private": "Tikai es",
+      "space": "Telpas dalībnieki",
+      "protected": "Lietotāji, kuri ir pieteikušies",
+      "public": "Visi"
+    },
     "visibility": {
       "private": "Privāts",
       "protected": "Aizsargāts",
@@ -522,9 +531,9 @@
       "space-description": "Visi telpā {{space}}"
     },
     "new-badge": "Jauns",
-    "parent-loading": "Notiek sākotnējās piezīmes ielāde…",
-    "parent-load-error": "Nevarēja ielādēt sākotnējo piezīmi.",
-    "parent-unavailable": "Sākotnējā piezīme nav pieejama",
+    "parent-loading": "Notiek galvenās piezīmes ielāde…",
+    "parent-load-error": "Nevarēja ielādēt galveno piezīmi.",
+    "parent-unavailable": "Galvenā piezīme nav pieejama",
     "parent-unavailable-description": "Iespējams, tā ir izdzēsta vai jums vairs nav piekļuves.",
     "moved": "Piezīme pārvietota",
     "back-to": "Atpakaļ uz {{source}}",
@@ -543,7 +552,9 @@
     "add-reaction": "Pievienojiet reakciju",
     "remove-reaction": "Noņemiet reakciju",
     "full-width": "Pilns platums",
-    "full-width-hint": "Izmantot visu piezīmju laika skalas platumu."
+    "full-width-hint": "Izmantot visu piezīmju laika skalas platumu.",
+    "include-comments": "Iekļaut komentārus",
+    "include-comments-hint": "Sarakstos rādīt komentārus kopā ar piezīmēm."
   },
   "message": {
     "archived-successfully": "Veiksmīgi arhivēts",
@@ -1063,8 +1074,6 @@
       "label": "Usage limits",
       "memos": "Memos",
       "memos-description": "Includes comments and archived memos.",
-      "move-down": "Move down",
-      "move-up": "Move up",
       "never-applies": "Never applies",
       "never-applies-description": "Every user named here is caught by an earlier entry.",
       "order-note": "Entries are checked from top to bottom. The first entry that names a user is that user's limits; later entries are ignored for them. The last entry applies to everyone else.",

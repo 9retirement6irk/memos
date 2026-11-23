@@ -90,6 +90,8 @@
     "memo": "Memo",
     "memos": "Memos",
     "more": "Mais",
+    "move-down": "Mover para baixo",
+    "move-up": "Mover para cima",
     "name": "Nome",
     "nickname": "Apelido",
     "open": "Abrir",
@@ -433,6 +435,13 @@
     "order-by": "Ordenar por",
     "show-less": "Mostrar menos",
     "show-more": "Mostrar mais",
+    "audience": {
+      "heading": "Quem pode ver?",
+      "private": "Só eu",
+      "space": "Membros do espaço",
+      "protected": "Usuários conectados",
+      "public": "Todos"
+    },
     "visibility": {
       "private": "Privado",
       "protected": "Protegido",
@@ -471,9 +480,9 @@
       "open-image": "Compartilhar como imagem"
     },
     "new-badge": "Novo",
-    "parent-loading": "Carregando memorando original…",
-    "parent-load-error": "Não foi possível carregar o memorando original.",
-    "parent-unavailable": "Memorando original indisponível",
+    "parent-loading": "Carregando memorando pai…",
+    "parent-load-error": "Não foi possível carregar o memorando pai.",
+    "parent-unavailable": "Memorando pai indisponível",
     "parent-unavailable-description": "Ele pode ter sido excluído ou você pode não ter mais acesso a ele.",
     "moved": "Memorando movido",
     "back-to": "Voltar para {{source}}",
@@ -500,7 +509,9 @@
     "add-reaction": "Adicionar reação",
     "remove-reaction": "Remover reação",
     "full-width": "Largura total",
-    "full-width-hint": "Usar toda a largura da linha do tempo dos memos."
+    "full-width-hint": "Usar toda a largura da linha do tempo dos memos.",
+    "include-comments": "Incluir comentários",
+    "include-comments-hint": "Mostrar comentários junto com os memos nas listas."
   },
   "message": {
     "archived-successfully": "Arquivado com êxito",
@@ -866,8 +877,6 @@
       "label": "Limites de uso",
       "memos": "Memos",
       "memos-description": "Inclui comentários e memos arquivados.",
-      "move-down": "Mover para baixo",
-      "move-up": "Mover para cima",
       "never-applies": "Nunca se aplica",
       "never-applies-description": "Todos os usuários citados aqui já são cobertos por uma entrada anterior.",
       "order-note": "As entradas são verificadas de cima para baixo. A primeira entrada que cita um usuário define os limites dele; as entradas seguintes são ignoradas para ele. A última entrada se aplica a todos os demais.",

@@ -90,6 +90,8 @@
     "memo": "Memo",
     "memos": "Memos",
     "more": "Más",
+    "move-down": "Bajar",
+    "move-up": "Subir",
     "name": "Nombre",
     "nickname": "Apodo",
     "open": "Abrir",
@@ -465,6 +467,13 @@
     },
     "show-less": "Mostrar menos",
     "show-more": "Mostrar más",
+    "audience": {
+      "heading": "¿Quién puede verlo?",
+      "private": "Solo yo",
+      "space": "Miembros del espacio",
+      "protected": "Usuarios con sesión iniciada",
+      "public": "Todos"
+    },
     "visibility": {
       "private": "Privado",
       "protected": "Protegido",
@@ -484,9 +493,9 @@
       "updated": "Tareas actualizadas"
     },
     "new-badge": "Nuevo",
-    "parent-loading": "Cargando memorándum original…",
-    "parent-load-error": "No se pudo cargar el memorándum original.",
-    "parent-unavailable": "Memorándum original no disponible.",
+    "parent-loading": "Cargando memo principal…",
+    "parent-load-error": "No se pudo cargar el memo principal.",
+    "parent-unavailable": "Memo principal no disponible.",
     "parent-unavailable-description": "Es posible que se haya eliminado o que ya no tengas acceso.",
     "moved": "Memorándum movido.",
     "back-to": "Volver a {{source}}",
@@ -505,7 +514,9 @@
     "add-reaction": "Añadir reacción",
     "remove-reaction": "Eliminar reacción",
     "full-width": "Ancho completo",
-    "full-width-hint": "Usar todo el ancho de la cronología de memos."
+    "full-width-hint": "Usar todo el ancho de la cronología de memos.",
+    "include-comments": "Incluir comentarios",
+    "include-comments-hint": "Mostrar los comentarios junto a los memos en las listas."
   },
   "message": {
     "archived-successfully": "Archivado correctamente",
@@ -947,8 +958,6 @@
       "label": "Límites de uso",
       "memos": "Memos",
       "memos-description": "Incluye comentarios y memos archivados.",
-      "move-down": "Bajar",
-      "move-up": "Subir",
       "never-applies": "Nunca se aplica",
       "never-applies-description": "Todos los usuarios mencionados aquí ya están cubiertos por una entrada anterior.",
       "order-note": "Las entradas se comprueban de arriba abajo. La primera entrada que menciona a un usuario define sus límites; las entradas posteriores se ignoran para él. La última entrada se aplica a todos los demás.",

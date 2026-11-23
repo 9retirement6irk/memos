@@ -164,6 +164,8 @@
     "memos": "פתקים",
     "month-navigation": "ניווט בין חודשים",
     "more": "עוד",
+    "move-down": "Move down",
+    "move-up": "Move up",
     "name": "שם",
     "next-month": "החודש הבא",
     "nickname": "כינוי",
@@ -553,6 +555,13 @@
       "updated": "המשימות עודכנו"
     },
     "view-options": "אפשרויות תצוגה",
+    "audience": {
+      "heading": "מי יכול לראות את זה?",
+      "private": "רק אני",
+      "space": "חברי המרחב",
+      "protected": "משתמשים מחוברים",
+      "public": "כולם"
+    },
     "visibility": {
       "private": "פרטי",
       "private-description": "גלוי רק לכם",
@@ -563,9 +572,9 @@
       "space": "חברים",
       "space-description": "כל מי שב-{{space}}"
     },
-    "parent-loading": "טוען את התזכיר המקורי…",
-    "parent-load-error": "לא ניתן היה לטעון את התזכיר המקורי.",
-    "parent-unavailable": "התזכיר המקורי אינו זמין",
+    "parent-loading": "טוען את תזכיר האב…",
+    "parent-load-error": "לא ניתן היה לטעון את תזכיר האב.",
+    "parent-unavailable": "תזכיר האב אינו זמין",
     "parent-unavailable-description": "ייתכן שהוא נמחק או שאין לך עוד גישה.",
     "moved": "התזכיר הועבר",
     "back-to": "חזרה אל {{source}}",
@@ -575,7 +584,9 @@
     "add-reaction": "הוסף תגובה",
     "remove-reaction": "הסר תגובה",
     "full-width": "רוחב מלא",
-    "full-width-hint": "שימוש בכל הרוחב של ציר הזמן של הפתקים."
+    "full-width-hint": "שימוש בכל הרוחב של ציר הזמן של הפתקים.",
+    "include-comments": "הכללת תגובות",
+    "include-comments-hint": "הצגת תגובות לצד פתקים ברשימות."
   },
   "message": {
     "archived-successfully": "הועבר לארכיון בהצלחה",
@@ -1095,8 +1106,6 @@
       "label": "Usage limits",
       "memos": "Memos",
       "memos-description": "Includes comments and archived memos.",
-      "move-down": "Move down",
-      "move-up": "Move up",
       "never-applies": "Never applies",
       "never-applies-description": "Every user named here is caught by an earlier entry.",
       "order-note": "Entries are checked from top to bottom. The first entry that names a user is that user's limits; later entries are ignored for them. The last entry applies to everyone else.",
