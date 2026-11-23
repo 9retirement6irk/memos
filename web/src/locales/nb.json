@@ -90,6 +90,8 @@
     "memo": "Memo",
     "memos": "Memoer",
     "more": "Mer",
+    "move-down": "Move down",
+    "move-up": "Move up",
     "name": "Navn",
     "nickname": "Kallenavn",
     "open": "Åpne",
@@ -464,6 +466,13 @@
     },
     "show-less": "Vis mindre",
     "show-more": "Vis mer",
+    "audience": {
+      "heading": "Hvem kan se dette?",
+      "private": "Bare jeg",
+      "space": "Medlemmer av rommet",
+      "protected": "Innloggede brukere",
+      "public": "Alle"
+    },
     "visibility": {
       "private": "Privat",
       "protected": "Beskyttet",
@@ -483,9 +492,9 @@
       "updated": "Oppgaver oppdatert"
     },
     "new-badge": "Ny",
-    "parent-loading": "Laster inn originalt notat…",
-    "parent-load-error": "Kunne ikke laste inn det originale notatet.",
-    "parent-unavailable": "Originalt notat er ikke tilgjengelig",
+    "parent-loading": "Laster inn overordnet notat…",
+    "parent-load-error": "Kunne ikke laste inn det overordnede notatet.",
+    "parent-unavailable": "Overordnet notat er ikke tilgjengelig",
     "parent-unavailable-description": "Det kan ha blitt slettet, eller du har kanskje ikke lenger tilgang.",
     "moved": "Notat flyttet",
     "back-to": "Tilbake til {{source}}",
@@ -504,7 +513,9 @@
     "add-reaction": "Legg til reaksjon",
     "remove-reaction": "Fjern reaksjonen",
     "full-width": "Full bredde",
-    "full-width-hint": "Bruk hele bredden på memoenes tidslinje."
+    "full-width-hint": "Bruk hele bredden på memoenes tidslinje.",
+    "include-comments": "Inkluder kommentarer",
+    "include-comments-hint": "Vis kommentarer sammen med memoer i lister."
   },
   "message": {
     "archived-successfully": "Arkivering vellykket",
@@ -946,8 +957,6 @@
       "label": "Usage limits",
       "memos": "Memos",
       "memos-description": "Includes comments and archived memos.",
-      "move-down": "Move down",
-      "move-up": "Move up",
       "never-applies": "Never applies",
       "never-applies-description": "Every user named here is caught by an earlier entry.",
       "order-note": "Entries are checked from top to bottom. The first entry that names a user is that user's limits; later entries are ignored for them. The last entry applies to everyone else.",

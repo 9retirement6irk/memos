@@ -90,6 +90,8 @@
     "memo": "Ghi chú",
     "memos": "Ghi chú",
     "more": "Thêm",
+    "move-down": "Move down",
+    "move-up": "Move up",
     "name": "Tên",
     "nickname": "Biệt danh",
     "open": "Mở",
@@ -432,6 +434,13 @@
     "order-by": "Sắp xếp theo",
     "show-less": "Hiển thị ít hơn",
     "show-more": "Hiển thị thêm",
+    "audience": {
+      "heading": "Ai có thể xem?",
+      "private": "Chỉ mình tôi",
+      "space": "Thành viên không gian",
+      "protected": "Người dùng đã đăng nhập",
+      "public": "Mọi người"
+    },
     "visibility": {
       "private": "Riêng tư",
       "protected": "Không gian làm việc",
@@ -470,9 +479,9 @@
       "open-image": "Chia sẻ dưới dạng ảnh"
     },
     "new-badge": "Mới",
-    "parent-loading": "Đang tải bản ghi nhớ gốc…",
-    "parent-load-error": "Không thể tải bản ghi nhớ gốc.",
-    "parent-unavailable": "Bản ghi nhớ gốc không khả dụng",
+    "parent-loading": "Đang tải ghi chú cha…",
+    "parent-load-error": "Không thể tải ghi chú cha.",
+    "parent-unavailable": "Ghi chú cha không khả dụng",
     "parent-unavailable-description": "Có thể bản ghi nhớ đã bị xóa hoặc bạn không còn quyền truy cập nữa.",
     "moved": "Bản ghi nhớ đã được di chuyển",
     "back-to": "Quay lại {{source}}",
@@ -499,7 +508,9 @@
     "add-reaction": "Thêm biểu tượng cảm xúc",
     "remove-reaction": "Xóa phản ứng",
     "full-width": "Toàn bộ chiều rộng",
-    "full-width-hint": "Sử dụng toàn bộ chiều rộng của dòng thời gian ghi chú."
+    "full-width-hint": "Sử dụng toàn bộ chiều rộng của dòng thời gian ghi chú.",
+    "include-comments": "Bao gồm bình luận",
+    "include-comments-hint": "Hiển thị bình luận cùng với ghi chú trong danh sách."
   },
   "message": {
     "archived-successfully": "Lưu trữ thành công",
@@ -865,8 +876,6 @@
       "label": "Usage limits",
       "memos": "Memos",
       "memos-description": "Includes comments and archived memos.",
-      "move-down": "Move down",
-      "move-up": "Move up",
       "never-applies": "Never applies",
       "never-applies-description": "Every user named here is caught by an earlier entry.",
       "order-note": "Entries are checked from top to bottom. The first entry that names a user is that user's limits; later entries are ignored for them. The last entry applies to everyone else.",

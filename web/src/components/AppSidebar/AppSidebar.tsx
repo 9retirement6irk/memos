@@ -36,6 +36,7 @@ import useCurrentUser from "@/hooks/useCurrentUser";
 import { useFilteredMemoStats } from "@/hooks/useFilteredMemoStats";
 import { useJournalSettings } from "@/hooks/useJournalQueries";
 import useMediaQuery from "@/hooks/useMediaQuery";
+import { useCommentScopeFilter } from "@/hooks/useMemoFilters";
 import { useNotifications } from "@/hooks/useUserQueries";
 import { combineCELFilters } from "@/lib/cel-filter";
 import { cn } from "@/lib/utils";
@@ -93,7 +94,9 @@ const CollectionSidebarContent = ({
   // User-level collections stay aligned with their unscoped feeds even when a Space is remembered.
   const isUserLevelCollection = context === "archived";
   const collectionFilter = isUserLevelCollection ? undefined : memoFilter;
-  const statsFilter = scopeFilter ? combineCELFilters(collectionFilter, scopeFilter) : collectionFilter;
+  // The counts follow the lists: comments are in them only while the viewer includes comments.
+  const commentScopeFilter = useCommentScopeFilter();
+  const statsFilter = combineCELFilters(collectionFilter, scopeFilter, commentScopeFilter);
   const { statistics, tags } = useFilteredMemoStats({
     context: context === "archived" ? "archived" : "collection",
     filter: statsFilter,
@@ -216,18 +219,21 @@ const SettingsSidebarContent = () => {
   const basic = SETTINGS_SECTIONS.filter((section) => section.scope === "basic");
   const admin = SETTINGS_SECTIONS.filter((section) => section.scope === "admin");
   const renderSections = (sections: typeof SETTINGS_SECTIONS) =>
-    sections.map((section) => (
-      <Link
-        key={section.key}
-        to={`${ROUTES.SETTING}#${section.key}`}
-        onClick={() => setMobileOpen(false)}
-        {...sidebarRowStateAttributes(currentSection === section.key ? "current" : "idle")}
-        className={cn(SIDEBAR_ROW_CLASSES, sidebarRowStateClasses(currentSection === section.key ? "current" : "idle"))}
-      >
-        <SidebarRowIconSlot icon={section.icon} />
-        <span className="truncate">{t(section.labelKey)}</span>
-      </Link>
-    ));
+    sections.map((section) => {
+      const state = currentSection === section.key ? "current" : "idle";
+      return (
+        <Link
+          key={section.key}
+          to={`${ROUTES.SETTING}#${section.key}`}
+          onClick={() => setMobileOpen(false)}
+          {...sidebarRowStateAttributes(state)}
+          className={cn(SIDEBAR_ROW_CLASSES, sidebarRowStateClasses(state))}
+        >
+          <SidebarRowIconSlot icon={section.icon} />
+          <span className="truncate">{t(section.labelKey)}</span>
+        </Link>
+      );
+    });
   return (
     <div className={SIDEBAR_SECTION_STACK_CLASSES}>
       <SidebarSection label={t("common.basic")}>{renderSections(basic)}</SidebarSection>
@@ -295,13 +301,14 @@ interface NavPillProps {
 }
 
 /**
- * The compact navigator is intentionally horizontal. Its 16px glyph plus 6px padding
- * on each side makes the collapsed control an exact 28px square, the same box as the
- * header's compose control. Expanding the label only opens the text track, so the
- * artwork and surface never jump.
+ * The compact navigator is intentionally horizontal. Its 16px glyph plus 5px padding and
+ * the 1px focus border on each side makes the collapsed control an exact 28px square, the
+ * same box as the header's compose control. Expanding the label only opens the text track,
+ * so the artwork and surface never jump.
  *
- * Actions are separated by 4px; icons and labels by 6px. Below a 230px row the current
- * page stays a filled square with its tooltip, leaving room for the other actions.
+ * Actions are separated by 4px; icons and labels by 6px. Below a 240px row the current
+ * page stays a filled square with its tooltip, leaving room for the other actions: the
+ * label opens whole or not at all, never as a three-letter truncation.
  * Timeline's trailing arrow shares its surface, with a separate click target.
  */
 const NavPill = ({ label, icon: Icon, to, onClick, active = false, expanded = false, className }: NavPillProps) => {
@@ -333,11 +340,11 @@ const NavPill = ({ label, icon: Icon, to, onClick, active = false, expanded = fa
           aria-hidden="true"
           className={cn(
             "grid min-w-0 grid-cols-[0fr] ps-0 transition-[grid-template-columns,padding] duration-200 ease-out motion-reduce:transition-none",
-            expanded && "@min-[230px]:grid-cols-[1fr] @min-[230px]:ps-1.5",
+            expanded && "@min-[240px]:grid-cols-[1fr] @min-[240px]:ps-1.5",
           )}
         >
           <span className="flex min-w-0 items-center overflow-hidden">
-            <span data-sidebar-label className="min-w-0 truncate mu-body">
+            <span data-sidebar-label className="min-w-0 truncate mu-label-sm">
               {label}
             </span>
           </span>

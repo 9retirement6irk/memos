@@ -82,14 +82,14 @@ func buildArchiveFixture(t *testing.T, ts *TestService, username string) *archiv
 	})
 	require.NoError(t, err)
 
-	_, err = ts.Service.CreateMemoComment(userCtx, &apipb.CreateMemoCommentRequest{
-		Parent:    parent.Name,
-		CommentId: "comment0001",
-		Comment: &apipb.Memo{
+	_, err = ts.Service.CreateMemo(userCtx, &apipb.CreateMemoRequest{
+		Memo: &apipb.Memo{
+			Parent:     new(parent.Name),
 			Content:    "A comment",
 			Visibility: apipb.Visibility_PRIVATE,
 			CreateTime: timestamppb.New(mustTime(t, "2026-02-28T08:00:00Z")),
 		},
+		MemoId: "comment0001",
 	})
 	require.NoError(t, err)
 
@@ -213,6 +213,68 @@ func TestWriteMemoExport(t *testing.T) {
 	require.Equal(t, "ARCHIVED", byUID["archived001"].State)
 	require.Equal(t, "PROTECTED", byUID["archived001"].Visibility)
 	require.Equal(t, []string{"work"}, byUID["referenced1"].Tags)
+}
+
+func TestWriteMemoExportCrossChunkRelations(t *testing.T) {
+	ts := NewTestService(t)
+	defer ts.Cleanup()
+	ctx := context.Background()
+
+	user, err := ts.CreateRegularUser(ctx, "chunked-exporter")
+	require.NoError(t, err)
+	other, err := ts.CreateRegularUser(ctx, "other-user")
+	require.NoError(t, err)
+
+	const totalMemos = 501
+	baseTime := mustTime(t, "2026-03-01T00:00:00Z").Unix()
+	memos := make([]*store.Memo, 0, totalMemos)
+	for i := range totalMemos {
+		tsSec := baseTime + int64(i)
+		memo, err := ts.Store.CreateMemo(ctx, &store.Memo{
+			UID:        "chunk-memo-" + strconv.Itoa(i),
+			CreatorID:  user.ID,
+			CreatedTs:  tsSec,
+			UpdatedTs:  tsSec,
+			RowStatus:  store.Normal,
+			Content:    "memo " + strconv.Itoa(i),
+			Visibility: store.Public,
+		})
+		require.NoError(t, err)
+		memos = append(memos, memo)
+	}
+	otherMemo, err := ts.Store.CreateMemo(ctx, &store.Memo{
+		UID:        "other-user-memo",
+		CreatorID:  other.ID,
+		CreatedTs:  baseTime,
+		UpdatedTs:  baseTime,
+		RowStatus:  store.Normal,
+		Content:    "other memo",
+		Visibility: store.Public,
+	})
+	require.NoError(t, err)
+
+	first, last := memos[0], memos[len(memos)-1]
+	for _, rel := range []*store.MemoRelation{
+		{MemoID: first.ID, RelatedMemoID: last.ID, Type: store.MemoRelationReference},
+		{MemoID: last.ID, RelatedMemoID: first.ID, Type: store.MemoRelationReference},
+		{MemoID: first.ID, RelatedMemoID: otherMemo.ID, Type: store.MemoRelationReference},
+		{MemoID: otherMemo.ID, RelatedMemoID: last.ID, Type: store.MemoRelationReference},
+	} {
+		_, err := ts.Store.UpsertMemoRelation(ctx, rel)
+		require.NoError(t, err)
+	}
+
+	archive := exportArchive(t, ts, user)
+	require.Len(t, archive.Memos, totalMemos)
+
+	byUID := archiveMemosByUID(archive)
+	require.ElementsMatch(t, []memoexport.Relation{
+		{Type: memoexport.RelationReference, Memo: last.UID},
+		{Type: memoexport.RelationReference, Memo: otherMemo.UID},
+	}, byUID[first.UID].Relations)
+	require.Equal(t, []memoexport.Relation{
+		{Type: memoexport.RelationReference, Memo: first.UID},
+	}, byUID[last.UID].Relations)
 }
 
 func indexOfMemo(archive *memoexport.File, uid string) int {

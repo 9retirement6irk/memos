@@ -90,6 +90,8 @@
     "memo": "مذكرة",
     "memos": "مذكرات",
     "more": "المزيد",
+    "move-down": "Move down",
+    "move-up": "Move up",
     "name": "الاسم",
     "nickname": "الاسم المستعار",
     "open": "فتح",
@@ -436,6 +438,13 @@
     "order-by": "ترتيب حسب",
     "show-less": "عرض أقل",
     "show-more": "عرض المزيد",
+    "audience": {
+      "heading": "من يمكنه رؤيتها؟",
+      "private": "أنا فقط",
+      "space": "أعضاء المساحة",
+      "protected": "المستخدمون المسجّلون دخولهم",
+      "public": "الجميع"
+    },
     "visibility": {
       "private": "خاص",
       "protected": "محمي",
@@ -474,9 +483,9 @@
       "open-image": "مشاركة كصورة"
     },
     "new-badge": "جديد",
-    "parent-loading": "جارٍ تحميل المذكرة الأصلية...",
-    "parent-load-error": "تعذر تحميل المذكرة الأصلية.",
-    "parent-unavailable": "المذكرة الأصلية غير متوفرة",
+    "parent-loading": "جارٍ تحميل المذكرة الأم...",
+    "parent-load-error": "تعذر تحميل المذكرة الأم.",
+    "parent-unavailable": "المذكرة الأم غير متوفرة",
     "parent-unavailable-description": "ربما تم حذفها أو ربما لم يعد لديك صلاحية الوصول إليها.",
     "moved": "تم نقل المذكرة",
     "back-to": "العودة إلى {{source}}",
@@ -493,7 +502,7 @@
     "newest-first": "الأحدث أولًا",
     "oldest-first": "الأقدم أولًا",
     "on-this-memo": "في هذه المذكرة",
-    "parent-memo": "المذكرة الأصلية",
+    "parent-memo": "المذكرة الأم",
     "task-actions": {
       "check-all": "تحديد جميع المهام",
       "uncheck-all": "إلغاء تحديد جميع المهام",
@@ -503,7 +512,9 @@
     "add-reaction": "إضافة رد فعل",
     "remove-reaction": "إزالة التفاعل",
     "full-width": "العرض الكامل",
-    "full-width-hint": "استخدام العرض الكامل للخط الزمني للمذكرات."
+    "full-width-hint": "استخدام العرض الكامل للخط الزمني للمذكرات.",
+    "include-comments": "تضمين التعليقات",
+    "include-comments-hint": "عرض التعليقات مع المذكرات في القوائم."
   },
   "message": {
     "archived-successfully": "تمت الأرشفة بنجاح",
@@ -869,8 +880,6 @@
       "label": "Usage limits",
       "memos": "Memos",
       "memos-description": "Includes comments and archived memos.",
-      "move-down": "Move down",
-      "move-up": "Move up",
       "never-applies": "Never applies",
       "never-applies-description": "Every user named here is caught by an earlier entry.",
       "order-note": "Entries are checked from top to bottom. The first entry that names a user is that user's limits; later entries are ignored for them. The last entry applies to everyone else.",

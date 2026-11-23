@@ -92,6 +92,8 @@
     "memos": "メモ",
     "month-navigation": "月の移動",
     "more": "もっと",
+    "move-down": "Move down",
+    "move-up": "Move up",
     "name": "名前",
     "next-month": "翌月",
     "nickname": "ニックネーム",
@@ -473,6 +475,13 @@
     "show-less": "表示を減らす",
     "show-more": "もっと見る",
     "view-options": "表示オプション",
+    "audience": {
+      "heading": "誰が閲覧できますか？",
+      "private": "自分のみ",
+      "space": "スペースのメンバー",
+      "protected": "ログイン中のユーザー",
+      "public": "すべての人"
+    },
     "visibility": {
       "private": "非公開",
       "private-description": "自分にのみ表示",
@@ -492,9 +501,9 @@
       "updated": "タスクが更新されました"
     },
     "new-badge": "新着",
-    "parent-loading": "元のメモを読み込んでいます…",
-    "parent-load-error": "元のメモを読み込めませんでした。",
-    "parent-unavailable": "元のメモが利用できません",
+    "parent-loading": "親メモを読み込んでいます…",
+    "parent-load-error": "親メモを読み込めませんでした。",
+    "parent-unavailable": "親メモが利用できません",
     "parent-unavailable-description": "削除されたか、アクセス権がなくなった可能性があります。",
     "moved": "メモが移動されました",
     "back-to": "{{source}}に戻る",
@@ -504,7 +513,9 @@
     "add-reaction": "リアクションを追加",
     "remove-reaction": "反応を取り除く",
     "full-width": "全幅表示",
-    "full-width-hint": "メモのタイムラインを幅いっぱいに表示します。"
+    "full-width-hint": "メモのタイムラインを幅いっぱいに表示します。",
+    "include-comments": "コメントを含める",
+    "include-comments-hint": "一覧にメモと一緒にコメントを表示します。"
   },
   "message": {
     "archived-successfully": "アーカイブが完了しました",
@@ -946,8 +957,6 @@
       "label": "Usage limits",
       "memos": "Memos",
       "memos-description": "Includes comments and archived memos.",
-      "move-down": "Move down",
-      "move-up": "Move up",
       "never-applies": "Never applies",
       "never-applies-description": "Every user named here is caught by an earlier entry.",
       "order-note": "Entries are checked from top to bottom. The first entry that names a user is that user's limits; later entries are ignored for them. The last entry applies to everyone else.",

@@ -4,14 +4,14 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { type SpaceViewOverride, TimelineViewProvider, useView } from "@/contexts/ViewContext";
 
 const storageKey = "memos-view-setting";
-const saved = { timeBasis: "update_time", orderByTimeAsc: true, maxColumns: 3, compactMode: true };
-const defaults = { timeBasis: "create_time", orderByTimeAsc: false, maxColumns: 1, compactMode: false };
+const saved = { timeBasis: "update_time", orderByTimeAsc: true, maxColumns: 3 };
+const defaults = { timeBasis: "create_time", orderByTimeAsc: false, maxColumns: 1 };
 
 function Probe() {
-  const { timeBasis, orderByTimeAsc, maxColumns, compactMode, setMaxColumns, setFullWidth } = useView();
+  const { timeBasis, orderByTimeAsc, maxColumns, setMaxColumns, setFullWidth } = useView();
   return (
     <>
-      <output>{JSON.stringify({ timeBasis, orderByTimeAsc, maxColumns, compactMode })}</output>
+      <output>{JSON.stringify({ timeBasis, orderByTimeAsc, maxColumns })}</output>
       <button type="button" onClick={() => setMaxColumns(2)}>
         two columns
       </button>
@@ -84,7 +84,7 @@ describe("Timeline display settings scope", () => {
   });
 
   it("gives the journal Space its own view and leaves Home's alone", async () => {
-    const journal = { timeBasis: "create_time", orderByTimeAsc: true, maxColumns: 1, compactMode: false } as const;
+    const journal = { timeBasis: "create_time", orderByTimeAsc: true, maxColumns: 1 } as const;
     const update = vi.fn();
     const router = renderRoute("/spaces/journal", { space: "spaces/journal", state: { ...journal, fullWidth: false }, update });
     expect(settings()).toEqual(journal);

@@ -62,11 +62,15 @@ describe("PreferencesSection", () => {
 
     fireEvent.click(screen.getByRole("switch", { name: "memo.link-preview" }));
     fireEvent.click(screen.getByRole("switch", { name: "setting.preference.double-click-edit" }));
+    fireEvent.click(screen.getByRole("switch", { name: "memo.compact-mode" }));
+    fireEvent.click(screen.getByRole("switch", { name: "memo.include-comments" }));
 
     expect(JSON.parse(localStorage.getItem(DEVICE_PREFERENCES_KEY) ?? "null")).toEqual({
       linkPreview: false,
       doubleClickEdit: true,
       hiddenSidebarSpaces: [],
+      compactMode: true,
+      includeComments: true,
     });
     expect(mocks.mutate).not.toHaveBeenCalled();
 

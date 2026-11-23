@@ -129,6 +129,8 @@
     "memo": "Memo",
     "memos": "Memos",
     "more": "Rohkem",
+    "move-down": "Move down",
+    "move-up": "Move up",
     "name": "Nimi",
     "nickname": "Hüüdnimi",
     "open": "Ava",
@@ -510,6 +512,13 @@
       "uncheck-all": "Tühjendage kõigi ülesannete märge",
       "updated": "Ülesanded värskendatud"
     },
+    "audience": {
+      "heading": "Kes seda näevad?",
+      "private": "Ainult mina",
+      "space": "Ruumi liikmed",
+      "protected": "Sisselogitud kasutajad",
+      "public": "Kõik"
+    },
     "visibility": {
       "private": "Privaatne",
       "protected": "Kaitstud",
@@ -521,9 +530,9 @@
       "space-description": "Kõik ruumis {{space}}"
     },
     "new-badge": "Uus",
-    "parent-loading": "Algse memo laadimine…",
-    "parent-load-error": "Algse memo laadimine ebaõnnestus.",
-    "parent-unavailable": "Algne memo pole saadaval",
+    "parent-loading": "Ülemmemo laadimine…",
+    "parent-load-error": "Ülemmemo laadimine ebaõnnestus.",
+    "parent-unavailable": "Ülemmemo pole saadaval",
     "parent-unavailable-description": "See võib olla kustutatud või teil pole enam juurdepääsu.",
     "moved": "Memo teisaldatud",
     "back-to": "Tagasi {{source}} juurde",
@@ -542,7 +551,9 @@
     "add-reaction": "Lisa reaktsioon",
     "remove-reaction": "Eemaldage reaktsioon",
     "full-width": "Täislaius",
-    "full-width-hint": "Kasuta memode ajajoone kogu laiust."
+    "full-width-hint": "Kasuta memode ajajoone kogu laiust.",
+    "include-comments": "Kaasa kommentaarid",
+    "include-comments-hint": "Näita loendites kommentaare koos memodega."
   },
   "message": {
     "archived-successfully": "Arhiveerimine õnnestus",
@@ -1062,8 +1073,6 @@
       "label": "Usage limits",
       "memos": "Memos",
       "memos-description": "Includes comments and archived memos.",
-      "move-down": "Move down",
-      "move-up": "Move up",
       "never-applies": "Never applies",
       "never-applies-description": "Every user named here is caught by an earlier entry.",
       "order-note": "Entries are checked from top to bottom. The first entry that names a user is that user's limits; later entries are ignored for them. The last entry applies to everyone else.",

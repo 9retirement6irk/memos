@@ -90,6 +90,8 @@
     "memo": "Memo",
     "memos": "Memo",
     "more": "Altro",
+    "move-down": "Move down",
+    "move-up": "Move up",
     "name": "Nome",
     "nickname": "Nickname",
     "open": "Apri",
@@ -465,6 +467,13 @@
     },
     "show-less": "Mostra meno",
     "show-more": "Mostra di più",
+    "audience": {
+      "heading": "Chi può vedere questa nota?",
+      "private": "Solo io",
+      "space": "Membri dello spazio",
+      "protected": "Utenti che hanno effettuato l’accesso",
+      "public": "Tutti"
+    },
     "visibility": {
       "private": "Privato",
       "protected": "Protetto",
@@ -484,9 +493,9 @@
       "updated": "Attività aggiornate"
     },
     "new-badge": "Nuovo",
-    "parent-loading": "Caricamento del memo originale in corso…",
-    "parent-load-error": "Impossibile caricare il memo originale.",
-    "parent-unavailable": "Memo originale non disponibile",
+    "parent-loading": "Caricamento del memo principale in corso…",
+    "parent-load-error": "Impossibile caricare il memo principale.",
+    "parent-unavailable": "Memo principale non disponibile",
     "parent-unavailable-description": "Potrebbe essere stato eliminato o potresti non avere più accesso.",
     "moved": "Memo spostato",
     "back-to": "Torna a {{source}}",
@@ -505,7 +514,9 @@
     "add-reaction": "Aggiungi reazione",
     "remove-reaction": "Rimuovi la reazione",
     "full-width": "Larghezza intera",
-    "full-width-hint": "Usa tutta la larghezza della cronologia dei memo."
+    "full-width-hint": "Usa tutta la larghezza della cronologia dei memo.",
+    "include-comments": "Includi commenti",
+    "include-comments-hint": "Mostra i commenti insieme ai memo negli elenchi."
   },
   "message": {
     "archived-successfully": "Archiviato con successo",
@@ -947,8 +958,6 @@
       "label": "Usage limits",
       "memos": "Memos",
       "memos-description": "Includes comments and archived memos.",
-      "move-down": "Move down",
-      "move-up": "Move up",
       "never-applies": "Never applies",
       "never-applies-description": "Every user named here is caught by an earlier entry.",
       "order-note": "Entries are checked from top to bottom. The first entry that names a user is that user's limits; later entries are ignored for them. The last entry applies to everyone else.",

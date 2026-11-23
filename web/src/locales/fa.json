@@ -90,6 +90,8 @@
     "memo": "یادداشت",
     "memos": "یادداشت‌ها",
     "more": "بیشتر",
+    "move-down": "Move down",
+    "move-up": "Move up",
     "name": "نام",
     "nickname": "نام مستعار",
     "open": "باز کردن",
@@ -432,6 +434,13 @@
     "order-by": "مرتب‌سازی بر اساس",
     "show-less": "نمایش کمتر",
     "show-more": "نمایش بیشتر",
+    "audience": {
+      "heading": "چه کسانی می‌توانند آن را ببینند؟",
+      "private": "فقط من",
+      "space": "اعضای فضا",
+      "protected": "کاربران واردشده",
+      "public": "همه"
+    },
     "visibility": {
       "private": "خصوصی",
       "protected": "فضای کار",
@@ -470,9 +479,9 @@
       "open-image": "اشتراک‌گذاری به عنوان تصویر"
     },
     "new-badge": "جدید",
-    "parent-loading": "در حال بارگیری یادداشت اصلی...",
-    "parent-load-error": "یادداشت اصلی بارگیری نشد.",
-    "parent-unavailable": "یادداشت اصلی در دسترس نیست",
+    "parent-loading": "در حال بارگیری یادداشت والد...",
+    "parent-load-error": "یادداشت والد بارگیری نشد.",
+    "parent-unavailable": "یادداشت والد در دسترس نیست",
     "parent-unavailable-description": "ممکن است حذف شده باشد یا دیگر دسترسی نداشته باشید.",
     "moved": "یادداشت منتقل شد",
     "back-to": "بازگشت به {{source}}",
@@ -499,7 +508,9 @@
     "add-reaction": "افزودن واکنش",
     "remove-reaction": "حذف واکنش",
     "full-width": "تمام عرض",
-    "full-width-hint": "از تمام عرض خط زمانی یادداشت‌ها استفاده کنید."
+    "full-width-hint": "از تمام عرض خط زمانی یادداشت‌ها استفاده کنید.",
+    "include-comments": "شامل نظرات",
+    "include-comments-hint": "نمایش نظرات در کنار یادداشت‌ها در فهرست‌ها."
   },
   "message": {
     "archived-successfully": "با موفقیت آرشیو شد",
@@ -865,8 +876,6 @@
       "label": "Usage limits",
       "memos": "Memos",
       "memos-description": "Includes comments and archived memos.",
-      "move-down": "Move down",
-      "move-up": "Move up",
       "never-applies": "Never applies",
       "never-applies-description": "Every user named here is caught by an earlier entry.",
       "order-note": "Entries are checked from top to bottom. The first entry that names a user is that user's limits; later entries are ignored for them. The last entry applies to everyone else.",

@@ -90,6 +90,8 @@
     "memo": "Poznámka",
     "memos": "Poznámky",
     "more": "Více",
+    "move-down": "Posunout dolů",
+    "move-up": "Posunout nahoru",
     "name": "Jméno",
     "nickname": "Přezdívka",
     "open": "Otevřít",
@@ -466,6 +468,13 @@
     },
     "show-less": "Zobrazit méně",
     "show-more": "Zobrazit více",
+    "audience": {
+      "heading": "Kdo to uvidí?",
+      "private": "Jen já",
+      "space": "Členové prostoru",
+      "protected": "Přihlášení uživatelé",
+      "public": "Všichni"
+    },
     "visibility": {
       "private": "Soukromá",
       "protected": "Chráněná",
@@ -485,9 +494,9 @@
       "updated": "Úkoly aktualizovány"
     },
     "new-badge": "Nový",
-    "parent-loading": "Načítání původní poznámky…",
-    "parent-load-error": "Nepodařilo se načíst původní poznámku.",
-    "parent-unavailable": "Původní poznámka není k dispozici",
+    "parent-loading": "Načítání nadřazené poznámky…",
+    "parent-load-error": "Nepodařilo se načíst nadřazenou poznámku.",
+    "parent-unavailable": "Nadřazená poznámka není k dispozici",
     "parent-unavailable-description": "Možná byla smazána nebo k ní již nemáte přístup.",
     "moved": "Poznámka přesunuta",
     "back-to": "Zpět na {{source}}",
@@ -506,7 +515,9 @@
     "add-reaction": "Přidejte reakci",
     "remove-reaction": "Odstraňte reakci",
     "full-width": "Plná šířka",
-    "full-width-hint": "Využít celou šířku časové osy poznámek."
+    "full-width-hint": "Využít celou šířku časové osy poznámek.",
+    "include-comments": "Zahrnout komentáře",
+    "include-comments-hint": "Zobrazit komentáře v seznamech spolu s poznámkami."
   },
   "message": {
     "archived-successfully": "Úspěšně archivováno",
@@ -949,8 +960,6 @@
       "label": "Limity využití",
       "memos": "Poznámky",
       "memos-description": "Včetně komentářů a archivovaných poznámek.",
-      "move-down": "Posunout dolů",
-      "move-up": "Posunout nahoru",
       "never-applies": "Nikdy se nepoužije",
       "never-applies-description": "Na všechny uživatele uvedené zde se už vztahuje některý z předchozích záznamů.",
       "order-note": "Záznamy se procházejí shora dolů. Pro každého uživatele platí první záznam, který ho uvádí; pozdější záznamy se na něj už nepoužijí. Poslední záznam platí pro všechny ostatní.",

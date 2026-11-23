@@ -90,6 +90,8 @@
     "memo": "Memo",
     "memos": "Memos",
     "more": "More",
+    "move-down": "Move down",
+    "move-up": "Move up",
     "name": "Name",
     "nickname": "Nickname",
     "open": "Open",
@@ -464,6 +466,13 @@
     },
     "show-less": "Show less",
     "show-more": "Show more",
+    "audience": {
+      "heading": "Who can see this?",
+      "private": "Only me",
+      "space": "Space members",
+      "protected": "Signed-in users",
+      "public": "Everyone"
+    },
     "visibility": {
       "private": "Private",
       "protected": "Protected",
@@ -482,9 +491,9 @@
       "uncheck-all": "Uncheck all tasks",
       "updated": "Tasks updated"
     },
-    "parent-loading": "Loading original memo…",
-    "parent-load-error": "Couldn’t load the original memo.",
-    "parent-unavailable": "Original memo unavailable",
+    "parent-loading": "Loading parent memo…",
+    "parent-load-error": "Couldn’t load the parent memo.",
+    "parent-unavailable": "Parent memo unavailable",
     "parent-unavailable-description": "It may have been deleted or you may no longer have access.",
     "moved": "Memo moved",
     "back-to": "Back to {{source}}",
@@ -504,7 +513,9 @@
     "add-reaction": "Add reaction",
     "remove-reaction": "Remove reaction",
     "full-width": "Full width",
-    "full-width-hint": "Use entire width of the memo timeline."
+    "full-width-hint": "Use entire width of the memo timeline.",
+    "include-comments": "Include comments",
+    "include-comments-hint": "Show comments alongside memos in lists."
   },
   "message": {
     "archived-successfully": "Archived successfully",
@@ -946,8 +957,6 @@
       "label": "Usage limits",
       "memos": "Memos",
       "memos-description": "Includes comments and archived memos.",
-      "move-down": "Move down",
-      "move-up": "Move up",
       "never-applies": "Never applies",
       "never-applies-description": "Every user named here is caught by an earlier entry.",
       "order-note": "Entries are checked from top to bottom. The first entry that names a user is that user's limits; later entries are ignored for them. The last entry applies to everyone else.",

@@ -168,6 +168,8 @@
     "memos": "Notat",
     "month-navigation": "Månadsnavigering",
     "more": "Meir",
+    "move-down": "Move down",
+    "move-up": "Move up",
     "name": "Namn",
     "next-month": "Neste månad",
     "nickname": "Kallenamn",
@@ -552,10 +554,10 @@
     "oldest-first": "Eldste fyrst",
     "on-this-memo": "På dette notatet",
     "order-by": "Sorter etter",
-    "parent-load-error": "Klarte diverre ikkje å laste opphavsnotatet.",
-    "parent-loading": "Lastar opphavsnotatet…",
+    "parent-load-error": "Klarte diverre ikkje å laste det overordna notatet.",
+    "parent-loading": "Lastar det overordna notatet…",
     "parent-memo": "Overordna notat",
-    "parent-unavailable": "Opphavsnotatet er ikkje tilgjengeleg",
+    "parent-unavailable": "Det overordna notatet er ikkje tilgjengeleg",
     "parent-unavailable-description": "Det kan vera sletta, eller du har ikkje lenger åtgang.",
     "pinned": "Festa",
     "share": {
@@ -593,6 +595,13 @@
       "updated": "Gjeremåla er oppdaterte"
     },
     "view-options": "Visingsval",
+    "audience": {
+      "heading": "Kven kan sjå dette?",
+      "private": "Berre eg",
+      "space": "Medlemmer i rommet",
+      "protected": "Innlogga brukarar",
+      "public": "Alle"
+    },
     "visibility": {
       "private": "Privat",
       "private-description": "Berre synleg for deg",
@@ -606,7 +615,9 @@
     "add-reaction": "Legg til reaksjon",
     "remove-reaction": "Fjern reaksjon",
     "full-width": "Full breidd",
-    "full-width-hint": "Bruk heile breidda på tidslina for notata."
+    "full-width-hint": "Bruk heile breidda på tidslina for notata.",
+    "include-comments": "Inkluder kommentarar",
+    "include-comments-hint": "Vis kommentarar saman med notat i lister."
   },
   "message": {
     "archived-successfully": "Arkivert",
@@ -1281,8 +1292,6 @@
       "label": "Usage limits",
       "memos": "Memos",
       "memos-description": "Includes comments and archived memos.",
-      "move-down": "Move down",
-      "move-up": "Move up",
       "never-applies": "Never applies",
       "never-applies-description": "Every user named here is caught by an earlier entry.",
       "order-note": "Entries are checked from top to bottom. The first entry that names a user is that user's limits; later entries are ignored for them. The last entry applies to everyone else.",

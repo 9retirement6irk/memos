@@ -90,6 +90,8 @@
     "memo": "მემო",
     "memos": "მემოები",
     "more": "მეტი",
+    "move-down": "Move down",
+    "move-up": "Move up",
     "name": "სახელი",
     "nickname": "მეტსახელი",
     "open": "გახსნა",
@@ -464,6 +466,13 @@
     },
     "show-less": "ნაკლების ჩვენება",
     "show-more": "მეტის ჩვენება",
+    "audience": {
+      "heading": "ვის შეუძლია ნახვა?",
+      "private": "მხოლოდ მე",
+      "space": "სივრცის წევრები",
+      "protected": "სისტემაში შესული მომხმარებლები",
+      "public": "ყველა"
+    },
     "visibility": {
       "private": "პირადი",
       "protected": "სამუშაო სივრცე",
@@ -483,9 +492,9 @@
       "updated": "ამოცანები განახლებულია"
     },
     "new-badge": "ახალი",
-    "parent-loading": "ორიგინალი მემორის ჩატვირთვა…",
-    "parent-load-error": "ორიგინალი მემორის ჩატვირთვა ვერ მოხერხდა.",
-    "parent-unavailable": "ორიგინალი მემორანდუმი მიუწვდომელია",
+    "parent-loading": "მშობელი მემოს ჩატვირთვა…",
+    "parent-load-error": "მშობელი მემოს ჩატვირთვა ვერ მოხერხდა.",
+    "parent-unavailable": "მშობელი მემო მიუწვდომელია",
     "parent-unavailable-description": "შესაძლოა, ის წაშლილია ან აღარ გაქვთ წვდომა.",
     "moved": "მემორანდუმი გადატანილია",
     "back-to": "დაბრუნება {{source}}-ზე",
@@ -504,7 +513,9 @@
     "add-reaction": "დაამატეთ რეაქცია",
     "remove-reaction": "რეაქციის ამოღება",
     "full-width": "სრული სიგანე",
-    "full-width-hint": "მემოების დროის ხაზის სრული სიგანის გამოყენება."
+    "full-width-hint": "მემოების დროის ხაზის სრული სიგანის გამოყენება.",
+    "include-comments": "კომენტარების ჩართვა",
+    "include-comments-hint": "სიებში კომენტარების ჩვენება მემოებთან ერთად."
   },
   "message": {
     "archived-successfully": "წარმატებით დაარქივდა",
@@ -946,8 +957,6 @@
       "label": "Usage limits",
       "memos": "Memos",
       "memos-description": "Includes comments and archived memos.",
-      "move-down": "Move down",
-      "move-up": "Move up",
       "never-applies": "Never applies",
       "never-applies-description": "Every user named here is caught by an earlier entry.",
       "order-note": "Entries are checked from top to bottom. The first entry that names a user is that user's limits; later entries are ignored for them. The last entry applies to everyone else.",

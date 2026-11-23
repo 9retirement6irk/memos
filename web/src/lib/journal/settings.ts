@@ -35,6 +35,7 @@ export interface JournalView {
   /** 1 = list, 2 or 3 = at most that many columns, 0 = as many as fit. */
   maxColumns: 0 | 1 | 2 | 3;
   orderByTimeAsc: boolean;
+  /** No longer read: compact mode is a choice for every memo list (Settings → Preferences → This device). Kept so saved settings read back unchanged. */
   compactMode: boolean;
   /** The memo list uses the whole width of the page instead of a reading column. */
   fullWidth: boolean;
