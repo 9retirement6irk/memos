@@ -87,3 +87,37 @@ describe("the text colour button", () => {
     editor = null;
   });
 });
+
+describe("where the panel opens", () => {
+  const openAt = (buttonTop: number, side: "above" | "below") => {
+    const instance = create("hello world");
+    selectFirst(instance, 0, 5);
+    const popup = (instance as unknown as { toolbar: { popup: { el: HTMLElement; placed: string } } }).toolbar.popup;
+    popup.placed = side;
+    document.body.appendChild(popup.el);
+    const button = popup.el.querySelector<HTMLButtonElement>(".memo-tool-colour") as HTMLButtonElement;
+    button.getBoundingClientRect = () =>
+      ({ top: buttonTop, bottom: buttonTop + 28, left: 200, right: 236, width: 36, height: 28 }) as DOMRect;
+    for (const [name, value] of [
+      ["offsetHeight", 80],
+      ["offsetWidth", 420],
+    ] as const) {
+      Object.defineProperty(HTMLElement.prototype, name, { configurable: true, get: () => value });
+    }
+    button.click();
+    const panel = document.querySelector<HTMLElement>(".memo-colour-panel") as HTMLElement;
+    for (const name of ["offsetHeight", "offsetWidth"]) delete (HTMLElement.prototype as unknown as Record<string, unknown>)[name];
+    return panel;
+  };
+
+  it("opens on the toolbar's side away from the selection, from the button, like the editor's menus", () => {
+    // The toolbar is above the selection with room above it: the panel goes above the button.
+    expect(openAt(300, "above").style.top).toBe(`${300 - 80 - 4}px`);
+  });
+
+  it("flips below when there is no room above, as at the top of the window", () => {
+    const panel = openAt(21, "above");
+    expect(panel.style.top).toBe(`${21 + 28 + 4}px`);
+    expect(panel.style.left).toBe("200px");
+  });
+});
