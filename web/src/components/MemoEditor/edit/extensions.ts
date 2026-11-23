@@ -1,5 +1,6 @@
 import { type Extension, fileHandler, matchToken, type SuggestionAllowContext, scanTags, suggestion } from "@usememos/editor";
 import { emoji } from "@usememos/editor/emoji";
+import { colourTags } from "./colourTags";
 import { type TextColourLabels, textColourPicker } from "./textColourPicker";
 import type { EditorPosition } from "./types/editorController";
 
@@ -59,6 +60,8 @@ export function buildEditorExtensions({ getTags, onFiles, emojiLabel, textColour
   return [
     // Text colour and highlight, written as the <span data-color> / <span data-highlight> memos draws.
     ...(textColourLabels ? [textColourPicker(textColourLabels)] : []),
+    // Those spans show as coloured words while editing, not as their tags.
+    colourTags(),
     // The popup opens exactly where tags are highlighted: the matcher is built
     // from the same scanner as tags(). A pick writes "#work/planning ".
     suggestion({

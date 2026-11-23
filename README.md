@@ -122,7 +122,8 @@ download. PDFs load only when they scroll into view.
 The formatting toolbar has a colour button (after the link button): nine text colours and five
 highlights, or none. They're saved in the memo as `<span data-color="red">…</span>` and
 `<span data-highlight="yellow">…</span>`, the same as GZreader writes. Dark themes show lighter
-shades of the same colours. Stock Memos keeps the spans and shows the words without colour.
+shades of the same colours. While editing, coloured words show in their colour and the tags stay
+hidden; source mode shows the tags. Stock Memos keeps the spans and shows the words without colour.
 
 ### HEIC photos
 

@@ -1,7 +1,10 @@
 import {
   type Block,
   type Cell,
+  commands,
   containerContent,
+  type Decoration,
+  type Decorator,
   type EditorState,
   type Inline,
   isPlainTextBlock,
@@ -65,8 +68,18 @@ const openTag = (style: TextStyle) => {
   return `<span ${attributes.join(" ")}>`;
 };
 
-/** The block's content as units, with the colour spans taken out and turned into each unit's style. */
-const toUnits = (content: Inline): Unit[] => {
+/** Where one of our colour tags sits in a block's text. */
+interface TagRange {
+  from: number;
+  to: number;
+}
+
+/**
+ * The block's content as units, with the colour spans taken out and turned into each unit's style.
+ * `tags`, when given, collects where the colour tags that were taken out sat: an opening tag of ours and
+ * the closing tag that pairs with it.
+ */
+const toUnits = (content: Inline, tags?: TagRange[]): Unit[] => {
   const units: Unit[] = [];
   // Open spans, innermost last: ours carry a style, others (null) only keep their closing tag paired.
   const open: (TextStyle | null)[] = [];
@@ -79,13 +92,17 @@ const toUnits = (content: Inline): Unit[] => {
         const at = offset + (match.index ?? 0);
         const ours = OURS.exec(piece);
         if (ours) {
+          tags?.push({ from: at, to: at + piece.length });
           const style: TextStyle = {};
           for (const [, kind, value] of ours[1].matchAll(ATTRIBUTE)) style[kind as StyleKind] = value;
           open.push(style);
           continue;
         }
         if (SPAN_CLOSE.test(piece) && open.length > 0) {
-          if (open.pop() !== null) continue;
+          if (open.pop() !== null) {
+            tags?.push({ from: at, to: at + piece.length });
+            continue;
+          }
         } else if (SPAN_OPEN.test(piece)) {
           open.push(null);
         }
@@ -213,4 +230,111 @@ export const textStyleAt = (state: EditorState): TextStyle => {
   if (!content) return {};
   const unit = toUnits(content).find((candidate) => !candidate.html && candidate.from >= part.from);
   return unit?.style ?? {};
+};
+
+/* The formatted editor shows coloured words, not the tags around them. Rendered HTML already does when the
+ * caret is elsewhere; when the caret touches the run the editor shows its source, so these decorations hide the
+ * tags there (colourTags.css) and colour the words between them. The tags stay in the text, so a hidden tag
+ * is still under the caret: Backspace and Delete next to one go through deleteAcrossColourTags, which removes
+ * the word's character instead and writes the block's colour spans again, so a tag is never left half deleted.
+ */
+
+/** Hides the block's colour tags and colours the words between them. */
+export const colourTagDecorations: Decorator = ({ content }) => {
+  const tags: TagRange[] = [];
+  const units = toUnits(content, tags);
+  if (tags.length === 0) return [];
+  const decorations: Decoration[] = tags.map(({ from, to }) => ({ from, to, class: "memo-colour-tag" }));
+  for (let i = 0; i < units.length; ) {
+    const key = styleKey(units[i].style);
+    let end = i + 1;
+    // One decoration per stretch of the same style with no tag inside it, so decorations never overlap.
+    while (
+      end < units.length &&
+      styleKey(units[end].style) === key &&
+      units[end].from === units[end - 1].from + units[end - 1].text.length
+    ) {
+      end += 1;
+    }
+    const { color, highlight } = units[i].style;
+    if (color || highlight) {
+      const last = units[end - 1];
+      decorations.push({
+        from: units[i].from,
+        to: last.from + last.text.length,
+        class: "memo-colour-run",
+        attributes: { ...(color ? { "data-color": color } : {}), ...(highlight ? { "data-highlight": highlight } : {}) },
+      });
+    }
+    i = end;
+  }
+  return decorations.sort((a, b) => a.from - b.from);
+};
+
+type Position = EditorState["selection"]["anchor"];
+
+/** The block's text, units and tag ranges at a position, or null where colour tags can't be (code, raw HTML). */
+const containerAt = (state: EditorState, position: Position) => {
+  const index = state.doc.blocks.findIndex((block) => block.id === position.blockId);
+  const block = state.doc.blocks[index];
+  if (!block || !colourable(block)) return null;
+  const content = containerContent(block, position.cell);
+  if (!content) return null;
+  const tags: TagRange[] = [];
+  const units = toUnits(content, tags);
+  return { index, block, content, units, tags, text: content.map((span) => span.text).join("") };
+};
+
+/** The state with the units in `[from, to)` removed from one block, and the caret where they were. */
+const removeUnits = (
+  state: EditorState,
+  at: NonNullable<ReturnType<typeof containerAt>>,
+  position: Position,
+  from: number,
+  to: number,
+): EditorState | null => {
+  const first = at.units.findIndex((unit) => unit.from >= from);
+  const kept = at.units.filter((unit) => unit.from < from || unit.from >= to);
+  if (first < 0 || kept.length === at.units.length) return null;
+  const rebuilt = fromUnits(kept);
+  const blocks = [...state.doc.blocks];
+  blocks[at.index] = withContainerContent(at.block, position.cell, rebuilt.content);
+  const caret = { ...position, offset: rebuilt.starts[first] };
+  return { ...state, doc: { ...state.doc, blocks }, selection: { anchor: caret, focus: caret } };
+};
+
+/**
+ * Backspace or Delete beside a hidden colour tag, or over a selection in one block that holds one: deletes the
+ * words' characters, never part of a tag, and writes the colour spans again so none is left open or empty.
+ * Null when no colour tag is involved, for the editor's own key handling.
+ */
+export const deleteAcrossColourTags = (state: EditorState, direction: "backward" | "forward"): EditorState | null => {
+  const { anchor, focus } = state.selection;
+  if (anchor.blockId !== focus.blockId || anchor.cell?.row !== focus.cell?.row || anchor.cell?.col !== focus.cell?.col) return null;
+  const at = containerAt(state, anchor);
+  if (!at || at.tags.length === 0) return null;
+  if (anchor.offset !== focus.offset) {
+    const from = Math.min(anchor.offset, focus.offset);
+    const to = Math.max(anchor.offset, focus.offset);
+    if (!at.tags.some((tag) => tag.from < to && tag.to > from)) return null;
+    return removeUnits(state, at, { ...anchor, offset: from }, from, to);
+  }
+  // Step over the hidden tags beside the caret to the character the key is meant for.
+  let edge = anchor.offset;
+  if (direction === "backward") {
+    for (let tag = at.tags.find((t) => t.to === edge); tag; tag = at.tags.find((t) => t.to === edge)) edge = tag.from;
+  } else {
+    for (let tag = at.tags.find((t) => t.from === edge); tag; tag = at.tags.find((t) => t.from === edge)) edge = tag.to;
+  }
+  if (edge === anchor.offset) return null;
+  const hasCharacter = direction === "backward" ? edge > 0 : edge < at.text.length;
+  if (!hasCharacter) {
+    // Only tags between the caret and the block's edge: join the blocks as the key would at the edge.
+    const caret = { ...anchor, offset: edge };
+    const moved = { ...state, selection: { anchor: caret, focus: caret } };
+    return direction === "backward" ? commands.deleteBackward(moved) : commands.deleteForward(moved);
+  }
+  const [from, to] =
+    direction === "backward" ? [commands.previousGrapheme(at.text, edge), edge] : [edge, commands.nextGrapheme(at.text, edge)];
+  return removeUnits(state, at, anchor, from, to);
 };
