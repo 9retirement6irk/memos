@@ -1385,6 +1385,7 @@
     "place-placeholder": "Előbb válassz egy pontot."
   },
   "calendar": {
+    "more-memos": "+{{count}} további",
     "new-memo-on-day": "Új emlékeztető ezen a napon.",
     "next-year": "Jövőre.",
     "no-memos-in-month": "Nincsenek emlékeztetők {{month}}-ben.",
