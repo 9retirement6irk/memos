@@ -791,9 +791,14 @@
   transform: scale(1.3);
   transform-origin: center;
 }
+/* On a phone there are no page arrows: the options are one row that scrolls sideways under a finger. */
 .kidpix-panel .kidpix-options {
   position: static;
   flex: 1;
+  overflow: auto hidden;
+  overscroll-behavior-x: contain;
+  touch-action: pan-x;
+  scrollbar-width: none;
   grid-template-rows: 44px;
   grid-auto-columns: 44px;
   align-items: center;
@@ -825,6 +830,8 @@
   height: 72px;
   padding: 0 12px;
   overflow: auto hidden;
+  overscroll-behavior-x: contain;
+  touch-action: pan-x;
   border-radius: 36px;
   background: linear-gradient(180deg, #1f76d6 0%, #7fd0ff 40%, #3aa0f5 70%, #1659b8 100%);
   box-shadow:
@@ -832,7 +839,8 @@
     inset 0 0 0 5px #9ce0ff;
   scrollbar-width: none;
 }
-.kidpix-strip::-webkit-scrollbar {
+.kidpix-strip::-webkit-scrollbar,
+.kidpix-panel .kidpix-options::-webkit-scrollbar {
   display: none;
 }
 .kidpix-strip > .kidpix-dynamite {
