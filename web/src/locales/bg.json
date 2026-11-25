@@ -90,7 +90,6 @@
     "attachments": "Прикачени файлове",
     "avatar": "Аватар",
     "basic": "Основен",
-    "browse": "Разглеждане",
     "calendar": "Календар",
     "cancel": "Отказ",
     "clear": "ясно",
@@ -535,7 +534,6 @@
     "parent-unavailable": "Родителската бележка не е налична",
     "parent-unavailable-description": "Възможно е да е била изтрита или вече да нямате достъп.",
     "moved": "Бележката е преместена",
-    "back-to": "Обратно към {{source}}",
     "connections": "Връзки",
     "grid-compact-hint": "Свиване на по-дългите бележки. Винаги е включено при мрежови оформления.",
     "layout": "Оформление",
@@ -676,12 +674,12 @@
       "transcription-language-help": "ISO 639-1 кратък код (напр. en, de, zh). Оставете празно за автоматично откриване.",
       "transcription-language-placeholder": "автоматично откриване",
       "transcription-language": "Език по подразбиране",
-      "transcription-model-help": "Свободен текст. Използвайте идентификатора на модела на доставчика — напр. whisper-1, gpt-4o-transcribe, whisper-large-v3-turbo.",
+      "transcription-model-help": "Свободен текст. Използвайте идентификатора на модела на доставчика — напр. gpt-transcribe, whisper-large-v3-turbo.",
       "transcription-model-placeholder-gemini": "gemini-2.5-flash, gemini-2.5-pro",
-      "transcription-model-placeholder-openai": "whisper-1, gpt-4o-transcribe, gpt-4o-mini-transcribe, gpt-4o-transcribe-diarize",
+      "transcription-model-placeholder-openai": "gpt-transcribe",
       "transcription-model": "Модел",
       "transcription-no-provider": "Няма — транскрипцията е деактивирана",
-      "transcription-prompt-help": "Подобрява правописа на собствени имена и жаргон. OpenAI Whisper третира това като мек намек (лимитът на Whisper е приблизително 224 токени). Gemini го третира като буквална инструкция в подканата за генериране.",
+      "transcription-prompt-help": "Подобрява правописа на собствени имена и жаргон.",
       "transcription-prompt-placeholder": "Имена: Алис, Боб. Речник: kubernetes, OAuth.",
       "transcription-prompt": "Бързи съвети",
       "transcription-provider": "Доставчик",
@@ -1385,6 +1383,7 @@
     "place-placeholder": "Първо изберете позиция."
   },
   "calendar": {
+    "more-memos": "още {{count}}",
     "new-memo-on-day": "Нова бележка на този ден",
     "next-year": "Следващата година",
     "no-memos-in-month": "Няма бележки в {{month}}",
@@ -1393,7 +1392,6 @@
     "select-month": "Изберете месец"
   },
   "space": {
-    "all-spaces": "Всички пространства",
     "icon": {
       "change": "Промяна на икона на пространство",
       "kind": "Тип икона",

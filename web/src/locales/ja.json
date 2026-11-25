@@ -53,7 +53,6 @@
     "attachments": "添付ファイル",
     "avatar": "アイコン",
     "basic": "基本設定",
-    "browse": "閲覧",
     "calendar": "カレンダー",
     "cancel": "キャンセル",
     "clear": "クリア",
@@ -506,7 +505,6 @@
     "parent-unavailable": "親メモが利用できません",
     "parent-unavailable-description": "削除されたか、アクセス権がなくなった可能性があります。",
     "moved": "メモが移動されました",
-    "back-to": "{{source}}に戻る",
     "connections": "接続",
     "on-this-memo": "このメモについて",
     "parent-memo": "親メモ",
@@ -1053,12 +1051,12 @@
       "transcription-language-help": "ISO 639-1 ショート コード (en、de、zh など)。 自動検出するには空のままにします。",
       "transcription-language-placeholder": "自動検出",
       "transcription-language": "デフォルトの言語",
-      "transcription-model-help": "フリーテキスト。 プロバイダーのモデル識別子を使用します。 whisper-1、gpt-4o-transcribe、whisper-large-v3-turbo。",
+      "transcription-model-help": "フリーテキスト。 プロバイダーのモデル識別子を使用します。 gpt-transcribe、whisper-large-v3-turbo。",
       "transcription-model-placeholder-gemini": "gemini-2.5-flash, gemini-2.5-pro",
-      "transcription-model-placeholder-openai": "whisper-1, gpt-4o-transcribe, gpt-4o-mini-transcribe, gpt-4o-transcribe-diarize",
+      "transcription-model-placeholder-openai": "gpt-transcribe",
       "transcription-model": "モデル",
       "transcription-no-provider": "なし - 転写は無効です",
-      "transcription-prompt-help": "固有名詞や専門用語のスペルを改善します。 OpenAI Whisper はこれをソフト ヒントとして扱います (Whisper の制限はおよそ 224 トークンです)。 Gemini は、生成プロンプト内でこれをリテラル命令として扱います。",
+      "transcription-prompt-help": "固有名詞や専門用語のスペルを改善します。",
       "transcription-prompt-placeholder": "名前：アリス、ボブ。 用語集: Kubernetes、OAuth。",
       "transcription-prompt": "プロンプトヒント",
       "transcription-provider": "プロバイダー",
@@ -1385,6 +1383,7 @@
     "place-placeholder": "先に位置を選択してください。"
   },
   "calendar": {
+    "more-memos": "他{{count}}件",
     "new-memo-on-day": "この日に新しいメモが作成",
     "next-year": "来年",
     "no-memos-in-month": "{{month}} 件にメモはありません",
@@ -1393,7 +1392,6 @@
     "select-month": "月を選択"
   },
   "space": {
-    "all-spaces": "すべてのスペース",
     "icon": {
       "change": "スペースアイコンの変更",
       "kind": "アイコンの種類",

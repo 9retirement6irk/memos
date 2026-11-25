@@ -52,7 +52,6 @@
     "attachments": "Mellékletek",
     "avatar": "Avatar",
     "basic": "Általános",
-    "browse": "Böngészés",
     "calendar": "Naptár",
     "cancel": "Mégsem",
     "clear": "Törlés",
@@ -497,7 +496,6 @@
     "parent-unavailable": "A szülő feljegyzés nem érhető el.",
     "parent-unavailable-description": "Lehet, hogy törölték, vagy már nincs hozzáférésed.",
     "moved": "Feljegyzés áthelyezve.",
-    "back-to": "Vissza a {{source}}-hez",
     "connections": "Kapcsolatok",
     "grid-compact-hint": "Hosszabb jegyzetek összecsukása. Rácsos elrendezésben mindig bekapcsolva.",
     "layout": "Elrendezés",
@@ -1053,12 +1051,12 @@
       "transcription-language-help": "ISO 639-1 rövid kód (pl. en, de, zh). Hagyja üresen az automatikus észleléshez.",
       "transcription-language-placeholder": "automatikus felismerés",
       "transcription-language": "Alapértelmezett nyelv",
-      "transcription-model-help": "Szabad szöveg. Használja a szolgáltató modellazonosítóját – pl. whisper-1, gpt-4o-transcribe, whisper-large-v3-turbo.",
+      "transcription-model-help": "Szabad szöveg. Használja a szolgáltató modellazonosítóját – pl. gpt-transcribe, whisper-large-v3-turbo.",
       "transcription-model-placeholder-gemini": "gemini-2.5-flash, gemini-2.5-pro",
-      "transcription-model-placeholder-openai": "whisper-1, gpt-4o-transcribe, gpt-4o-mini-transcribe, gpt-4o-transcribe-diarize",
+      "transcription-model-placeholder-openai": "gpt-transcribe",
       "transcription-model": "Modell",
       "transcription-no-provider": "Nincs – az átírás le van tiltva",
-      "transcription-prompt-help": "Javítja a tulajdonnevek és a zsargon helyesírását. OpenAI Az Whisper ezt lágy utalásként kezeli (az Whisper limit nagyjából 224 tokenek). Az Gemini szó szerinti utasításként kezeli a generálási prompton belül.",
+      "transcription-prompt-help": "Javítja a tulajdonnevek és a zsargon helyesírását.",
       "transcription-prompt-placeholder": "Nevek: Alice, Bob. Szójegyzék: kubernetes, OAuth.",
       "transcription-prompt": "Gyors tippek",
       "transcription-provider": "Szolgáltató",
@@ -1385,6 +1383,7 @@
     "place-placeholder": "Előbb válassz egy pontot."
   },
   "calendar": {
+    "more-memos": "+{{count}} további",
     "new-memo-on-day": "Új emlékeztető ezen a napon.",
     "next-year": "Jövőre.",
     "no-memos-in-month": "Nincsenek emlékeztetők {{month}}-ben.",
@@ -1393,7 +1392,6 @@
     "select-month": "Hónap kiválasztása."
   },
   "space": {
-    "all-spaces": "Összes tér",
     "icon": {
       "change": "Tér ikonjának módosítása",
       "kind": "Ikontípus",

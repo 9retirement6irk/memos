@@ -66,6 +66,7 @@
     "signups-closed-description": "Bu instansda yeni hesablar deaktiv edilib. Giriş lazımdırsa, administratorunuzla əlaqə saxlayın."
   },
   "calendar": {
+    "more-memos": "+{{count}} daha",
     "new-memo-on-day": "Bu gün üçün yeni qeyd",
     "next-year": "Növbəti il",
     "no-memos-in-month": "{{month}} ayında qeyd yoxdur",
@@ -155,7 +156,6 @@
     "attachments": "Qoşmalar",
     "avatar": "Avatar",
     "basic": "Əsas",
-    "browse": "Baxış",
     "calendar": "Təqvim",
     "cancel": "Ləğv et",
     "clear": "Təmizlə",
@@ -518,7 +518,6 @@
     "parent-unavailable": "Ana qeyd əlçatan deyil",
     "parent-unavailable-description": "Silinmiş ola bilər və ya artıq giriş icazəniz yoxdur.",
     "moved": "Memo köçürüldü",
-    "back-to": "{{source}} bölməsinə qayıt",
     "click-to-show-sensitive-content": "Həssas məzmunu göstərmək üçün klikləyin",
     "comment": {
       "self": "Şərhlər",
@@ -754,12 +753,12 @@
       "transcription-language-help": "ISO 639-1 qısa kodu (məsələn, en, de, zh). Avtomatik təyin üçün boş buraxın.",
       "transcription-language-placeholder": "avtomatik təyin",
       "transcription-language": "Defolt dil",
-      "transcription-model-help": "Sərbəst mətn. Provayderin model identifikatorunu yazın — məsələn, whisper-1, gpt-4o-transcribe, whisper-large-v3-turbo.",
+      "transcription-model-help": "Sərbəst mətn. Provayderin model identifikatorunu yazın — məsələn, gpt-transcribe, whisper-large-v3-turbo.",
       "transcription-model-placeholder-gemini": "gemini-2.5-flash, gemini-2.5-pro",
-      "transcription-model-placeholder-openai": "whisper-1, gpt-4o-transcribe, gpt-4o-mini-transcribe, gpt-4o-transcribe-diarize",
+      "transcription-model-placeholder-openai": "gpt-transcribe",
       "transcription-model": "Model",
       "transcription-no-provider": "Yoxdur — transkripsiya deaktivdir",
-      "transcription-prompt-help": "Xüsusi adların və peşə terminlərinin yazılışını yaxşılaşdırır. OpenAI Whisper bunu yumşaq işarə kimi qəbul edir (Whisper limiti təxminən 224 tokendir). Gemini isə onu generasiya promptunun içində hərfi göstəriş kimi qəbul edir.",
+      "transcription-prompt-help": "Xüsusi adların və peşə terminlərinin yazılışını yaxşılaşdırır.",
       "transcription-prompt-placeholder": "Adlar: Alice, Bob. Lüğət: kubernetes, OAuth.",
       "transcription-prompt": "Prompt ipucları",
       "transcription-provider": "Provayder",
@@ -1388,7 +1387,6 @@
     }
   },
   "space": {
-    "all-spaces": "Bütün məkanlar",
     "icon": {
       "change": "Sahə ikonunu dəyiş",
       "kind": "İkon növü",

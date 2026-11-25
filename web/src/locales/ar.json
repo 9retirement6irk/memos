@@ -52,7 +52,6 @@
     "attachments": "مرفقات",
     "avatar": "الصورة الشخصية",
     "basic": "بسيط",
-    "browse": "تصفح",
     "calendar": "التقويم",
     "cancel": "ألغِ",
     "clear": "مسح",
@@ -488,7 +487,6 @@
     "parent-unavailable": "المذكرة الأم غير متوفرة",
     "parent-unavailable-description": "ربما تم حذفها أو ربما لم يعد لديك صلاحية الوصول إليها.",
     "moved": "تم نقل المذكرة",
-    "back-to": "العودة إلى {{source}}",
     "count-memos-updated-in-date": "{{count}} {{memos}} تم التحديث في {{date}}",
     "connections": "الاتصالات",
     "grid-compact-hint": "طيّ المذكرات الطويلة. مفعّل دائمًا في تخطيطات الشبكة.",
@@ -1024,7 +1022,7 @@
     "ai": {
       "endpoint": "نقطة النهاية",
       "transcription-model-placeholder-gemini": "gemini-2.5-flash, gemini-2.5-pro",
-      "transcription-model-placeholder-openai": "whisper-1, gpt-4o-transcribe, gpt-4o-mini-transcribe, gpt-4o-transcribe-diarize",
+      "transcription-model-placeholder-openai": "gpt-transcribe",
       "add-provider": "إضافة موفر خدمة",
       "api-key": "مفتاح API",
       "api-key-required": "مفتاح API مطلوب.",
@@ -1054,10 +1052,10 @@
       "transcription-language-help": "الرمز المختصر ISO 639-1 (مثل en، de، zh). اتركه فارغًا للكشف التلقائي.",
       "transcription-language-placeholder": "الكشف التلقائي",
       "transcription-language": "اللغة الافتراضية",
-      "transcription-model-help": "نص حر. استخدم مُعرّف نموذج المزوّد — مثل whisper-1، gpt-4o-transcribe، whisper-large-v3-turbo.",
+      "transcription-model-help": "نص حر. استخدم مُعرّف نموذج المزوّد — مثل gpt-transcribe، whisper-large-v3-turbo.",
       "transcription-model": "النموذج",
       "transcription-no-provider": "لا شيء — النسخ مُعطّل",
-      "transcription-prompt-help": "يُحسّن تهجئة الأسماء العلمية والمصطلحات. OpenAI Whisper يُعامل هذا كتلميح مبدئي (الحد الأقصى لـ Whisper هو 224 رمزًا تقريبًا). Gemini يُعامل كتعليمات حرفية داخل موجه الإنشاء.",
+      "transcription-prompt-help": "يُحسّن تهجئة الأسماء العلمية والمصطلحات.",
       "transcription-prompt-placeholder": "الأسماء: أليس، بوب. المصطلحات: kubernetes، OAuth.",
       "transcription-prompt": "تلميحات المطالبات",
       "transcription-provider": "الموفر",
@@ -1370,6 +1368,7 @@
     "place-placeholder": "اختر موضعًا أولًا."
   },
   "calendar": {
+    "more-memos": "+{{count}} أخرى",
     "new-memo-on-day": "مذكرة جديدة في هذا اليوم",
     "next-year": "العام القادم",
     "no-memos-in-month": "لا توجد مذكرات في {{month}}",
@@ -1397,7 +1396,6 @@
     "text": "نص"
   },
   "space": {
-    "all-spaces": "جميع المساحات",
     "icon": {
       "change": "تغيير رمز المساحة",
       "kind": "نوع الرمز",

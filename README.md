@@ -33,10 +33,12 @@ Four extra themes in **Settings → Preferences → Theme**: **Aero · Light**, 
 ### Journaling mode
 
 Choose a journal Space in **Settings → Journal**. New memos there open as journal entries, and
-the ＋ menu has a **Journaling mode** switch for writing an entry anywhere else.
+the ＋ menu has a **Journaling mode** switch for writing an entry anywhere else. Journal entries
+start with your own default audience (Private unless you changed it), where other memos written in a
+Space start shared with its members.
 A **Spaces** section in the sidebar, above Views, lists your Spaces, so the journal is one click
-away; **All spaces** takes you back. **Settings → Preferences → Spaces in the sidebar** chooses which
-Spaces are listed.
+away; **Home** takes you back to your own memos. **Settings → Preferences → Spaces in the sidebar**
+chooses which Spaces are listed.
 
 - **Entries:** each one has a dated heading, a rotating prompt, your text, a checklist of daily
   goals, the activities you did, and an optional place and weather line.

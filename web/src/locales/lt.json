@@ -90,7 +90,6 @@
     "attachments": "Priedai",
     "avatar": "Avataras",
     "basic": "Pagrindinis",
-    "browse": "Peržiūra",
     "calendar": "Kalendorius",
     "cancel": "Atšaukti",
     "clear": "Aišku",
@@ -537,7 +536,6 @@
     "parent-unavailable": "Pagrindinis priminimas nepasiekiamas",
     "parent-unavailable-description": "Jis galėjo būti ištrintas arba jūs nebeturite prieigos.",
     "moved": "Priminimas perkeltas",
-    "back-to": "Atgal į {{source}}",
     "connections": "Ryšiai",
     "grid-compact-hint": "Sutraukti ilgesnes atmintines. Tinklelio išdėstymuose visada įjungta.",
     "layout": "Išdėstymas",
@@ -678,12 +676,12 @@
       "transcription-language-help": "ISO 639-1 trumpasis kodas (pvz., en, de, zh). Palikite tuščią, kad būtų automatiškai aptikta.",
       "transcription-language-placeholder": "automatinis aptikimas",
       "transcription-language": "Numatytoji kalba",
-      "transcription-model-help": "Laisvas tekstas. Naudokite tiekėjo modelio identifikatorių, pvz., whisper-1, gpt-4o-transcribe, whisper-large-v3-turbo.",
+      "transcription-model-help": "Laisvas tekstas. Naudokite tiekėjo modelio identifikatorių, pvz., gpt-transcribe, whisper-large-v3-turbo.",
       "transcription-model-placeholder-gemini": "gemini-2.5-flash, gemini-2.5-pro",
-      "transcription-model-placeholder-openai": "whisper-1, gpt-4o-transcribe, gpt-4o-mini-transcribe, gpt-4o-transcribe-diarize",
+      "transcription-model-placeholder-openai": "gpt-transcribe",
       "transcription-model": "Modelis",
       "transcription-no-provider": "Nėra – transkripcija išjungta",
-      "transcription-prompt-help": "Pagerina tikrinių daiktavardžių ir žargono rašybą. OpenAI Whisper traktuoja tai kaip švelnią užuominą (Whisper riba yra maždaug 224 žetonai). Gemini tai traktuoja kaip pažodinį nurodymą generavimo eilutėje.",
+      "transcription-prompt-help": "Pagerina tikrinių daiktavardžių ir žargono rašybą.",
       "transcription-prompt-placeholder": "Vardai: Alisa, Bobas. Žodynas: kubernetes, OAuth.",
       "transcription-prompt": "Skubios užuominos",
       "transcription-provider": "Teikėjas",
@@ -1387,6 +1385,7 @@
     "place-placeholder": "Pirmiausia pasirinkite tašką."
   },
   "calendar": {
+    "more-memos": "dar {{count}}",
     "new-memo-on-day": "Naujas priminimas šią dieną",
     "next-year": "Kitais metais",
     "no-memos-in-month": "Nėra priminimų {{month}}",
@@ -1395,7 +1394,6 @@
     "select-month": "Pasirinkite mėnesį"
   },
   "space": {
-    "all-spaces": "Visos erdvės",
     "icon": {
       "change": "Keisti erdvės piktogramą",
       "kind": "Piktogramos tipas",

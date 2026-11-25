@@ -7,6 +7,7 @@ import { buildCollectionPath, ROUTES } from "@/router/routes";
 
 const mocks = vi.hoisted(() => ({
   selectedSpaceName: undefined as string | undefined,
+  creatorUsername: "alice" as string | undefined,
   spaces: [
     { name: "spaces/journal", title: "Journal" },
     { name: "spaces/homelab", title: "Homelab" },
@@ -16,8 +17,9 @@ const mocks = vi.hoisted(() => ({
 }));
 
 vi.mock("@/contexts/SpaceContext", () => ({
-  useSpaceContext: () => ({ spaces: mocks.spaces, selectedSpaceName: mocks.selectedSpaceName }),
+  useSpaceContext: () => ({ spaces: mocks.spaces, selectedSpaceName: mocks.selectedSpaceName, creatorUsername: mocks.creatorUsername }),
 }));
+vi.mock("@/hooks/useCurrentUser", () => ({ default: () => ({ name: "users/alice", username: "alice" }) }));
 vi.mock("@/contexts/AppSidebarContext", () => ({ useAppSidebar: () => ({ setMobileOpen: mocks.setMobileOpen }) }));
 vi.mock("@/components/SpaceIcon", () => ({ default: () => <span data-testid="space-icon" /> }));
 vi.mock("@/utils/i18n", async (importOriginal) => ({
@@ -39,19 +41,20 @@ describe("SpacesSection", () => {
   beforeEach(() => {
     window.localStorage.removeItem(DEVICE_PREFERENCES_KEY);
     mocks.selectedSpaceName = undefined;
+    mocks.creatorUsername = "alice";
     mocks.setMobileOpen.mockReset();
   });
 
-  it("lists All spaces and every Space under a Spaces heading, with All spaces as the current place", () => {
+  it("lists Home and every Space under a Spaces heading, with Home as the current place on your own memos", () => {
     renderAt(ROUTES.HOME);
     expect(screen.getByText("space.spaces")).toBeInTheDocument();
     // A Space without a title shows its id.
-    expect(rows()).toEqual(["space.all-spaces", "Journal", "Homelab", "x7"]);
-    expect(screen.getByRole("button", { name: "space.all-spaces" })).toHaveAttribute("data-current");
+    expect(rows()).toEqual(["common.home", "Journal", "Homelab", "x7"]);
+    expect(screen.getByRole("button", { name: "common.home" })).toHaveAttribute("data-current");
     expect(screen.getAllByTestId("space-icon")).toHaveLength(3);
   });
 
-  it("moves the page to the Space clicked, and back with All spaces", () => {
+  it("moves the page to the Space clicked, and back to your own memos with Home", () => {
     const { unmount } = renderAt(ROUTES.HOME);
     fireEvent.click(screen.getByRole("button", { name: "Homelab" }));
     expect(screen.getByTestId("path")).toHaveTextContent(buildCollectionPath(ROUTES.HOME, "spaces/homelab"));
@@ -61,20 +64,20 @@ describe("SpacesSection", () => {
     mocks.selectedSpaceName = "spaces/homelab";
     renderAt(buildCollectionPath(ROUTES.HOME, "spaces/homelab"));
     expect(screen.getByRole("button", { name: "Homelab" })).toHaveAttribute("data-current");
-    expect(screen.getByRole("button", { name: "space.all-spaces" })).not.toHaveAttribute("data-current");
-    fireEvent.click(screen.getByRole("button", { name: "space.all-spaces" }));
+    expect(screen.getByRole("button", { name: "common.home" })).not.toHaveAttribute("data-current");
+    fireEvent.click(screen.getByRole("button", { name: "common.home" }));
     expect(screen.getByTestId("path")).toHaveTextContent(buildCollectionPath(ROUTES.HOME, undefined));
   });
 
   it("leaves out the Spaces switched off in Preferences, but still shows the one you are in", () => {
     updateDevicePreferences({ hiddenSidebarSpaces: ["spaces/journal", "spaces/x7"] });
     const { unmount } = renderAt(ROUTES.HOME);
-    expect(rows()).toEqual(["space.all-spaces", "Homelab"]);
+    expect(rows()).toEqual(["common.home", "Homelab"]);
     unmount();
 
     mocks.selectedSpaceName = "spaces/journal";
     renderAt(buildCollectionPath(ROUTES.HOME, "spaces/journal"));
-    expect(rows()).toEqual(["space.all-spaces", "Journal", "Homelab"]);
+    expect(rows()).toEqual(["common.home", "Journal", "Homelab"]);
   });
 
   it("is not shown when every Space is switched off", () => {

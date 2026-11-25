@@ -52,7 +52,6 @@
     "attachments": "Вкладення",
     "avatar": "Аватар",
     "basic": "Основний",
-    "browse": "Перегляд",
     "calendar": "Календар",
     "cancel": "Скасувати",
     "clear": "Очистити",
@@ -499,7 +498,6 @@
     "parent-unavailable": "Батьківська нотатка недоступна",
     "parent-unavailable-description": "Можливо, її було видалено, або ви більше не маєте до неї доступу.",
     "moved": "Нотатку переміщено",
-    "back-to": "Назад до {{source}}",
     "connections": "З'єднання",
     "grid-compact-hint": "Згортати довгі нотатки. Завжди ввімкнено в сіткових макетах.",
     "layout": "Макет",
@@ -1055,12 +1053,12 @@
       "transcription-language-help": "Короткий код ISO 639-1 (наприклад, en, de, zh). Залиште пустим для автоматичного визначення.",
       "transcription-language-placeholder": "автовизначення",
       "transcription-language": "Мова за замовчуванням",
-      "transcription-model-help": "Вільний текст. Використовуйте ідентифікатор моделі постачальника — напр. whisper-1, gpt-4o-transcribe, whisper-large-v3-turbo.",
+      "transcription-model-help": "Вільний текст. Використовуйте ідентифікатор моделі постачальника — напр. gpt-transcribe, whisper-large-v3-turbo.",
       "transcription-model-placeholder-gemini": "gemini-2.5-flash, gemini-2.5-pro",
-      "transcription-model-placeholder-openai": "whisper-1, gpt-4o-transcribe, gpt-4o-mini-transcribe, gpt-4o-transcribe-diarize",
+      "transcription-model-placeholder-openai": "gpt-transcribe",
       "transcription-model": "Модель",
       "transcription-no-provider": "Немає — транскрипцію вимкнено",
-      "transcription-prompt-help": "Покращує правопис власних іменників і жаргонізму. OpenAI Whisper розглядає це як м’яку підказку (ліміт Whisper становить приблизно 224 токенів). Gemini розглядає це як буквальну інструкцію всередині підказки генерації.",
+      "transcription-prompt-help": "Покращує правопис власних іменників і жаргонізму.",
       "transcription-prompt-placeholder": "Імена: Аліса, Боб. Глосарій: kubernetes, OAuth.",
       "transcription-prompt": "Оперативні підказки",
       "transcription-provider": "Провайдер",
@@ -1387,6 +1385,7 @@
     "place-placeholder": "Спочатку виберіть точку."
   },
   "calendar": {
+    "more-memos": "ще {{count}}",
     "new-memo-on-day": "Нова нотатка цього дня",
     "next-year": "Наступного року",
     "no-memos-in-month": "Немає нотаток у {{month}}",
@@ -1395,7 +1394,6 @@
     "select-month": "Виберіть місяць"
   },
   "space": {
-    "all-spaces": "Усі простори",
     "icon": {
       "change": "Змінити значок простору",
       "kind": "Тип значка",

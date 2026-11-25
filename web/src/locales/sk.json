@@ -90,7 +90,6 @@
     "attachments": "Prílohy",
     "avatar": "Avatar",
     "basic": "Základné",
-    "browse": "Prehliadať",
     "calendar": "Kalendár",
     "cancel": "Zrušiť",
     "clear": "Jasné",
@@ -537,7 +536,6 @@
     "parent-unavailable": "Nadradená poznámka nie je k dispozícii",
     "parent-unavailable-description": "Možno bola odstránená alebo k nej už nemáte prístup.",
     "moved": "Poznámka presunutá",
-    "back-to": "Späť na {{source}}",
     "connections": "Pripojenia",
     "grid-compact-hint": "Zbaliť dlhšie poznámky. Pri rozložení do mriežky je vždy zapnuté.",
     "layout": "Rozloženie",
@@ -678,12 +676,12 @@
       "transcription-language-help": "ISO 639-1 krátky kód (napr. en, de, zh). Nechajte prázdne na automatické zistenie.",
       "transcription-language-placeholder": "automatická detekcia",
       "transcription-language": "Predvolený jazyk",
-      "transcription-model-help": "Voľný text. Použite identifikátor modelu poskytovateľa — napr. whisper-1, gpt-4o-transcribe, whisper-large-v3-turbo.",
+      "transcription-model-help": "Voľný text. Použite identifikátor modelu poskytovateľa — napr. gpt-transcribe, whisper-large-v3-turbo.",
       "transcription-model-placeholder-gemini": "gemini-2.5-flash, gemini-2.5-pro",
-      "transcription-model-placeholder-openai": "whisper-1, gpt-4o-transcribe, gpt-4o-mini-transcribe, gpt-4o-transcribe-diarize",
+      "transcription-model-placeholder-openai": "gpt-transcribe",
       "transcription-model": "Model",
       "transcription-no-provider": "Žiadne – prepis je zakázaný",
-      "transcription-prompt-help": "Zlepšuje pravopis vlastných podstatných mien a žargónu. OpenAI Whisper to považuje za jemný náznak (limit Whisper je približne 224 tokenov). Gemini to považuje za doslovnú inštrukciu vo výzve na generovanie.",
+      "transcription-prompt-help": "Zlepšuje pravopis vlastných podstatných mien a žargónu.",
       "transcription-prompt-placeholder": "Mená: Alice, Bob. Slovník: kubernetes, OAuth.",
       "transcription-prompt": "Promptné rady",
       "transcription-provider": "Poskytovateľ",
@@ -1387,6 +1385,7 @@
     "place-placeholder": "Najprv vyberte polohu."
   },
   "calendar": {
+    "more-memos": "ešte {{count}}",
     "new-memo-on-day": "Nová poznámka v tento deň",
     "next-year": "Budúci rok",
     "no-memos-in-month": "Žiadne poznámky v {{month}}",
@@ -1395,7 +1394,6 @@
     "select-month": "Vyberte mesiac"
   },
   "space": {
-    "all-spaces": "Všetky priestory",
     "icon": {
       "change": "Zmeniť ikonu priestoru",
       "kind": "Typ ikony",

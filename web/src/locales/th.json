@@ -52,7 +52,6 @@
     "attachments": "ไฟล์แนบ",
     "avatar": "สัญลักษณ์",
     "basic": "ทั่วไป",
-    "browse": "เรียกดู",
     "calendar": "ปฏิทิน",
     "cancel": "ยกเลิก",
     "clear": "ล้าง",
@@ -484,7 +483,6 @@
     "parent-unavailable": "บันทึกหลักไม่พร้อมใช้งาน",
     "parent-unavailable-description": "อาจถูกลบไปแล้วหรือคุณอาจไม่สามารถเข้าถึงได้อีกต่อไป",
     "moved": "ย้ายบันทึกแล้ว",
-    "back-to": "กลับไปที่ {{source}}",
     "count-memos-updated-in-date": "{{count}} {{memos}} อัปเดตเมื่อ {{date}}",
     "connections": "การเชื่อมต่อ",
     "grid-compact-hint": "ย่อบันทึกช่วยจำที่ยาว เปิดใช้งานเสมอในรูปแบบตาราง",
@@ -1020,7 +1018,7 @@
     "ai": {
       "endpoint": "จุดปลายทาง",
       "transcription-model-placeholder-gemini": "gemini-2.5-flash, gemini-2.5-pro",
-      "transcription-model-placeholder-openai": "whisper-1, gpt-4o-transcribe, gpt-4o-mini-transcribe, gpt-4o-transcribe-diarize",
+      "transcription-model-placeholder-openai": "gpt-transcribe",
       "add-provider": "เพิ่มผู้ให้บริการ",
       "api-key": "คีย์ API",
       "api-key-required": "ต้องใช้คีย์ API",
@@ -1050,10 +1048,10 @@
       "transcription-language-help": "รหัสย่อ ISO 639-1 (เช่น en, de, zh) เว้นว่างไว้เพื่อตรวจจับอัตโนมัติ",
       "transcription-language-placeholder": "ตรวจจับอัตโนมัติ",
       "transcription-language": "ภาษาเริ่มต้น",
-      "transcription-model-help": "ข้อความอิสระ ใช้ตัวระบุโมเดลของผู้ให้บริการ — เช่น whisper-1, gpt-4o-transcribe, whisper-large-v3-turbo.",
+      "transcription-model-help": "ข้อความอิสระ ใช้ตัวระบุโมเดลของผู้ให้บริการ — เช่น gpt-transcribe, whisper-large-v3-turbo.",
       "transcription-model": "โมเดล",
       "transcription-no-provider": "ไม่มี — ปิดใช้งานการถอดเสียง",
-      "transcription-prompt-help": "ปรับปรุงการสะกดคำนามเฉพาะและศัพท์เฉพาะ OpenAI Whisper ถือว่าเป็นคำแนะนำแบบอ่อนๆ (Whisper ขีดจำกัดอยู่ที่ประมาณ 224 โทเค็น) Gemini ถือว่าเป็นคำสั่งตามตัวอักษรภายในข้อความแจ้งการสร้าง",
+      "transcription-prompt-help": "ปรับปรุงการสะกดคำนามเฉพาะและศัพท์เฉพาะ",
       "transcription-prompt-placeholder": "ชื่อ: Alice, Bob. คำศัพท์: kubernetes, OAuth",
       "transcription-prompt": "คำแนะนำสำหรับข้อความแจ้งเตือน",
       "transcription-provider": "ผู้ให้บริการ",
@@ -1366,6 +1364,7 @@
     "place-placeholder": "เลือกตำแหน่งก่อน"
   },
   "calendar": {
+    "more-memos": "อีก {{count}} รายการ",
     "new-memo-on-day": "บันทึกช่วยจำใหม่ในวันนี้",
     "next-year": "ปีหน้า",
     "no-memos-in-month": "ไม่มีบันทึกช่วยจำใน {{month}}",
@@ -1393,7 +1392,6 @@
     "text": "ข้อความ"
   },
   "space": {
-    "all-spaces": "พื้นที่ทั้งหมด",
     "icon": {
       "change": "เปลี่ยนไอคอนพื้นที่",
       "kind": "ประเภทไอคอน",

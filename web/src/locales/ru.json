@@ -52,7 +52,6 @@
     "attachments": "Файлы",
     "avatar": "Аватар",
     "basic": "Базовые",
-    "browse": "Просмотр",
     "calendar": "Календарь",
     "cancel": "Отменить",
     "clear": "Очистить",
@@ -508,7 +507,6 @@
     "parent-unavailable": "Родительская заметка недоступна",
     "parent-unavailable-description": "Возможно, она была удалена или у вас больше нет доступа.",
     "moved": "Записка перемещена",
-    "back-to": "Назад к {{source}}",
     "connections": "Подключения",
     "on-this-memo": "К этой заметке",
     "parent-memo": "Родительская заметка",
@@ -1055,12 +1053,12 @@
       "transcription-language-help": "Сокращенный код ISO 639-1 (например, en, de, zh). Оставьте пустым для автоматического обнаружения.",
       "transcription-language-placeholder": "автоматическое обнаружение",
       "transcription-language": "Язык по умолчанию",
-      "transcription-model-help": "Свободный текст. Используйте идентификатор модели поставщика, например whisper-1, gpt-4o-transcribe, whisper-large-v3-turbo.",
+      "transcription-model-help": "Свободный текст. Используйте идентификатор модели поставщика, например gpt-transcribe, whisper-large-v3-turbo.",
       "transcription-model-placeholder-gemini": "gemini-2.5-flash, gemini-2.5-pro",
-      "transcription-model-placeholder-openai": "whisper-1, gpt-4o-transcribe, gpt-4o-mini-transcribe, gpt-4o-transcribe-diarize",
+      "transcription-model-placeholder-openai": "gpt-transcribe",
       "transcription-model": "Модель",
       "transcription-no-provider": "Нет — транскрипция отключена",
-      "transcription-prompt-help": "Улучшает правописание имен собственных и жаргона. OpenAI Whisper воспринимает это как мягкую подсказку (ограничение Whisper составляет примерно токены 224). Gemini воспринимает это как буквальную инструкцию внутри приглашения генерации.",
+      "transcription-prompt-help": "Улучшает правописание имен собственных и жаргона.",
       "transcription-prompt-placeholder": "Имена: Алиса, Боб. Глоссарий: kubernetes, OAuth.",
       "transcription-prompt": "Подсказки",
       "transcription-provider": "Поставщик",
@@ -1373,6 +1371,7 @@
     "place-placeholder": "Сначала выберите точку."
   },
   "calendar": {
+    "more-memos": "ещё {{count}}",
     "new-memo-on-day": "Новая заметка в этот день",
     "next-year": "В следующем году",
     "no-memos-in-month": "Нет заметок в {{month}}",
@@ -1395,7 +1394,6 @@
     "text": "Текст"
   },
   "space": {
-    "all-spaces": "Все пространства",
     "icon": {
       "change": "Изменить значок пространства",
       "kind": "Тип значка",

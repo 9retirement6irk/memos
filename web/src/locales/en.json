@@ -66,6 +66,7 @@
     "signups-closed-description": "New accounts are disabled on this instance. Contact your administrator if you need access."
   },
   "calendar": {
+    "more-memos": "+{{count}} more",
     "new-memo-on-day": "New memo on this day",
     "next-year": "Next year",
     "no-memos-in-month": "No memos in {{month}}",
@@ -155,7 +156,6 @@
     "attachments": "Attachments",
     "avatar": "Avatar",
     "basic": "Basic",
-    "browse": "Browse",
     "calendar": "Calendar",
     "cancel": "Cancel",
     "clear": "Clear",
@@ -518,7 +518,6 @@
     "parent-unavailable": "Parent memo unavailable",
     "parent-unavailable-description": "It may have been deleted or you may no longer have access.",
     "moved": "Memo moved",
-    "back-to": "Back to {{source}}",
     "click-to-show-sensitive-content": "Click to show sensitive content",
     "comment": {
       "self": "Comments",
@@ -754,12 +753,12 @@
       "transcription-language-help": "ISO 639-1 short code (e.g. en, de, zh). Leave empty to auto-detect.",
       "transcription-language-placeholder": "auto-detect",
       "transcription-language": "Default language",
-      "transcription-model-help": "Free text. Use the provider's model identifier — e.g. whisper-1, gpt-4o-transcribe, whisper-large-v3-turbo.",
+      "transcription-model-help": "Free text. Use the provider's model identifier — e.g. gpt-transcribe, whisper-large-v3-turbo.",
       "transcription-model-placeholder-gemini": "gemini-2.5-flash, gemini-2.5-pro",
-      "transcription-model-placeholder-openai": "whisper-1, gpt-4o-transcribe, gpt-4o-mini-transcribe, gpt-4o-transcribe-diarize",
+      "transcription-model-placeholder-openai": "gpt-transcribe",
       "transcription-model": "Model",
       "transcription-no-provider": "None — transcription disabled",
-      "transcription-prompt-help": "Improves spelling of proper nouns and jargon. OpenAI Whisper treats this as a soft hint (Whisper limit is roughly 224 tokens). Gemini treats it as a literal instruction inside the generation prompt.",
+      "transcription-prompt-help": "Improves spelling of proper nouns and jargon.",
       "transcription-prompt-placeholder": "Names: Alice, Bob. Glossary: kubernetes, OAuth.",
       "transcription-prompt": "Prompt hints",
       "transcription-provider": "Provider",
@@ -1388,7 +1387,6 @@
     }
   },
   "space": {
-    "all-spaces": "All spaces",
     "icon": {
       "change": "Change space icon",
       "kind": "Icon type",
