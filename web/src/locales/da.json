@@ -90,7 +90,6 @@
     "attachments": "Vedhæftede filer",
     "avatar": "Avatar",
     "basic": "Grundlæggende",
-    "browse": "Gennemse",
     "calendar": "Kalender",
     "cancel": "Ophæve",
     "clear": "Klar",
@@ -535,7 +534,6 @@
     "parent-unavailable": "Overordnet notat er ikke tilgængeligt",
     "parent-unavailable-description": "Det er muligvis blevet slettet, eller du har muligvis ikke længere adgang.",
     "moved": "Notat flyttet",
-    "back-to": "Tilbage til {{source}}",
     "connections": "Forbindelser",
     "grid-compact-hint": "Fold længere memoer sammen. Altid aktiveret i gitterlayout.",
     "layout": "Layout",
@@ -676,12 +674,12 @@
       "transcription-language-help": "ISO 639-1 kort kode (f.eks. en, de, zh). Lad være tomt for automatisk registrering.",
       "transcription-language-placeholder": "automatisk registrering",
       "transcription-language": "Standardsprog",
-      "transcription-model-help": "Fri tekst. Brug udbyderens model-id — f.eks. whisper-1, gpt-4o-transcribe, whisper-large-v3-turbo.",
+      "transcription-model-help": "Fri tekst. Brug udbyderens model-id — f.eks. gpt-transcribe, whisper-large-v3-turbo.",
       "transcription-model-placeholder-gemini": "gemini-2.5-flash, gemini-2.5-pro",
-      "transcription-model-placeholder-openai": "whisper-1, gpt-4o-transcribe, gpt-4o-mini-transcribe, gpt-4o-transcribe-diarize",
+      "transcription-model-placeholder-openai": "gpt-transcribe",
       "transcription-model": "Model",
       "transcription-no-provider": "Ingen — transskription deaktiveret",
-      "transcription-prompt-help": "Forbedrer stavning af egennavne og jargon. OpenAI Whisper behandler dette som et blødt hint (Whisper-grænsen er cirka 224-tokens). Gemini behandler det som en bogstavelig instruktion i generationsprompten.",
+      "transcription-prompt-help": "Forbedrer stavning af egennavne og jargon.",
       "transcription-prompt-placeholder": "Navne: Alice, Bob. Ordliste: kubernetes, OAuth.",
       "transcription-prompt": "Hurtige tip",
       "transcription-provider": "Udbyder",
@@ -1385,6 +1383,7 @@
     "place-placeholder": "Vælg først en position."
   },
   "calendar": {
+    "more-memos": "+{{count}} mere",
     "new-memo-on-day": "Nyt notat på denne dag",
     "next-year": "Næste år",
     "no-memos-in-month": "Ingen notater i {{month}}",
@@ -1393,7 +1392,6 @@
     "select-month": "Vælg måned"
   },
   "space": {
-    "all-spaces": "Alle rum",
     "icon": {
       "change": "Skift ikon for rum",
       "kind": "Ikontype",

@@ -66,6 +66,7 @@
     "signups-closed-description": "此实例已禁用新账号注册。如需访问，请联系管理员。"
   },
   "calendar": {
+    "more-memos": "还有 {{count}} 条",
     "new-memo-on-day": "在这一天新建备忘录",
     "next-year": "下一年",
     "no-memos-in-month": "{{month}} 没有备忘录",
@@ -89,7 +90,6 @@
     "attachments": "附件",
     "avatar": "头像",
     "basic": "基础",
-    "browse": "浏览",
     "calendar": "日历",
     "cancel": "取消",
     "clear": "清除",
@@ -442,7 +442,6 @@
     "no-matching-memos": "没有符合条件的 Memo",
     "clear-filters": "清除筛选",
     "pinned": "已置顶",
-    "back-to": "返回{{source}}",
     "click-to-show-sensitive-content": "点击显示敏感内容",
     "comment": {
       "self": "评论",
@@ -638,12 +637,12 @@
       "transcription-language-help": "ISO 639-1 语言代码（如 en、de、zh）。留空则自动检测。",
       "transcription-language-placeholder": "自动检测",
       "transcription-model": "模型",
-      "transcription-model-help": "自由填写。填入供应商的模型标识符，如 whisper-1、gpt-4o-transcribe、whisper-large-v3-turbo。",
+      "transcription-model-help": "自由填写。填入供应商的模型标识符，如 gpt-transcribe、whisper-large-v3-turbo。",
       "transcription-model-placeholder-gemini": "gemini-2.5-flash, gemini-2.5-pro",
-      "transcription-model-placeholder-openai": "whisper-1, gpt-4o-transcribe, gpt-4o-mini-transcribe, gpt-4o-transcribe-diarize",
+      "transcription-model-placeholder-openai": "gpt-transcribe",
       "transcription-no-provider": "无 — 语音转写已禁用",
       "transcription-prompt": "提示词",
-      "transcription-prompt-help": "用于改进专有名词和专业术语的拼写。OpenAI Whisper 将其作为参考提示（约限 224 个词元）；Gemini 将其作为生成提示中的明确指令。",
+      "transcription-prompt-help": "用于改进专有名词和专业术语的拼写。",
       "transcription-prompt-placeholder": "人名：张三、李四。术语：Kubernetes、OAuth。",
       "transcription-provider": "供应商",
       "transcription-title": "语音转写",
@@ -1379,7 +1378,6 @@
     }
   },
   "space": {
-    "all-spaces": "所有空间",
     "icon": {
       "change": "更改空间图标",
       "kind": "图标类型",

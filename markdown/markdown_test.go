@@ -98,6 +98,30 @@ func TestGenerateSnippet(t *testing.T) {
 			expected:  "Item 1 Item 2 Item 3",
 		},
 		{
+			name:      "nested tight list items",
+			content:   "- a\n  - b",
+			maxLength: 100,
+			expected:  "a b",
+		},
+		{
+			name:      "nested ordered list items",
+			content:   "1. one\n   1. two",
+			maxLength: 100,
+			expected:  "one two",
+		},
+		{
+			name:      "nested task list items",
+			content:   "- [ ] buy milk\n  - [ ] oat",
+			maxLength: 100,
+			expected:  "buy milk oat",
+		},
+		{
+			name:      "quote inside a tight list item",
+			content:   "- a\n  > b",
+			maxLength: 100,
+			expected:  "a b",
+		},
+		{
 			name:      "hard line break with trailing spaces",
 			content:   "first line  \nsecond line",
 			maxLength: 100,
@@ -233,6 +257,46 @@ func TestGenerateSnippet(t *testing.T) {
 	for _, tt := range tagTests {
 		t.Run(tt.name, func(t *testing.T) {
 			snippet, err := svcWithTags.GenerateSnippet([]byte(tt.content), tt.maxLength)
+			require.NoError(t, err)
+			assert.Equal(t, tt.expected, snippet)
+		})
+	}
+
+	svcWithTagsAndMentions := NewService(WithTagExtension(), WithMentionExtension())
+	mentionTests := []struct {
+		name      string
+		content   string
+		maxLength int
+		expected  string
+	}{
+		{
+			name:      "mention only",
+			content:   "@alice",
+			maxLength: 100,
+			expected:  "@alice",
+		},
+		{
+			name:      "text with mentions and tags",
+			content:   "Ask @Alice-2 and @bob about #release",
+			maxLength: 100,
+			expected:  "Ask @Alice-2 and @bob about #release",
+		},
+		{
+			name:      "formatted mention before soft line break",
+			content:   "Ping **@alice**\nfor review",
+			maxLength: 100,
+			expected:  "Ping @alice for review",
+		},
+		{
+			name:      "mention alongside email and URL",
+			content:   "Email support@example.com or ask @alice at https://usememos.com",
+			maxLength: 100,
+			expected:  "Email support@example.com or ask @alice at https://usememos.com",
+		},
+	}
+	for _, tt := range mentionTests {
+		t.Run(tt.name, func(t *testing.T) {
+			snippet, err := svcWithTagsAndMentions.GenerateSnippet([]byte(tt.content), tt.maxLength)
 			require.NoError(t, err)
 			assert.Equal(t, tt.expected, snippet)
 		})
@@ -397,7 +461,7 @@ func TestExtractInlineImage(t *testing.T) {
 }
 
 func TestExtractAllTitle(t *testing.T) {
-	svc := NewService(WithTagExtension())
+	svc := NewService(WithTagExtension(), WithMentionExtension())
 
 	tests := []struct {
 		name    string
@@ -419,13 +483,47 @@ func TestExtractAllTitle(t *testing.T) {
 			content: "Intro\n\n# Late Heading",
 			title:   "",
 		},
+		{
+			name:    "h1 with mention",
+			content: "# 1:1 with @Alice-2\n\nNotes.",
+			title:   "1:1 with @Alice-2",
+		},
+		{
+			name:    "h1 with tag",
+			content: "# Release #v2 notes\n\nBody.",
+			title:   "Release #v2 notes",
+		},
+		{
+			name:    "h1 with formatted mention and tag",
+			content: "# Review **@alice** on #work/q4",
+			title:   "Review @alice on #work/q4",
+		},
+		{
+			name:    "h1 with autolinks",
+			content: "# Docs https://usememos.com www.usememos.com <https://example.com> <ops@example.com>",
+			title:   "Docs https://usememos.com www.usememos.com https://example.com ops@example.com",
+		},
+		{
+			name:    "h1 with inline math and email",
+			content: "# Formula $a+b$ by alice@example.com",
+			title:   "Formula $a+b$ by alice@example.com",
+		},
+		{
+			name:    "multiline setext h1",
+			content: "First line\nSecond line\n===========",
+			title:   "First line Second line",
+		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			data, err := svc.ExtractAll([]byte(tt.content))
 			require.NoError(t, err)
-			assert.Equal(t, tt.title, data.Property.Title, "Title")
+			assert.Equal(t, tt.title, data.Property.Title, "ExtractAll Title")
+
+			props, err := svc.ExtractProperties([]byte(tt.content))
+			require.NoError(t, err)
+			assert.Equal(t, tt.title, props.Title, "ExtractProperties Title")
 		})
 	}
 }

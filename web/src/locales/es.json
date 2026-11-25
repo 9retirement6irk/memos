@@ -52,7 +52,6 @@
     "attachments": "Adjuntos",
     "avatar": "Avatar",
     "basic": "Básico",
-    "browse": "Navegar",
     "calendar": "Calendario",
     "cancel": "Cancelar",
     "clear": "Borrar",
@@ -498,7 +497,6 @@
     "parent-unavailable": "Memo principal no disponible.",
     "parent-unavailable-description": "Es posible que se haya eliminado o que ya no tengas acceso.",
     "moved": "Memorándum movido.",
-    "back-to": "Volver a {{source}}",
     "connections": "Conexiones",
     "grid-compact-hint": "Contraer los memos largos. Siempre activado en los diseños de cuadrícula.",
     "layout": "Diseño",
@@ -1054,12 +1052,12 @@
       "transcription-language-help": "Código corto ISO 639-1 (por ejemplo, en, de, zh). Déjelo vacío para que se detecte automáticamente.",
       "transcription-language-placeholder": "detección automática",
       "transcription-language": "Idioma predeterminado",
-      "transcription-model-help": "Texto libre. Utilice el identificador de modelo del proveedor, p. whisper-1, gpt-4o-transcribe, whisper-large-v3-turbo.",
+      "transcription-model-help": "Texto libre. Utilice el identificador de modelo del proveedor, p. gpt-transcribe, whisper-large-v3-turbo.",
       "transcription-model-placeholder-gemini": "gemini-2.5-flash, gemini-2.5-pro",
-      "transcription-model-placeholder-openai": "whisper-1, gpt-4o-transcribe, gpt-4o-mini-transcribe, gpt-4o-transcribe-diarize",
+      "transcription-model-placeholder-openai": "gpt-transcribe",
       "transcription-model": "Modelo",
       "transcription-no-provider": "Ninguna - transcripción deshabilitada",
-      "transcription-prompt-help": "Mejora la ortografía de nombres propios y jerga. OpenAI Whisper trata esto como una sugerencia suave (el límite de Whisper es aproximadamente tokens 224). Gemini lo trata como una instrucción literal dentro del mensaje de generación.",
+      "transcription-prompt-help": "Mejora la ortografía de nombres propios y jerga.",
       "transcription-prompt-placeholder": "Nombres: Alicia, Bob. Glosario: kubernetes, OAuth.",
       "transcription-prompt": "Consejos rápidos",
       "transcription-provider": "Proveedora",
@@ -1386,6 +1384,7 @@
     "place-placeholder": "Primero elige una posición."
   },
   "calendar": {
+    "more-memos": "+{{count}} más",
     "new-memo-on-day": "Nuevo memorándum en este día",
     "next-year": "El próximo año",
     "no-memos-in-month": "No hay memorándums en {{month}}",
@@ -1394,7 +1393,6 @@
     "select-month": "Seleccionar mes"
   },
   "space": {
-    "all-spaces": "Todos los espacios",
     "icon": {
       "change": "Cambiar icono del espacio",
       "kind": "Tipo de icono",

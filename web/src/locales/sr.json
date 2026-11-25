@@ -90,7 +90,6 @@
     "attachments": "Прилози",
     "avatar": "Аватар",
     "basic": "Басиц",
-    "browse": "Прегледај",
     "calendar": "Календар",
     "cancel": "Откажи",
     "clear": "Јасно",
@@ -536,7 +535,6 @@
     "parent-unavailable": "Надређена порука није доступна",
     "parent-unavailable-description": "Можда је обрисана или више немате приступ.",
     "moved": "Белешка је премештена",
-    "back-to": "Назад на {{source}}",
     "connections": "Везе",
     "grid-compact-hint": "Скупи дуже мемое. Увек омогућено у мрежним распоредима.",
     "layout": "Распоред",
@@ -677,12 +675,12 @@
       "transcription-language-help": "ИСО 639-1 кратки код (нпр. ен, де, зх). Оставите празно за аутоматско откривање.",
       "transcription-language-placeholder": "ауто-детецт",
       "transcription-language": "Подразумевани језик",
-      "transcription-model-help": "Слободан текст. Користите идентификатор модела добављача — нпр. whisper-1, gpt-4o-transcribe, whisper-large-v3-turbo.",
+      "transcription-model-help": "Слободан текст. Користите идентификатор модела добављача — нпр. gpt-transcribe, whisper-large-v3-turbo.",
       "transcription-model-placeholder-gemini": "gemini-2.5-flash, gemini-2.5-pro",
-      "transcription-model-placeholder-openai": "whisper-1, gpt-4o-transcribe, gpt-4o-mini-transcribe, gpt-4o-transcribe-diarize",
+      "transcription-model-placeholder-openai": "gpt-transcribe",
       "transcription-model": "Модел",
       "transcription-no-provider": "Ништа — транскрипција је онемогућена",
-      "transcription-prompt-help": "Побољшава правопис властитих именица и жаргона. OpenAI Whisper ово третира као меки наговештај (Whisper ограничење је отприлике 224 токени). Gemini га третира као дословну инструкцију унутар генерисања.",
+      "transcription-prompt-help": "Побољшава правопис властитих именица и жаргона.",
       "transcription-prompt-placeholder": "Имена: Алис, Боб. Речник: кубернетес, OAuth.",
       "transcription-prompt": "Промпт хинтс",
       "transcription-provider": "Провајдер",
@@ -1386,6 +1384,7 @@
     "place-placeholder": "Прво изаберите положај."
   },
   "calendar": {
+    "more-memos": "још {{count}}",
     "new-memo-on-day": "Нова белешка на данашњи дан",
     "next-year": "Следећа година",
     "no-memos-in-month": "Нема белешки у {{month}}",
@@ -1394,7 +1393,6 @@
     "select-month": "Изаберите месец"
   },
   "space": {
-    "all-spaces": "Сви простори",
     "icon": {
       "change": "Промени икону простора",
       "kind": "Тип иконе",

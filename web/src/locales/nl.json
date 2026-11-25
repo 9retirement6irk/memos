@@ -52,7 +52,6 @@
     "attachments": "Bijlagen",
     "avatar": "Avatar",
     "basic": "Simpel",
-    "browse": "Bladeren",
     "calendar": "Kalender",
     "cancel": "Annuleren",
     "clear": "Leegmaken",
@@ -497,7 +496,6 @@
     "parent-unavailable": "Hoofdmemo niet beschikbaar",
     "parent-unavailable-description": "Deze is mogelijk verwijderd of je hebt er geen toegang meer toe.",
     "moved": "Memo verplaatst",
-    "back-to": "Terug naar {{source}}",
     "connections": "Verbindingen",
     "grid-compact-hint": "Vouw langere memo’s samen. Altijd ingeschakeld bij rasterindelingen.",
     "layout": "Indeling",
@@ -1053,12 +1051,12 @@
       "transcription-language-help": "ISO 639-1 korte code (bijv. en, de, zh). Laat leeg voor automatische detectie.",
       "transcription-language-placeholder": "automatisch detecteren",
       "transcription-language": "Standaardtaal",
-      "transcription-model-help": "Vrije tekst. Gebruik de modelidentificatie van de aanbieder, b.v. whisper-1, gpt-4o-transcribe, whisper-large-v3-turbo.",
+      "transcription-model-help": "Vrije tekst. Gebruik de modelidentificatie van de aanbieder, b.v. gpt-transcribe, whisper-large-v3-turbo.",
       "transcription-model-placeholder-gemini": "gemini-2.5-flash, gemini-2.5-pro",
-      "transcription-model-placeholder-openai": "whisper-1, gpt-4o-transcribe, gpt-4o-mini-transcribe, gpt-4o-transcribe-diarize",
+      "transcription-model-placeholder-openai": "gpt-transcribe",
       "transcription-model": "Model",
       "transcription-no-provider": "Geen — transcriptie uitgeschakeld",
-      "transcription-prompt-help": "Verbetert de spelling van eigennamen en jargon. OpenAI Whisper beschouwt dit als een zachte hint (Whisper-limiet is ongeveer 224-tokens). Gemini beschouwt het als een letterlijke instructie binnen de generatieprompt.",
+      "transcription-prompt-help": "Verbetert de spelling van eigennamen en jargon.",
       "transcription-prompt-placeholder": "Namen: Alice, Bob. Woordenlijst: kubernetes, OAuth.",
       "transcription-prompt": "Snelle tips",
       "transcription-provider": "Aanbieder",
@@ -1385,6 +1383,7 @@
     "place-placeholder": "Kies eerst een positie."
   },
   "calendar": {
+    "more-memos": "+{{count}} meer",
     "new-memo-on-day": "Nieuwe memo op deze dag",
     "next-year": "Volgend jaar",
     "no-memos-in-month": "Geen memo's in {{month}}",
@@ -1393,7 +1392,6 @@
     "select-month": "Selecteer maand"
   },
   "space": {
-    "all-spaces": "Alle ruimtes",
     "icon": {
       "change": "Pictogram van de ruimte wijzigen",
       "kind": "Type pictogram",

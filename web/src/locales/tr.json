@@ -66,6 +66,7 @@
     "signups-closed-description": "Bu sunucuda yeni kayıtlar kapalı. Erişime ihtiyacın varsa yöneticinle iletişime geç."
   },
   "calendar": {
+    "more-memos": "+{{count}} daha",
     "new-memo-on-day": "Bu güne yeni not ekle",
     "next-year": "Sonraki yıl",
     "no-memos-in-month": "{{month}} ayında hiç not yok",
@@ -84,7 +85,6 @@
     "attachments": "Ekler",
     "avatar": "Profil fotoğrafı",
     "basic": "Temel",
-    "browse": "Göz at",
     "calendar": "Takvim",
     "cancel": "İptal",
     "clear": "Temizle",
@@ -447,7 +447,6 @@
     "parent-unavailable": "Üst nota ulaşılamıyor",
     "parent-unavailable-description": "Silinmiş olabilir ya da artık erişim iznin kalmamış olabilir.",
     "moved": "Not taşındı",
-    "back-to": "{{source}} görünümüne dön",
     "click-to-show-sensitive-content": "Hassas içeriği görmek için tıkla",
     "comment": {
       "self": "Yorumlar",
@@ -1221,12 +1220,12 @@
       "transcription-language-help": "ISO 639-1 kısa dil kodu (ör. tr, en, de). Otomatik algılama için boş bırak.",
       "transcription-language-placeholder": "otomatik algıla",
       "transcription-language": "Varsayılan dil",
-      "transcription-model-help": "Serbest metin alanıdır. Sağlayıcının model adını yaz — örneğin whisper-1, gpt-4o-transcribe, whisper-large-v3-turbo.",
+      "transcription-model-help": "Serbest metin alanıdır. Sağlayıcının model adını yaz — örneğin gpt-transcribe, whisper-large-v3-turbo.",
       "transcription-model-placeholder-gemini": "gemini-2.5-flash, gemini-2.5-pro",
-      "transcription-model-placeholder-openai": "whisper-1, gpt-4o-transcribe, gpt-4o-mini-transcribe, gpt-4o-transcribe-diarize",
+      "transcription-model-placeholder-openai": "gpt-transcribe",
       "transcription-model": "Model",
       "transcription-no-provider": "Yok — ses dökümü kapalı",
-      "transcription-prompt-help": "Özel isimlerin ve teknik terimlerin doğru yazılmasını sağlar. OpenAI Whisper bunu yol gösterici bir ipucu olarak dikkate alır (sınırı yaklaşık 224 tokendir). Gemini ise doğrudan bir komut gibi işler.",
+      "transcription-prompt-help": "Özel isimlerin ve teknik terimlerin doğru yazılmasını sağlar.",
       "transcription-prompt-placeholder": "İsimler: Ayşe, Mehmet. Terimler: kubernetes, OAuth.",
       "transcription-prompt": "Bağlam ipuçları",
       "transcription-provider": "Sağlayıcı",
@@ -1317,7 +1316,6 @@
     }
   },
   "space": {
-    "all-spaces": "Tüm alanlar",
     "icon": {
       "change": "Alan simgesini değiştir",
       "kind": "Simge türü",

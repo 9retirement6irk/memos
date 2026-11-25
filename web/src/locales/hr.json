@@ -52,7 +52,6 @@
     "attachments": "Privici",
     "avatar": "Avatar",
     "basic": "Osnovno",
-    "browse": "Pregledaj",
     "calendar": "Kalendar",
     "cancel": "Otkaži",
     "clear": "Očisti",
@@ -498,7 +497,6 @@
     "parent-unavailable": "Nadređeni podsjetnik nije dostupan",
     "parent-unavailable-description": "Možda je izbrisana ili više nemate pristup.",
     "moved": "Bilješka je premještena",
-    "back-to": "Natrag na {{source}}",
     "connections": "Veze",
     "grid-compact-hint": "Sažmi dulje memoe. Uvijek omogućeno u mrežnim rasporedima.",
     "layout": "Raspored",
@@ -1054,12 +1052,12 @@
       "transcription-language-help": "ISO 639-1 kratki kod (npr. en, de, zh). Ostavite prazno za automatsko otkrivanje.",
       "transcription-language-placeholder": "automatsko otkrivanje",
       "transcription-language": "Zadani jezik",
-      "transcription-model-help": "Slobodan tekst. Koristite davateljev identifikator modela — npr. whisper-1, gpt-4o-transcribe, whisper-large-v3-turbo.",
+      "transcription-model-help": "Slobodan tekst. Koristite davateljev identifikator modela — npr. gpt-transcribe, whisper-large-v3-turbo.",
       "transcription-model-placeholder-gemini": "gemini-2.5-flash, gemini-2.5-pro",
-      "transcription-model-placeholder-openai": "whisper-1, gpt-4o-transcribe, gpt-4o-mini-transcribe, gpt-4o-transcribe-diarize",
+      "transcription-model-placeholder-openai": "gpt-transcribe",
       "transcription-model": "Model",
       "transcription-no-provider": "Ništa — transkripcija onemogućena",
-      "transcription-prompt-help": "Poboljšava pravopis vlastitih imenica i žargona. OpenAI Whisper ovo tretira kao blagi savjet (ograničenje Whisper je otprilike 224 tokena). Gemini to tretira kao doslovnu uputu unutar odzivnika za generiranje.",
+      "transcription-prompt-help": "Poboljšava pravopis vlastitih imenica i žargona.",
       "transcription-prompt-placeholder": "Imena: Alice, Bob. Rječnik: kubernetes, OAuth.",
       "transcription-prompt": "Brzi savjeti",
       "transcription-provider": "Davatelj",
@@ -1386,6 +1384,7 @@
     "place-placeholder": "Najprije odaberite položaj."
   },
   "calendar": {
+    "more-memos": "još {{count}}",
     "new-memo-on-day": "Nova bilješka na današnji dan",
     "next-year": "Sljedeća godina",
     "no-memos-in-month": "Nema bilješki u {{month}}",
@@ -1394,7 +1393,6 @@
     "select-month": "Odaberite mjesec"
   },
   "space": {
-    "all-spaces": "Svi prostori",
     "icon": {
       "change": "Promijeni ikonu prostora",
       "kind": "Vrsta ikone",

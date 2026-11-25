@@ -19,6 +19,8 @@ import { restampDefaultCreateTime } from "../utils/deriveDefaultCreateTime";
 interface UseMemoSaveOptions {
   memoName?: string;
   parentMemoName?: string;
+  /** The parent's Space, where a comment shared with a Space is filed. */
+  parentSpace?: string;
   defaultSpace?: string;
   defaultVisibility?: Visibility;
   defaultCreateTime?: Date;
@@ -40,6 +42,7 @@ interface UseMemoSaveOptions {
 export function useMemoSave({
   memoName,
   parentMemoName,
+  parentSpace,
   defaultSpace,
   defaultVisibility,
   defaultCreateTime,
@@ -118,6 +121,7 @@ export function useMemoSave({
         {
           memoName,
           parentMemoName,
+          parentSpace,
           space: defaultSpace,
           onFileUploaded: (file, attachment) => {
             uploaded.set(file.previewUrl, attachment);
@@ -199,6 +203,7 @@ export function useMemoSave({
     onConfirm,
     onSaved,
     parentMemoName,
+    parentSpace,
     queryClient,
     t,
     transformContent,

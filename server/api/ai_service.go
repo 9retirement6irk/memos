@@ -101,7 +101,7 @@ func (s *APIService) Transcribe(ctx context.Context, request *apipb.TranscribeRe
 
 	model := persisted.GetModel()
 	if model == "" {
-		defaultModel, err := ai.DefaultTranscriptionModel(provider.Type)
+		defaultModel, err := ai.DefaultTranscriptionModel(provider)
 		if err != nil {
 			return nil, status.Errorf(codes.InvalidArgument, "%v", err)
 		}
@@ -119,6 +119,9 @@ func (s *APIService) Transcribe(ctx context.Context, request *apipb.TranscribeRe
 			"provider type %q is not supported for transcription", provider.Type)
 	}
 	if err != nil {
+		if errors.Is(err, audiollm.ErrUnsupportedAudio) {
+			return nil, status.Errorf(codes.InvalidArgument, "failed to transcribe audio: %v", err)
+		}
 		return nil, status.Errorf(codes.Internal, "failed to transcribe audio: %v", err)
 	}
 	return &apipb.TranscribeResponse{Text: text}, nil

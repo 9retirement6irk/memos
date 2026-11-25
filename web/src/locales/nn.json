@@ -109,6 +109,7 @@
     "signups-closed-description": "Nye kontoar er ikkje tillatne på denne instansen. Ta kontakt med administratoren din dersom du treng åtgang."
   },
   "calendar": {
+    "more-memos": "+{{count}} til",
     "new-memo-on-day": "Nytt notat på denne dagen",
     "next-year": "Neste år",
     "no-memos-in-month": "Ingen notat i {{month}}",
@@ -127,7 +128,6 @@
     "attachments": "Vedlegg",
     "avatar": "Profilbilete",
     "basic": "Grunnleggjande",
-    "browse": "Bla gjennom",
     "calendar": "Kalender",
     "cancel": "Avbryt",
     "clear": "Tøm",
@@ -512,7 +512,6 @@
     "no-memos-yet": "Ingen notat enno",
     "no-matching-memos": "Ingen notat samsvarar",
     "clear-filters": "Tøm filter",
-    "back-to": "Attende til {{source}}",
     "click-to-show-sensitive-content": "Trykk for å vise sensitivt innhald",
     "comment": {
       "self": "Kommentarar",
@@ -755,12 +754,12 @@
       "transcription-language-help": "ISO 639-1-kortkode (t.d. nn, de, zh). Lat feltet stå tomt for automatisk attkjenning.",
       "transcription-language-placeholder": "kjenn att automatisk",
       "transcription-model": "Modell",
-      "transcription-model-help": "Fritekst. Nytt modellidentifikatoren til tilbydaren, t.d. whisper-1, gpt-4o-transcribe, whisper-large-v3-turbo.",
+      "transcription-model-help": "Fritekst. Nytt modellidentifikatoren til tilbydaren, t.d. gpt-transcribe, whisper-large-v3-turbo.",
       "transcription-model-placeholder-gemini": "gemini-2.5-flash, gemini-2.5-pro",
-      "transcription-model-placeholder-openai": "whisper-1, gpt-4o-transcribe, gpt-4o-mini-transcribe, gpt-4o-transcribe-diarize",
+      "transcription-model-placeholder-openai": "gpt-transcribe",
       "transcription-no-provider": "Ingen; transkripsjon er slått av",
       "transcription-prompt": "Rettleiande instruks",
-      "transcription-prompt-help": "Betrar skrivemåten for særnamn og faguttrykk. OpenAI Whisper nyttar dette som rettleiing (Whisper-grensa er om lag 224 token). Gemini handsamar teksten bokstavleg som ein del av instruksen for tekstgenerering.",
+      "transcription-prompt-help": "Betrar skrivemåten for særnamn og faguttrykk.",
       "transcription-prompt-placeholder": "Namn: Alice, Bob. Ordliste: kubernetes, OAuth.",
       "transcription-provider": "Tilbydar",
       "transcription-title": "Transkripsjon",
@@ -1388,7 +1387,6 @@
     }
   },
   "space": {
-    "all-spaces": "Alle rom",
     "back-to-memos": "Attende til Memos",
     "create": "Opprett rom",
     "create-description": "Opprett ein felles stad for notat og medlemer.",

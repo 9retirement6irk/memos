@@ -43,6 +43,7 @@
     "signups-closed-description": "此實例已停用新帳號註冊。如需存取權限，請聯絡管理員。"
   },
   "calendar": {
+    "more-memos": "還有 {{count}} 則",
     "new-memo-on-day": "在這一天新增備忘錄",
     "next-year": "下一年",
     "no-memos-in-month": "{{month}} 沒有備忘錄",
@@ -132,7 +133,6 @@
     "attachments": "附件",
     "avatar": "頭像",
     "basic": "基礎",
-    "browse": "瀏覽",
     "calendar": "日曆",
     "cancel": "取消",
     "clear": "清除",
@@ -585,7 +585,6 @@
     "parent-unavailable": "父備忘錄不可用",
     "parent-unavailable-description": "它可能已被刪除，或者您可能已失去存取權限。",
     "moved": "備忘錄已移動",
-    "back-to": "返回 {{source}}",
     "connections": "關聯",
     "on-this-memo": "在此備忘錄中",
     "parent-memo": "父備忘錄",
@@ -718,12 +717,12 @@
       "transcription-language-help": "ISO 639-1 短代碼（例如 en、de、zh）。留空則自動偵測。",
       "transcription-language-placeholder": "自動偵測",
       "transcription-model": "模型",
-      "transcription-model-help": "任意模型 ID。使用服務供應商的模型識別碼，例如 whisper-1、gpt-4o-transcribe、whisper-large-v3-turbo。",
+      "transcription-model-help": "任意模型 ID。使用服務供應商的模型識別碼，例如 gpt-transcribe、whisper-large-v3-turbo。",
       "transcription-model-placeholder-gemini": "gemini-2.5-flash, gemini-2.5-pro",
-      "transcription-model-placeholder-openai": "whisper-1, gpt-4o-transcribe, gpt-4o-mini-transcribe, gpt-4o-transcribe-diarize",
+      "transcription-model-placeholder-openai": "gpt-transcribe",
       "transcription-no-provider": "無 — 轉寫功能已停用",
       "transcription-prompt": "提示詞",
-      "transcription-prompt-help": "改善專有名詞和行話的拼寫。OpenAI Whisper 將此視為軟性提示（Whisper 限制約 224 個 token）。Gemini 將此視為生成提示中的字面指令。",
+      "transcription-prompt-help": "改善專有名詞和行話的拼寫。",
       "transcription-prompt-placeholder": "名稱：Alice, Bob。詞彙表：kubernetes, OAuth。",
       "transcription-provider": "服務供應商",
       "transcription-title": "轉寫",
@@ -1351,7 +1350,6 @@
     }
   },
   "space": {
-    "all-spaces": "所有空間",
     "unavailable": "空間不存在或你沒有存取權限。",
     "back-to-memos": "返回 Memos",
     "create": "建立空間",

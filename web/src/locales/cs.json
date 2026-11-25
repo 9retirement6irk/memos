@@ -52,7 +52,6 @@
     "attachments": "Přílohy",
     "avatar": "Avatar",
     "basic": "Základní",
-    "browse": "Procházet",
     "calendar": "Kalendář",
     "cancel": "Zrušit",
     "clear": "Vymazat",
@@ -499,7 +498,6 @@
     "parent-unavailable": "Nadřazená poznámka není k dispozici",
     "parent-unavailable-description": "Možná byla smazána nebo k ní již nemáte přístup.",
     "moved": "Poznámka přesunuta",
-    "back-to": "Zpět na {{source}}",
     "connections": "Připojení",
     "grid-compact-hint": "Sbalit delší poznámky. V rozvržení mřížky je vždy zapnuto.",
     "layout": "Rozvržení",
@@ -1056,12 +1054,12 @@
       "transcription-language-help": "ISO 639-1 krátký kód (např. en, de, zh). Nechte prázdné pro automatickou detekci.",
       "transcription-language-placeholder": "autodetekce",
       "transcription-language": "Výchozí jazyk",
-      "transcription-model-help": "Volný text. Použijte identifikátor modelu poskytovatele — např. whisper-1, gpt-4o-transcribe, whisper-large-v3-turbo.",
+      "transcription-model-help": "Volný text. Použijte identifikátor modelu poskytovatele — např. gpt-transcribe, whisper-large-v3-turbo.",
       "transcription-model-placeholder-gemini": "gemini-2.5-flash, gemini-2.5-pro",
-      "transcription-model-placeholder-openai": "whisper-1, gpt-4o-transcribe, gpt-4o-mini-transcribe, gpt-4o-transcribe-diarize",
+      "transcription-model-placeholder-openai": "gpt-transcribe",
       "transcription-model": "Model",
       "transcription-no-provider": "Žádné — přepis zakázán",
-      "transcription-prompt-help": "Zlepšuje pravopis vlastních podstatných jmen a žargonu. OpenAI Whisper to považuje za jemný náznak (limit Whisper je zhruba 224 tokenů). Gemini s tím zachází jako s doslovnou instrukcí uvnitř výzvy pro generování.",
+      "transcription-prompt-help": "Zlepšuje pravopis vlastních podstatných jmen a žargonu.",
       "transcription-prompt-placeholder": "Jména: Alice, Bob. Slovník: kubernetes, OAuth.",
       "transcription-prompt": "Nápovědy pro přepis",
       "transcription-provider": "Poskytovatel",
@@ -1388,6 +1386,7 @@
     "place-placeholder": "Nejprve vyberte polohu."
   },
   "calendar": {
+    "more-memos": "+{{count}} další",
     "new-memo-on-day": "Nová poznámka z tohoto dne",
     "next-year": "Příští rok",
     "no-memos-in-month": "Žádné poznámky v {{month}}",
@@ -1396,7 +1395,6 @@
     "select-month": "Vyberte měsíc"
   },
   "space": {
-    "all-spaces": "Všechny prostory",
     "icon": {
       "change": "Změnit ikonu prostoru",
       "kind": "Typ ikony",
