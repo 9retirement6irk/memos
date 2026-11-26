@@ -2,9 +2,9 @@ import { readFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import type { FreedrawElement } from "@usememos/canvas";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { FREEDRAW_HOOK_KEY, hookCanvasSource } from "@/components/DrawingSheet/pencil/canvasHook";
-import { GRAIN_LEVELS, GRAIN_SIDE, grain, grainLevel, grainTile } from "@/components/DrawingSheet/pencil/grain";
-import { isPencilStroke, pencilBands } from "@/components/DrawingSheet/pencil/strokes";
+import { FREEDRAW_HOOK_KEY, hookCanvasSource } from "@/components/DrawingSheet/gzreader/canvasHook";
+import { GRAIN_LEVELS, GRAIN_SIDE, grain, grainLevel, grainTile } from "@/components/DrawingSheet/gzreader/grain";
+import { gzToolOf, type StrokeBand, strokeBands, washColour } from "@/components/DrawingSheet/gzreader/strokes";
 
 const stroke = (points: number[][], extra: Record<string, unknown> = {}) =>
   ({
@@ -29,6 +29,11 @@ const stroke = (points: number[][], extra: Record<string, unknown> = {}) =>
     customData: { gzTool: "pencil" },
     ...extra,
   }) as unknown as FreedrawElement;
+
+/** A pencil stroke's bands, each with its grain step. */
+const pencilBands = (element: FreedrawElement): (StrokeBand & { level: number })[] =>
+  strokeBands(element, "pencil").map((band) => ({ ...band, level: band.level ?? Number.NaN }));
+const isPencilStroke = (element: { type: string; customData?: unknown }) => gzToolOf(element) === "pencil";
 
 describe("the paper's tooth", () => {
   it("matches GZreader's Sketch.grain", () => {
@@ -74,7 +79,10 @@ describe("the paper's tooth", () => {
 describe("a GZreader pencil stroke", () => {
   it("is known by the mark GZreader leaves, not by being see-through", () => {
     expect(isPencilStroke(stroke([[0, 0, 0.5]]))).toBe(true);
-    expect(isPencilStroke(stroke([[0, 0, 0.5]], { customData: { gzTool: "highlighter" } }))).toBe(false);
+    expect(gzToolOf(stroke([[0, 0, 0.5]], { customData: { gzTool: "highlighter" } }))).toBe("highlighter");
+    // The pen leaves no mark, and a mark that isn't a tool's is no tool.
+    expect(gzToolOf(stroke([[0, 0, 0.5]], { customData: { gzTool: "pen" } }))).toBeUndefined();
+    expect(gzToolOf(stroke([[0, 0, 0.5]], { customData: { gzTool: "constructor" } }))).toBeUndefined();
     expect(isPencilStroke(stroke([[0, 0, 0.5]], { customData: undefined }))).toBe(false);
     expect(isPencilStroke({ type: "rectangle", customData: { gzTool: "pencil" } })).toBe(false);
   });
@@ -138,6 +146,56 @@ describe("a GZreader pencil stroke", () => {
   });
 });
 
+describe("GZreader's other tools", () => {
+  const line = (pressure: number, extra: Record<string, unknown>) =>
+    strokeBands(
+      stroke(
+        [
+          [0, 0, pressure],
+          [10, 0, pressure],
+        ],
+        extra,
+      ),
+      (extra.customData as { gzTool: "fountain" | "marker" | "highlighter" | "shader" }).gzTool,
+    );
+
+  it("the fountain pen stays thin until pressed, then swells", () => {
+    const fountain = (pressure: number) => line(pressure, { strokeWidth: 2, opacity: 100, customData: { gzTool: "fountain" } });
+    // Medium: the pen's radius is 3 Kindle pixels; 0.15 of it lightest, 2.8 times it heaviest.
+    expect(fountain(0).map((band) => band.lineWidth)).toEqual([1.5]);
+    expect(fountain(0.5)[0].lineWidth).toBe(3.5);
+    expect(fountain(1)[0].lineWidth).toBe(8.5);
+    expect(fountain(0.5)[0].level).toBeUndefined();
+  });
+
+  it("the marker is even whatever the pressure, and broader laid over", () => {
+    const marker = (pressure: number, tilt?: number[]) =>
+      line(pressure, { strokeWidth: 3.8, opacity: 100, customData: { gzTool: "marker", ...(tilt ? { gzTilt: tilt } : {}) } });
+    expect(marker(0.1)).toEqual(marker(0.9));
+    expect(marker(0.5)).toHaveLength(1);
+    expect(marker(0.5)[0].lineWidth).toBe(6.5);
+    expect(marker(0.5, [1, 1])[0].lineWidth).toBe(11.5);
+  });
+
+  it("the highlighter and the shader are one even band each", () => {
+    const highlighter = line(0.9, { strokeWidth: 7, opacity: 35, customData: { gzTool: "highlighter" } });
+    const shader = line(0.2, { strokeWidth: 10, opacity: 20, customData: { gzTool: "shader" } });
+    expect(highlighter).toHaveLength(1);
+    expect(shader).toHaveLength(1);
+    expect(highlighter[0].lineWidth).toBe(11.5);
+    expect(shader[0].lineWidth).toBe(15.5);
+    // One path for the whole stroke, so it doesn't darken where it crosses itself.
+    expect(highlighter[0].segments).toHaveLength(8);
+  });
+
+  it("a wash is the tool's grey in memos' ink and a tint of any other colour", () => {
+    expect(washColour("#1a1a1a", { grey: 0xc8, tint: 0.55 })).toBe("#c8c8c8");
+    expect(washColour("#ffff00", { grey: 0xc8, tint: 0.55 })).toBe("#ffff73");
+    expect(washColour("#0000ff", { grey: 0xe6, tint: 0.3 })).toBe("#b3b3ff");
+    expect(washColour("not a colour", { grey: 0xe6, tint: 0.3 })).toBe("#e6e6e6");
+  });
+});
+
 describe("the drawing engine's hook", () => {
   const source = readFileSync(createRequire(import.meta.url).resolve("@usememos/canvas"), "utf8");
 
@@ -157,7 +215,7 @@ describe("the drawing engine's hook", () => {
   });
 });
 
-describe("drawing a pencil stroke", () => {
+describe("drawing a GZreader stroke", () => {
   afterEach(() => vi.unstubAllGlobals());
 
   it("strokes each band with the paper's tooth, solid, and leaves other strokes to the engine", async () => {
@@ -177,22 +235,29 @@ describe("drawing a pencil stroke", () => {
     vi.stubGlobal("DOMMatrix", FakeMatrix);
     const tileCtx = { createImageData: (w: number, h: number) => ({ data: new Uint8ClampedArray(w * h * 4) }), putImageData: vi.fn() };
     vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockReturnValue(tileCtx as never);
-    const { drawPencilStroke } = await import("@/components/DrawingSheet/pencil");
+    const { drawGzStroke: drawPencilStroke } = await import("@/components/DrawingSheet/gzreader");
     expect((globalThis as Record<symbol, unknown>)[Symbol.for(FREEDRAW_HOOK_KEY)]).toBe(drawPencilStroke);
 
     const setTransform = vi.fn();
-    const strokes: { lineWidth: number; alpha: number; path: FakePath }[] = [];
+    const strokes: { lineWidth: number; alpha: number; path: FakePath; style: unknown; mode: string }[] = [];
     const ctx = {
       globalAlpha: 0.7,
       lineWidth: 0,
       lineCap: "",
       lineJoin: "",
       strokeStyle: null as unknown,
+      globalCompositeOperation: "source-over",
       save: vi.fn(),
       restore: vi.fn(),
       createPattern: vi.fn(() => ({ setTransform })),
       stroke(path: FakePath) {
-        strokes.push({ lineWidth: this.lineWidth, alpha: this.globalAlpha, path });
+        strokes.push({
+          lineWidth: this.lineWidth,
+          alpha: this.globalAlpha,
+          path,
+          style: this.strokeStyle,
+          mode: this.globalCompositeOperation,
+        });
       },
     };
     const pencil = stroke([
@@ -214,7 +279,33 @@ describe("drawing a pencil stroke", () => {
     expect(ctx.save).toHaveBeenCalledTimes(1);
     expect(ctx.restore).toHaveBeenCalledTimes(1);
 
+    expect(strokes.every((s) => s.mode === "source-over")).toBe(true);
+
     expect(drawPencilStroke(ctx as never, stroke([[0, 0, 0.5]], { customData: undefined }))).toBe(false);
     expect(ctx.save).toHaveBeenCalledTimes(1);
+
+    // A highlighter: one solid band, multiplied over what is under it, in its wash colour.
+    strokes.length = 0;
+    ctx.globalAlpha = 0.35;
+    const highlight = stroke(
+      [
+        [0, 0, 0.5],
+        [10, 0, 0.5],
+      ],
+      { strokeWidth: 7, opacity: 35, strokeColor: "#ffff00", customData: { gzTool: "highlighter" } },
+    );
+    expect(drawPencilStroke(ctx as never, highlight)).toBe(true);
+    expect(strokes).toHaveLength(1);
+    expect(strokes[0]).toMatchObject({ lineWidth: 11.5, style: "#ffff73", mode: "multiply" });
+    expect(strokes[0].alpha).toBeCloseTo(1);
+
+    // A fountain pen: the stroke's own colour, drawn over.
+    strokes.length = 0;
+    ctx.globalAlpha = 1;
+    ctx.globalCompositeOperation = "source-over";
+    expect(
+      drawPencilStroke(ctx as never, stroke([[0, 0, 0.5]], { strokeWidth: 2, opacity: 100, customData: { gzTool: "fountain" } })),
+    ).toBe(true);
+    expect(strokes[0]).toMatchObject({ lineWidth: 3.5, style: "#1a1a1a", mode: "source-over" });
   });
 });

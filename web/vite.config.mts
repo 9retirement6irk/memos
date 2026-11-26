@@ -2,7 +2,7 @@ import babel from "@rolldown/plugin-babel";
 import react, { reactCompilerPreset } from "@vitejs/plugin-react";
 import { resolve } from "path";
 import { defineConfig, type Plugin } from "vite";
-import { hookCanvasSource } from "./src/components/DrawingSheet/pencil/canvasHook";
+import { hookCanvasSource } from "./src/components/DrawingSheet/gzreader/canvasHook";
 import tailwindcss from "@tailwindcss/vite";
 
 let devProxyServer = "http://localhost:8081";
@@ -12,9 +12,9 @@ if (process.env.DEV_PROXY_SERVER && process.env.DEV_PROXY_SERVER.length > 0) {
 }
 
 /**
- * Lets the drawing engine's pen strokes be drawn by the fork (GZreader's pencil, see
- * `src/components/DrawingSheet/pencil`). The build stops if the engine no longer has the
- * place this reaches, so an engine update can't quietly lose the pencil.
+ * Lets the drawing engine's pen strokes be drawn by the fork (GZreader's writing tools, see
+ * `src/components/DrawingSheet/gzreader`). The build stops if the engine no longer has the
+ * place this reaches, so an engine update can't quietly lose them.
  */
 const canvasFreedrawHook = (): Plugin => ({
   name: "memos-canvas-freedraw-hook",
@@ -22,7 +22,7 @@ const canvasFreedrawHook = (): Plugin => ({
   transform(code, id) {
     if (!/[\\/]@usememos[\\/]canvas[\\/]dist[\\/]index\.js(\?|$)/.test(id)) return null;
     const hooked = hookCanvasSource(code);
-    if (hooked === null) this.error("@usememos/canvas no longer fills pen strokes where the pencil hook expects (pencil/canvasHook.ts)");
+    if (hooked === null) this.error("@usememos/canvas no longer fills pen strokes where the GZreader hook expects (gzreader/canvasHook.ts)");
     return { code: hooked, map: null };
   },
 });
