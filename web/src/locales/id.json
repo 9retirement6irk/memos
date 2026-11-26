@@ -1770,7 +1770,13 @@
     "mood-trend": "Perasaanmu selama ini",
     "mood-trend-description": "Suasana hati harianmu selama delapan minggu terakhir",
     "best-with": "Terasa paling baik dengan",
-    "worst-with": "Terasa paling berat dengan"
+    "worst-with": "Terasa paling berat dengan",
+    "state": {
+      "label": "Suasana hati",
+      "feelings": "Perasaan",
+      "impacts": "Karena",
+      "activities": "Kegiatan"
+    }
   },
   "dawarich": {
     "route": {

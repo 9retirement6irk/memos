@@ -1772,7 +1772,13 @@
     "mood-trend": "Ako si sa cítil",
     "mood-trend-description": "Tvoja denná nálada za posledných osem týždňov",
     "best-with": "Najlepšie sa cítiš s",
-    "worst-with": "Najhoršie sa cítiš s"
+    "worst-with": "Najhoršie sa cítiš s",
+    "state": {
+      "label": "Duševný stav",
+      "feelings": "Pocity",
+      "impacts": "Kvôli",
+      "activities": "Robil(a) som"
+    }
   },
   "dawarich": {
     "route": {

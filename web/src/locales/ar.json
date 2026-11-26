@@ -1774,7 +1774,13 @@
     "mood-trend": "كيف شعرت",
     "mood-trend-description": "مزاجك اليومي خلال الأسابيع الثمانية الأخيرة",
     "best-with": "أفضل شعور مع",
-    "worst-with": "أصعب شعور مع"
+    "worst-with": "أصعب شعور مع",
+    "state": {
+      "label": "الحالة النفسية",
+      "feelings": "المشاعر",
+      "impacts": "بسبب",
+      "activities": "ما فعلته"
+    }
   },
   "dawarich": {
     "route": {

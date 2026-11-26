@@ -1770,7 +1770,13 @@
     "mood-trend": "Miltä sinusta on tuntunut",
     "mood-trend-description": "Päivittäinen mielialasi viimeisten kahdeksan viikon ajalta",
     "best-with": "Tuntuu parhaalta, kun mukana on",
-    "worst-with": "Tuntuu raskaimmalta, kun mukana on"
+    "worst-with": "Tuntuu raskaimmalta, kun mukana on",
+    "state": {
+      "label": "Mielentila",
+      "feelings": "Tunteet",
+      "impacts": "Syynä",
+      "activities": "Tein"
+    }
   },
   "dawarich": {
     "route": {

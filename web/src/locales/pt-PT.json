@@ -1771,7 +1771,13 @@
     "mood-trend": "Como se sentiu",
     "mood-trend-description": "O seu humor diário nas últimas oito semanas",
     "best-with": "Sente-se melhor com",
-    "worst-with": "Sente-se pior com"
+    "worst-with": "Sente-se pior com",
+    "state": {
+      "label": "Estado de espírito",
+      "feelings": "Sentimentos",
+      "impacts": "Por causa de",
+      "activities": "Fiz"
+    }
   },
   "dawarich": {
     "route": {

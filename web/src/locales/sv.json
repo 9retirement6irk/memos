@@ -1770,7 +1770,13 @@
     "mood-trend": "Hur du har mått",
     "mood-trend-description": "Ditt dagliga humör de senaste åtta veckorna",
     "best-with": "Känns bäst med",
-    "worst-with": "Känns tyngst med"
+    "worst-with": "Känns tyngst med",
+    "state": {
+      "label": "Sinnesstämning",
+      "feelings": "Känslor",
+      "impacts": "På grund av",
+      "activities": "Gjorde"
+    }
   },
   "dawarich": {
     "route": {

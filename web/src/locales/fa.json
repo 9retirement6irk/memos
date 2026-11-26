@@ -1770,7 +1770,13 @@
     "mood-trend": "حال شما در این مدت",
     "mood-trend-description": "حال روزانهٔ شما در هشت هفتهٔ اخیر",
     "best-with": "بهترین حس با",
-    "worst-with": "سخت‌ترین حس با"
+    "worst-with": "سخت‌ترین حس با",
+    "state": {
+      "label": "حال روحی",
+      "feelings": "احساسات",
+      "impacts": "به خاطر",
+      "activities": "انجام دادم"
+    }
   },
   "dawarich": {
     "route": {

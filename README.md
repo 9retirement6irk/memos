@@ -47,6 +47,9 @@ chooses which Spaces are listed.
   - Optionally add feeling words (Apple's 38) and what had the biggest impact (Apple's 18
     causes).
   - **Log how I feel** in the ＋ menu adds a quick check-in to any memo.
+  - A **State of mind** panel at the foot of the memo shows the mood on its scale, the feelings,
+    what they were because of, and the activities you did as icon tiles. It replaces the line of
+    journal tags at the end of the memo, and clicking an item shows the memos with its tag.
 - **Place and weather:** the place can be where you are now, where Dawarich says you were, or a
   search. The weather comes from Open-Meteo for that place and hour, past dates included.
 - **Suggestions from your photos:** recent Immich photos are grouped into outings. **Write about

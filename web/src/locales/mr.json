@@ -1770,7 +1770,13 @@
     "mood-trend": "तुम्हाला कसे वाटले",
     "mood-trend-description": "मागील आठ आठवड्यांतील तुमचा रोजचा मूड",
     "best-with": "सर्वात छान वाटते",
-    "worst-with": "सर्वात कठीण वाटते"
+    "worst-with": "सर्वात कठीण वाटते",
+    "state": {
+      "label": "मनःस्थिती",
+      "feelings": "भावना",
+      "impacts": "यामुळे",
+      "activities": "केले"
+    }
   },
   "dawarich": {
     "route": {

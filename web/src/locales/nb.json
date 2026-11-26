@@ -1770,7 +1770,13 @@
     "mood-trend": "Hvordan du har hatt det",
     "mood-trend-description": "Det daglige humøret ditt de siste åtte ukene",
     "best-with": "Føles best med",
-    "worst-with": "Føles tyngst med"
+    "worst-with": "Føles tyngst med",
+    "state": {
+      "label": "Sinnstilstand",
+      "feelings": "Følelser",
+      "impacts": "På grunn av",
+      "activities": "Gjorde"
+    }
   },
   "dawarich": {
     "route": {

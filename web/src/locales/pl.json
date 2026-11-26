@@ -1772,7 +1772,13 @@
     "mood-trend": "Jak się czułeś",
     "mood-trend-description": "Twój codzienny nastrój z ostatnich ośmiu tygodni",
     "best-with": "Najlepiej czujesz się przy",
-    "worst-with": "Najtrudniej czujesz się przy"
+    "worst-with": "Najtrudniej czujesz się przy",
+    "state": {
+      "label": "Stan ducha",
+      "feelings": "Uczucia",
+      "impacts": "Z powodu",
+      "activities": "Zajęcia"
+    }
   },
   "dawarich": {
     "route": {
