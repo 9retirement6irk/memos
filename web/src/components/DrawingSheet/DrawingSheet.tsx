@@ -37,6 +37,8 @@ import { type DrawingPage, type DrawingPagesResult, newPageKey } from "./pages";
 import { findPaperElement, loadPaper, PAPERS, type PaperId } from "./paper/papers";
 import { DRAWING_HUES, DRAWING_PAPER, useCanvasTheme } from "./useCanvasTheme";
 import { useCanvasZoom, ZoomMenu } from "./ZoomMenu";
+// GZreader's pencil strokes draw as graphite, in the sheet and the viewer.
+import "./pencil";
 
 const TOOLS: { name: ToolName; label: Translations; shortcut: string; icon: ReactElement }[] = [
   { name: "select", label: "editor.drawing.tool-select", shortcut: "V", icon: <MousePointer2Icon /> },
