@@ -1770,7 +1770,13 @@
     "mood-trend": "Как сте се чувствали",
     "mood-trend-description": "Дневното ви настроение през последните осем седмици",
     "best-with": "Най-добре с",
-    "worst-with": "Най-трудно с"
+    "worst-with": "Най-трудно с",
+    "state": {
+      "label": "Душевно състояние",
+      "feelings": "Чувства",
+      "impacts": "Заради",
+      "activities": "Направено"
+    }
   },
   "dawarich": {
     "route": {

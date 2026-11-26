@@ -1577,6 +1577,38 @@
   }
 }
 
+/* ---------- 13b. Journal state of mind panel (Journal/JournalStatePanel) --- */
+/* An inset glass well at the foot of a journal entry; its activities sit on glossy tiles. */
+[data-theme^="aero-"] [data-slot="journal-state"] {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.55), rgba(222, 236, 250, 0.55));
+  border: 1px solid var(--aero-pane-edge);
+  box-shadow:
+    inset 0 1px 3px rgba(0, 40, 90, 0.18),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+  & [data-journal-scale] > span {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.55),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.18);
+  }
+  & [data-journal-scale] > [data-chosen] {
+    --tw-ring-color: var(--aero-focus-edge);
+  }
+  & [data-journal-tile] {
+    background: var(--aero-button);
+    border-color: var(--aero-field-edge);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.7);
+  }
+  & button:hover [data-journal-tile] {
+    background: var(--aero-button-hover);
+    border-color: var(--aero-select-edge);
+  }
+}
+[data-theme="aero-dark"] [data-slot="journal-state"] {
+  background: linear-gradient(180deg, rgba(40, 60, 85, 0.6), rgba(20, 32, 50, 0.6));
+  border-color: rgba(120, 160, 205, 0.45);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.45);
+}
+
 /* ---------- 14. Small screens and reduced motion ------------------------- */
 @media (max-width: 767px) {
   [data-theme^="aero-"] [data-app-window] {

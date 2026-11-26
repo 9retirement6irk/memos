@@ -13,6 +13,7 @@ import { getCreatorHomePath } from "@/router/routes";
 import type { Attachment } from "@/types/proto/api/attachment_service_pb";
 import { findAnchorTarget } from "@/utils/markdown-manipulation";
 import { headingSlugs } from "./headings";
+import { journalTagLinesExtension } from "./journalTagLines";
 import LinkMetadataCard from "./LinkMetadataCard";
 import { type LinkCardMount, linkCardsExtension } from "./linkCards";
 import { useSearchMatchHighlight } from "./useSearchMatchHighlight";
@@ -28,6 +29,11 @@ export interface MemoContentViewProps {
   parentPage?: string;
   /** The card renders collapsed (ClampedSection), so in-memo anchor links navigate instead of scrolling. */
   compact?: boolean;
+  /**
+   * Journal tags shown in the memo's state of mind panel, lowercased and without "#". A line of
+   * nothing but these is hidden, since the panel draws them.
+   */
+  journalTags?: readonly string[];
   /**
    * Lets the viewer tick task items, for a memo they can manage. Called with the new
    * Markdown, in which only the ticked item's `[ ]` or `[x]` changed.
@@ -65,7 +71,19 @@ let nextLinkCardKey = 0;
  * may hide their target. MemoEditor shows a memo by name through it; previews pass content.
  */
 const MemoContentViewImpl = (props: MemoContentViewProps) => {
-  const { className, contentClassName, content, attachments, memoName, parentPage, compact, onTaskToggle, onClick, onDoubleClick } = props;
+  const {
+    className,
+    contentClassName,
+    content,
+    attachments,
+    memoName,
+    parentPage,
+    compact,
+    journalTags,
+    onTaskToggle,
+    onClick,
+    onDoubleClick,
+  } = props;
   const navigate = useNavigate();
   const { linkPreview: linkPreviewEnabled } = useDevicePreferences();
   const navigateToTag = useTagNavigation(parentPage);
@@ -81,6 +99,11 @@ const MemoContentViewImpl = (props: MemoContentViewProps) => {
   const [cards, setCards] = useState<readonly LinkCard[]>([]);
   const linkPreviewEnabledRef = useRef(linkPreviewEnabled);
   linkPreviewEnabledRef.current = linkPreviewEnabled;
+  // The journal tags the state of mind panel draws: their line is hidden, read through a ref
+  // like the link setting and applied with a refresh of that view.
+  const journalTagKey = (journalTags ?? []).join(" ");
+  const journalTagsRef = useRef<ReadonlySet<string>>(new Set(journalTags));
+  journalTagsRef.current = useMemo(() => new Set(journalTagKey ? journalTagKey.split(" ") : []), [journalTagKey]);
   const linkCards = useMemo(
     () => [
       linkCardsExtension({
@@ -89,6 +112,7 @@ const MemoContentViewImpl = (props: MemoContentViewProps) => {
           setCards((previous) => [...previous.filter((card) => card.element !== mount.element), { ...mount, key: nextLinkCardKey++ }]),
         onUnmount: (element) => setCards((previous) => previous.filter((card) => card.element !== element)),
       }),
+      journalTagLinesExtension(() => journalTagsRef.current),
     ],
     [],
   );
@@ -98,6 +122,15 @@ const MemoContentViewImpl = (props: MemoContentViewProps) => {
     appliedLinkPreview.current = linkPreviewEnabled;
     editor?.refreshViews("linkCards");
   }, [editor, linkPreviewEnabled]);
+  const appliedJournalTags = useRef(journalTagKey);
+  useEffect(() => {
+    if (appliedJournalTags.current === journalTagKey) return;
+    appliedJournalTags.current = journalTagKey;
+    // refreshViews lets go of the lines hidden so far; redecorate draws every block again, so a
+    // line that now matches is hidden too.
+    editor?.refreshViews("journalTagLines");
+    editor?.redecorate();
+  }, [editor, journalTagKey]);
 
   // In-memo anchors scroll within this memo; a collapsed card may hide the target, so it opens the detail page.
   const handleLinkClick = ({ href }: { href: string }) => {

@@ -1770,7 +1770,13 @@
     "mood-trend": "Hogyan érezted magad",
     "mood-trend-description": "Napi hangulatod az elmúlt nyolc hétben",
     "best-with": "Legjobban ezzel érzed magad",
-    "worst-with": "Legnehezebben ezzel érzed magad"
+    "worst-with": "Legnehezebben ezzel érzed magad",
+    "state": {
+      "label": "Lelkiállapot",
+      "feelings": "Érzések",
+      "impacts": "Ami miatt",
+      "activities": "Csináltam"
+    }
   },
   "dawarich": {
     "route": {

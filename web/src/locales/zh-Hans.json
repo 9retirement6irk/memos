@@ -1770,7 +1770,13 @@
     "mood-trend": "你的感受",
     "mood-trend-description": "最近八周每天的心情",
     "best-with": "感觉最好时有",
-    "worst-with": "感觉最难时有"
+    "worst-with": "感觉最难时有",
+    "state": {
+      "label": "心理状态",
+      "feelings": "感受",
+      "impacts": "原因",
+      "activities": "做了"
+    }
   },
   "dawarich": {
     "route": {

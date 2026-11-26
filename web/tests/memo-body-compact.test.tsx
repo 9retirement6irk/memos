@@ -9,12 +9,14 @@ const mockState = vi.hoisted(() => ({
     content: "",
     relations: [],
     attachments: [],
+    tags: [] as string[],
     reactions: [] as Array<{ reactionType: string; creator: string }>,
   },
   blurred: false,
   showBlurredContent: false,
   toggleBlurVisibility: vi.fn(),
   reactionClick: vi.fn(),
+  tagClick: vi.fn(),
 }));
 
 vi.mock("@/utils/i18n", () => ({
@@ -23,6 +25,14 @@ vi.mock("@/utils/i18n", () => ({
 }));
 
 vi.mock("@/hooks/useCurrentUser", () => ({ default: () => undefined }));
+
+vi.mock("@/hooks/useJournalQueries", async () => {
+  const { defaultJournalSettings } = await import("@/lib/journal/settings");
+  const settings = defaultJournalSettings((id) => id);
+  return { useJournalSettings: () => ({ settings }) };
+});
+
+vi.mock("@/components/MemoEditor/view/useTagNavigation", () => ({ useTagNavigation: () => mockState.tagClick }));
 
 vi.mock("@/contexts/MentionResolutionContext", () => ({
   useResolvedMentionUsernames: () => new Set<string>(),
@@ -70,11 +80,12 @@ vi.mock("@/components/MemoView/MemoViewContext", () => ({
   }),
 }));
 
-const createMemo = (content: string, reactions: Array<{ reactionType: string; creator: string }> = []) => ({
+const createMemo = (content: string, reactions: Array<{ reactionType: string; creator: string }> = [], tags: string[] = []) => ({
   name: "memos/1",
   content,
   relations: [],
   attachments: [],
+  tags,
   reactions,
 });
 
@@ -83,6 +94,7 @@ afterEach(() => {
   mockState.showBlurredContent = false;
   mockState.toggleBlurVisibility.mockReset();
   mockState.reactionClick.mockReset();
+  mockState.tagClick.mockReset();
   vi.restoreAllMocks();
 });
 
@@ -116,6 +128,21 @@ describe("<MemoBody /> compact body clamp", () => {
     mockState.memo = createMemo("A caption");
     rerender(<MemoBody />);
     expect(screen.getByTestId("memo-text")).toHaveTextContent("A caption");
+  });
+
+  it("shows a journal entry's state of mind panel inside the body, filtering by a tag", () => {
+    mockState.memo = createMemo("A good day.\n\n#mood/pleasant #did/reading", [], ["mood/pleasant", "did/reading"]);
+    const { container } = render(<MemoBody compact />);
+    const panel = container.querySelector('[data-slot="journal-state"]');
+    expect(panel?.closest('[data-slot="memo-body"]')).not.toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "reading" }));
+    expect(mockState.tagClick).toHaveBeenCalledWith("did/reading");
+  });
+
+  it("has no panel for a memo without journal tags", () => {
+    mockState.memo = createMemo("Just a note #trip", [], ["trip"]);
+    const { container } = render(<MemoBody />);
+    expect(container.querySelector('[data-slot="journal-state"]')).toBeNull();
   });
 
   it("renders no clamp when compact is off", () => {

@@ -2,11 +2,15 @@ import { Button } from "@usememos/ui";
 import { EyeIcon } from "lucide-react";
 import { useMemo } from "react";
 import ClampedSection from "@/components/ClampedSection";
+import { JournalStatePanel } from "@/components/Journal/JournalStatePanel";
 import { MemoEditor } from "@/components/MemoEditor/MemoEditor";
+import { useTagNavigation } from "@/components/MemoEditor/view/useTagNavigation";
 import { AttachmentGallery, MemoMetadataRows, PdfAttachment } from "@/components/MemoMetadata";
 import { isInlinePdf, separateAttachments } from "@/components/MemoMetadata/Attachment/attachmentHelpers";
 import { isReferenceRelation } from "@/components/MemoMetadata/Relation/relationHelpers";
 import useCurrentUser from "@/hooks/useCurrentUser";
+import { useJournalSettings } from "@/hooks/useJournalQueries";
+import { journalState } from "@/lib/journal/state";
 import { cn } from "@/lib/utils";
 import { useTranslate } from "@/utils/i18n";
 import { filterInlineManagedAttachments } from "@/utils/managed-attachment";
@@ -58,6 +62,11 @@ const MemoBody: React.FC<MemoBodyProps> = ({ compact, showCreator }) => {
   // PDFs this instance serves show their pages in the memo; other files stay rows.
   const pdfs = useMemo(() => docs.filter(isInlinePdf), [docs]);
   const otherDocs = useMemo(() => docs.filter((attachment) => !isInlinePdf(attachment)), [docs]);
+  // A journal entry's mood, feelings and activities show as a panel at its foot, in place of
+  // the line of tags that records them.
+  const { settings: journalSettings } = useJournalSettings();
+  const state = useMemo(() => journalState(memo.tags, journalSettings), [memo.tags, journalSettings]);
+  const navigateToTag = useTagNavigation(parentPage);
 
   // Editing takes the body's place inside the card's own frame: the session brings its
   // attachments, metadata and toolbar, so the read-only rows and reactions step aside.
@@ -98,10 +107,12 @@ const MemoBody: React.FC<MemoBodyProps> = ({ compact, showCreator }) => {
                 name={memo.name}
                 parentPage={parentPage}
                 compact={Boolean(compact)}
+                journalTags={state?.shownTags}
                 onClick={handleMemoContentClick}
                 onDoubleClick={handleMemoContentDoubleClick}
               />
             )}
+            {state && <JournalStatePanel state={state} onTagClick={navigateToTag} />}
             <AttachmentGallery
               visual={visual}
               onImagePreview={openPreview}

@@ -1770,7 +1770,13 @@
     "mood-trend": "Nasıl hissettin",
     "mood-trend-description": "Son sekiz haftadaki günlük ruh hâlin",
     "best-with": "En iyi hissettiren",
-    "worst-with": "En zor hissettiren"
+    "worst-with": "En zor hissettiren",
+    "state": {
+      "label": "Ruh hâli",
+      "feelings": "Duygular",
+      "impacts": "Nedeni",
+      "activities": "Yaptıklarım"
+    }
   },
   "dawarich": {
     "route": {

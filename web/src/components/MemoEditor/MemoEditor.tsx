@@ -42,6 +42,8 @@ export interface MemoEditorViewProps {
   compact?: boolean;
   /** Collection page that rendered the memo, preserved when an inline link opens its detail page. */
   parentPage?: string;
+  /** Journal tags the memo's state of mind panel draws; their line is hidden. See MemoContentView. */
+  journalTags?: readonly string[];
   className?: string;
   contentClassName?: string;
   onClick?: (event: React.MouseEvent) => void;
@@ -127,7 +129,16 @@ export const MemoEditor = (props: MemoEditorProps) => {
   return <MemoEditorView {...props} />;
 };
 
-const MemoEditorView = ({ name, compact, parentPage, className, contentClassName, onClick, onDoubleClick }: MemoEditorViewProps) => {
+const MemoEditorView = ({
+  name,
+  compact,
+  parentPage,
+  journalTags,
+  className,
+  contentClassName,
+  onClick,
+  onDoubleClick,
+}: MemoEditorViewProps) => {
   const { data: memo } = useMemoByName(name);
   const currentUser = useCurrentUser();
   const { mutate: updateMemo } = useUpdateMemo(name);
@@ -142,6 +153,7 @@ const MemoEditorView = ({ name, compact, parentPage, className, contentClassName
       attachments={memo.attachments}
       parentPage={parentPage}
       compact={compact}
+      journalTags={journalTags}
       onTaskToggle={canManageMemo(memo, currentUser) ? handleTaskToggle : undefined}
       className={className}
       contentClassName={contentClassName}

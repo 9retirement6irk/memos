@@ -1770,7 +1770,13 @@
     "mood-trend": "Necə hiss etdin",
     "mood-trend-description": "Son səkkiz həftədə gündəlik əhvalın",
     "best-with": "Ən yaxşı hiss etdirən",
-    "worst-with": "Ən çətin hiss etdirən"
+    "worst-with": "Ən çətin hiss etdirən",
+    "state": {
+      "label": "Əhval-ruhiyyə",
+      "feelings": "Hisslər",
+      "impacts": "Səbəbi",
+      "activities": "Etdiklərim"
+    }
   },
   "dawarich": {
     "route": {

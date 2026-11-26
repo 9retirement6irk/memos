@@ -1770,7 +1770,13 @@
     "mood-trend": "איך הרגשתם",
     "mood-trend-description": "מצב הרוח היומי שלכם בשמונת השבועות האחרונים",
     "best-with": "הכי טוב עם",
-    "worst-with": "הכי קשה עם"
+    "worst-with": "הכי קשה עם",
+    "state": {
+      "label": "מצב רוח",
+      "feelings": "רגשות",
+      "impacts": "בגלל",
+      "activities": "עשיתי"
+    }
   },
   "dawarich": {
     "route": {

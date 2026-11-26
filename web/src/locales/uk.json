@@ -1772,7 +1772,13 @@
     "mood-trend": "Як ви почувалися",
     "mood-trend-description": "Ваш щоденний настрій за останні вісім тижнів",
     "best-with": "Найкраще з",
-    "worst-with": "Найважче з"
+    "worst-with": "Найважче з",
+    "state": {
+      "label": "Душевний стан",
+      "feelings": "Почуття",
+      "impacts": "Через",
+      "activities": "Заняття"
+    }
   },
   "dawarich": {
     "route": {

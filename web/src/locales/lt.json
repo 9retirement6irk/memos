@@ -1772,7 +1772,13 @@
     "mood-trend": "Kaip jauteisi",
     "mood-trend-description": "Tavo dienos nuotaika per paskutines aštuonias savaites",
     "best-with": "Geriausiai jautiesi su",
-    "worst-with": "Sunkiausiai jautiesi su"
+    "worst-with": "Sunkiausiai jautiesi su",
+    "state": {
+      "label": "Nuotaika",
+      "feelings": "Jausmai",
+      "impacts": "Dėl",
+      "activities": "Veikiau"
+    }
   },
   "dawarich": {
     "route": {

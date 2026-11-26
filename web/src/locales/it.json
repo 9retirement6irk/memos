@@ -1771,7 +1771,13 @@
     "mood-trend": "Come ti sei sentito",
     "mood-trend-description": "Il tuo umore giornaliero nelle ultime otto settimane",
     "best-with": "Ti fa stare meglio",
-    "worst-with": "Ti fa stare peggio"
+    "worst-with": "Ti fa stare peggio",
+    "state": {
+      "label": "Stato d'animo",
+      "feelings": "Sentimenti",
+      "impacts": "A causa di",
+      "activities": "Fatto"
+    }
   },
   "dawarich": {
     "route": {

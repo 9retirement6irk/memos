@@ -1771,7 +1771,13 @@
     "mood-trend": "Kā tu juties",
     "mood-trend-description": "Tavs dienas noskaņojums pēdējās astoņās nedēļās",
     "best-with": "Vislabāk jūties ar",
-    "worst-with": "Visgrūtāk jūties ar"
+    "worst-with": "Visgrūtāk jūties ar",
+    "state": {
+      "label": "Garastāvoklis",
+      "feelings": "Sajūtas",
+      "impacts": "Dēļ",
+      "activities": "Darīju"
+    }
   },
   "dawarich": {
     "route": {
