@@ -35,7 +35,11 @@ vi.mock("@/contexts/AuthContext", () => ({
 }));
 vi.mock("@/lib/toast", () => ({ toast: { add: vi.fn(), close: vi.fn() }, showErrorToast: vi.fn() }));
 vi.mock("@/contexts/InstanceContext", () => ({
-  useInstance: () => ({ aiSetting: { providers: [], transcription: undefined }, fetchSetting: vi.fn().mockResolvedValue(undefined) }),
+  useInstance: () => ({
+    profile: {},
+    aiSetting: { providers: [], transcription: undefined },
+    fetchSetting: vi.fn().mockResolvedValue(undefined),
+  }),
 }));
 vi.mock("@/contexts/NewMemoContext", () => ({ useNewMemo: () => ({ markNewMemo: vi.fn() }) }));
 vi.mock("@/hooks/useSpaceQueries", () => ({ useSpaces: () => ({ data: [] }) }));

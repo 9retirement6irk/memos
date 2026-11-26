@@ -37,4 +37,3 @@ with system)**, saved as `aero`, `aero-dark`, `aero-paper` and `aero-system` and
   icons and an install manifest named after the instance.
 - The PNG icons and pictures in `aero/` are Microsoft's, not MIT; the SVGs are this fork's own. The
   credits are under "Third-party assets" in the repository's README. Credit any new one there too.
-
