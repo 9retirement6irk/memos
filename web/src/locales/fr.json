@@ -1282,12 +1282,15 @@
       "description": "Votre propre historique de positions, pour les lieux du journal et les images de trajet dans n’importe quel mémo. Votre clé API reste sur ce serveur."
     },
     "text-extraction": {
-      "claude-title": "Claude (Anthropic)",
       "claude-description": "Connectez Claude avec une clé d'API de l'Anthropic Console. La clé reste sur ce serveur.",
+      "claude-title": "Claude (Anthropic)",
       "description": "Lit le texte des images, des dessins et des PDF numérisés à la demande. À chaque fois, le fichier est envoyé au fournisseur choisi ici.",
       "model-help": "Laissez vide pour utiliser {{model}}.",
       "off": "Désactivé",
       "provider-help": "Claude ou l'un des fournisseurs Gemini ci-dessus.",
+      "tags-description": "Claude suggère des étiquettes pour le mémo que vous rédigez. Tant que cette option est activée, Claude est utilisé à la place du fournisseur de génération de texte ci-dessus.",
+      "tags-enabled": "Suggérer des étiquettes avec Claude",
+      "tags-title": "Suggestions d'étiquettes avec Claude",
       "title": "Extraction de texte"
     }
   },

@@ -1285,12 +1285,15 @@
       "description": "Tvoja lastna zgodovina lokacij, za kraje v dnevniku in slike poti v katerem koli zapisu. Tvoj ključ API ostane na tem strežniku."
     },
     "text-extraction": {
-      "claude-title": "Claude (Anthropic)",
       "claude-description": "Povežite Claude s ključem API iz Anthropic Console. Ključ ostane na tem strežniku.",
+      "claude-title": "Claude (Anthropic)",
       "description": "Na zahtevo prebere besedilo s slik, risb in optično prebranih PDF-jev. Vsakič se datoteka pošlje ponudniku, izbranemu tukaj.",
       "model-help": "Pustite prazno za uporabo {{model}}.",
       "off": "Izklopljeno",
       "provider-help": "Claude ali eden od ponudnikov Gemini zgoraj.",
+      "tags-description": "Claude predlaga oznake za zapisek, ki ga pišete. Dokler je to vklopljeno, se namesto zgornjega ponudnika za ustvarjanje besedila uporablja Claude.",
+      "tags-enabled": "Predlagaj oznake s Claudom",
+      "tags-title": "Predlogi oznak s Claudom",
       "title": "Izločanje besedila"
     }
   },

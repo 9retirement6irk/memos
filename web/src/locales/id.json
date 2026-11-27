@@ -1276,12 +1276,15 @@
       "description": "Riwayat lokasimu sendiri, untuk tempat di jurnal dan gambar rute di memo mana pun. Kunci API-mu tetap di server ini."
     },
     "text-extraction": {
-      "claude-title": "Claude (Anthropic)",
       "claude-description": "Hubungkan Claude dengan kunci API dari Anthropic Console. Kunci tetap di server ini.",
+      "claude-title": "Claude (Anthropic)",
       "description": "Membaca teks pada gambar, lukisan, dan PDF hasil pindaian saat diminta. Setiap kali, berkas itu dikirim ke penyedia yang dipilih di sini.",
       "model-help": "Biarkan kosong untuk memakai {{model}}.",
       "off": "Mati",
       "provider-help": "Claude atau salah satu penyedia Gemini di atas.",
+      "tags-description": "Claude menyarankan tag untuk memo yang sedang Anda tulis. Selama ini aktif, Claude digunakan sebagai pengganti penyedia pembuatan teks di atas.",
+      "tags-enabled": "Sarankan tag dengan Claude",
+      "tags-title": "Saran tag dengan Claude",
       "title": "Ekstraksi teks"
     }
   },

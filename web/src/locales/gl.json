@@ -1281,12 +1281,15 @@
       "description": "O teu propio historial de localizacións, para os lugares do diario e as imaxes de rutas en calquera nota. A túa chave de API queda neste servidor."
     },
     "text-extraction": {
-      "claude-title": "Claude (Anthropic)",
       "claude-description": "Conecta Claude cunha clave de API de Anthropic Console. A clave queda neste servidor.",
+      "claude-title": "Claude (Anthropic)",
       "description": "Le o texto de imaxes, debuxos e PDF escaneados cando alguén o pide. Cada vez, o ficheiro envíase ao provedor escollido aquí.",
       "model-help": "Déixao baleiro para usar {{model}}.",
       "off": "Desactivado",
       "provider-help": "Claude ou un dos provedores de Gemini de enriba.",
+      "tags-description": "Claude suxire etiquetas para a nota que estás a escribir. Mentres estea activado, úsase Claude en lugar do provedor de xeración de texto de arriba.",
+      "tags-enabled": "Suxerir etiquetas con Claude",
+      "tags-title": "Suxestións de etiquetas con Claude",
       "title": "Extracción de texto"
     }
   },

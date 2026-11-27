@@ -19,6 +19,7 @@ import (
 	audiollmgemini "github.com/usememos/memos/provider/ai/audiollm/gemini"
 	"github.com/usememos/memos/provider/ai/stt"
 	sttopenai "github.com/usememos/memos/provider/ai/stt/openai"
+	"github.com/usememos/memos/server/textextraction"
 )
 
 const (
@@ -264,8 +265,13 @@ func (s *APIService) aiFeatures(ctx context.Context) (*apipb.InstanceProfile_AIF
 		_, err := s.resolveAIProvider(setting, providerID)
 		return err == nil
 	}
+	// The fork's Claude connection answers tag suggestions when an admin chose it for them.
+	_, _, claudeTags, err := textextraction.TagSuggestionProvider(ctx, s.Store)
+	if err != nil {
+		return nil, err
+	}
 	return &apipb.InstanceProfile_AIFeatures{
 		Transcription:  ready(setting.GetTranscription().GetProviderId(), setting.GetTranscription().GetModel()),
-		TagSuggestions: ready(setting.GetTextGeneration().GetProviderId(), setting.GetTextGeneration().GetModel()),
+		TagSuggestions: claudeTags || ready(setting.GetTextGeneration().GetProviderId(), setting.GetTextGeneration().GetModel()),
 	}, nil
 }

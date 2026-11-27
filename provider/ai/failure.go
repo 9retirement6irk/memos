@@ -87,6 +87,10 @@ func ClassifyFailure(err error) Failure {
 		return failure
 	}
 
+	if failure, ok := anthropicFailure(err); ok {
+		return failure
+	}
+
 	// No provider response from here on, so the error text is local.
 	failure := Failure{Detail: localText(err)}
 	netErr, isNetErr := stderrors.AsType[net.Error](err)

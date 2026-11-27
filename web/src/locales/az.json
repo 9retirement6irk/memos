@@ -1398,12 +1398,15 @@
       "description": "Öz məkan tarixçən, gündəlik yerləri və istənilən qeyddə marşrut şəkilləri üçün. API açarın bu serverdə qalır."
     },
     "text-extraction": {
-      "claude-title": "Claude (Anthropic)",
       "claude-description": "Claude-u Anthropic Console-dan alınan API açarı ilə qoşun. Açar bu serverdə qalır.",
+      "claude-title": "Claude (Anthropic)",
       "description": "İstənildikdə şəkillərdəki, rəsmlərdəki və skan edilmiş PDF-lərdəki mətni oxuyur. Hər dəfə həmin fayl burada seçilmiş provayderə göndərilir.",
       "model-help": "{{model}} istifadə etmək üçün boş saxlayın.",
       "off": "Söndürülüb",
       "provider-help": "Claude və ya yuxarıdakı Gemini provayderlərindən biri.",
+      "tags-description": "Claude yazdığınız qeyd üçün teqlər təklif edir. Bu açıq olduqda yuxarıdakı mətn yaratma provayderinin əvəzinə Claude istifadə olunur.",
+      "tags-enabled": "Teqləri Claude ilə təklif et",
+      "tags-title": "Claude ilə teq təklifləri",
       "title": "Mətnin çıxarılması"
     }
   },

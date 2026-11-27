@@ -1281,12 +1281,15 @@
       "description": "Din egen platshistorik, för platser i dagboken och ruttbilder i alla anteckningar. Din API-nyckel stannar på den här servern."
     },
     "text-extraction": {
-      "claude-title": "Claude (Anthropic)",
       "claude-description": "Anslut Claude med en API-nyckel från Anthropic Console. Nyckeln stannar på den här servern.",
+      "claude-title": "Claude (Anthropic)",
       "description": "Läser texten i bilder, teckningar och skannade PDF-filer när någon ber om det. Varje gång skickas filen till leverantören som valts här.",
       "model-help": "Lämna tomt för att använda {{model}}.",
       "off": "Av",
       "provider-help": "Claude eller någon av Gemini-leverantörerna ovan.",
+      "tags-description": "Claude föreslår taggar för anteckningen du skriver. Så länge detta är på används Claude i stället för textgenereringsleverantören ovan.",
+      "tags-enabled": "Föreslå taggar med Claude",
+      "tags-title": "Taggförslag med Claude",
       "title": "Textextrahering"
     }
   },

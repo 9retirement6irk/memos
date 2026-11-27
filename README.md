@@ -162,6 +162,18 @@ collapsed "Text from …" section that stock Memos shows too.
 - **Limits:** 20 scanned pages at a time, and 30 reads an hour for each user, since each one is
   paid for with the instance's key.
 
+### Tag suggestions with Claude
+
+Memos can suggest tags for the memo you're writing, with the **Suggest tags with AI** command in
+the tag picker. Stock Memos asks an OpenAI or Gemini provider. The fork can ask Claude instead,
+over the same Claude connection as **Read text**.
+
+- **Setup:** an admin connects Claude in Settings → AI, then turns on **Suggest tags with Claude**
+  under **Tag suggestions with Claude**. The model is `claude-haiku-5-5` unless you name another.
+- **Which AI answers:** while it's on, Claude answers in place of the provider chosen under
+  **Text generation**. Turn it off to go back to that provider.
+- **Limits:** the same as stock Memos' tag suggestions.
+
 ## Your data stays stock Memos
 
 The fork never changes the database schema. Its extras are kept where stock Memos ignores them:
@@ -212,6 +224,7 @@ The fork's extras reach outside your server only when you use them:
 | [Nominatim](https://nominatim.openstreetmap.org) (OpenStreetMap) | Searching for, or naming, a place | The search text or coordinates, from your browser |
 | OpenStreetMap tiles | Route maps with the map turned on | The map area shown, from your browser |
 | Anthropic (Claude) or Google (Gemini), whichever an admin chose | Read text | The picture of an image, drawing or scanned PDF page, from the Memos server with the instance's key |
+| Anthropic (Claude), when an admin turned it on | Suggest tags with AI | The memo you're writing and your existing tags, from the Memos server with the instance's key |
 
 Addresses you enter for Immich, Dawarich, Home Assistant and Claude are checked before the server
 connects. Loopback, link-local and cloud metadata addresses are refused, and redirects are

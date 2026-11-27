@@ -170,3 +170,46 @@ func TestReadTextBadRequest(t *testing.T) {
 	require.ErrorIs(t, err, ErrBadRequest)
 	require.Contains(t, err.Error(), "image exceeds 5 MB maximum")
 }
+
+func TestGenerate(t *testing.T) {
+	var got struct {
+		Model     string `json:"model"`
+		MaxTokens int    `json:"max_tokens"`
+		System    string `json:"system"`
+		Messages  []struct {
+			Role    string `json:"role"`
+			Content string `json:"content"`
+		} `json:"messages"`
+	}
+	answer := `{"content":[{"type":"text","text":" {\"tags\":[\"work\"]} "}],"stop_reason":"end_turn"}`
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		require.Equal(t, "/v1/messages", r.URL.Path)
+		require.Equal(t, testKey, r.Header.Get("x-api-key"))
+		require.NoError(t, json.NewDecoder(r.Body).Decode(&got))
+		_, _ = w.Write([]byte(answer))
+	}))
+	defer server.Close()
+	client, err := New(server.URL, testKey, server.Client())
+	require.NoError(t, err)
+
+	text, err := client.Generate(context.Background(), GenerateRequest{Model: " claude-haiku-5-5 ", System: "Answer in JSON.", Input: "a draft"})
+	require.NoError(t, err)
+	require.Equal(t, `{"tags":["work"]}`, text)
+	require.Equal(t, "claude-haiku-5-5", got.Model)
+	require.Equal(t, 1024, got.MaxTokens)
+	require.Equal(t, "Answer in JSON.", got.System)
+	require.Len(t, got.Messages, 1)
+	require.Equal(t, "user", got.Messages[0].Role)
+	require.Equal(t, "a draft", got.Messages[0].Content)
+
+	// An answer cut off at the limit is no answer, and a refusal is said to be one.
+	answer = `{"content":[{"type":"text","text":"{\"tags\":["}],"stop_reason":"max_tokens"}`
+	_, err = client.Generate(context.Background(), GenerateRequest{Model: "m", Input: "a draft"})
+	require.ErrorIs(t, err, ErrIncomplete)
+	answer = `{"content":[],"stop_reason":"refusal"}`
+	_, err = client.Generate(context.Background(), GenerateRequest{Model: "m", Input: "a draft"})
+	require.ErrorIs(t, err, ErrRefused)
+
+	_, err = client.Generate(context.Background(), GenerateRequest{Input: "a draft"})
+	require.Error(t, err)
+}

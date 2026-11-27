@@ -221,3 +221,52 @@ func TestSavedKeyStaysWithItsEndpoint(t *testing.T) {
 	require.Zero(t, requests.Load())
 	require.Equal(t, claude.URL, decode(t, env.do(http.MethodGet, "/api/text-extraction/settings", "", env.admin)).Claude.Endpoint)
 }
+
+// An admin can have Claude answer tag suggestions, once Claude is connected.
+func TestClaudeForTagSuggestions(t *testing.T) {
+	ctx := context.Background()
+	claude := fakeClaude(t)
+	env := newTestEnv(ctx, t, claude)
+	choose := func(body, token string) *httptest.ResponseRecorder {
+		return env.do(http.MethodPut, "/api/text-extraction/tag-suggestions", body, token)
+	}
+	provider := func() (string, string, bool) {
+		config, model, ok, err := TagSuggestionProvider(ctx, env.store)
+		require.NoError(t, err)
+		return config.Endpoint, model, ok
+	}
+
+	require.Equal(t, http.StatusForbidden, choose(`{"claude":true}`, env.user).Code)
+	// Claude needs a connection first.
+	require.Equal(t, http.StatusBadRequest, choose(`{"claude":true}`, env.admin).Code)
+	_, _, ok := provider()
+	require.False(t, ok)
+
+	decode(t, env.do(http.MethodPut, "/api/text-extraction/claude", `{"endpoint":"`+claude.URL+`","apiKey":"`+goodKey+`"}`, env.admin))
+	require.Equal(t, http.StatusBadRequest, choose(`{"claude":true,"model":"`+strings.Repeat("m", 257)+`"}`, env.admin).Code)
+
+	// On with no model named uses the default one.
+	response := decode(t, choose(`{"claude":true,"model":" "}`, env.admin))
+	require.Equal(t, TagSuggestions{Claude: true, Model: "claude-haiku-5-5"}, response.TagSuggestions)
+	endpoint, model, ok := provider()
+	require.True(t, ok)
+	require.Equal(t, claude.URL, endpoint)
+	require.Equal(t, "claude-haiku-5-5", model)
+
+	response = decode(t, choose(`{"claude":true,"model":" claude-sonnet-5-5 "}`, env.admin))
+	require.Equal(t, "claude-sonnet-5-5", response.TagSuggestions.Model)
+	// The choice for reading text is a separate one.
+	require.Empty(t, response.ProviderID)
+
+	// Off forgets the model, and so does removing Claude.
+	response = decode(t, choose(`{"claude":false,"model":"claude-sonnet-5-5"}`, env.admin))
+	require.Equal(t, TagSuggestions{}, response.TagSuggestions)
+	_, _, ok = provider()
+	require.False(t, ok)
+
+	decode(t, choose(`{"claude":true}`, env.admin))
+	removed := decode(t, env.do(http.MethodDelete, "/api/text-extraction/claude", "", env.admin))
+	require.Equal(t, TagSuggestions{}, removed.TagSuggestions)
+	_, _, ok = provider()
+	require.False(t, ok)
+}

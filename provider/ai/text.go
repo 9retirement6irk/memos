@@ -9,6 +9,8 @@ import (
 	"github.com/openai/openai-go/v3/shared"
 	"github.com/pkg/errors"
 	"google.golang.org/genai"
+
+	"github.com/usememos/memos/provider/ai/anthropic"
 )
 
 // generateJSON requests a JSON object from the configured text model.
@@ -52,7 +54,29 @@ func generateJSON(ctx context.Context, cfg ProviderConfig, model, instruction, i
 			return "", errors.Wrap(ErrUnusableResponse, "incomplete text generation")
 		}
 		return resp.Text(), nil
+	case ProviderAnthropic:
+		sdk, err := anthropic.New(cfg.Endpoint, cfg.APIKey, client)
+		if err != nil {
+			return "", err
+		}
+		text, err := sdk.Generate(ctx, anthropic.GenerateRequest{Model: model, System: instruction, Input: input})
+		if err != nil {
+			return "", err
+		}
+		return jsonObject(text), nil
 	default:
 		return "", errors.Wrap(ErrCapabilityUnsupported, "text generation")
 	}
+}
+
+// jsonObject returns the JSON object in an answer that may have words or a code
+// fence around it: Claude has no JSON-only mode, and is only told to answer in
+// JSON. An answer without an object is returned as it is, for the caller to refuse.
+func jsonObject(text string) string {
+	start := strings.Index(text, "{")
+	end := strings.LastIndex(text, "}")
+	if start < 0 || end < start {
+		return text
+	}
+	return text[start : end+1]
 }

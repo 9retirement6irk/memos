@@ -1284,12 +1284,15 @@
       "description": "سجل مواقعك الخاص، لأماكن اليوميات وصور المسارات في أي مذكرة. يبقى مفتاح API على هذا الخادم."
     },
     "text-extraction": {
-      "claude-title": "Claude (Anthropic)",
       "claude-description": "اربط Claude بمفتاح API من Anthropic Console. يبقى المفتاح على هذا الخادم.",
+      "claude-title": "Claude (Anthropic)",
       "description": "يقرأ النص في الصور والرسومات وملفات PDF الممسوحة عند الطلب. في كل مرة يُرسل ذلك الملف إلى المزوّد المختار هنا.",
       "model-help": "اتركه فارغًا لاستخدام {{model}}.",
       "off": "متوقف",
       "provider-help": "Claude أو أحد مزوّدي Gemini أعلاه.",
+      "tags-description": "يقترح Claude وسومًا للمذكرة التي تكتبها. ما دام هذا الخيار مفعّلًا، يُستخدم Claude بدلًا من مزوّد توليد النص أعلاه.",
+      "tags-enabled": "اقتراح الوسوم باستخدام Claude",
+      "tags-title": "اقتراح الوسوم باستخدام Claude",
       "title": "استخراج النص"
     }
   },

@@ -1276,12 +1276,15 @@
       "description": "Lịch sử vị trí của riêng bạn, cho địa điểm trong nhật ký và ảnh lộ trình trong mọi ghi chú. Khóa API của bạn ở lại trên máy chủ này."
     },
     "text-extraction": {
-      "claude-title": "Claude (Anthropic)",
       "claude-description": "Kết nối Claude bằng khóa API từ Anthropic Console. Khóa được giữ trên máy chủ này.",
+      "claude-title": "Claude (Anthropic)",
       "description": "Đọc văn bản trong hình ảnh, bản vẽ và PDF quét khi có người yêu cầu. Mỗi lần, tệp đó được gửi đến nhà cung cấp chọn ở đây.",
       "model-help": "Để trống để dùng {{model}}.",
       "off": "Tắt",
       "provider-help": "Claude hoặc một nhà cung cấp Gemini ở trên.",
+      "tags-description": "Claude gợi ý thẻ cho ghi chú bạn đang viết. Khi bật, Claude được dùng thay cho nhà cung cấp tạo văn bản ở trên.",
+      "tags-enabled": "Gợi ý thẻ bằng Claude",
+      "tags-title": "Gợi ý thẻ bằng Claude",
       "title": "Trích xuất văn bản"
     }
   },

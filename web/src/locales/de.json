@@ -1281,12 +1281,15 @@
       "description": "Dein eigener Standortverlauf, für Orte im Tagebuch und Routenbilder in jedem Memo. Dein API-Schlüssel bleibt auf diesem Server."
     },
     "text-extraction": {
-      "claude-title": "Claude (Anthropic)",
       "claude-description": "Verbinde Claude mit einem API-Schlüssel aus der Anthropic Console. Der Schlüssel bleibt auf diesem Server.",
+      "claude-title": "Claude (Anthropic)",
       "description": "Liest den Text in Bildern, Zeichnungen und gescannten PDFs, wenn jemand darum bittet. Dabei wird die Datei jedes Mal an den hier gewählten Anbieter gesendet.",
       "model-help": "Leer lassen, um {{model}} zu verwenden.",
       "off": "Aus",
       "provider-help": "Claude oder einer der Gemini-Anbieter oben.",
+      "tags-description": "Claude schlägt Tags für das Memo vor, das du gerade schreibst. Solange dies aktiviert ist, wird Claude anstelle des obigen Anbieters für Textgenerierung verwendet.",
+      "tags-enabled": "Tags mit Claude vorschlagen",
+      "tags-title": "Tag-Vorschläge mit Claude",
       "title": "Texterkennung"
     }
   },
