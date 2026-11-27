@@ -1,7 +1,7 @@
 import { Button, Field, Input, Select } from "@usememos/ui";
 import { useEffect, useMemo, useState } from "react";
 import { useTextExtractionSettings, useUpdateTextExtraction } from "@/hooks/useTextExtractionQueries";
-import { CLAUDE_PROVIDER, DEFAULT_CLAUDE_MODEL } from "@/lib/textExtraction";
+import { DEFAULT_CLAUDE_MODEL } from "@/lib/textExtraction";
 import { showErrorToast } from "@/lib/toast";
 import { useTranslate } from "@/utils/i18n";
 import SettingGroup from "./SettingGroup";
@@ -10,22 +10,22 @@ import SettingGroup from "./SettingGroup";
 const DEFAULT_GEMINI_MODEL = "gemini-2.5-flash";
 const OFF = "__off__";
 
+/** One of the instance's AI providers that can read images: an Anthropic or a Gemini one. */
 export interface ExtractionProvider {
   id: string;
   title: string;
+  kind: "anthropic" | "gemini";
 }
 
 /**
- * Which AI reads text out of images, drawings and scanned PDFs: Claude, once it is connected, or
- * one of the Gemini providers. The choice lives in a settings row of the fork's own
- * (server/textextraction), which stock Memos ignores. Claude itself is connected in the provider
- * list above (AISection, useClaudeProvider).
+ * Which of the instance's AI providers reads text out of images, drawings and scanned PDFs: an
+ * Anthropic (Claude) or a Gemini one from the list above. The choice lives in a settings row of
+ * the fork's own (server/textextraction), which stock Memos ignores.
  */
-const TextExtractionSettings = ({ geminiProviders }: { geminiProviders: ExtractionProvider[] }) => {
+const TextExtractionSettings = ({ providers }: { providers: ExtractionProvider[] }) => {
   const t = useTranslate();
   const { data: settings } = useTextExtractionSettings();
   const { saveChoice } = useUpdateTextExtraction();
-  const configured = Boolean(settings?.claude.configured);
 
   const [providerId, setProviderId] = useState("");
   const [model, setModel] = useState("");
@@ -40,18 +40,18 @@ const TextExtractionSettings = ({ geminiProviders }: { geminiProviders: Extracti
 
   const providerOptions = useMemo(() => {
     const options = [
-      { value: OFF, label: t("setting.text-extraction.off") },
-      { value: CLAUDE_PROVIDER, label: "Claude", disabled: !configured },
-      ...geminiProviders.map((provider) => ({ value: provider.id, label: provider.title || provider.id, disabled: false })),
+      { value: OFF, label: t("setting.text-extraction.off"), disabled: false },
+      ...providers.map((provider) => ({ value: provider.id, label: provider.title || provider.id, disabled: false })),
     ];
     // A provider deleted since it was chosen still shows, so the choice can be changed away from it.
-    if (providerId && providerId !== CLAUDE_PROVIDER && !geminiProviders.some((provider) => provider.id === providerId)) {
+    if (providerId && !providers.some((provider) => provider.id === providerId)) {
       options.push({ value: providerId, label: providerId, disabled: true });
     }
     return options;
-  }, [configured, geminiProviders, providerId, t]);
+  }, [providers, providerId, t]);
 
-  const defaultModel = providerId === CLAUDE_PROVIDER ? DEFAULT_CLAUDE_MODEL : providerId ? DEFAULT_GEMINI_MODEL : "";
+  const kind = providers.find((provider) => provider.id === providerId)?.kind;
+  const defaultModel = kind === "anthropic" ? DEFAULT_CLAUDE_MODEL : kind === "gemini" ? DEFAULT_GEMINI_MODEL : "";
 
   const handleSaveChoice = () => {
     saveChoice.mutate({ providerId, model: model.trim() }, { onError: (failure) => showErrorToast(failure.message) });

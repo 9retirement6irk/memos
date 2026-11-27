@@ -15,8 +15,6 @@ import (
 
 	apipb "github.com/usememos/memos/proto/gen/api"
 	"github.com/usememos/memos/proto/gen/api/apiconnect"
-	"github.com/usememos/memos/server/textextraction"
-	"github.com/usememos/memos/store"
 )
 
 func TestSuggestTags(t *testing.T) {
@@ -120,93 +118,4 @@ func TestSuggestTags(t *testing.T) {
 	configure("GEMINI", "invalid-output")
 	_, err := suggest("fixes")
 	require.Equal(t, connect.CodeUnavailable, connect.CodeOf(err))
-}
-
-// The fork's Claude connection answers tag suggestions when an admin chose it,
-// with or without a stock text generation provider.
-func TestSuggestTagsWithClaude(t *testing.T) {
-	inst := bootInstance(t.Context(), t, instanceOptions{instanceURL: "http://127.0.0.1"})
-	inst.createAdmin(t)
-	token := inst.signIn(t)
-	const path = "/api/ai:suggestTags"
-	draft := map[string]any{"content": "a bug in the parser", "candidateTags": []string{"bug", "code"}}
-
-	var asked atomic.Int32
-	claude := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		if !assert.Equal(t, "/v1/messages", r.URL.Path) {
-			w.WriteHeader(http.StatusNotFound)
-			return
-		}
-		asked.Add(1)
-		var request struct {
-			Model    string
-			System   string
-			Messages []struct{ Role, Content string }
-		}
-		assert.NoError(t, json.NewDecoder(r.Body).Decode(&request))
-		assert.Equal(t, "claude-test-model", request.Model)
-		assert.Equal(t, "claude-test-key", r.Header.Get("x-api-key"))
-		assert.NotEmpty(t, request.System)
-		if assert.Len(t, request.Messages, 1) {
-			assert.JSONEq(t, `{"draft":"a bug in the parser","candidates":["bug","code"]}`, request.Messages[0].Content)
-		}
-		_, _ = io.WriteString(w, `{"content":[{"type":"text","text":"{\"tags\":[\"bug\"]}"}],"stop_reason":"end_turn"}`)
-	}))
-	defer claude.Close()
-
-	tagSuggestions := func() bool {
-		t.Helper()
-		code, body := inst.do(t, http.MethodGet, "/api/instance/profile", token, nil)
-		require.Equal(t, http.StatusOK, code, "%s", body)
-		var profile struct {
-			AiFeatures struct {
-				TagSuggestions bool `json:"tagSuggestions"`
-			} `json:"aiFeatures"`
-		}
-		require.NoError(t, json.Unmarshal(body, &profile))
-		return profile.AiFeatures.TagSuggestions
-	}
-	save := func(settings *textextraction.Settings) {
-		t.Helper()
-		require.NoError(t, inst.server.Store.UpsertForkSetting(t.Context(), store.ForkSettingTextExtraction, settings))
-	}
-	connection := &textextraction.ClaudeConnection{Endpoint: claude.URL, APIKey: "claude-test-key"}
-
-	// Claude connected but not chosen for tags: nothing answers them.
-	save(&textextraction.Settings{Claude: connection})
-	require.False(t, tagSuggestions())
-	code, body := inst.do(t, http.MethodPost, path, token, draft)
-	require.NotEqual(t, http.StatusOK, code)
-	require.Contains(t, string(body), "text generation is not configured")
-	require.Zero(t, asked.Load())
-
-	save(&textextraction.Settings{Claude: connection, TagSuggestionModel: "claude-test-model"})
-	require.True(t, tagSuggestions())
-	code, body = inst.do(t, http.MethodPost, path, token, draft)
-	require.Equal(t, http.StatusOK, code, "%s", body)
-	require.JSONEq(t, `{"tags":["bug"]}`, string(body))
-	require.EqualValues(t, 1, asked.Load())
-
-	// Chosen, Claude answers in place of a stock provider too.
-	stock := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		if r.URL.Path == "/models" {
-			_, _ = io.WriteString(w, `{"data":[]}`)
-			return
-		}
-		t.Errorf("the stock provider was asked: %s", r.URL.Path)
-		w.WriteHeader(http.StatusNotFound)
-	}))
-	defer stock.Close()
-	code, body = inst.do(t, http.MethodPatch, "/api/instance/settings/AI", token, map[string]any{
-		"aiSetting": map[string]any{
-			"providers":      []map[string]string{{"id": "p", "type": "OPENAI", "title": "test", "apiKey": "test-key", "endpoint": stock.URL}},
-			"textGeneration": map[string]string{"providerId": "p", "model": "text-model"},
-		},
-	})
-	require.Equal(t, http.StatusOK, code, "%s", body)
-	code, body = inst.do(t, http.MethodPost, path, token, draft)
-	require.Equal(t, http.StatusOK, code, "%s", body)
-	require.EqualValues(t, 2, asked.Load())
 }

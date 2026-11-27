@@ -181,10 +181,10 @@ func extractBody(attachment string, images ...string) string {
 	return `{"attachment":"` + attachment + `","images":[` + strings.Join(parts, ",") + `]}`
 }
 
-func useClaude(t *testing.T, env *testEnv, fake *fakeAI) {
+func useClaude(ctx context.Context, t *testing.T, env *testEnv, fake *fakeAI) {
 	t.Helper()
-	decode(t, env.do(http.MethodPut, "/api/text-extraction/claude", `{"endpoint":"`+fake.server.URL+`","apiKey":"`+goodKey+`"}`, env.admin))
-	decode(t, env.do(http.MethodPut, "/api/text-extraction/settings", `{"providerId":"claude"}`, env.admin))
+	setProviders(ctx, t, env, &storepb.AIProviderConfig{Id: "claude-1", Title: "Claude", Type: storepb.AIProviderType_ANTHROPIC, Endpoint: fake.server.URL, ApiKey: goodKey})
+	decode(t, env.do(http.MethodPut, "/api/text-extraction/settings", `{"providerId":"claude-1"}`, env.admin))
 }
 
 func status(t *testing.T, env *testEnv, token string) bool {
@@ -202,7 +202,7 @@ func TestStatus(t *testing.T) {
 	env := newTestEnv(ctx, t, fake.server)
 	require.Equal(t, http.StatusUnauthorized, env.do(http.MethodGet, "/api/text-extraction/status", "", "").Code)
 	require.False(t, status(t, env, env.user))
-	useClaude(t, env, fake)
+	useClaude(ctx, t, env, fake)
 	// Every signed-in user learns that it's on, and nothing about the connection.
 	recorder := env.do(http.MethodGet, "/api/text-extraction/status", "", env.user)
 	require.NotContains(t, recorder.Body.String(), goodKey)
@@ -220,7 +220,7 @@ func TestExtractWithClaude(t *testing.T) {
 
 	// Off until an admin chooses a provider.
 	require.Equal(t, http.StatusConflict, env.do(http.MethodPost, "/api/text-extraction/extract", extractBody(scan, picture), env.user).Code)
-	useClaude(t, env, fake)
+	useClaude(ctx, t, env, fake)
 
 	recorder := env.do(http.MethodPost, "/api/text-extraction/extract", extractBody(scan, picture, picture), env.user)
 	require.Equal(t, http.StatusOK, recorder.Code, recorder.Body.String())
@@ -238,7 +238,7 @@ func TestExtractChecksTheAttachment(t *testing.T) {
 	ctx := context.Background()
 	fake := newFakeAI(t)
 	env := newTestEnv(ctx, t, fake.server)
-	useClaude(t, env, fake)
+	useClaude(ctx, t, env, fake)
 	picture := pngPicture(t)
 	private := newAttachment(ctx, t, env, env.adminID, "admins-scan", "image/png", store.Private)
 	public := newAttachment(ctx, t, env, env.adminID, "public-scan", "image/png", store.Public)
@@ -312,7 +312,7 @@ func TestExtractRateLimit(t *testing.T) {
 	fake := newFakeAI(t)
 	env := newTestEnv(ctx, t, fake.server)
 	env.service.Limiter = ratelimit.NewMemoryLimiter(ratelimit.Policy{rateLimitScope: {Limit: 1, Window: time.Hour}})
-	useClaude(t, env, fake)
+	useClaude(ctx, t, env, fake)
 	scan := newAttachment(ctx, t, env, env.userID, "limited", "image/png", store.Private)
 	body := extractBody(scan, pngPicture(t))
 
