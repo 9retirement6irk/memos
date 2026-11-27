@@ -1034,7 +1034,7 @@
       "add-provider": "공급자 추가",
       "api-key": "API 키",
       "api-key-required": "API 키가 필요합니다.",
-      "byok-description": "본인 계정의 API 키를 사용하여 OpenAI 또는 Gemini에 연결합니다. Memos은 이 서버에서 공급자를 직접 호출합니다.",
+      "byok-description": "본인 계정의 API 키를 사용하여 OpenAI, Gemini 또는 Claude에 연결합니다. Memos은 이 서버에서 공급자를 직접 호출합니다.",
       "byok-storage-note": "키는 이 인스턴스에 저장되며 설정이 로드될 때 마스킹됩니다.",
       "configured": "구성됨",
       "current-key": "현재 키: {{key}}",
@@ -1276,15 +1276,10 @@
       "description": "일기 장소와 모든 메모의 경로 이미지에 쓰이는 내 위치 기록. API 키는 이 서버에 보관됩니다."
     },
     "text-extraction": {
-      "claude-description": "Anthropic Console의 API 키로 Claude를 연결합니다. 키는 이 서버에만 보관됩니다.",
-      "claude-title": "Claude (Anthropic)",
       "description": "요청할 때 이미지, 그림, 스캔한 PDF의 텍스트를 읽습니다. 그때마다 파일이 여기에서 선택한 제공자로 전송됩니다.",
       "model-help": "비워 두면 {{model}}을(를) 사용합니다.",
       "off": "끔",
       "provider-help": "Claude 또는 위의 Gemini 제공자 중 하나.",
-      "tags-description": "Claude가 작성 중인 메모에 맞는 태그를 추천합니다. 이 기능이 켜져 있는 동안에는 위의 텍스트 생성 제공자 대신 Claude가 사용됩니다.",
-      "tags-enabled": "Claude로 태그 추천",
-      "tags-title": "Claude 태그 추천",
       "title": "텍스트 추출"
     }
   },

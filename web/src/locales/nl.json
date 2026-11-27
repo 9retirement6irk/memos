@@ -1038,7 +1038,7 @@
       "add-provider": "Aanbieder toevoegen",
       "api-key": "API-sleutel",
       "api-key-required": "API-sleutel is vereist.",
-      "byok-description": "Verbind OpenAI of Gemini met een API-sleutel uit uw eigen account. Memos belt de provider rechtstreeks vanaf deze server.",
+      "byok-description": "Verbind OpenAI, Gemini of Claude met een API-sleutel uit uw eigen account. Memos belt de provider rechtstreeks vanaf deze server.",
       "byok-storage-note": "Sleutels blijven op deze instantie en worden gemaskeerd wanneer instellingen worden geladen.",
       "configured": "Geconfigureerd",
       "current-key": "Huidige sleutel: {{key}}",
@@ -1281,15 +1281,10 @@
       "description": "Je eigen locatiegeschiedenis, voor plaatsen in je dagboek en routeafbeeldingen in elke memo. Je API-sleutel blijft op deze server."
     },
     "text-extraction": {
-      "claude-description": "Koppel Claude met een API-sleutel uit de Anthropic Console. De sleutel blijft op deze server.",
-      "claude-title": "Claude (Anthropic)",
       "description": "Leest de tekst in afbeeldingen, tekeningen en gescande pdf's als iemand daarom vraagt. Elke keer gaat dat bestand naar de aanbieder die hier is gekozen.",
       "model-help": "Laat leeg om {{model}} te gebruiken.",
       "off": "Uit",
       "provider-help": "Claude of een van de Gemini-aanbieders hierboven.",
-      "tags-description": "Claude stelt tags voor bij de memo die je schrijft. Zolang dit aanstaat, wordt Claude gebruikt in plaats van de bovenstaande provider voor tekstgeneratie.",
-      "tags-enabled": "Tags voorstellen met Claude",
-      "tags-title": "Tagsuggesties met Claude",
       "title": "Tekstherkenning"
     }
   },

@@ -1039,7 +1039,7 @@
       "add-provider": "Aggiungi fornitore",
       "api-key": "Tasto API",
       "api-key-required": "È richiesta la chiave API.",
-      "byok-description": "Connetti OpenAI o Gemini con una chiave API dal tuo account. Memos chiama il provider direttamente da questo server.",
+      "byok-description": "Connetti OpenAI, Gemini o Claude con una chiave API dal tuo account. Memos chiama il provider direttamente da questo server.",
       "byok-storage-note": "Le chiavi rimangono su questa istanza e vengono mascherate quando vengono caricate le impostazioni.",
       "configured": "Configurato",
       "current-key": "Chiave attuale: {{key}}",
@@ -1282,15 +1282,10 @@
       "description": "La tua cronologia delle posizioni, per i luoghi del diario e le immagini dei percorsi in qualsiasi memo. La tua chiave API resta su questo server."
     },
     "text-extraction": {
-      "claude-description": "Collega Claude con una chiave API dell'Anthropic Console. La chiave resta su questo server.",
-      "claude-title": "Claude (Anthropic)",
       "description": "Legge il testo di immagini, disegni e PDF scansionati quando qualcuno lo chiede. Ogni volta il file viene inviato al fornitore scelto qui.",
       "model-help": "Lascia vuoto per usare {{model}}.",
       "off": "Disattivata",
       "provider-help": "Claude o uno dei fornitori Gemini qui sopra.",
-      "tags-description": "Claude suggerisce tag per la nota che stai scrivendo. Finché questa opzione è attiva, viene usato Claude al posto del provider di generazione del testo qui sopra.",
-      "tags-enabled": "Suggerisci tag con Claude",
-      "tags-title": "Suggerimenti di tag con Claude",
       "title": "Estrazione del testo"
     }
   },

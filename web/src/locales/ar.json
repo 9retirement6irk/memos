@@ -1042,7 +1042,7 @@
       "add-provider": "إضافة موفر خدمة",
       "api-key": "مفتاح API",
       "api-key-required": "مفتاح API مطلوب.",
-      "byok-description": "قم بتوصيل OpenAI أو Gemini باستخدام مفتاح API من حسابك. يتصل Memos بمزود الخدمة مباشرةً من هذا الخادم.",
+      "byok-description": "قم بتوصيل OpenAI أو Gemini أو Claude باستخدام مفتاح API من حسابك. يتصل Memos بمزود الخدمة مباشرةً من هذا الخادم.",
       "byok-storage-note": "تبقى المفاتيح على هذه النسخة ويتم إخفاؤها عند تحميل الإعدادات.",
       "configured": "تم التكوين",
       "current-key": "المفتاح الحالي: {{key}}",
@@ -1284,15 +1284,10 @@
       "description": "سجل مواقعك الخاص، لأماكن اليوميات وصور المسارات في أي مذكرة. يبقى مفتاح API على هذا الخادم."
     },
     "text-extraction": {
-      "claude-description": "اربط Claude بمفتاح API من Anthropic Console. يبقى المفتاح على هذا الخادم.",
-      "claude-title": "Claude (Anthropic)",
       "description": "يقرأ النص في الصور والرسومات وملفات PDF الممسوحة عند الطلب. في كل مرة يُرسل ذلك الملف إلى المزوّد المختار هنا.",
       "model-help": "اتركه فارغًا لاستخدام {{model}}.",
       "off": "متوقف",
       "provider-help": "Claude أو أحد مزوّدي Gemini أعلاه.",
-      "tags-description": "يقترح Claude وسومًا للمذكرة التي تكتبها. ما دام هذا الخيار مفعّلًا، يُستخدم Claude بدلًا من مزوّد توليد النص أعلاه.",
-      "tags-enabled": "اقتراح الوسوم باستخدام Claude",
-      "tags-title": "اقتراح الوسوم باستخدام Claude",
       "title": "استخراج النص"
     }
   },

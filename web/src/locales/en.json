@@ -740,7 +740,7 @@
       "add-provider": "Add provider",
       "api-key": "API key",
       "api-key-required": "API key is required.",
-      "byok-description": "Connect OpenAI or Gemini with an API key from your own account. Memos calls the provider directly from this server.",
+      "byok-description": "Connect OpenAI, Gemini or Claude with an API key from your own account. Memos calls the provider directly from this server.",
       "byok-storage-note": "Keys stay on this instance and are masked when settings are loaded.",
       "configured": "Configured",
       "current-key": "Current key: {{key}}",
@@ -1398,15 +1398,10 @@
       "description": "Your own location history, for journal places and route images in any memo. Your API key stays on this server."
     },
     "text-extraction": {
-      "claude-description": "Connect Claude with an API key from the Anthropic Console. The key stays on this server.",
-      "claude-title": "Claude (Anthropic)",
       "description": "Reads the text in images, drawings and scanned PDFs when someone asks. Each time, that file is sent to the provider chosen here.",
       "model-help": "Leave empty to use {{model}}.",
       "off": "Off",
       "provider-help": "Claude, or one of the Gemini providers above.",
-      "tags-description": "Claude suggests tags for the memo you are writing. While this is on, Claude is used in place of the text generation provider above.",
-      "tags-enabled": "Suggest tags with Claude",
-      "tags-title": "Tag suggestions with Claude",
       "title": "Text extraction"
     }
   },

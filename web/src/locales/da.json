@@ -661,7 +661,7 @@
       "add-provider": "Tilføj udbyder",
       "api-key": "API nøgle",
       "api-key-required": "API nøgle er påkrævet.",
-      "byok-description": "Forbind OpenAI eller Gemini med en API-nøgle fra din egen konto. Memos ringer til udbyderen direkte fra denne server.",
+      "byok-description": "Forbind OpenAI, Gemini eller Claude med en API-nøgle fra din egen konto. Memos ringer til udbyderen direkte fra denne server.",
       "byok-storage-note": "Nøgler forbliver på denne instans og maskeres, når indstillinger indlæses.",
       "configured": "Konfigureret",
       "current-key": "Nuværende nøgle: {{key}}",
@@ -1319,15 +1319,10 @@
       "description": "Din egen placeringshistorik, til steder i dagbogen og rutebilleder i alle memoer. Din API-nøgle bliver på denne server."
     },
     "text-extraction": {
-      "claude-description": "Forbind Claude med en API-nøgle fra Anthropic Console. Nøglen bliver på denne server.",
-      "claude-title": "Claude (Anthropic)",
       "description": "Læser teksten i billeder, tegninger og scannede PDF'er, når nogen beder om det. Hver gang sendes filen til den udbyder, der er valgt her.",
       "model-help": "Lad feltet være tomt for at bruge {{model}}.",
       "off": "Fra",
       "provider-help": "Claude eller en af Gemini-udbyderne ovenfor.",
-      "tags-description": "Claude foreslår tags til det notat, du skriver. Mens dette er slået til, bruges Claude i stedet for tekstgenereringsudbyderen ovenfor.",
-      "tags-enabled": "Foreslå tags med Claude",
-      "tags-title": "Tagforslag med Claude",
       "title": "Tekstudtræk"
     }
   },

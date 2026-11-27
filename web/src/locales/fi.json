@@ -661,7 +661,7 @@
       "add-provider": "Lisää palveluntarjoaja",
       "api-key": "API avain",
       "api-key-required": "API-avain vaaditaan.",
-      "byok-description": "Yhdistä OpenAI tai Gemini API-avaimella omalta tililtäsi. Memos soittaa palveluntarjoajalle suoraan tältä palvelimelta.",
+      "byok-description": "Yhdistä OpenAI, Gemini tai Claude API-avaimella omalta tililtäsi. Memos soittaa palveluntarjoajalle suoraan tältä palvelimelta.",
       "byok-storage-note": "Näppäimet pysyvät tässä tapauksessa ja peitetään, kun asetukset ladataan.",
       "configured": "Määritetty",
       "current-key": "Nykyinen avain: {{key}}",
@@ -1319,15 +1319,10 @@
       "description": "Oma sijaintihistoriasi päiväkirjan paikkoja ja minkä tahansa muistion reittikuvia varten. API-avaimesi pysyy tällä palvelimella."
     },
     "text-extraction": {
-      "claude-description": "Yhdistä Claude Anthropic Consolen API-avaimella. Avain pysyy tällä palvelimella.",
-      "claude-title": "Claude (Anthropic)",
       "description": "Lukee tekstin kuvista, piirroksista ja skannatuista PDF-tiedostoista pyydettäessä. Tiedosto lähetetään joka kerta tässä valitulle palveluntarjoajalle.",
       "model-help": "Jätä tyhjäksi käyttääksesi mallia {{model}}.",
       "off": "Pois",
       "provider-help": "Claude tai jokin yllä olevista Gemini-palveluntarjoajista.",
-      "tags-description": "Claude ehdottaa tunnisteita kirjoittamaasi muistiinpanoon. Kun tämä on päällä, Claudea käytetään yllä olevan tekstin luonnin palveluntarjoajan sijaan.",
-      "tags-enabled": "Ehdota tunnisteita Claudella",
-      "tags-title": "Tunniste-ehdotukset Claudella",
       "title": "Tekstin poiminta"
     }
   },
