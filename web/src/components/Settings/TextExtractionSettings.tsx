@@ -61,16 +61,7 @@ const TextExtractionSettings = ({ geminiProviders }: { geminiProviders: Extracti
 
   return (
     <>
-      <SettingGroup
-        title={t("setting.text-extraction.title")}
-        description={t("setting.text-extraction.description")}
-        showSeparator
-        actions={
-          <Button variant="primary" disabled={!choiceChanged} loading={saveChoice.isPending} onClick={handleSaveChoice}>
-            {t("common.save")}
-          </Button>
-        }
-      >
+      <SettingGroup title={t("setting.text-extraction.title")} description={t("setting.text-extraction.description")} showSeparator>
         <div className="grid max-w-3xl grid-cols-1 gap-3">
           <Field.Root>
             <Field.Label>{t("setting.ai.transcription-provider")}</Field.Label>
@@ -103,6 +94,12 @@ const TextExtractionSettings = ({ geminiProviders }: { geminiProviders: Extracti
             />
             {defaultModel && <Field.Description>{t("setting.text-extraction.model-help", { model: defaultModel })}</Field.Description>}
           </Field.Root>
+        </div>
+        {/* Save closes the form at its end, in line with the fields, as in the transcription and text generation forms above. */}
+        <div className="flex max-w-3xl items-center justify-end">
+          <Button variant="primary" disabled={!choiceChanged} loading={saveChoice.isPending} onClick={handleSaveChoice}>
+            {t("common.save")}
+          </Button>
         </div>
       </SettingGroup>
     </>
