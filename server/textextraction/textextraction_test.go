@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"strings"
-	"sync/atomic"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -98,38 +97,8 @@ func TestOnlyAdmins(t *testing.T) {
 	env := newTestEnv(ctx, t, fakeClaude(t))
 	require.Equal(t, http.StatusUnauthorized, env.do(http.MethodGet, "/api/text-extraction/settings", "", "").Code)
 	require.Equal(t, http.StatusForbidden, env.do(http.MethodGet, "/api/text-extraction/settings", "", env.user).Code)
-	require.Equal(t, http.StatusForbidden, env.do(http.MethodPut, "/api/text-extraction/claude", `{"apiKey":"`+goodKey+`"}`, env.user).Code)
+	require.Equal(t, http.StatusForbidden, env.do(http.MethodPut, "/api/text-extraction/settings", `{"providerId":""}`, env.user).Code)
 	require.Equal(t, http.StatusOK, env.do(http.MethodGet, "/api/text-extraction/settings", "", env.admin).Code)
-}
-
-func TestClaudeConnection(t *testing.T) {
-	ctx := context.Background()
-	claude := fakeClaude(t)
-	env := newTestEnv(ctx, t, claude)
-
-	// A refused key is not saved, and the error never repeats it.
-	refused := env.do(http.MethodPut, "/api/text-extraction/claude", `{"endpoint":"`+claude.URL+`","apiKey":"wrong-key-0002"}`, env.admin)
-	require.Equal(t, http.StatusBadGateway, refused.Code)
-	require.Contains(t, refused.Body.String(), "rejected by Anthropic")
-	require.NotContains(t, refused.Body.String(), "wrong-key-0002")
-	require.False(t, decode(t, env.do(http.MethodGet, "/api/text-extraction/settings", "", env.admin)).Claude.Configured)
-
-	// A working key is saved; the browser sees only a hint.
-	saved := env.do(http.MethodPut, "/api/text-extraction/claude", `{"endpoint":"`+claude.URL+`/v1/","apiKey":"`+goodKey+`"}`, env.admin)
-	require.NotContains(t, saved.Body.String(), goodKey)
-	response := decode(t, saved)
-	require.True(t, response.Claude.Configured)
-	require.Equal(t, claude.URL, response.Claude.Endpoint)
-	require.Equal(t, "test...0001", response.Claude.APIKeyHint)
-
-	// An empty key keeps the saved one.
-	require.True(t, decode(t, env.do(http.MethodPut, "/api/text-extraction/claude", `{"endpoint":"`+claude.URL+`"}`, env.admin)).Claude.Configured)
-
-	stored := &Settings{}
-	found, err := env.store.GetForkSetting(ctx, store.ForkSettingTextExtraction, stored)
-	require.NoError(t, err)
-	require.True(t, found)
-	require.Equal(t, goodKey, stored.Claude.APIKey)
 }
 
 func TestChangesNeedABearerToken(t *testing.T) {
@@ -142,131 +111,55 @@ func TestChangesNeedABearerToken(t *testing.T) {
 	require.Equal(t, http.StatusUnauthorized, recorder.Code)
 }
 
-func TestChoosingTheProvider(t *testing.T) {
-	ctx := context.Background()
-	claude := fakeClaude(t)
-	env := newTestEnv(ctx, t, claude)
+// setProviders saves the instance's AI providers, as Settings > AI does.
+func setProviders(ctx context.Context, t *testing.T, env *testEnv, providers ...*storepb.AIProviderConfig) {
+	t.Helper()
 	_, err := env.store.UpsertInstanceSetting(ctx, &storepb.InstanceSetting{
-		Key: storepb.InstanceSettingKey_AI,
-		Value: &storepb.InstanceSetting_AiSetting{AiSetting: &storepb.InstanceAISetting{Providers: []*storepb.AIProviderConfig{
-			{Id: "gemini-1", Title: "Gemini", Type: storepb.AIProviderType_GEMINI, ApiKey: "gemini-test-key"},
-			{Id: "openai-1", Title: "OpenAI", Type: storepb.AIProviderType_OPENAI, ApiKey: "openai-test-key"},
-		}}},
+		Key:   storepb.InstanceSettingKey_AI,
+		Value: &storepb.InstanceSetting_AiSetting{AiSetting: &storepb.InstanceAISetting{Providers: providers}},
 	})
 	require.NoError(t, err)
+}
+
+func TestChoosingTheProvider(t *testing.T) {
+	ctx := context.Background()
+	env := newTestEnv(ctx, t, fakeClaude(t))
+	setProviders(ctx, t, env,
+		&storepb.AIProviderConfig{Id: "gemini-1", Title: "Gemini", Type: storepb.AIProviderType_GEMINI, ApiKey: "gemini-test-key"},
+		&storepb.AIProviderConfig{Id: "openai-1", Title: "OpenAI", Type: storepb.AIProviderType_OPENAI, ApiKey: "openai-test-key"},
+		&storepb.AIProviderConfig{Id: "claude-1", Title: "Claude", Type: storepb.AIProviderType_ANTHROPIC, ApiKey: goodKey},
+		&storepb.AIProviderConfig{Id: "proxy-1", Title: "Proxy", Type: storepb.AIProviderType_ANTHROPIC_COMPATIBLE, Endpoint: "https://claude.example.com", ApiKey: goodKey},
+	)
 
 	choose := func(body string) *httptest.ResponseRecorder {
 		return env.do(http.MethodPut, "/api/text-extraction/settings", body, env.admin)
 	}
-	// Claude needs a connection first; OpenAI can't read images; unknown providers are refused.
-	require.Equal(t, http.StatusBadRequest, choose(`{"providerId":"claude"}`).Code)
+	// OpenAI can't read images here; unknown providers, the old Claude connection's name among them, are refused.
 	require.Equal(t, http.StatusBadRequest, choose(`{"providerId":"openai-1"}`).Code)
 	require.Equal(t, http.StatusBadRequest, choose(`{"providerId":"gone"}`).Code)
+	require.Equal(t, http.StatusBadRequest, choose(`{"providerId":"claude"}`).Code)
 	require.Equal(t, http.StatusBadRequest, choose(`{"providerId":"gemini-1","model":"`+strings.Repeat("m", 257)+`"}`).Code)
 
 	response := decode(t, choose(`{"providerId":"gemini-1","model":" gemini-2.5-flash "}`))
 	require.Equal(t, "gemini-1", response.ProviderID)
 	require.Equal(t, "gemini-2.5-flash", response.Model)
+	require.Equal(t, "claude-1", decode(t, choose(`{"providerId":"claude-1","model":""}`)).ProviderID)
+	require.Equal(t, "proxy-1", decode(t, choose(`{"providerId":"proxy-1"}`)).ProviderID)
 
-	decode(t, env.do(http.MethodPut, "/api/text-extraction/claude", `{"endpoint":"`+claude.URL+`","apiKey":"`+goodKey+`"}`, env.admin))
-	require.Equal(t, ProviderClaude, decode(t, choose(`{"providerId":"claude","model":""}`)).ProviderID)
-
-	// Removing Claude also stops extraction from using it.
-	removed := decode(t, env.do(http.MethodDelete, "/api/text-extraction/claude", "", env.admin))
-	require.False(t, removed.Claude.Configured)
-	require.Empty(t, removed.ProviderID)
+	// The answer carries the choice and nothing of the provider.
+	recorder := env.do(http.MethodGet, "/api/text-extraction/settings", "", env.admin)
+	require.NotContains(t, recorder.Body.String(), goodKey)
+	require.Empty(t, decode(t, choose(`{"providerId":""}`)).ProviderID)
 }
 
 // The row is invisible to stock Memos' instance settings.
 func TestStockSettingsIgnoreTheRow(t *testing.T) {
 	ctx := context.Background()
-	claude := fakeClaude(t)
-	env := newTestEnv(ctx, t, claude)
-	decode(t, env.do(http.MethodPut, "/api/text-extraction/claude", `{"endpoint":"`+claude.URL+`","apiKey":"`+goodKey+`"}`, env.admin))
+	env := newTestEnv(ctx, t, fakeClaude(t))
+	decode(t, env.do(http.MethodPut, "/api/text-extraction/settings", `{"providerId":""}`, env.admin))
 	settings, err := env.store.ListInstanceSettings(ctx, &store.FindInstanceSetting{})
 	require.NoError(t, err)
 	for _, setting := range settings {
 		require.NotEqual(t, storepb.InstanceSettingKey_INSTANCE_SETTING_KEY_UNSPECIFIED, setting.GetKey())
 	}
-}
-
-// otherServer is a server the saved key was never meant for; it counts the
-// requests it gets.
-func otherServer(t *testing.T) (*httptest.Server, *atomic.Int32) {
-	t.Helper()
-	requests := &atomic.Int32{}
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
-		requests.Add(1)
-		w.WriteHeader(http.StatusUnauthorized)
-	}))
-	t.Cleanup(server.Close)
-	return server, requests
-}
-
-func TestSavedKeyStaysWithItsEndpoint(t *testing.T) {
-	ctx := context.Background()
-	claude := fakeClaude(t)
-	env := newTestEnv(ctx, t, claude)
-	other, requests := otherServer(t)
-
-	decode(t, env.do(http.MethodPut, "/api/text-extraction/claude", `{"endpoint":"`+claude.URL+`","apiKey":"`+goodKey+`"}`, env.admin))
-
-	// Another endpoint without a key is refused before anything is sent there;
-	// so is an empty endpoint, which means Anthropic's own.
-	for _, endpoint := range []string{other.URL, ""} {
-		refused := env.do(http.MethodPut, "/api/text-extraction/claude", `{"endpoint":"`+endpoint+`"}`, env.admin)
-		require.Equal(t, http.StatusBadRequest, refused.Code, endpoint)
-		require.Contains(t, refused.Body.String(), "enter the API key again")
-	}
-	require.Zero(t, requests.Load())
-	require.Equal(t, claude.URL, decode(t, env.do(http.MethodGet, "/api/text-extraction/settings", "", env.admin)).Claude.Endpoint)
-}
-
-// An admin can have Claude answer tag suggestions, once Claude is connected.
-func TestClaudeForTagSuggestions(t *testing.T) {
-	ctx := context.Background()
-	claude := fakeClaude(t)
-	env := newTestEnv(ctx, t, claude)
-	choose := func(body, token string) *httptest.ResponseRecorder {
-		return env.do(http.MethodPut, "/api/text-extraction/tag-suggestions", body, token)
-	}
-	provider := func() (string, string, bool) {
-		config, model, ok, err := TagSuggestionProvider(ctx, env.store)
-		require.NoError(t, err)
-		return config.Endpoint, model, ok
-	}
-
-	require.Equal(t, http.StatusForbidden, choose(`{"claude":true}`, env.user).Code)
-	// Claude needs a connection first.
-	require.Equal(t, http.StatusBadRequest, choose(`{"claude":true}`, env.admin).Code)
-	_, _, ok := provider()
-	require.False(t, ok)
-
-	decode(t, env.do(http.MethodPut, "/api/text-extraction/claude", `{"endpoint":"`+claude.URL+`","apiKey":"`+goodKey+`"}`, env.admin))
-	require.Equal(t, http.StatusBadRequest, choose(`{"claude":true,"model":"`+strings.Repeat("m", 257)+`"}`, env.admin).Code)
-
-	// On with no model named uses the default one.
-	response := decode(t, choose(`{"claude":true,"model":" "}`, env.admin))
-	require.Equal(t, TagSuggestions{Claude: true, Model: "claude-haiku-5-5"}, response.TagSuggestions)
-	endpoint, model, ok := provider()
-	require.True(t, ok)
-	require.Equal(t, claude.URL, endpoint)
-	require.Equal(t, "claude-haiku-5-5", model)
-
-	response = decode(t, choose(`{"claude":true,"model":" claude-sonnet-5-5 "}`, env.admin))
-	require.Equal(t, "claude-sonnet-5-5", response.TagSuggestions.Model)
-	// The choice for reading text is a separate one.
-	require.Empty(t, response.ProviderID)
-
-	// Off forgets the model, and so does removing Claude.
-	response = decode(t, choose(`{"claude":false,"model":"claude-sonnet-5-5"}`, env.admin))
-	require.Equal(t, TagSuggestions{}, response.TagSuggestions)
-	_, _, ok = provider()
-	require.False(t, ok)
-
-	decode(t, choose(`{"claude":true}`, env.admin))
-	removed := decode(t, env.do(http.MethodDelete, "/api/text-extraction/claude", "", env.admin))
-	require.Equal(t, TagSuggestions{}, removed.TagSuggestions)
-	_, _, ok = provider()
-	require.False(t, ok)
 }

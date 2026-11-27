@@ -6,7 +6,7 @@ swapped.
 
 | Package | Backend |
 | --- | --- |
-| `ai/` | AI provider configuration, connection testing, tag suggestions and audio transcription (OpenAI, Gemini); `ai/anthropic` (Claude) and `ai/geminivision` (Gemini, for images) are the fork's clients for text extraction, and `ai/anthropic` also answers tag suggestions when an admin chose Claude for them |
+| `ai/` | AI provider configuration, connection testing, tag suggestions and audio transcription; `ai/anthropic` (Claude) and `ai/geminivision` (Gemini) are the fork's clients for reading text out of images |
 | `idp/` | identity providers for SSO (OAuth2) |
 | `storage/` | attachment object storage (local disk, S3) |
 

@@ -242,11 +242,8 @@ export function InstanceProvider({ children }: { children: ReactNode }) {
               : prev.profile,
         settings: isAccessSetting ? prev.settings : [...prev.settings.filter((s) => s.name !== updatedSetting.name), updatedSetting],
       }));
-      // The fork's Claude connection can answer tag suggestions without a text generation
-      // provider (server/textextraction), which only the server's profile knows.
-      if (updatedSetting.value.case === "aiSetting") void refreshProfile();
     },
-    [updateAccessSetting, refreshProfile],
+    [updateAccessSetting],
   );
 
   // Memoize context value to prevent unnecessary re-renders of consumers

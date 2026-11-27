@@ -97,6 +97,14 @@ func NewServer(ctx context.Context, profile *profile.Profile, store *store.Store
 		return httphandler.Text(w, http.StatusOK, "Service ready.")
 	}), nil))
 
+	// Stock Memos has Anthropic providers now: move the Claude connection the
+	// fork used to keep into them. A failure leaves it where it was, to be
+	// tried again at the next start. The error is not logged: it is about a
+	// setting that holds an API key.
+	if err := textextraction.MoveClaudeConnection(ctx, s.Store); err != nil {
+		slog.Warn("failed to move the Claude connection into the AI providers")
+	}
+
 	apiService := api.NewAPIService(s.Secret, profile, store)
 	s.apiService = apiService
 
@@ -114,7 +122,7 @@ func NewServer(ctx context.Context, profile *profile.Profile, store *store.Store
 	immich.NewService(s.Store, s.Secret).RegisterRoutes(mux)
 	// Each user's Dawarich location history: their saved connection and a read-only proxy.
 	dawarich.NewService(s.Store, s.Secret).RegisterRoutes(mux)
-	// The Claude connection and which AI reads text out of images, drawings and PDFs.
+	// Which AI provider reads text out of images, drawings and PDFs.
 	textextraction.NewService(s.Store, s.Secret).RegisterRoutes(mux)
 	// Each user's journal settings and Home Assistant streak reminder.
 	journal.NewService(s.Store, s.Secret).RegisterRoutes(mux)

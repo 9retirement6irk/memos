@@ -256,47 +256,45 @@ func (s *Service) checkAttachment(ctx context.Context, user *store.User, name st
 // readerFor returns the chosen provider's reader, or nil when extraction is
 // off or its provider is gone. It makes no request.
 func (s *Service) readerFor(ctx context.Context, settings *Settings) (reader, error) {
-	switch settings.ProviderID {
-	case "":
+	if settings.ProviderID == "" {
 		return nil, nil
-	case ProviderClaude:
-		if settings.Claude == nil {
-			return nil, nil
-		}
-		client, err := anthropic.New(settings.Claude.Endpoint, settings.Claude.APIKey, s.extractClient())
+	}
+	provider, err := s.provider(ctx, settings.ProviderID)
+	if err != nil || provider == nil {
+		return nil, err
+	}
+	// An empty endpoint is the service's own, which each client fills in.
+	if provider.GetType() == storepb.AIProviderType_GEMINI {
+		client, err := geminivision.New(provider.GetEndpoint(), provider.GetApiKey(), s.extractClient())
 		if err != nil {
-			return nil, &httphandler.Error{Code: http.StatusInternalServerError, Message: "the saved Claude connection is not valid", Cause: err}
+			return nil, &httphandler.Error{Code: http.StatusInternalServerError, Message: "the Gemini provider's settings are not valid", Cause: err}
 		}
-		model := modelOr(settings.Model, anthropic.DefaultModel)
+		model := modelOr(settings.Model, geminivision.DefaultModel)
 		return func(ctx context.Context, decoded [][]byte) (*ExtractResponse, error) {
-			images := make([]anthropic.Image, len(decoded))
+			images := make([]geminivision.Image, len(decoded))
 			for i, data := range decoded {
-				images[i] = anthropic.Image{MediaType: detectedType(data), Data: data}
+				images[i] = geminivision.Image{MediaType: detectedType(data), Data: data}
 			}
-			result, err := client.ReadText(ctx, anthropic.TextRequest{Model: model, Instructions: Instructions, Images: images, MaxTokens: maxAnswerTokens})
+			result, err := client.ReadText(ctx, geminivision.TextRequest{Model: model, Instructions: Instructions, Images: images, MaxTokens: maxAnswerTokens})
 			if err != nil {
-				return nil, claudeError(err)
+				return nil, geminiError(err)
 			}
 			return answer(result.Text, result.Truncated, len(decoded)), nil
 		}, nil
 	}
-	provider, err := s.geminiProvider(ctx, settings.ProviderID)
-	if err != nil || provider == nil {
-		return nil, err
-	}
-	client, err := geminivision.New(provider.GetEndpoint(), provider.GetApiKey(), s.extractClient())
+	client, err := anthropic.New(provider.GetEndpoint(), provider.GetApiKey(), s.extractClient())
 	if err != nil {
-		return nil, &httphandler.Error{Code: http.StatusInternalServerError, Message: "the Gemini provider's settings are not valid", Cause: err}
+		return nil, &httphandler.Error{Code: http.StatusInternalServerError, Message: "the Anthropic provider's settings are not valid", Cause: err}
 	}
-	model := modelOr(settings.Model, geminivision.DefaultModel)
+	model := modelOr(settings.Model, anthropic.DefaultModel)
 	return func(ctx context.Context, decoded [][]byte) (*ExtractResponse, error) {
-		images := make([]geminivision.Image, len(decoded))
+		images := make([]anthropic.Image, len(decoded))
 		for i, data := range decoded {
-			images[i] = geminivision.Image{MediaType: detectedType(data), Data: data}
+			images[i] = anthropic.Image{MediaType: detectedType(data), Data: data}
 		}
-		result, err := client.ReadText(ctx, geminivision.TextRequest{Model: model, Instructions: Instructions, Images: images, MaxTokens: maxAnswerTokens})
+		result, err := client.ReadText(ctx, anthropic.TextRequest{Model: model, Instructions: Instructions, Images: images, MaxTokens: maxAnswerTokens})
 		if err != nil {
-			return nil, geminiError(err)
+			return nil, claudeError(err)
 		}
 		return answer(result.Text, result.Truncated, len(decoded)), nil
 	}, nil
@@ -336,14 +334,15 @@ func answer(text string, truncated bool, images int) *ExtractResponse {
 	return response
 }
 
-// geminiProvider returns the instance's Gemini provider with a key, or nil.
-func (s *Service) geminiProvider(ctx context.Context, id string) (*storepb.AIProviderConfig, error) {
+// provider returns the instance's AI provider with that ID when it can read
+// images and has a key, or nil.
+func (s *Service) provider(ctx context.Context, id string) (*storepb.AIProviderConfig, error) {
 	aiSetting, err := s.Store.GetInstanceAISetting(ctx)
 	if err != nil {
 		return nil, &httphandler.Error{Code: http.StatusInternalServerError, Message: "failed to read the AI providers", Cause: err}
 	}
 	for _, provider := range aiSetting.GetProviders() {
-		if provider.GetId() == id && provider.GetType() == storepb.AIProviderType_GEMINI && provider.GetApiKey() != "" {
+		if provider.GetId() == id && readsImages(provider.GetType()) && provider.GetApiKey() != "" {
 			return provider, nil
 		}
 	}

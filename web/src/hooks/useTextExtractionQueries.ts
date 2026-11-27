@@ -1,14 +1,10 @@
 import { QueryClient, QueryClientContext, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useContext } from "react";
 import { getRequestToken } from "@/connect";
-import { useInstance } from "@/contexts/InstanceContext";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import {
-  deleteClaudeConnection,
   getTextExtractionSettings,
   getTextExtractionStatus,
-  saveClaudeConnection,
-  saveClaudeTagSuggestions,
   saveTextExtractionChoice,
   type TextExtractionSettings,
 } from "@/lib/textExtraction";
@@ -51,26 +47,11 @@ export const useTextExtractionSettings = () => {
 
 export const useUpdateTextExtraction = () => {
   const queryClient = useQueryClient();
-  const { refreshProfile } = useInstance();
   const onSuccess = (settings: TextExtractionSettings) => {
     queryClient.setQueryData(textExtractionKeys.settings, settings);
     queryClient.invalidateQueries({ queryKey: textExtractionKeys.status });
   };
-  // Whether the composer offers tag suggestions is part of the instance profile, which Claude's part in it changes.
-  const onTagsSuccess = (settings: TextExtractionSettings) => {
-    onSuccess(settings);
-    void refreshProfile();
-  };
   return {
-    saveClaude: useMutation({
-      mutationFn: ({ endpoint, apiKey }: { endpoint: string; apiKey: string }) => saveClaudeConnection(endpoint, apiKey),
-      onSuccess,
-    }),
-    removeClaude: useMutation({ mutationFn: deleteClaudeConnection, onSuccess: onTagsSuccess }),
-    saveTagSuggestions: useMutation({
-      mutationFn: ({ claude, model }: { claude: boolean; model: string }) => saveClaudeTagSuggestions(claude, model),
-      onSuccess: onTagsSuccess,
-    }),
     saveChoice: useMutation({
       mutationFn: ({ providerId, model }: { providerId: string; model: string }) => saveTextExtractionChoice(providerId, model),
       onSuccess,

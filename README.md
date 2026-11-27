@@ -155,25 +155,13 @@ Claude or Gemini. It's in the image viewer, the drawing viewer and under a PDF i
 can edit the text, copy it, or **Add to memo**, which adds it to the end of the memo as a
 collapsed "Text from …" section that stock Memos shows too.
 
-- **Setup:** an admin picks Claude or one of the Gemini providers in Settings → AI, under
-  **Text extraction**. It's off until then. Claude is added like any other provider: **Add
-  provider**, type **Claude**, and an Anthropic API key.
+- **Setup:** an admin picks one of the Anthropic (Claude) or Gemini providers in Settings → AI,
+  under **Text extraction**. It's off until then. The providers themselves are stock Memos':
+  **Add provider** in the same page.
 - **What's sent:** only what's needed. Images are scaled down first. A PDF's own text is read in
   your browser, and only its scanned pages are sent; a PDF with text on every page is never sent.
 - **Limits:** 20 scanned pages at a time, and 30 reads an hour for each user, since each one is
   paid for with the instance's key.
-
-### Tag suggestions with Claude
-
-Memos can suggest tags for the memo you're writing, with the **Suggest tags with AI** command in
-the tag picker. Stock Memos asks an OpenAI or Gemini provider. The fork can ask Claude instead,
-over the same Claude connection as **Read text**.
-
-- **Setup:** an admin adds Claude in Settings → AI (**Add provider**, type **Claude**), then picks
-  it under **Text generation** with a model, such as `claude-haiku-5-5`.
-- **One choice:** tag suggestions are answered by the one provider picked there, Claude or a
-  stock one.
-- **Limits:** the same as stock Memos' tag suggestions.
 
 ## Your data stays stock Memos
 
@@ -225,11 +213,10 @@ The fork's extras reach outside your server only when you use them:
 | [Nominatim](https://nominatim.openstreetmap.org) (OpenStreetMap) | Searching for, or naming, a place | The search text or coordinates, from your browser |
 | OpenStreetMap tiles | Route maps with the map turned on | The map area shown, from your browser |
 | Anthropic (Claude) or Google (Gemini), whichever an admin chose | Read text | The picture of an image, drawing or scanned PDF page, from the Memos server with the instance's key |
-| Anthropic (Claude), when an admin turned it on | Suggest tags with AI | The memo you're writing and your existing tags, from the Memos server with the instance's key |
 
-Addresses you enter for Immich, Dawarich, Home Assistant and Claude are checked before the server
-connects. Loopback, link-local and cloud metadata addresses are refused, and redirects are
-followed only on the same host.
+Addresses you enter for Immich, Dawarich and Home Assistant are checked before the server
+connects, and so is the address of the provider that **Read text** calls. Loopback, link-local
+and cloud metadata addresses are refused, and redirects are followed only on the same host.
 
 ## Based on Memos
 
