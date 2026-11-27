@@ -313,6 +313,8 @@ func (s *Service) putTagSuggestions(w http.ResponseWriter, r *http.Request) erro
 		return &httphandler.Error{Code: http.StatusBadRequest, Message: "connect Claude first"}
 	case model == "":
 		model = anthropic.DefaultModel
+	default:
+		// On with a model named: it is kept as typed.
 	}
 	settings.TagSuggestionModel = model
 	if err := s.save(r.Context(), settings); err != nil {
