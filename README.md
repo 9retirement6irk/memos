@@ -155,8 +155,9 @@ Claude or Gemini. It's in the image viewer, the drawing viewer and under a PDF i
 can edit the text, copy it, or **Add to memo**, which adds it to the end of the memo as a
 collapsed "Text from …" section that stock Memos shows too.
 
-- **Setup:** an admin connects Claude with an Anthropic API key, or picks one of the Gemini
-  providers already in Settings → AI, under **Text extraction**. It's off until then.
+- **Setup:** an admin picks Claude or one of the Gemini providers in Settings → AI, under
+  **Text extraction**. It's off until then. Claude is added like any other provider: **Add
+  provider**, type **Claude**, and an Anthropic API key.
 - **What's sent:** only what's needed. Images are scaled down first. A PDF's own text is read in
   your browser, and only its scanned pages are sent; a PDF with text on every page is never sent.
 - **Limits:** 20 scanned pages at a time, and 30 reads an hour for each user, since each one is
@@ -168,10 +169,10 @@ Memos can suggest tags for the memo you're writing, with the **Suggest tags with
 the tag picker. Stock Memos asks an OpenAI or Gemini provider. The fork can ask Claude instead,
 over the same Claude connection as **Read text**.
 
-- **Setup:** an admin connects Claude in Settings → AI, then turns on **Suggest tags with Claude**
-  under **Tag suggestions with Claude**. The model is `claude-haiku-5-5` unless you name another.
-- **Which AI answers:** while it's on, Claude answers in place of the provider chosen under
-  **Text generation**. Turn it off to go back to that provider.
+- **Setup:** an admin adds Claude in Settings → AI (**Add provider**, type **Claude**), then picks
+  it under **Text generation** with a model, such as `claude-haiku-5-5`.
+- **One choice:** tag suggestions are answered by the one provider picked there, Claude or a
+  stock one.
 - **Limits:** the same as stock Memos' tag suggestions.
 
 ## Your data stays stock Memos

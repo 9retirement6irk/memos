@@ -1038,7 +1038,7 @@
       "add-provider": "プロバイダーの追加",
       "api-key": "APIキー",
       "api-key-required": "APIキーが必要です。",
-      "byok-description": "自分のアカウントの API キーを使用して OpenAI または Gemini を接続します。 Memos は、このサーバーからプロバイダーを直接呼び出します。",
+      "byok-description": "自分のアカウントの API キーを使用して OpenAI、Gemini、または Claude を接続します。 Memos は、このサーバーからプロバイダーを直接呼び出します。",
       "byok-storage-note": "キーはこのインスタンスに残り、設定が読み込まれるときにマスクされます。",
       "configured": "設定済み",
       "current-key": "現在のキー: {{key}}",
@@ -1281,15 +1281,10 @@
       "description": "ジャーナルの場所や、どのメモにも使える経路画像のための、あなた自身の位置履歴。API キーはこのサーバーに保存されます。"
     },
     "text-extraction": {
-      "claude-description": "Anthropic Console の API キーで Claude を接続します。キーはこのサーバーに保存されます。",
-      "claude-title": "Claude (Anthropic)",
       "description": "依頼されたときに、画像、描画、スキャンした PDF の文字を読み取ります。そのたびにファイルはここで選んだプロバイダーに送られます。",
       "model-help": "空欄にすると {{model}} を使います。",
       "off": "オフ",
       "provider-help": "Claude、または上の Gemini プロバイダーのいずれか。",
-      "tags-description": "Claude が、作成中のメモに合うタグを提案します。オンの間は、上のテキスト生成プロバイダーの代わりに Claude が使われます。",
-      "tags-enabled": "Claude でタグを提案する",
-      "tags-title": "Claude によるタグの提案",
       "title": "テキスト抽出"
     }
   },

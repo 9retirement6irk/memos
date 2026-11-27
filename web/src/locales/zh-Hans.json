@@ -623,7 +623,7 @@
       "add-provider": "添加 provider",
       "api-key": "API 密钥",
       "api-key-required": "API key 不能为空。",
-      "byok-description": "使用你自己的 OpenAI 或 Gemini 账号 API key。Memos 会从本实例服务器直接调用 provider。",
+      "byok-description": "使用你自己的 OpenAI、Gemini 或 Claude 账号 API key。Memos 会从本实例服务器直接调用 provider。",
       "byok-storage-note": "Key 保存在本实例中，加载设置时只返回脱敏提示。",
       "configured": "已配置",
       "current-key": "当前 key：{{key}}",
@@ -1313,15 +1313,10 @@
       "description": "你自己的位置历史，用于日记地点和任意备忘录中的路线图片。你的 API 密钥保存在此服务器上。"
     },
     "text-extraction": {
-      "claude-description": "使用 Anthropic Console 的 API 密钥连接 Claude。密钥保存在此服务器上。",
-      "claude-title": "Claude (Anthropic)",
       "description": "在有人请求时读取图片、绘图和扫描 PDF 中的文字。每次都会把该文件发送给此处选择的提供商。",
       "model-help": "留空则使用 {{model}}。",
       "off": "关闭",
       "provider-help": "Claude 或上方的某个 Gemini 提供商。",
-      "tags-description": "Claude 会为你正在写的备忘录推荐标签。开启后，将使用 Claude 代替上方的文本生成提供商。",
-      "tags-enabled": "使用 Claude 推荐标签",
-      "tags-title": "使用 Claude 推荐标签",
       "title": "文本提取"
     }
   },

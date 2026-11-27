@@ -14,6 +14,11 @@ vi.mock("@/contexts/InstanceContext", () => ({ useInstance: () => ({ aiSetting, 
 vi.mock("@/hooks/useConfigurationQueries", () => ({ useManagedResource: () => undefined, isFieldManaged: () => false }));
 // The fork's "Read text" settings below the providers need the signed-in user and a query client; they have tests of their own.
 vi.mock("@/components/Settings/TextExtractionSettings", () => ({ default: () => null }));
+// The fork lists its Claude connection with the providers (tests/ai-settings-claude.test.tsx); here there is none.
+vi.mock("@/components/Settings/useClaudeProvider", () => ({
+  CLAUDE_DEFAULT_ENDPOINT: "https://api.anthropic.com",
+  useClaudeProvider: () => ({ id: "claude", loaded: false, connected: false, endpoint: "", apiKeyHint: "", readsText: false, busy: false }),
+}));
 vi.mock("@/hooks/useUserQueries", () => ({ useTagCounts: () => ({ data: { garden: 3, travel: 1 } }) }));
 
 beforeEach(() => {

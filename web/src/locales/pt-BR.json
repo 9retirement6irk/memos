@@ -1035,7 +1035,7 @@
       "add-provider": "Adicionar provedor",
       "api-key": "Chave API",
       "api-key-required": "A chave API é obrigatória.",
-      "byok-description": "Conecte OpenAI ou Gemini com uma chave API da sua própria conta. Memos chama o provedor diretamente deste servidor.",
+      "byok-description": "Conecte OpenAI, Gemini ou Claude com uma chave API da sua própria conta. Memos chama o provedor diretamente deste servidor.",
       "byok-storage-note": "As chaves permanecem nesta instância e são mascaradas quando as configurações são carregadas.",
       "configured": "Configurado",
       "current-key": "Chave atual: {{key}}",
@@ -1277,15 +1277,10 @@
       "description": "Seu próprio histórico de localização, para lugares do diário e imagens de trajeto em qualquer memo. Sua chave de API fica neste servidor."
     },
     "text-extraction": {
-      "claude-description": "Conecte o Claude com uma chave de API do Anthropic Console. A chave fica neste servidor.",
-      "claude-title": "Claude (Anthropic)",
       "description": "Lê o texto de imagens, desenhos e PDFs digitalizados quando alguém pede. A cada vez, o arquivo é enviado ao provedor escolhido aqui.",
       "model-help": "Deixe vazio para usar {{model}}.",
       "off": "Desativado",
       "provider-help": "Claude ou um dos provedores Gemini acima.",
-      "tags-description": "O Claude sugere tags para o memo que você está escrevendo. Enquanto isto estiver ativado, o Claude é usado no lugar do provedor de geração de texto acima.",
-      "tags-enabled": "Sugerir tags com o Claude",
-      "tags-title": "Sugestões de tags com o Claude",
       "title": "Extração de texto"
     }
   },

@@ -663,7 +663,7 @@
       "add-provider": "Pridať poskytovateľa",
       "api-key": "kľúč API",
       "api-key-required": "Vyžaduje sa kľúč API.",
-      "byok-description": "Pripojte OpenAI alebo Gemini pomocou kľúča API z vášho vlastného účtu. Memos volá poskytovateľa priamo z tohto servera.",
+      "byok-description": "Pripojte OpenAI, Gemini alebo Claude pomocou kľúča API z vášho vlastného účtu. Memos volá poskytovateľa priamo z tohto servera.",
       "byok-storage-note": "Klávesy zostanú v tejto inštancii a pri načítaní nastavení sú maskované.",
       "configured": "Nakonfigurované",
       "current-key": "Aktuálny kľúč: {{key}}",
@@ -1323,15 +1323,10 @@
       "description": "Tvoja vlastná história polohy, pre miesta v denníku a obrázky trás v akejkoľvek poznámke. Tvoj kľúč API zostáva na tomto serveri."
     },
     "text-extraction": {
-      "claude-description": "Pripojte Claude pomocou kľúča API z Anthropic Console. Kľúč zostáva na tomto serveri.",
-      "claude-title": "Claude (Anthropic)",
       "description": "Na požiadanie prečíta text v obrázkoch, kresbách a naskenovaných PDF. Zakaždým sa daný súbor odošle poskytovateľovi zvolenému tu.",
       "model-help": "Ponechajte prázdne pre použitie {{model}}.",
       "off": "Vypnuté",
       "provider-help": "Claude alebo jeden z poskytovateľov Gemini vyššie.",
-      "tags-description": "Claude navrhuje štítky pre poznámku, ktorú píšete. Kým je táto možnosť zapnutá, používa sa Claude namiesto poskytovateľa generovania textu vyššie.",
-      "tags-enabled": "Navrhovať štítky pomocou Claude",
-      "tags-title": "Návrhy štítkov pomocou Claude",
       "title": "Extrakcia textu"
     }
   },

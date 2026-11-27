@@ -1042,7 +1042,7 @@
       "add-provider": "Dodajte ponudnika",
       "api-key": "Ključ API",
       "api-key-required": "Potreben je ključ API.",
-      "byok-description": "Povežite OpenAI ali Gemini s ključem API iz svojega računa. Memos pokliče ponudnika neposredno s tega strežnika.",
+      "byok-description": "Povežite OpenAI, Gemini ali Claude s ključem API iz svojega računa. Memos pokliče ponudnika neposredno s tega strežnika.",
       "byok-storage-note": "Ključi ostanejo na tej instanci in so prikriti, ko se naložijo nastavitve.",
       "configured": "Konfigurirano",
       "current-key": "Trenutni ključ: {{key}}",
@@ -1285,15 +1285,10 @@
       "description": "Tvoja lastna zgodovina lokacij, za kraje v dnevniku in slike poti v katerem koli zapisu. Tvoj ključ API ostane na tem strežniku."
     },
     "text-extraction": {
-      "claude-description": "Povežite Claude s ključem API iz Anthropic Console. Ključ ostane na tem strežniku.",
-      "claude-title": "Claude (Anthropic)",
       "description": "Na zahtevo prebere besedilo s slik, risb in optično prebranih PDF-jev. Vsakič se datoteka pošlje ponudniku, izbranemu tukaj.",
       "model-help": "Pustite prazno za uporabo {{model}}.",
       "off": "Izklopljeno",
       "provider-help": "Claude ali eden od ponudnikov Gemini zgoraj.",
-      "tags-description": "Claude predlaga oznake za zapisek, ki ga pišete. Dokler je to vklopljeno, se namesto zgornjega ponudnika za ustvarjanje besedila uporablja Claude.",
-      "tags-enabled": "Predlagaj oznake s Claudom",
-      "tags-title": "Predlogi oznak s Claudom",
       "title": "Izločanje besedila"
     }
   },

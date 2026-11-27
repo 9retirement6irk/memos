@@ -1038,7 +1038,7 @@
       "add-provider": "Anbieter hinzufügen",
       "api-key": "API-Taste",
       "api-key-required": "Der API-Schlüssel ist erforderlich.",
-      "byok-description": "Verbinden Sie OpenAI oder Gemini mit einem API-Schlüssel von Ihrem eigenen Konto. Memos ruft den Anbieter direkt von diesem Server aus auf.",
+      "byok-description": "Verbinden Sie OpenAI, Gemini oder Claude mit einem API-Schlüssel von Ihrem eigenen Konto. Memos ruft den Anbieter direkt von diesem Server aus auf.",
       "byok-storage-note": "Schlüssel bleiben auf dieser Instanz und werden beim Laden der Einstellungen maskiert.",
       "configured": "Konfiguriert",
       "current-key": "Aktueller Schlüssel: {{key}}",
@@ -1281,15 +1281,10 @@
       "description": "Dein eigener Standortverlauf, für Orte im Tagebuch und Routenbilder in jedem Memo. Dein API-Schlüssel bleibt auf diesem Server."
     },
     "text-extraction": {
-      "claude-description": "Verbinde Claude mit einem API-Schlüssel aus der Anthropic Console. Der Schlüssel bleibt auf diesem Server.",
-      "claude-title": "Claude (Anthropic)",
       "description": "Liest den Text in Bildern, Zeichnungen und gescannten PDFs, wenn jemand darum bittet. Dabei wird die Datei jedes Mal an den hier gewählten Anbieter gesendet.",
       "model-help": "Leer lassen, um {{model}} zu verwenden.",
       "off": "Aus",
       "provider-help": "Claude oder einer der Gemini-Anbieter oben.",
-      "tags-description": "Claude schlägt Tags für das Memo vor, das du gerade schreibst. Solange dies aktiviert ist, wird Claude anstelle des obigen Anbieters für Textgenerierung verwendet.",
-      "tags-enabled": "Tags mit Claude vorschlagen",
-      "tags-title": "Tag-Vorschläge mit Claude",
       "title": "Texterkennung"
     }
   },

@@ -11,6 +11,8 @@ import { useFieldErrors } from "@/hooks/useFieldErrors";
 import { useOverflowTitle } from "@/hooks/useOverflowTitle";
 import i18n from "@/i18n";
 import { getErrorMessage } from "@/lib/error";
+import { DEFAULT_CLAUDE_MODEL } from "@/lib/textExtraction";
+import { showErrorToast } from "@/lib/toast";
 import {
   InstanceSetting_AIProviderConfig,
   InstanceSetting_AIProviderConfigSchema,
@@ -31,6 +33,7 @@ import SettingTable from "./SettingTable";
 import TagSuggestionsPlayground from "./TagSuggestionsPlayground";
 import TextExtractionSettings from "./TextExtractionSettings";
 import TranscriptionPlayground from "./TranscriptionPlayground";
+import { CLAUDE_DEFAULT_ENDPOINT, useClaudeProvider } from "./useClaudeProvider";
 import useInstanceSettingUpdater, { buildInstanceSettingName } from "./useInstanceSettingUpdater";
 
 type LocalAIProvider = {
@@ -41,7 +44,15 @@ type LocalAIProvider = {
   apiKey: string;
   apiKeySet: boolean;
   apiKeyHint: string;
+  /**
+   * The fork's Claude connection, listed with the stock providers but kept in the fork's own
+   * settings (useClaudeProvider): it is never part of the AI setting that is saved.
+   */
+  claude?: boolean;
 };
+
+/** What the provider dialog calls the Claude type; stock types are named by their number. */
+const CLAUDE_TYPE = "claude";
 
 type LocalTranscription = {
   providerId: string;
@@ -55,7 +66,8 @@ const providerTypeOptions = [InstanceSetting_AIProviderType.OPENAI, InstanceSett
 /** The OpenAI type also serves the many services that speak its API, so it is named for that. Gemini is a product name. */
 const useProviderTypeLabel = () => {
   const t = useTranslate();
-  return (type: InstanceSetting_AIProviderType) => {
+  return (type: InstanceSetting_AIProviderType, claude?: boolean) => {
+    if (claude) return "Claude";
     switch (type) {
       case InstanceSetting_AIProviderType.OPENAI:
         return t("setting.ai.provider-type-openai");
@@ -71,8 +83,8 @@ const useProviderTypeLabel = () => {
 const modelExamples = {
   transcription: (type?: InstanceSetting_AIProviderType) =>
     type === InstanceSetting_AIProviderType.GEMINI ? "gemini-2.5-flash" : "gpt-transcribe",
-  textGeneration: (type?: InstanceSetting_AIProviderType) =>
-    type === InstanceSetting_AIProviderType.GEMINI ? "gemini-2.5-flash" : "gpt-5-mini",
+  textGeneration: (type?: InstanceSetting_AIProviderType, claude?: boolean) =>
+    claude ? DEFAULT_CLAUDE_MODEL : type === InstanceSetting_AIProviderType.GEMINI ? "gemini-2.5-flash" : "gpt-5-mini",
 };
 
 /** A masked key such as "sk-a…wxyz" identifies the key. A short key masks to dots only, which says nothing. */
@@ -134,6 +146,37 @@ const AISection = () => {
   const saveInstanceSetting = useInstanceSettingUpdater();
   const { aiSetting: originalSetting } = useInstance();
   const providers = useMemo(() => originalSetting.providers.map(toLocalProvider), [originalSetting.providers]);
+  // Claude, once connected, is listed after the stock providers. `providers` stays the stock
+  // list: it is what the AI setting saves and what can transcribe.
+  const claude = useClaudeProvider();
+  const [claudeSaving, setClaudeSaving] = useState(false);
+  const listedProviders = useMemo(
+    () =>
+      claude.connected
+        ? [
+            ...providers,
+            {
+              id: claude.id,
+              title: "Claude",
+              type: InstanceSetting_AIProviderType.AI_PROVIDER_TYPE_UNSPECIFIED,
+              endpoint: claude.endpoint === CLAUDE_DEFAULT_ENDPOINT ? "" : claude.endpoint,
+              apiKey: "",
+              apiKeySet: true,
+              apiKeyHint: claude.apiKeyHint,
+              claude: true,
+            } satisfies LocalAIProvider,
+          ]
+        : providers,
+    [providers, claude.connected, claude.id, claude.endpoint, claude.apiKeyHint],
+  );
+  // One choice answers tag suggestions: Claude when it was chosen, otherwise the stock setting.
+  const textGeneration = useMemo(
+    () =>
+      claude.tagModel === undefined
+        ? originalSetting.textGeneration
+        : create(InstanceSetting_TextGenerationConfigSchema, { providerId: claude.id, model: claude.tagModel }),
+    [claude.tagModel, claude.id, originalSetting.textGeneration],
+  );
   const [transcription, setTranscription] = useState<LocalTranscription>(() => toLocalTranscription(originalSetting.transcription));
   const [editingProvider, setEditingProvider] = useState<LocalAIProvider | undefined>();
   const [deleteTarget, setDeleteTarget] = useState<LocalAIProvider | undefined>();
@@ -203,6 +246,20 @@ const AISection = () => {
   };
 
   const handleSaveProvider = async (provider: LocalAIProvider) => {
+    if (provider.claude) {
+      // The server checks the key with Anthropic before saving; its answer shows in the dialog.
+      setProviderError(undefined);
+      setClaudeSaving(true);
+      try {
+        await claude.save(provider.endpoint.trim(), provider.apiKey.trim());
+        setEditingProvider(undefined);
+      } catch (error) {
+        setProviderError(getErrorMessage(error));
+      } finally {
+        setClaudeSaving(false);
+      }
+      return;
+    }
     const normalizedProvider = { ...provider, title: provider.title.trim(), endpoint: provider.endpoint.trim() };
     const exists = providers.some((item) => item.id === normalizedProvider.id);
     const nextProviders = exists
@@ -221,6 +278,16 @@ const AISection = () => {
   const handleDeleteProvider = async () => {
     if (!deleteTarget) return;
     const target = deleteTarget;
+    if (target.claude) {
+      // The server turns off what Claude was used for along with the connection.
+      try {
+        await claude.remove();
+        setDeleteTarget(undefined);
+      } catch (error) {
+        showErrorToast(getErrorMessage(error));
+      }
+      return;
+    }
     const nextProviders = providers.filter((provider) => provider.id !== target.id);
 
     // A capability served by the deleted provider is turned off in the same update.
@@ -237,6 +304,8 @@ const AISection = () => {
   };
 
   const affectedFeatures: string[] = [];
+  if (deleteTarget?.claude && claude.readsText) affectedFeatures.push(t("setting.text-extraction.title"));
+  if (deleteTarget?.claude && claude.tagModel !== undefined) affectedFeatures.push(t("setting.ai.text-generation-title"));
   if (deleteTarget && originalSetting.transcription?.providerId === deleteTarget.id)
     affectedFeatures.push(t("setting.ai.transcription-title"));
   if (deleteTarget && originalSetting.textGeneration?.providerId === deleteTarget.id)
@@ -255,6 +324,24 @@ const AISection = () => {
     await persistAISetting("Update transcription", "transcription", {
       transcription: transcription.providerId ? toTranscriptionConfig(transcription) : null,
     });
+  };
+
+  // Tag suggestions have one provider. Choosing Claude saves it in the fork's settings and clears
+  // the stock choice; choosing a stock provider, or none, saves that and has Claude stop.
+  const handleSaveTextGeneration = async (config: InstanceSetting_TextGenerationConfig | null) => {
+    try {
+      if (config?.providerId === claude.id) {
+        await claude.setTagModel(config.model);
+        if (!originalSetting.textGeneration) return true;
+        return await persistAISetting("Update text generation", "textGeneration", { textGeneration: null });
+      }
+      const ok = await persistAISetting("Update text generation", "textGeneration", { textGeneration: config });
+      if (ok && claude.tagModel !== undefined) await claude.setTagModel(undefined);
+      return ok;
+    } catch (error) {
+      showErrorToast(getErrorMessage(error));
+      return false;
+    }
   };
 
   return (
@@ -280,7 +367,7 @@ const AISection = () => {
             {
               key: "type",
               header: t("setting.ai.provider-type"),
-              render: (_, provider: LocalAIProvider) => <span>{providerTypeLabel(provider.type)}</span>,
+              render: (_, provider: LocalAIProvider) => <span>{providerTypeLabel(provider.type, provider.claude)}</span>,
             },
             {
               key: "endpoint",
@@ -316,13 +403,18 @@ const AISection = () => {
                     <Tooltip.Popup>{t("common.more")}</Tooltip.Popup>
                   </Tooltip.Root>
                   <Menu.Popup align="end">
-                    <Menu.Item disabled={providersLocked} onClick={() => setEditingProvider({ ...provider, apiKey: "" })}>
+                    {/* Claude is the fork's own, so a configuration file that manages the stock providers doesn't lock it. */}
+                    <Menu.Item
+                      disabled={providersLocked && !provider.claude}
+                      onClick={() => setEditingProvider({ ...provider, apiKey: "" })}
+                    >
                       {t("common.edit")}
                     </Menu.Item>
-                    {providersLocked ? null : (
+                    {providersLocked && !provider.claude ? null : (
                       <Menu.Item
                         disabled={
                           saving ||
+                          claude.busy ||
                           (transcriptionLocked && originalSetting.transcription?.providerId === provider.id) ||
                           (textGenerationLocked && originalSetting.textGeneration?.providerId === provider.id)
                         }
@@ -337,7 +429,7 @@ const AISection = () => {
               ),
             },
           ]}
-          data={providers}
+          data={listedProviders}
           emptyMessage={t("setting.ai.no-providers")}
           getRowKey={(provider) => provider.id}
         />
@@ -383,13 +475,13 @@ const AISection = () => {
         </SettingGroup>
       </form>
       <TextGenerationSettings
-        config={originalSetting.textGeneration}
-        providers={providers}
+        config={textGeneration}
+        providers={listedProviders}
         locked={textGenerationLocked}
         managed={managed}
         saving={savingSection === "textGeneration"}
-        busy={saving}
-        onSave={(config) => persistAISetting("Update text generation", "textGeneration", { textGeneration: config })}
+        busy={saving || claude.busy}
+        onSave={handleSaveTextGeneration}
       />
 
       <TranscriptionPlayground
@@ -399,14 +491,16 @@ const AISection = () => {
         unsaved={transcriptionHasChanges}
       />
 
-      {/* The fork's Claude connection and its choice of AI for reading text out of images (server/textextraction). */}
+      {/* The fork's choice of AI for reading text out of images (server/textextraction). */}
       <TextExtractionSettings
         geminiProviders={providers.filter((provider) => provider.type === InstanceSetting_AIProviderType.GEMINI && provider.apiKeySet)}
       />
 
       <AIProviderDialog
         provider={editingProvider}
-        saving={savingSection === "providers"}
+        // A second Claude can't be added, and only an admin's loaded settings say whether there is one.
+        canAddClaude={claude.loaded && !claude.connected}
+        saving={savingSection === "providers" || claudeSaving}
         error={providerError}
         onOpenChange={(open) => {
           if (open) return;
@@ -548,7 +642,7 @@ function TextGenerationSettings({
   const savedProvider = providers.find((item) => item.id === config?.providerId);
   const changed = providerId !== (config?.providerId ?? "") || modelId !== (config?.model ?? "");
   const canSave = !locked && !busy && changed && (!providerId || provider?.apiKeySet);
-  const example = modelExamples.textGeneration(provider?.type);
+  const example = modelExamples.textGeneration(provider?.type, provider?.claude);
 
   // Saving needs a model; the field says so instead of a disabled button staying silent.
   const hasModel = () => {
@@ -728,6 +822,8 @@ const TranscriptionForm = ({
 
 interface AIProviderDialogProps {
   provider?: LocalAIProvider;
+  /** Whether Claude is offered as a type for a new provider. */
+  canAddClaude: boolean;
   saving: boolean;
   /** Why the last save was refused, such as a rejected key. */
   error?: string;
@@ -737,7 +833,7 @@ interface AIProviderDialogProps {
   onSave: (provider: LocalAIProvider) => void;
 }
 
-const AIProviderDialog = ({ provider, saving, error, onOpenChange, onChange, onSave }: AIProviderDialogProps) => {
+const AIProviderDialog = ({ provider, canAddClaude, saving, error, onOpenChange, onChange, onSave }: AIProviderDialogProps) => {
   const t = useTranslate();
   const providerTypeLabel = useProviderTypeLabel();
   const formId = useId();
@@ -746,7 +842,16 @@ const AIProviderDialog = ({ provider, saving, error, onOpenChange, onChange, onS
   const [draft, setDraft] = useState<LocalAIProvider>(() => provider ?? newProvider());
   const [keyVisible, setKeyVisible] = useState(false);
   const fieldErrors = useFieldErrors<"title" | "apiKey">();
-  const typeOptions = providerTypeOptions.map((type) => ({ value: String(type), label: providerTypeLabel(type) }));
+  const isEditing = !!provider?.apiKeySet;
+  // Claude is a type of its own: offered for a new provider while there is none, and the only
+  // type of the Claude connection, which is kept apart from the stock providers.
+  const claudeOption = { value: CLAUDE_TYPE, label: providerTypeLabel(InstanceSetting_AIProviderType.AI_PROVIDER_TYPE_UNSPECIFIED, true) };
+  const typeOptions = provider?.claude
+    ? [claudeOption]
+    : [
+        ...providerTypeOptions.map((type) => ({ value: String(type), label: providerTypeLabel(type) })),
+        ...(canAddClaude && !isEditing ? [claudeOption] : []),
+      ];
 
   // A newly opened provider starts clean: its draft and no errors from the last one.
   useEffect(() => {
@@ -761,11 +866,12 @@ const AIProviderDialog = ({ provider, saving, error, onOpenChange, onChange, onS
     onChange();
   };
 
-  const isEditing = !!provider?.apiKeySet;
-  const previousEndpoint = (provider?.endpoint.trim() || getDefaultEndpointPlaceholder(provider?.type ?? draft.type)).replace(/\/+$/, "");
-  const endpoint = (draft.endpoint.trim() || getDefaultEndpointPlaceholder(draft.type)).replace(/\/+$/, "");
+  const previousEndpoint = (
+    provider?.endpoint.trim() || getDefaultEndpointPlaceholder(provider?.type ?? draft.type, provider?.claude ?? draft.claude)
+  ).replace(/\/+$/, "");
+  const endpoint = (draft.endpoint.trim() || getDefaultEndpointPlaceholder(draft.type, draft.claude)).replace(/\/+$/, "");
   // The server keeps a stored key only for the connection it was saved with.
-  const reuseKey = isEditing && provider.type === draft.type && previousEndpoint === endpoint;
+  const reuseKey = isEditing && provider.type === draft.type && !!provider.claude === !!draft.claude && previousEndpoint === endpoint;
   const visibilityLabel = keyVisible ? t("auth.hide-password") : t("auth.show-password");
 
   // Saving needs a key; the field says so instead of a disabled button staying silent.
@@ -780,7 +886,7 @@ const AIProviderDialog = ({ provider, saving, error, onOpenChange, onChange, onS
   // Missing fields show under the field, as in the other settings dialogs.
   const handleSave = () => {
     if (saving) return;
-    if (!draft.title.trim()) {
+    if (!draft.claude && !draft.title.trim()) {
       fieldErrors.set("title", t("setting.ai.provider-title-required"));
       titleRef.current?.focus();
       return;
@@ -809,7 +915,9 @@ const AIProviderDialog = ({ provider, saving, error, onOpenChange, onChange, onS
               <Field.Label>{t("setting.ai.provider-title")}</Field.Label>
               <Input
                 ref={titleRef}
-                value={draft.title}
+                // There is one Claude connection, and it goes by its own name.
+                value={draft.claude ? "Claude" : draft.title}
+                disabled={draft.claude}
                 onChange={(e) => {
                   updateDraft({ title: e.target.value });
                   fieldErrors.clear("title");
@@ -817,16 +925,23 @@ const AIProviderDialog = ({ provider, saving, error, onOpenChange, onChange, onS
                 placeholder="OpenAI"
               />
               {/* Configuration files refer to a provider by this ID. */}
-              {isEditing && <p className="font-mono mu-caption text-mu-text-secondary">ID {draft.id}</p>}
+              {isEditing && !draft.claude && <p className="font-mono mu-caption text-mu-text-secondary">ID {draft.id}</p>}
               {fieldErrors.errors.title && <Field.Error match>{fieldErrors.errors.title}</Field.Error>}
             </Field.Root>
 
             <Field.Root>
               <Field.Label>{t("setting.ai.provider-type")}</Field.Label>
               <Select.Root
-                value={String(draft.type)}
+                value={draft.claude ? CLAUDE_TYPE : String(draft.type)}
                 items={typeOptions}
-                onValueChange={(value) => updateDraft({ type: Number(value) as InstanceSetting_AIProviderType })}
+                onValueChange={(value) => {
+                  fieldErrors.clear("title");
+                  updateDraft(
+                    value === CLAUDE_TYPE
+                      ? { claude: true }
+                      : { claude: false, type: (Number(value) || InstanceSetting_AIProviderType.OPENAI) as InstanceSetting_AIProviderType },
+                  );
+                }}
               >
                 <Select.Trigger className="w-full">
                   <Select.Value />
@@ -848,7 +963,7 @@ const AIProviderDialog = ({ provider, saving, error, onOpenChange, onChange, onS
                 inputMode="url"
                 value={draft.endpoint}
                 onChange={(e) => updateDraft({ endpoint: e.target.value })}
-                placeholder={getDefaultEndpointPlaceholder(draft.type)}
+                placeholder={getDefaultEndpointPlaceholder(draft.type, draft.claude)}
                 spellCheck={false}
                 autoCapitalize="off"
                 autoComplete="off"
@@ -923,7 +1038,8 @@ const AIProviderDialog = ({ provider, saving, error, onOpenChange, onChange, onS
   );
 };
 
-const getDefaultEndpointPlaceholder = (type: InstanceSetting_AIProviderType) => {
+const getDefaultEndpointPlaceholder = (type: InstanceSetting_AIProviderType, claude?: boolean) => {
+  if (claude) return CLAUDE_DEFAULT_ENDPOINT;
   switch (type) {
     case InstanceSetting_AIProviderType.OPENAI:
       return "https://api.openai.com/v1";

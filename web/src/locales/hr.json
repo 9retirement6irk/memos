@@ -1040,7 +1040,7 @@
       "add-provider": "Dodajte davatelja usluga",
       "api-key": "Ključ API",
       "api-key-required": "Potreban je ključ API.",
-      "byok-description": "Povežite OpenAI ili Gemini s API ključem s vlastitog računa. Memos poziva pružatelja usluga izravno s ovog poslužitelja.",
+      "byok-description": "Povežite OpenAI, Gemini ili Claude s API ključem s vlastitog računa. Memos poziva pružatelja usluga izravno s ovog poslužitelja.",
       "byok-storage-note": "Ključevi ostaju na ovoj instanci i maskirani su kada se učitaju postavke.",
       "configured": "Konfigurirano",
       "current-key": "Trenutni ključ: {{key}}",
@@ -1283,15 +1283,10 @@
       "description": "Tvoja vlastita povijest lokacija, za mjesta u dnevniku i slike ruta u bilo kojoj bilješci. Tvoj API ključ ostaje na ovom poslužitelju."
     },
     "text-extraction": {
-      "claude-description": "Povežite Claude ključem API-ja iz Anthropic Consolea. Ključ ostaje na ovom poslužitelju.",
-      "claude-title": "Claude (Anthropic)",
       "description": "Na zahtjev čita tekst sa slika, crteža i skeniranih PDF-ova. Svaki put datoteka se šalje pružatelju odabranom ovdje.",
       "model-help": "Ostavite prazno za {{model}}.",
       "off": "Isključeno",
       "provider-help": "Claude ili jedan od Gemini pružatelja iznad.",
-      "tags-description": "Claude predlaže oznake za bilješku koju pišete. Dok je ovo uključeno, Claude se koristi umjesto gore navedenog pružatelja generiranja teksta.",
-      "tags-enabled": "Predlaži oznake uz Claude",
-      "tags-title": "Prijedlozi oznaka uz Claude",
       "title": "Izdvajanje teksta"
     }
   },

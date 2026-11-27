@@ -1039,7 +1039,7 @@
       "add-provider": "Afegeix un proveïdor",
       "api-key": "Tecla API",
       "api-key-required": "La clau API és necessària.",
-      "byok-description": "Connecteu OpenAI o Gemini amb una clau API del vostre compte. Memos truca al proveïdor directament des d'aquest servidor.",
+      "byok-description": "Connecteu OpenAI, Gemini o Claude amb una clau API del vostre compte. Memos truca al proveïdor directament des d'aquest servidor.",
       "byok-storage-note": "Les claus romanen en aquesta instància i s'emmascaren quan es carreguen la configuració.",
       "configured": "Configurat",
       "current-key": "Clau actual: {{key}}",
@@ -1282,15 +1282,10 @@
       "description": "El teu propi historial d’ubicacions, per als llocs del diari i les imatges de recorreguts en qualsevol nota. La teva clau d’API es queda en aquest servidor."
     },
     "text-extraction": {
-      "claude-description": "Connecteu Claude amb una clau d'API de l'Anthropic Console. La clau es queda en aquest servidor.",
-      "claude-title": "Claude (Anthropic)",
       "description": "Llegeix el text d'imatges, dibuixos i PDF escanejats quan algú ho demana. Cada vegada, el fitxer s'envia al proveïdor triat aquí.",
       "model-help": "Deixeu-ho en blanc per fer servir {{model}}.",
       "off": "Desactivat",
       "provider-help": "Claude o un dels proveïdors Gemini de més amunt.",
-      "tags-description": "Claude suggereix etiquetes per a la nota que esteu escrivint. Mentre això estigui activat, s'utilitza Claude en lloc del proveïdor de generació de text de dalt.",
-      "tags-enabled": "Suggereix etiquetes amb Claude",
-      "tags-title": "Suggeriments d'etiquetes amb Claude",
       "title": "Extracció de text"
     }
   },

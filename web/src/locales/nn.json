@@ -740,7 +740,7 @@
       "add-provider": "Legg til tilbydar",
       "api-key": "API-lykel",
       "api-key-required": "API-lykel er naudsynt.",
-      "byok-description": "Kople til OpenAI eller Gemini med ein API-lykel frå din eigen konto. Memos kallar tilbydaren direkte frå denne tenaren.",
+      "byok-description": "Kople til OpenAI, Gemini eller Claude med ein API-lykel frå din eigen konto. Memos kallar tilbydaren direkte frå denne tenaren.",
       "byok-storage-note": "Lyklane vert verande på denne instansen og vert maskerte når innstillingane vert lasta.",
       "configured": "Sett opp",
       "current-key": "Noverande lykel: {{key}}",
@@ -1398,15 +1398,10 @@
       "description": "Din eigen posisjonshistorikk, for stader i dagboka og rutebilete i alle notat. API-nøkkelen din blir verande på denne serveren."
     },
     "text-extraction": {
-      "claude-description": "Kopla til Claude med ein API-nøkkel frå Anthropic Console. Nøkkelen blir på denne tenaren.",
-      "claude-title": "Claude (Anthropic)",
       "description": "Les teksten i bilete, teikningar og skanna PDF-ar når nokon ber om det. Kvar gong blir fila send til leverandøren som er vald her.",
       "model-help": "La feltet stå tomt for å bruka {{model}}.",
       "off": "Av",
       "provider-help": "Claude eller ein av Gemini-leverandørane ovanfor.",
-      "tags-description": "Claude føreslår taggar til notatet du skriv. Så lenge dette er på, blir Claude brukt i staden for tekstgenereringsleverandøren ovanfor.",
-      "tags-enabled": "Føreslå taggar med Claude",
-      "tags-title": "Taggforslag med Claude",
       "title": "Tekstuttrekk"
     }
   },

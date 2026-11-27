@@ -1042,7 +1042,7 @@
       "add-provider": "Dodaj dostawcę",
       "api-key": "Klucz API",
       "api-key-required": "Wymagany jest klucz API.",
-      "byok-description": "Połącz OpenAI lub Gemini z kluczem API z własnego konta. Memos wywołuje dostawcę bezpośrednio z tego serwera.",
+      "byok-description": "Połącz OpenAI, Gemini lub Claude z kluczem API z własnego konta. Memos wywołuje dostawcę bezpośrednio z tego serwera.",
       "byok-storage-note": "Klucze pozostają w tej instancji i są maskowane po załadowaniu ustawień.",
       "configured": "Skonfigurowane",
       "current-key": "Aktualny klucz: {{key}}",
@@ -1285,15 +1285,10 @@
       "description": "Twoja własna historia lokalizacji, dla miejsc w dzienniku i obrazów tras w dowolnej notatce. Twój klucz API zostaje na tym serwerze."
     },
     "text-extraction": {
-      "claude-description": "Połącz Claude za pomocą klucza API z Anthropic Console. Klucz zostaje na tym serwerze.",
-      "claude-title": "Claude (Anthropic)",
       "description": "Na żądanie odczytuje tekst z obrazów, rysunków i zeskanowanych plików PDF. Za każdym razem plik jest wysyłany do wybranego tu dostawcy.",
       "model-help": "Zostaw puste, aby użyć {{model}}.",
       "off": "Wyłączone",
       "provider-help": "Claude lub jeden z dostawców Gemini powyżej.",
-      "tags-description": "Claude podpowiada tagi do pisanej notatki. Dopóki ta opcja jest włączona, zamiast powyższego dostawcy generowania tekstu używany jest Claude.",
-      "tags-enabled": "Sugeruj tagi z Claude",
-      "tags-title": "Sugestie tagów z Claude",
       "title": "Wyodrębnianie tekstu"
     }
   },
