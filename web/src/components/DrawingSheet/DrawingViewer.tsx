@@ -23,8 +23,8 @@ import { PageTabs } from "./PageTabs";
 import { type DrawingPage, type DrawingPagesResult, isNewPageKey, placeNewPages } from "./pages";
 import { useCanvasTheme } from "./useCanvasTheme";
 import { useCanvasZoom, ZoomMenu } from "./ZoomMenu";
-// GZreader's pencil strokes draw as graphite, in the sheet and the viewer.
-import "./pencil";
+// GZreader's pencil, fountain pen, marker, highlighter and shader draw as on the Kindle, in the sheet and the viewer.
+import "./gzreader";
 
 export interface DrawingViewerProps {
   attachment: Attachment;

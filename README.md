@@ -115,10 +115,15 @@ Connect [Dawarich](https://dawarich.app) in **Settings → Dawarich**, again per
 
   What you paint is added to the drawing when you leave the mode.
 
-- **GZreader's pencil:** a drawing made on a Kindle with
-  [GZreader](https://github.com/9retirement6irk/GZreader) keeps its pencil's graphite texture when
-  you open it in the viewer or the drawing sheet, with the pen's pressure and tilt, and when you
-  save it again. The pencil lines still move, resize and erase like any other stroke.
+- **GZreader's writing tools:** a drawing made on a Kindle with
+  [GZreader](https://github.com/9retirement6irk/GZreader) looks in the viewer and the drawing
+  sheet as it did on the Kindle, and keeps that look when you save it again:
+  - the pencil's graphite texture, with the pen's pressure and tilt
+  - the fountain pen's thin line that swells as you press
+  - the marker's even line, broader with the pen laid over
+  - the highlighter and the shader as an even wash that leaves the writing under it dark
+
+  The lines still move, resize and erase like any other stroke.
 
 Each page is still an ordinary `.canvas.png` attachment, so stock Memos shows every drawing.
 

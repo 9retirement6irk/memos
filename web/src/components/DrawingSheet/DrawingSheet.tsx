@@ -37,8 +37,8 @@ import { type DrawingPage, type DrawingPagesResult, newPageKey } from "./pages";
 import { findPaperElement, loadPaper, PAPERS, type PaperId } from "./paper/papers";
 import { DRAWING_HUES, DRAWING_PAPER, useCanvasTheme } from "./useCanvasTheme";
 import { useCanvasZoom, ZoomMenu } from "./ZoomMenu";
-// GZreader's pencil strokes draw as graphite, in the sheet and the viewer.
-import "./pencil";
+// GZreader's pencil, fountain pen, marker, highlighter and shader draw as on the Kindle, in the sheet and the viewer.
+import "./gzreader";
 
 const TOOLS: { name: ToolName; label: Translations; shortcut: string; icon: ReactElement }[] = [
   { name: "select", label: "editor.drawing.tool-select", shortcut: "V", icon: <MousePointer2Icon /> },
