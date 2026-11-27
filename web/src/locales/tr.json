@@ -1327,12 +1327,15 @@
       "description": "Kendi konum geçmişin; günlükteki yerler ve her nottaki rota görselleri için. API anahtarın bu sunucuda kalır."
     },
     "text-extraction": {
-      "claude-title": "Claude (Anthropic)",
       "claude-description": "Claude'u Anthropic Console'dan alınan bir API anahtarıyla bağlayın. Anahtar bu sunucuda kalır.",
+      "claude-title": "Claude (Anthropic)",
       "description": "İstendiğinde görsellerdeki, çizimlerdeki ve taranmış PDF'lerdeki metni okur. Her seferinde dosya burada seçilen sağlayıcıya gönderilir.",
       "model-help": "{{model}} kullanmak için boş bırakın.",
       "off": "Kapalı",
       "provider-help": "Claude veya yukarıdaki Gemini sağlayıcılarından biri.",
+      "tags-description": "Claude, yazdığınız not için etiketler önerir. Bu açıkken, yukarıdaki metin üretme sağlayıcısının yerine Claude kullanılır.",
+      "tags-enabled": "Etiketleri Claude ile öner",
+      "tags-title": "Claude ile etiket önerileri",
       "title": "Metin çıkarma"
     }
   },

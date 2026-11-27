@@ -11,6 +11,8 @@ export interface TextExtractionSettings {
   claude: { configured: boolean; endpoint: string; apiKeyHint: string };
   providerId: string;
   model: string;
+  /** Whether Claude answers tag suggestions, in place of the text generation provider, and with which model. */
+  tagSuggestions: { claude: boolean; model: string };
 }
 
 const BASE = "/api/text-extraction";
@@ -25,6 +27,10 @@ export const deleteClaudeConnection = () => apiJSON<TextExtractionSettings>(`${B
 
 export const saveTextExtractionChoice = (providerId: string, model: string) =>
   apiJSON<TextExtractionSettings>(`${BASE}/settings`, { method: "PUT", body: JSON.stringify({ providerId, model }) });
+
+/** Turns Claude on or off for tag suggestions. On with no model uses the default one. */
+export const saveClaudeTagSuggestions = (claude: boolean, model: string) =>
+  apiJSON<TextExtractionSettings>(`${BASE}/tag-suggestions`, { method: "PUT", body: JSON.stringify({ claude, model }) });
 
 /** The most pictures one request may carry, and the largest picture, as the server allows. */
 export const MAX_EXTRACT_IMAGES = 20;

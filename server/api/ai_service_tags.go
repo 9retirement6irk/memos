@@ -12,6 +12,7 @@ import (
 	"github.com/usememos/memos/markdown/parser"
 	apipb "github.com/usememos/memos/proto/gen/api"
 	"github.com/usememos/memos/provider/ai"
+	"github.com/usememos/memos/server/textextraction"
 )
 
 // SuggestTags recommends existing or new tags for a memo draft.
@@ -29,15 +30,7 @@ func (s *APIService) SuggestTags(ctx context.Context, req *apipb.SuggestTagsRequ
 	if len(req.CandidateTags) > 64 {
 		return nil, status.Errorf(codes.InvalidArgument, "provide at most 64 candidate tags")
 	}
-	setting, err := s.Store.GetInstanceAISetting(ctx)
-	if err != nil {
-		return nil, status.Errorf(codes.Internal, "failed to get AI settings")
-	}
-	cfg := setting.GetTextGeneration()
-	if cfg.GetProviderId() == "" || cfg.GetModel() == "" {
-		return nil, status.Errorf(codes.FailedPrecondition, "text generation is not configured")
-	}
-	provider, err := s.resolveAIProvider(setting, cfg.ProviderId)
+	provider, model, err := s.tagSuggestionProvider(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -57,20 +50,46 @@ func (s *APIService) SuggestTags(ctx context.Context, req *apipb.SuggestTagsRequ
 	if err := s.throttleAndCharge(ratelimit.ScopeSuggestTagsUser, userKey(user.ID), 1); err != nil {
 		return nil, err
 	}
-	tags, err := ai.SuggestTags(ctx, provider, cfg.Model, req.Content, candidates)
+	tags, err := ai.SuggestTags(ctx, provider, model, req.Content, candidates)
 	if err != nil {
 		if ctx.Err() != nil {
 			return nil, status.FromContextError(ctx.Err()).Err()
 		}
 		// The caller gets a fixed message and a reason; the cause goes to the log.
 		failure := ai.ClassifyFailure(err)
-		logAIFailure("suggest_tags", provider, cfg.Model, failure)
+		logAIFailure("suggest_tags", provider, model, failure)
 		return nil, newAIFailureError("failed to suggest tags: ", failure)
 	}
 	tags = slices.DeleteFunc(tags, func(tag string) bool {
 		return !validSuggestionTag(tag) || slices.Contains(existing, tag)
 	})
 	return &apipb.SuggestTagsResponse{Tags: tags}, nil
+}
+
+// tagSuggestionProvider returns the provider and model that answer tag
+// suggestions: the fork's Claude connection when an admin chose it for them
+// (server/textextraction), otherwise the instance's text generation setting.
+func (s *APIService) tagSuggestionProvider(ctx context.Context) (ai.ProviderConfig, string, error) {
+	claude, claudeModel, ok, err := textextraction.TagSuggestionProvider(ctx, s.Store)
+	if err != nil {
+		return ai.ProviderConfig{}, "", status.Errorf(codes.Internal, "failed to get AI settings")
+	}
+	if ok {
+		return claude, claudeModel, nil
+	}
+	setting, err := s.Store.GetInstanceAISetting(ctx)
+	if err != nil {
+		return ai.ProviderConfig{}, "", status.Errorf(codes.Internal, "failed to get AI settings")
+	}
+	cfg := setting.GetTextGeneration()
+	if cfg.GetProviderId() == "" || cfg.GetModel() == "" {
+		return ai.ProviderConfig{}, "", status.Errorf(codes.FailedPrecondition, "text generation is not configured")
+	}
+	provider, err := s.resolveAIProvider(setting, cfg.ProviderId)
+	if err != nil {
+		return ai.ProviderConfig{}, "", err
+	}
+	return provider, cfg.Model, nil
 }
 
 func validSuggestionTag(tag string) bool {

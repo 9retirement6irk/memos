@@ -1,7 +1,8 @@
 // Package textextraction serves /api/text-extraction: reading the text out of
 // images, drawings and PDFs with Claude or Gemini, and the settings for it.
 //
-// The settings are the instance's Claude connection and its choice of AI.
+// The settings are the instance's Claude connection, its choice of AI for
+// reading text, and whether Claude answers tag suggestions (TagSuggestionProvider).
 // Only admins can see or change them. The Claude API key stays on the server:
 // responses carry only whether it is set and a masked hint.
 //
@@ -31,6 +32,7 @@ import (
 	"github.com/usememos/memos/internal/ratelimit"
 	"github.com/usememos/memos/internal/safehttp"
 	storepb "github.com/usememos/memos/proto/gen/store"
+	"github.com/usememos/memos/provider/ai"
 	"github.com/usememos/memos/provider/ai/anthropic"
 	"github.com/usememos/memos/server/auth"
 	"github.com/usememos/memos/store"
@@ -67,6 +69,9 @@ type Settings struct {
 	Claude     *ClaudeConnection `json:"claude,omitempty"`
 	ProviderID string            `json:"providerId"`
 	Model      string            `json:"model"`
+	// TagSuggestionModel is the Claude model that answers tag suggestions.
+	// Empty leaves them to the instance's text generation setting.
+	TagSuggestionModel string `json:"tagSuggestionModel,omitempty"`
 }
 
 // ClaudeResponse is what an admin sees of the Claude connection: never the key.
@@ -76,11 +81,18 @@ type ClaudeResponse struct {
 	APIKeyHint string `json:"apiKeyHint"`
 }
 
+// TagSuggestions says whether Claude answers tag suggestions, and with which model.
+type TagSuggestions struct {
+	Claude bool   `json:"claude"`
+	Model  string `json:"model"`
+}
+
 // SettingsResponse is what an admin sees of the settings.
 type SettingsResponse struct {
-	Claude     ClaudeResponse `json:"claude"`
-	ProviderID string         `json:"providerId"`
-	Model      string         `json:"model"`
+	Claude         ClaudeResponse `json:"claude"`
+	ProviderID     string         `json:"providerId"`
+	Model          string         `json:"model"`
+	TagSuggestions TagSuggestions `json:"tagSuggestions"`
 }
 
 // ClaudeRequest updates the Claude connection. An empty APIKey keeps the saved
@@ -120,6 +132,7 @@ func (s *Service) RegisterRoutes(mux *http.ServeMux) {
 	mux.Handle("PUT /api/text-extraction/settings", httphandler.Func(s.putChoice))
 	mux.Handle("PUT /api/text-extraction/claude", httphandler.Func(s.putClaude))
 	mux.Handle("DELETE /api/text-extraction/claude", httphandler.Func(s.deleteClaude))
+	mux.Handle("PUT /api/text-extraction/tag-suggestions", httphandler.Func(s.putTagSuggestions))
 	mux.Handle("GET /api/text-extraction/status", httphandler.Func(s.getStatus))
 	mux.Handle("POST /api/text-extraction/extract", httphandler.Func(s.extract))
 }
@@ -166,6 +179,7 @@ func respond(w http.ResponseWriter, settings *Settings) error {
 	response := SettingsResponse{ProviderID: settings.ProviderID, Model: settings.Model}
 	if settings.Claude != nil {
 		response.Claude = ClaudeResponse{Configured: true, Endpoint: settings.Claude.Endpoint, APIKeyHint: maskAPIKey(settings.Claude.APIKey)}
+		response.TagSuggestions = TagSuggestions{Claude: settings.TagSuggestionModel != "", Model: settings.TagSuggestionModel}
 	}
 	return httphandler.JSON(w, http.StatusOK, response)
 }
@@ -235,10 +249,11 @@ func (s *Service) deleteClaude(w http.ResponseWriter, r *http.Request) error {
 		return err
 	}
 	settings.Claude = nil
-	// Extraction can't use a connection that is gone.
+	// Extraction and tag suggestions can't use a connection that is gone.
 	if settings.ProviderID == ProviderClaude {
 		settings.ProviderID = ""
 	}
+	settings.TagSuggestionModel = ""
 	if err := s.save(r.Context(), settings); err != nil {
 		return err
 	}
@@ -271,6 +286,61 @@ func (s *Service) putChoice(w http.ResponseWriter, r *http.Request) error {
 		return err
 	}
 	return respond(w, settings)
+}
+
+// putTagSuggestions turns Claude on or off for tag suggestions. On, with no
+// model named, it uses the default one.
+func (s *Service) putTagSuggestions(w http.ResponseWriter, r *http.Request) error {
+	if _, err := s.admin(r, true); err != nil {
+		return err
+	}
+	request := TagSuggestions{}
+	if err := json.NewDecoder(io.LimitReader(r.Body, maxRequestBytes)).Decode(&request); err != nil {
+		return &httphandler.Error{Code: http.StatusBadRequest, Message: "invalid request body", Cause: err}
+	}
+	model := strings.TrimSpace(request.Model)
+	if len(model) > maxModelLength {
+		return &httphandler.Error{Code: http.StatusBadRequest, Message: "the model name is too long"}
+	}
+	settings, err := s.Load(r.Context())
+	if err != nil {
+		return err
+	}
+	switch {
+	case !request.Claude:
+		model = ""
+	case settings.Claude == nil:
+		return &httphandler.Error{Code: http.StatusBadRequest, Message: "connect Claude first"}
+	case model == "":
+		model = anthropic.DefaultModel
+	}
+	settings.TagSuggestionModel = model
+	if err := s.save(r.Context(), settings); err != nil {
+		return err
+	}
+	return respond(w, settings)
+}
+
+// TagSuggestionProvider returns Claude as the provider that answers tag
+// suggestions, and the model to ask, when an admin chose it and Claude is
+// connected. Otherwise it reports false, and the instance's own text
+// generation setting decides.
+func TagSuggestionProvider(ctx context.Context, st *store.Store) (ai.ProviderConfig, string, bool, error) {
+	settings := &Settings{}
+	if _, err := st.GetForkSetting(ctx, store.ForkSettingTextExtraction, settings); err != nil {
+		return ai.ProviderConfig{}, "", false, err
+	}
+	if settings.Claude == nil || settings.TagSuggestionModel == "" {
+		return ai.ProviderConfig{}, "", false, nil
+	}
+	provider := ai.ProviderConfig{
+		ID:       ProviderClaude,
+		Title:    "Claude",
+		Type:     ai.ProviderAnthropic,
+		Endpoint: settings.Claude.Endpoint,
+		APIKey:   settings.Claude.APIKey,
+	}
+	return provider, settings.TagSuggestionModel, true, nil
 }
 
 // checkProvider accepts no provider, Claude once it is connected, or one of the

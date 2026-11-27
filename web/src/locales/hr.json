@@ -1283,12 +1283,15 @@
       "description": "Tvoja vlastita povijest lokacija, za mjesta u dnevniku i slike ruta u bilo kojoj bilješci. Tvoj API ključ ostaje na ovom poslužitelju."
     },
     "text-extraction": {
-      "claude-title": "Claude (Anthropic)",
       "claude-description": "Povežite Claude ključem API-ja iz Anthropic Consolea. Ključ ostaje na ovom poslužitelju.",
+      "claude-title": "Claude (Anthropic)",
       "description": "Na zahtjev čita tekst sa slika, crteža i skeniranih PDF-ova. Svaki put datoteka se šalje pružatelju odabranom ovdje.",
       "model-help": "Ostavite prazno za {{model}}.",
       "off": "Isključeno",
       "provider-help": "Claude ili jedan od Gemini pružatelja iznad.",
+      "tags-description": "Claude predlaže oznake za bilješku koju pišete. Dok je ovo uključeno, Claude se koristi umjesto gore navedenog pružatelja generiranja teksta.",
+      "tags-enabled": "Predlaži oznake uz Claude",
+      "tags-title": "Prijedlozi oznaka uz Claude",
       "title": "Izdvajanje teksta"
     }
   },

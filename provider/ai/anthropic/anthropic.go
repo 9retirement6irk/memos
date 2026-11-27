@@ -1,7 +1,7 @@
 // Package anthropic calls Anthropic's Messages API, for Claude. The fork uses
-// it to read the text out of images, drawings and PDFs. It speaks the HTTP API
-// directly rather than through Anthropic's SDK, which would be a large
-// dependency for two requests.
+// it to read the text out of images, drawings and PDFs, and to suggest tags.
+// It speaks the HTTP API directly rather than through Anthropic's SDK, which
+// would be a large dependency for three requests.
 //
 // The API key is sent only in the x-api-key header and never appears in an
 // error this package returns.
@@ -49,6 +49,8 @@ var (
 	ErrBadRequest = errors.New("the Claude API refused the request")
 	// ErrRefused means Claude declined to answer.
 	ErrRefused = errors.New("the model declined to read this file")
+	// ErrIncomplete means an answer that had to be whole stopped before its end.
+	ErrIncomplete = errors.New("the model's answer was cut short")
 )
 
 // Image is one picture to send: PNG, JPEG, GIF or WebP bytes.
@@ -71,6 +73,17 @@ type TextResult struct {
 	Text string
 	// Truncated means the answer reached MaxTokens before it ended.
 	Truncated bool
+}
+
+// GenerateRequest asks Claude to answer some text.
+type GenerateRequest struct {
+	Model string
+	// System is the instruction the answer follows.
+	System string
+	// Input is the user's message.
+	Input string
+	// MaxTokens bounds the answer; zero means 1024.
+	MaxTokens int
 }
 
 // Client calls one Anthropic endpoint with one API key.
@@ -176,17 +189,59 @@ func (c *Client) ReadText(ctx context.Context, request TextRequest) (*TextResult
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to encode the request")
 	}
-	httpRequest, err := c.newRequest(ctx, http.MethodPost, "/v1/messages", bytes.NewReader(body))
+	text, stopReason, err := c.send(ctx, body)
 	if err != nil {
 		return nil, err
 	}
+	return &TextResult{Text: text, Truncated: stopReason == "max_tokens"}, nil
+}
+
+// Generate sends the input under the system instruction and returns the text
+// of Claude's answer. An answer that did not end by itself is ErrIncomplete.
+func (c *Client) Generate(ctx context.Context, request GenerateRequest) (string, error) {
+	if strings.TrimSpace(request.Model) == "" {
+		return "", errors.New("a model is required")
+	}
+	maxTokens := request.MaxTokens
+	if maxTokens <= 0 {
+		maxTokens = 1024
+	}
+	payload := map[string]any{
+		"model":      strings.TrimSpace(request.Model),
+		"max_tokens": maxTokens,
+		"messages":   []map[string]any{{"role": "user", "content": request.Input}},
+	}
+	if request.System != "" {
+		payload["system"] = request.System
+	}
+	body, err := json.Marshal(payload)
+	if err != nil {
+		return "", errors.Wrap(err, "failed to encode the request")
+	}
+	text, stopReason, err := c.send(ctx, body)
+	if err != nil {
+		return "", err
+	}
+	if stopReason != "end_turn" && stopReason != "stop_sequence" {
+		return "", ErrIncomplete
+	}
+	return text, nil
+}
+
+// send posts one Messages request and returns the text of the answer, trimmed,
+// and why it stopped. A refusal is ErrRefused.
+func (c *Client) send(ctx context.Context, body []byte) (string, string, error) {
+	httpRequest, err := c.newRequest(ctx, http.MethodPost, "/v1/messages", bytes.NewReader(body))
+	if err != nil {
+		return "", "", err
+	}
 	response, err := c.http.Do(httpRequest)
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to reach the Claude API")
+		return "", "", errors.Wrap(err, "failed to reach the Claude API")
 	}
 	defer response.Body.Close()
 	if response.StatusCode != http.StatusOK {
-		return nil, statusError(response)
+		return "", "", statusError(response)
 	}
 	var message struct {
 		Content []struct {
@@ -196,10 +251,10 @@ func (c *Client) ReadText(ctx context.Context, request TextRequest) (*TextResult
 		StopReason string `json:"stop_reason"`
 	}
 	if err := json.NewDecoder(io.LimitReader(response.Body, 8<<20)).Decode(&message); err != nil {
-		return nil, errors.Wrap(ErrNotFound, "the answer was not a Claude message")
+		return "", "", errors.Wrap(ErrNotFound, "the answer was not a Claude message")
 	}
 	if message.StopReason == "refusal" {
-		return nil, ErrRefused
+		return "", "", ErrRefused
 	}
 	var text strings.Builder
 	for _, block := range message.Content {
@@ -207,7 +262,7 @@ func (c *Client) ReadText(ctx context.Context, request TextRequest) (*TextResult
 			text.WriteString(block.Text)
 		}
 	}
-	return &TextResult{Text: strings.TrimSpace(text.String()), Truncated: message.StopReason == "max_tokens"}, nil
+	return strings.TrimSpace(text.String()), message.StopReason, nil
 }
 
 func (c *Client) newRequest(ctx context.Context, method, path string, body io.Reader) (*http.Request, error) {

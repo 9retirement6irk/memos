@@ -1354,12 +1354,15 @@
       "description": "היסטוריית המיקומים שלכם, למקומות ביומן ולתמונות מסלול בכל פתק. מפתח ה־API נשאר בשרת הזה."
     },
     "text-extraction": {
-      "claude-title": "Claude (Anthropic)",
       "claude-description": "חברו את Claude עם מפתח API מ-Anthropic Console. המפתח נשאר בשרת הזה.",
+      "claude-title": "Claude (Anthropic)",
       "description": "קורא את הטקסט בתמונות, בציורים ובקובצי PDF סרוקים לפי בקשה. בכל פעם הקובץ נשלח לספק שנבחר כאן.",
       "model-help": "השאירו ריק כדי להשתמש ב-{{model}}.",
       "off": "כבוי",
       "provider-help": "Claude או אחד מספקי Gemini שלמעלה.",
+      "tags-description": "Claude מציע תגיות לפתק שאתם כותבים. כל עוד האפשרות פעילה, נעשה שימוש ב-Claude במקום ספק יצירת הטקסט שלמעלה.",
+      "tags-enabled": "הצעת תגיות עם Claude",
+      "tags-title": "הצעות תגיות עם Claude",
       "title": "חילוץ טקסט"
     }
   },

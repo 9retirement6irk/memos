@@ -1323,12 +1323,15 @@
       "description": "Tavo paties vietų istorija – dienoraščio vietoms ir maršrutų vaizdams bet kuriame įraše. Tavo API raktas lieka šiame serveryje."
     },
     "text-extraction": {
-      "claude-title": "Claude (Anthropic)",
       "claude-description": "Prijunkite Claude su API raktu iš Anthropic Console. Raktas lieka šiame serveryje.",
+      "claude-title": "Claude (Anthropic)",
       "description": "Paprašius perskaito tekstą paveikslėliuose, piešiniuose ir nuskenuotuose PDF. Kiekvieną kartą failas siunčiamas čia pasirinktam teikėjui.",
       "model-help": "Palikite tuščią, kad būtų naudojamas {{model}}.",
       "off": "Išjungta",
       "provider-help": "Claude arba vienas iš aukščiau esančių Gemini teikėjų.",
+      "tags-description": "„Claude“ siūlo žymas jūsų rašomam įrašui. Kol tai įjungta, vietoj aukščiau nurodyto teksto generavimo teikėjo naudojamas „Claude“.",
+      "tags-enabled": "Siūlyti žymas su „Claude“",
+      "tags-title": "Žymų pasiūlymai su „Claude“",
       "title": "Teksto išgavimas"
     }
   },

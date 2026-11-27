@@ -1319,12 +1319,15 @@
       "description": "Sinu enda asukohaajalugu, päeviku kohtade ja marsruudipiltide jaoks igas märkmes. Sinu API-võti jääb sellesse serverisse."
     },
     "text-extraction": {
-      "claude-title": "Claude (Anthropic)",
       "claude-description": "Ühenda Claude Anthropic Console'i API-võtmega. Võti jääb sellesse serverisse.",
+      "claude-title": "Claude (Anthropic)",
       "description": "Loeb soovi korral teksti piltidelt, joonistustelt ja skannitud PDF-idest. Iga kord saadetakse fail siin valitud teenusepakkujale.",
       "model-help": "Jäta tühjaks, et kasutada mudelit {{model}}.",
       "off": "Väljas",
       "provider-help": "Claude või mõni ülaltoodud Gemini teenusepakkuja.",
+      "tags-description": "Claude soovitab silte märkmele, mida kirjutad. Kui see on sisse lülitatud, kasutatakse ülaltoodud tekstiloome pakkuja asemel Claude'i.",
+      "tags-enabled": "Soovita silte Claude'iga",
+      "tags-title": "Sildisoovitused Claude'iga",
       "title": "Teksti eraldamine"
     }
   },

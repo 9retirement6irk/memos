@@ -1281,12 +1281,15 @@
       "description": "A saját helyelőzményeid, a napló helyeihez és útvonalképekhez bármely jegyzetben. Az API-kulcsod ezen a szerveren marad."
     },
     "text-extraction": {
-      "claude-title": "Claude (Anthropic)",
       "claude-description": "Csatlakoztasd a Claude-ot egy Anthropic Console-ból származó API-kulccsal. A kulcs ezen a szerveren marad.",
+      "claude-title": "Claude (Anthropic)",
       "description": "Kérésre kiolvassa a szöveget képekből, rajzokból és szkennelt PDF-ekből. A fájlt minden alkalommal az itt választott szolgáltatónak küldi el.",
       "model-help": "Hagyd üresen a(z) {{model}} használatához.",
       "off": "Ki",
       "provider-help": "A Claude vagy a fenti Gemini-szolgáltatók egyike.",
+      "tags-description": "A Claude címkéket javasol az éppen írt jegyzethez. Amíg ez be van kapcsolva, a fenti szöveggeneráló szolgáltató helyett a Claude-ot használja a rendszer.",
+      "tags-enabled": "Címkék javaslása a Claude-dal",
+      "tags-title": "Címkejavaslatok a Claude-dal",
       "title": "Szövegkinyerés"
     }
   },

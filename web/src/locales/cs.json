@@ -1285,12 +1285,15 @@
       "description": "Tvá vlastní historie polohy, pro místa v deníku a obrázky tras v jakékoli poznámce. Tvůj klíč API zůstává na tomto serveru."
     },
     "text-extraction": {
-      "claude-title": "Claude (Anthropic)",
       "claude-description": "Připojte Claude pomocí klíče API z Anthropic Console. Klíč zůstává na tomto serveru.",
+      "claude-title": "Claude (Anthropic)",
       "description": "Na požádání přečte text v obrázcích, kresbách a naskenovaných PDF. Pokaždé se daný soubor odešle poskytovateli zvolenému zde.",
       "model-help": "Ponechte prázdné pro použití {{model}}.",
       "off": "Vypnuto",
       "provider-help": "Claude nebo jeden z poskytovatelů Gemini výše.",
+      "tags-description": "Claude navrhuje štítky pro poznámku, kterou píšete. Dokud je tato možnost zapnutá, používá se Claude místo poskytovatele generování textu výše.",
+      "tags-enabled": "Navrhovat štítky pomocí Claude",
+      "tags-title": "Návrhy štítků pomocí Claude",
       "title": "Extrakce textu"
     }
   },
